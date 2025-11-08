@@ -1,0 +1,36 @@
+{
+  "$schema": "https://www.schemastore.org/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@types": ["./src/types/index.ts"],
+      "@core": ["./src/core/index.ts"],
+      "@test-helpers": ["./src/test-helpers/index.ts"]
+    },
+    "lib": ["ESNext", "dom"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "noErrorTruncation": true,
+    "isolatedModules": true,
+    "noEmitOnError": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": false
+  }
+}

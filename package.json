@@ -1,0 +1,29 @@
+{
+  "name": "ynab-plus",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "type-check": "tsgo"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/ws": "^8.18.1",
+    "@typescript/native-preview": "^7.0.0-dev.20251108.1",
+    "bun-mock-extended": "^3.0.5",
+    "get-port": "^7.1.0",
+    "ws": "^8.18.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/react-dom": "^19.2.2",
+    "@types/stack-trace": "^0.0.33",
+    "react-dom": "^19.2.0",
+    "stacktracey": "^2.1.8",
+    "uuid": "^13.0.0",
+    "winston": "^3.18.3",
+    "zod": "^4.1.12"
+  }
+}
