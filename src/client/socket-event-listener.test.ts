@@ -1,68 +1,8 @@
 import { describe, expect, it, mock } from "bun:test";
-import { mock as mockExtended, mockFn } from "bun-mock-extended";
-import { waitFor } from "@test-helpers";
+import { mock as mockExtended } from "bun-mock-extended";
+import { createSocketHarness, waitFor } from "@test-helpers";
 import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IEventPacket } from "@types";
-
-type MessageListener = (event: MessageEvent) => void;
-type EventListenerRef = EventListenerOrEventListenerObject;
-
-const createSocketHarness = () => {
-  const socket = mockExtended<WebSocket>({
-    addEventListener: mockFn(),
-    removeEventListener: mockFn(),
-  });
-
-  const listeners = new Set<MessageListener>();
-  const listenerMap = new Map<EventListenerRef, MessageListener>();
-
-  const toMessageListener = (listener: EventListenerRef): MessageListener => {
-    if (typeof listener === "function") {
-      return listener as MessageListener;
-    }
-
-    return (event: MessageEvent) => {
-      listener.handleEvent(event);
-    };
-  };
-
-  socket.addEventListener.mockImplementation((type, listener) => {
-    if (type !== "message") {
-      return;
-    }
-
-    const messageListener = toMessageListener(listener);
-    listenerMap.set(listener, messageListener);
-    listeners.add(messageListener);
-  });
-
-  socket.removeEventListener.mockImplementation((type, listener) => {
-    if (type !== "message") {
-      return;
-    }
-
-    const messageListener = listenerMap.get(listener);
-
-    if (!messageListener) {
-      return;
-    }
-
-    listeners.delete(messageListener);
-    listenerMap.delete(listener);
-  });
-
-  const send = (packet: unknown) => {
-    const event = new MessageEvent("message", {
-      data: JSON.stringify(packet),
-    });
-
-    for (const listener of listeners) {
-      listener(event);
-    }
-  };
-
-  return { socket, send };
-};
 
 describe("socket-event-bus", () => {
   describe("onAll", () => {
