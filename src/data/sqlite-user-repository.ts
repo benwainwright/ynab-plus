@@ -1,7 +1,7 @@
 import type { IRepository, IUser } from "@types";
 import { Database } from "bun:sqlite";
 
-export class UserRepository implements IRepository<IUser> {
+export class SqliteUserRepository implements IRepository<IUser> {
   public constructor(
     private tableName: string,
     private database: Database,

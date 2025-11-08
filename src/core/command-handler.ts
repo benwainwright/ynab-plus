@@ -1,6 +1,4 @@
-import type { IEventBus, IHandleContext, ISessionData } from "@types";
-import type { ICommandMessage } from "../types/i-command-message.ts";
-import type { SessionStorage } from "./session-storage.ts";
+import type { IHandleContext, ICommandMessage } from "@types";
 
 export abstract class CommandHandler<TKey extends keyof Commands> {
   public constructor() {}

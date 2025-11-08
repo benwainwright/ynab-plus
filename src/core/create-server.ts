@@ -1,23 +1,32 @@
 import { cwd } from "node:process";
-import type { IEventBus, ILogger, ISessionData } from "@types";
+import { join } from "node:path";
+
+import type { Server } from "bun";
+import type { IEventBus, ISessionData } from "@types";
+
 import type { CommandHandler } from "./command-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
-import type { Server } from "bun";
 import { FlatFileStorage } from "./flat-file-storage.ts";
-import { join } from "node:path";
 import { SessionStorage } from "./session-storage.ts";
-import index from "./index.html";
 
-export const createServer = (
-  handlers: CommandHandler<keyof Commands>[],
-  eventBus: IEventBus,
-  developmentMode?: boolean,
-) => {
+interface ServerConfig {
+  handlers: CommandHandler<keyof Commands>[];
+  eventBus: IEventBus;
+  developmentMode?: boolean;
+  indexPage: Bun.HTMLBundle;
+}
+
+export const createServer = ({
+  handlers,
+  eventBus,
+  developmentMode,
+  indexPage,
+}: ServerConfig) => {
   return Bun.serve({
     port: 3015,
     development: developmentMode ?? false,
     routes: {
-      "/": index,
+      "/": indexPage,
       "/socket": (
         request,
         server: Server<{ client: ServerWebsocketClient }>,

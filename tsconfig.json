@@ -4,6 +4,9 @@
     "paths": {
       "@types": ["./src/types/index.ts"],
       "@core": ["./src/core/index.ts"],
+      "@data": ["./src/data/index.ts"],
+      "@client": ["./src/client/index.ts"],
+      "@handlers": ["./src/handlers/index.ts"],
       "@test-helpers": ["./src/test-helpers/index.ts"]
     },
     "lib": ["ESNext", "dom"],

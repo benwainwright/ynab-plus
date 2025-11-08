@@ -1,5 +1,5 @@
 import { v7 } from "uuid";
-import type { ICommandMessage, ICommandResponse } from "@types";
+import type { ICommandMessage } from "@types";
 import { SocketEventListener } from "./socket-event-listener.ts";
 
 export class CommandClient {

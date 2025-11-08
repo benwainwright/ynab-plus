@@ -1,13 +1,5 @@
 import { CommandHandler } from "@core";
-import type {
-  ICommandMessage,
-  IEventBus,
-  IHandleContext,
-  IRepository,
-  ISessionData,
-  IUser,
-} from "@types";
-import type { SessionStorage } from "../core/session-storage.ts";
+import type { IHandleContext, IRepository, IUser } from "@types";
 
 export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser"> {
   public override readonly commandName = "GetCurrentUser";

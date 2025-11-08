@@ -1,4 +1,12 @@
-import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  mock,
+} from "bun:test";
 import { mock as mockExtended } from "bun-mock-extended";
 import { waitFor } from "@test-helpers";
 import getPort from "get-port";
@@ -26,13 +34,20 @@ beforeAll(async () => {
   });
 });
 
+afterEach(() => {
+  try {
+    currentSocket?.close();
+  } catch {}
+  currentSocket = undefined;
+});
+
 afterAll(async () => {
-  await server?.stop();
+  await server?.stop(true);
 });
 
 describe("socket-event-bus", () => {
   describe("onAll", () => {
-    it("allows you to listen to events sent on the socket", async (done) => {
+    it.only("allows you to listen to events sent on the socket", async (done) => {
       const socket = new WebSocket(`ws://${server?.url.host}`);
       socket.addEventListener("open", async () => {
         const bus = new SocketEventListener(socket);

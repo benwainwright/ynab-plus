@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { App } from "../client/app.tsx";
+import { App } from "./app.tsx";
 
 const rootElement = document.querySelector("#root");
 

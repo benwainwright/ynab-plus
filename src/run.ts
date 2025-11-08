@@ -1,19 +1,25 @@
 import { EventEmitter } from "node:events";
 import { Database } from "bun:sqlite";
-import { createServer } from "@core";
+
+import { createServer, EventBus } from "@core";
+import { indexPage } from "@client";
+
 import { logger } from "./logger.ts";
-import { EventBus } from "./core/event-bus.ts";
-import { HelloWorldHandler } from "./handlers/index.ts";
-import { RegisterCommandHandler } from "./handlers/register-user-command.ts";
-import { UserRepository } from "./data/user-repository.ts";
-import { GetCurrentUserCommandHandler } from "./handlers/get-current-user-command-handler.ts";
+
+import {
+  HelloWorldHandler,
+  RegisterCommandHandler,
+  GetCurrentUserCommandHandler,
+} from "@handlers";
+
+import { SqliteUserRepository } from "@data";
 
 const events = new EventEmitter();
 const bus = new EventBus(events, `ynab-app`);
 
 const database = new Database("ynab-plus.sqlite", { strict: true });
 
-const userRepository = new UserRepository(`users`, database);
+const userRepository = new SqliteUserRepository(`users`, database);
 
 userRepository.create();
 
@@ -23,6 +29,6 @@ const handlers = [
   new GetCurrentUserCommandHandler(userRepository),
 ];
 
-const server = createServer(handlers, bus);
+const server = createServer({ handlers, eventBus: bus, indexPage });
 
 logger.log("info", `Server running at ${server.url}`);

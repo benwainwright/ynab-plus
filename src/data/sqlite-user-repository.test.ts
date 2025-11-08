@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
-import { UserRepository } from "./user-repository.ts";
+import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { Database } from "bun:sqlite";
 
 describe("the user repository", () => {
   it("can update and return a user", async () => {
-    const repo = new UserRepository(
+    const repo = new SqliteUserRepository(
       "user",
       new Database(":memory:", { strict: true }),
     );
@@ -27,7 +27,7 @@ describe("the user repository", () => {
   });
 
   it("returns undefined if not present", async () => {
-    const repo = new UserRepository(
+    const repo = new SqliteUserRepository(
       "user",
       new Database(":memory:", { strict: true }),
     );

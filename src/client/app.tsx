@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { useServer } from "./use-server.ts";
+import { useEffect } from "react";
+
 import styles from "./app.module.css";
 import { useSocket } from "./use-socket.ts";
 import { useCommand } from "./use-command.ts";
-import type { IUser } from "@types";
 
 export const App = () => {
   const { socket } = useSocket("ws://localhost:3015/socket");
