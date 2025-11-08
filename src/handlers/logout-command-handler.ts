@@ -6,7 +6,10 @@ export class LogoutCommandHandler extends CommandHandler<"Logout"> {
 
   public override async handle({
     session,
+    eventBus,
   }: IHandleContext<"Logout">): Promise<undefined> {
     await session.set({ userId: undefined });
+
+    eventBus.emit("LogoutSuccess", undefined);
   }
 }

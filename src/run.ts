@@ -29,6 +29,11 @@ const handlers = [
   new GetCurrentUserCommandHandler(userRepository),
 ];
 
-const server = createServer({ handlers, eventBus: bus, indexPage });
+const server = createServer({
+  handlers,
+  eventBus: bus,
+  indexPage,
+  developmentMode: false,
+});
 
 logger.log("info", `Server running at ${server.url}`);

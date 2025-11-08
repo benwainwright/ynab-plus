@@ -1,7 +1,9 @@
-export interface IEventPacket<TKey extends keyof Events> {
-  key: TKey;
-  data: Events[TKey];
-}
+export type IEventPacket<TKey extends keyof Events> = TKey extends keyof Events
+  ? {
+      key: TKey;
+      data: Events[TKey];
+    }
+  : never;
 
 export type IListener = (arg: IEventPacket<keyof Events>) => void;
 

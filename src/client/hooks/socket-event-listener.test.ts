@@ -1,5 +1,4 @@
 import { describe, expect, it, mock } from "bun:test";
-import { mock as mockExtended } from "bun-mock-extended";
 import { createSocketHarness, waitFor } from "@test-helpers";
 import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IEventPacket } from "@types";

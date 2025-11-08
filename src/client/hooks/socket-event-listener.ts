@@ -29,17 +29,10 @@ export class SocketEventListener implements IEventListener {
 
   public on<TKey extends keyof Events>(
     key: TKey,
-    callback: (data: Events[TKey]) => void,
+    callback: (data: IEventPacket<TKey>["data"]) => void,
   ): string {
     const handler = (packet: IEventPacket<keyof Events>) => {
-      const hasKey = <K extends keyof Events>(
-        p: IEventPacket<keyof Events>,
-        key: K,
-      ): p is IEventPacket<K> => {
-        return p.key === key;
-      };
-
-      if (hasKey(packet, key)) {
+      if (packet.key === key) {
         callback(packet.data);
       }
     };

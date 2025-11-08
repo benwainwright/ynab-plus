@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CommandClient } from "./command-client.ts";
-import { ClientError } from "./client-error.ts";
+import { AppError } from "@errors";
 
 export const useCommand = <TKey extends keyof Commands>(
   command: TKey,
@@ -13,7 +13,7 @@ export const useCommand = <TKey extends keyof Commands>(
 
   const send = async (data: Commands[TKey]["request"]) => {
     if (!socket) {
-      throw new ClientError("Socket not initialised");
+      throw new AppError("Socket not initialised");
     }
     const client = new CommandClient(socket);
     setSending(true);

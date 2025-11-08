@@ -1,0 +1,46 @@
+import { useContext, useState } from "react";
+import { useEvents } from "./use-events.ts";
+import { SocketContext } from "./socket-provider.tsx";
+
+interface FooterMessage {
+  type: "error" | "info";
+  message: string;
+}
+
+export const useFooterMessage = () => {
+  const [message, setMessage] = useState<FooterMessage | undefined>();
+  const { socket } = useContext(SocketContext);
+  useEvents(socket, (event) => {
+    switch (event.key) {
+      case "ApplicationError":
+        setMessage({
+          type: "error",
+          message: event.data.message,
+        });
+        break;
+
+      case "LoginSuccess":
+        setMessage({
+          type: "info",
+          message: "Login Successful",
+        });
+        break;
+
+      case "LogoutSuccess":
+        setMessage({
+          type: "info",
+          message: "Logout Successful",
+        });
+        break;
+
+      case "RegisterSuccess":
+        setMessage({
+          type: "info",
+          message: "Registration Successful",
+        });
+        break;
+    }
+  });
+
+  return message;
+};

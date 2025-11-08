@@ -42,20 +42,10 @@ export class EventBus implements IEventBus {
 
   public on<TKey extends keyof Events>(
     key: TKey,
-    callback: (data: Events[TKey]) => void,
+    callback: (data: IEventPacket<TKey>["data"]) => void,
   ): string {
-    const handler = (packet: {
-      key: keyof Events;
-      data: Events[keyof Events];
-    }) => {
-      const hasKey = <K extends keyof Events>(
-        p: IEventPacket<keyof Events>,
-        key: K,
-      ): p is IEventPacket<K> => {
-        return p.key === key;
-      };
-
-      if (hasKey(packet, key)) {
+    const handler: IListener = (packet) => {
+      if (packet.key === key) {
         callback(packet.data);
       }
     };

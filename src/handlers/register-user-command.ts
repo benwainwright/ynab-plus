@@ -11,6 +11,7 @@ export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
   public override async handle({
     command,
     session,
+    eventBus,
   }: IHandleContext<"RegisterCommand">) {
     const { password, username, email } = command.data;
 
@@ -25,6 +26,7 @@ export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
     });
     await session.set({ userId: id });
 
+    eventBus.emit("RegisterSuccess", undefined);
     return { success: true, id };
   }
 }
