@@ -27,6 +27,8 @@ export const createServer = ({
     development: developmentMode ?? false,
     routes: {
       "/": indexPage,
+      "/*": () =>
+        Response.json({}, { status: 301, headers: { location: "/" } }),
       "/socket": (
         request,
         server: Server<{ client: ServerWebsocketClient }>,

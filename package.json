@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
     "type-check": "tsgo",
     "prepare": "husky",
     "format": "prettier --write ."
