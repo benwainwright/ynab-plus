@@ -5,11 +5,14 @@ import { useContext } from "react";
 
 export const App = () => {
   const { socket } = useContext(SocketContext);
-  const user = useCurrentUser(socket);
+  const { currentUser, currentUserLoaded } = useCurrentUser(socket);
   return (
     <div className={styles.wrapper}>
       <Header title={"YNAB Plus!"} />
-      <AppRoutes currentUser={user} />
+      <AppRoutes
+        currentUser={currentUser}
+        currentUserLoaded={currentUserLoaded}
+      />
       <Footer />
     </div>
   );

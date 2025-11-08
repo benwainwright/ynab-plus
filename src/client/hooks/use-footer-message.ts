@@ -26,6 +26,13 @@ export const useFooterMessage = () => {
         });
         break;
 
+      case "LoginFail":
+        setMessage({
+          type: "error",
+          message: "Login Failed",
+        });
+        break;
+
       case "LogoutSuccess":
         setMessage({
           type: "info",

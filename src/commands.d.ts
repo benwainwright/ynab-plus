@@ -6,6 +6,13 @@ declare global {
       request: undefined;
       response: void;
     };
+    LoginCommand: {
+      request: {
+        username: string;
+        password: string;
+      };
+      response: { success: true; id: string } | { success: false };
+    };
     RegisterCommand: {
       request: {
         username: string;

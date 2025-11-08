@@ -6,15 +6,22 @@ import type { IUser } from "@types";
 
 interface AppRouteProps {
   currentUser: IUser | undefined;
+  currentUserLoaded: boolean;
 }
 
-export const AppRoutes = ({ currentUser }: AppRouteProps) => {
+export const AppRoutes = ({
+  currentUser,
+  currentUserLoaded,
+}: AppRouteProps) => {
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <RouteGuard currentUser={currentUser}>
+          <RouteGuard
+            currentUser={currentUser}
+            currentUserLoaded={currentUserLoaded}
+          >
             <Dashboard />
           </RouteGuard>
         }

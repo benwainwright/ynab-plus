@@ -3,6 +3,7 @@ declare global {
     SocketOpened: undefined;
     LogoutSuccess: undefined;
     LoginSuccess: undefined;
+    LoginFail: undefined;
     RegisterSuccess: undefined;
     ApplicationError: {
       stack: {

@@ -12,9 +12,8 @@ describe("the user repository", () => {
     repo.create();
 
     const data = {
-      id: "019a643d-7c86-7000-b504-208b6717b472",
       email: "bwainwright28@gmail.com",
-      username: "ben",
+      id: "ben",
       passwordHash:
         "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
     };

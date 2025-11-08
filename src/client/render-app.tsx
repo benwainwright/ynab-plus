@@ -5,8 +5,6 @@ import { SocketProvider } from "@client/hooks";
 
 const rootElement = document.querySelector("#root");
 
-console.log(rootElement);
-
 if (!rootElement) {
   throw new Error("Root element not found!");
 }
@@ -14,7 +12,7 @@ if (!rootElement) {
 const root = createRoot(rootElement);
 root.render(
   <BrowserRouter>
-    <SocketProvider url={`ws://localhost:3015`}>
+    <SocketProvider url={`ws://localhost:3015/socket`}>
       <App />
     </SocketProvider>
   </BrowserRouter>,

@@ -4,6 +4,7 @@ import type { IUser } from "@types";
 
 export const useCurrentUser = (socket: WebSocket | undefined) => {
   const { send, result } = useCommand("GetCurrentUser", socket);
+  const [currentUserLoaded, setCurrentUserLoaded] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUser>();
 
   useEffect(() => {
@@ -17,8 +18,9 @@ export const useCurrentUser = (socket: WebSocket | undefined) => {
   useEffect(() => {
     if (result) {
       setCurrentUser(result);
+      setCurrentUserLoaded(true);
     }
   }, [result]);
 
-  return currentUser;
+  return { currentUser, currentUserLoaded };
 };

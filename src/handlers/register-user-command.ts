@@ -16,17 +16,15 @@ export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
     const { password, username, email } = command.data;
 
     const hash = await Bun.password.hash(password);
-    const id = Bun.randomUUIDv7();
 
     await this.users.save({
-      id,
+      id: username,
       email,
-      username,
       passwordHash: hash,
     });
-    await session.set({ userId: id });
+    await session.set({ userId: username });
 
     eventBus.emit("RegisterSuccess", undefined);
-    return { success: true, id };
+    return { success: true, id: username };
   }
 }

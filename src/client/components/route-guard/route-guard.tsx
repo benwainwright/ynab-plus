@@ -4,11 +4,16 @@ import { Navigate } from "react-router";
 
 interface RouteGuardProps {
   currentUser: IUser | undefined;
+  currentUserLoaded: boolean;
   children: ReactNode;
 }
 
-export const RouteGuard = ({ currentUser, children }: RouteGuardProps) => {
-  if (!currentUser) {
+export const RouteGuard = ({
+  currentUser,
+  children,
+  currentUserLoaded,
+}: RouteGuardProps) => {
+  if (currentUserLoaded && !currentUser) {
     return <Navigate to="/login" replace />;
   }
 

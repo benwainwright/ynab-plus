@@ -33,7 +33,11 @@ export class ServerWebsocketClient {
         );
 
         if (!handler) {
-          throw new AppError("Handler not found");
+          const message =
+            "key" in parsed
+              ? `Handler for ${parsed.key} not found`
+              : `Handler not found`;
+          throw new AppError(message);
         }
 
         const response = await handler.handle({

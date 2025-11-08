@@ -1,3 +1,8 @@
 export const Dashboard = () => {
-  return <>Dashboard</>;
+  return (
+    <>
+      <h2>Dashboard</h2>
+      <p>You are now logged in</p>
+    </>
+  );
 };

@@ -10,9 +10,11 @@ import {
   HelloWorldHandler,
   RegisterCommandHandler,
   GetCurrentUserCommandHandler,
+  LogoutCommandHandler,
 } from "@handlers";
 
 import { SqliteUserRepository } from "@data";
+import { LoginCommandHandler } from "./handlers/login-command.ts";
 
 const events = new EventEmitter();
 const bus = new EventBus(events, `ynab-app`);
@@ -26,6 +28,8 @@ userRepository.create();
 const handlers = [
   new HelloWorldHandler(),
   new RegisterCommandHandler(userRepository),
+  new LoginCommandHandler(userRepository),
+  new LogoutCommandHandler(),
   new GetCurrentUserCommandHandler(userRepository),
 ];
 

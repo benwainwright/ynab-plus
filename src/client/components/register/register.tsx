@@ -1,9 +1,11 @@
-import { SocketContext, useCommand } from "@client/hooks";
+import { SocketContext, useCommand, useEvents } from "@client/hooks";
+import { useNavigate } from "react-router";
 import { useContext } from "react";
 
 export const Register = () => {
   const { socket } = useContext(SocketContext);
   const { send } = useCommand("RegisterCommand", socket);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
     await send({
@@ -12,6 +14,12 @@ export const Register = () => {
       password: data.get("password")?.toString() ?? "",
     });
   };
+
+  useEvents(socket, (events) => {
+    if (events.key === "RegisterSuccess") {
+      navigate("/");
+    }
+  });
 
   return (
     <form action={onSubmit}>
