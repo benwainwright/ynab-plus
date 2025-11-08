@@ -1,26 +1,18 @@
 import { useEffect, useState } from "react";
 import { useCommand } from "./use-command.ts";
-import type { IUser } from "@types";
 
 export const useCurrentUser = (socket: WebSocket | undefined) => {
   const { send, result } = useCommand("GetCurrentUser", socket);
   const [currentUserLoaded, setCurrentUserLoaded] = useState(false);
-  const [currentUser, setCurrentUser] = useState<IUser>();
 
   useEffect(() => {
     (async () => {
       if (socket) {
         await send(undefined);
+        setCurrentUserLoaded(true);
       }
     })();
   }, [socket]);
 
-  useEffect(() => {
-    if (result) {
-      setCurrentUser(result);
-      setCurrentUserLoaded(true);
-    }
-  }, [result]);
-
-  return { currentUser, currentUserLoaded };
+  return { currentUser: result, currentUserLoaded };
 };

@@ -13,6 +13,11 @@ export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser
   }: IHandleContext<"GetCurrentUser">): Promise<IUser | undefined> {
     const id = await session.get();
 
-    return id?.userId ? this.users.get(id.userId) : undefined;
+    if (id?.userId) {
+      const user = this.users.get(id.userId);
+      return user;
+    }
+
+    return undefined;
   }
 }

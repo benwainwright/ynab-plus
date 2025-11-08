@@ -2,26 +2,13 @@ import { Route, Routes } from "react-router";
 
 import { Dashboard, Login, Register, RouteGuard } from "@client/components";
 
-import type { IUser } from "@types";
-
-interface AppRouteProps {
-  currentUser: IUser | undefined;
-  currentUserLoaded: boolean;
-}
-
-export const AppRoutes = ({
-  currentUser,
-  currentUserLoaded,
-}: AppRouteProps) => {
+export const AppRoutes = () => {
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <RouteGuard
-            currentUser={currentUser}
-            currentUserLoaded={currentUserLoaded}
-          >
+          <RouteGuard>
             <Dashboard />
           </RouteGuard>
         }

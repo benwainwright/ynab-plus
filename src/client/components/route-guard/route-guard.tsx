@@ -1,19 +1,14 @@
-import type { IUser } from "@types";
-import type { ReactNode } from "react";
+import { useContext, type ReactNode } from "react";
 import { Navigate } from "react-router";
+import { CurrentUserContext } from "@client/hooks";
 
 interface RouteGuardProps {
-  currentUser: IUser | undefined;
-  currentUserLoaded: boolean;
   children: ReactNode;
 }
 
-export const RouteGuard = ({
-  currentUser,
-  children,
-  currentUserLoaded,
-}: RouteGuardProps) => {
-  if (currentUserLoaded && !currentUser) {
+export const RouteGuard = ({ children }: RouteGuardProps) => {
+  const { user, finishedLoading } = useContext(CurrentUserContext);
+  if (finishedLoading && !user) {
     return <Navigate to="/login" replace />;
   }
 
