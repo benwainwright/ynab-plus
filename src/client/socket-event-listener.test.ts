@@ -1,104 +1,126 @@
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  mock,
-} from "bun:test";
-import { mock as mockExtended } from "bun-mock-extended";
+import { describe, expect, it, mock } from "bun:test";
+import { mock as mockExtended, mockFn } from "bun-mock-extended";
 import { waitFor } from "@test-helpers";
-import getPort from "get-port";
 import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IEventPacket } from "@types";
 
-let server: Bun.Server<undefined> | undefined;
-let currentSocket: Bun.ServerWebSocket | undefined;
+type MessageListener = (event: MessageEvent) => void;
+type EventListenerRef = EventListenerOrEventListenerObject;
 
-beforeAll(async () => {
-  server = Bun.serve({
-    port: await getPort(),
-    fetch(req, server) {
-      if (server.upgrade(req)) {
-        return;
-      }
-      return new Response("Upgrade failed", { status: 500 });
-    },
-    websocket: {
-      open: (socket) => {
-        currentSocket = socket;
-      },
-      message: () => {},
-    },
+const createSocketHarness = () => {
+  const socket = mockExtended<WebSocket>({
+    addEventListener: mockFn(),
+    removeEventListener: mockFn(),
   });
-});
 
-afterEach(() => {
-  try {
-    currentSocket?.close();
-  } catch {}
-  currentSocket = undefined;
-});
+  const listeners = new Set<MessageListener>();
+  const listenerMap = new Map<EventListenerRef, MessageListener>();
 
-afterAll(async () => {
-  await server?.stop(true);
-});
+  const toMessageListener = (listener: EventListenerRef): MessageListener => {
+    if (typeof listener === "function") {
+      return listener as MessageListener;
+    }
+
+    return (event: MessageEvent) => {
+      listener.handleEvent(event);
+    };
+  };
+
+  socket.addEventListener.mockImplementation((type, listener) => {
+    if (type !== "message") {
+      return;
+    }
+
+    const messageListener = toMessageListener(listener);
+    listenerMap.set(listener, messageListener);
+    listeners.add(messageListener);
+  });
+
+  socket.removeEventListener.mockImplementation((type, listener) => {
+    if (type !== "message") {
+      return;
+    }
+
+    const messageListener = listenerMap.get(listener);
+
+    if (!messageListener) {
+      return;
+    }
+
+    listeners.delete(messageListener);
+    listenerMap.delete(listener);
+  });
+
+  const send = (packet: unknown) => {
+    const event = new MessageEvent("message", {
+      data: JSON.stringify(packet),
+    });
+
+    for (const listener of listeners) {
+      listener(event);
+    }
+  };
+
+  return { socket, send };
+};
 
 describe("socket-event-bus", () => {
   describe("onAll", () => {
-    it.only("allows you to listen to events sent on the socket", async (done) => {
-      const socket = new WebSocket(`ws://${server?.url.host}`);
-      socket.addEventListener("open", async () => {
-        const bus = new SocketEventListener(socket);
+    it("allows you to listen to events sent on the socket", async () => {
+      const { socket, send } = createSocketHarness();
+      const bus = new SocketEventListener(socket);
 
-        const mockListener = mock();
+      const mockListener = mock();
 
-        const data: IEventPacket<"AppInitialised"> = {
-          key: "AppInitialised",
-          data: {
-            port: 2,
-            url: "foo",
-          },
-        };
+      const data: IEventPacket<"AppInitialised"> = {
+        key: "AppInitialised",
+        data: {
+          port: 2,
+          url: "foo",
+        },
+      };
 
-        bus.onAll(mockListener);
-        currentSocket?.send(JSON.stringify(data));
-        await waitFor(async () => {
-          expect(mockListener).toHaveBeenCalled();
-        });
-        done();
+      bus.onAll(mockListener);
+      send(data);
+
+      await waitFor(() => {
+        expect(mockListener).toHaveBeenCalledWith(data);
       });
+
+      bus[Symbol.dispose]();
     });
   });
+
   describe("on", () => {
-    it("allows you to listen to events sent on the socket", async (done) => {
-      const socket = new WebSocket(`ws://${server?.url.host}`);
-      socket.addEventListener("open", async () => {
-        const bus = new SocketEventListener(socket);
+    it("allows you to listen to events sent on the socket", async () => {
+      const { socket, send } = createSocketHarness();
+      const bus = new SocketEventListener(socket);
 
-        const mockListener = mock();
+      const mockListener = mock();
 
-        const data: IEventPacket<"AppInitialised"> = {
-          key: "AppInitialised",
-          data: {
-            port: 2,
-            url: "foo",
-          },
-        };
+      const data: IEventPacket<"AppInitialised"> = {
+        key: "AppInitialised",
+        data: {
+          port: 2,
+          url: "foo",
+        },
+      };
 
-        bus.on("AppInitialised", mockListener);
-        currentSocket?.send(JSON.stringify(data));
+      bus.on("AppInitialised", mockListener);
+      send(data);
 
-        await waitFor(async () => {
-          expect(mockListener).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(mockListener).toHaveBeenCalledWith({
+          port: 2,
+          url: "foo",
         });
-        done();
       });
+
+      bus[Symbol.dispose]();
     });
 
-    it("returns an identifier that can be used to clear the listener", async () => {
-      const socket = mockExtended<WebSocket>();
+    it("returns an identifier that can be used to clear the listener", () => {
+      const { socket, send } = createSocketHarness();
 
       const bus = new SocketEventListener(socket);
 
@@ -113,7 +135,7 @@ describe("socket-event-bus", () => {
       };
 
       const identifier = bus.on("AppInitialised", mockListener);
-      currentSocket?.send(JSON.stringify(data));
+      send(data);
       bus.off(identifier);
       expect(socket.removeEventListener).toHaveBeenCalledWith(
         "message",
@@ -124,25 +146,15 @@ describe("socket-event-bus", () => {
 
   describe("removeAll", () => {
     it("clears all the listeners", () => {
-      const socket = mockExtended<WebSocket>();
+      const { socket } = createSocketHarness();
 
       const bus = new SocketEventListener(socket);
 
       const mockListener = mock();
       const mockListener2 = mock();
 
-      const data: IEventPacket<"AppInitialised"> = {
-        key: "AppInitialised",
-        data: {
-          port: 2,
-          url: "foo",
-        },
-      };
-
       bus.on("AppInitialised", mockListener);
       bus.on("AppClosing", mockListener2);
-
-      currentSocket?.send(JSON.stringify(data));
       bus.removeAll();
 
       expect(socket.removeEventListener).toHaveBeenCalledTimes(2);
@@ -151,7 +163,7 @@ describe("socket-event-bus", () => {
 
   describe("symbol dispose", () => {
     it("clears all the listeners", () => {
-      const socket = mockExtended<WebSocket>();
+      const { socket } = createSocketHarness();
 
       {
         using bus = new SocketEventListener(socket);
@@ -159,18 +171,8 @@ describe("socket-event-bus", () => {
         const mockListener = mock();
         const mockListener2 = mock();
 
-        const data: IEventPacket<"AppInitialised"> = {
-          key: "AppInitialised",
-          data: {
-            port: 2,
-            url: "foo",
-          },
-        };
-
         bus.on("AppInitialised", mockListener);
         bus.on("AppClosing", mockListener2);
-
-        currentSocket?.send(JSON.stringify(data));
       }
 
       expect(socket.removeEventListener).toHaveBeenCalledTimes(2);
