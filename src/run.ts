@@ -7,7 +7,6 @@ import { indexPage } from "@client";
 import { logger } from "./logger.ts";
 
 import {
-  HelloWorldHandler,
   RegisterCommandHandler,
   GetCurrentUserCommandHandler,
   LogoutCommandHandler,
@@ -26,7 +25,6 @@ const userRepository = new SqliteUserRepository(`users`, database);
 userRepository.create();
 
 const handlers = [
-  new HelloWorldHandler(),
   new RegisterCommandHandler(userRepository),
   new LoginCommandHandler(userRepository),
   new LogoutCommandHandler(),
