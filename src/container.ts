@@ -22,6 +22,7 @@ import { indexPage } from "@client";
 
 import {
   GetCurrentUserCommandHandler,
+  GetUserCommandHandler,
   ListUsersCommandHandler,
   LoginCommandHandler,
   LogoutCommandHandler,
@@ -49,6 +50,7 @@ container.bind(handlerToken).to(ListUsersCommandHandler);
 container.bind(handlerToken).to(LoginCommandHandler);
 container.bind(handlerToken).to(LogoutCommandHandler);
 container.bind(handlerToken).to(RegisterCommandHandler);
+container.bind(handlerToken).to(GetUserCommandHandler);
 
 container.bind(indexPageToken).toConstantValue(indexPage);
 container.bind(Container).toConstantValue(container);

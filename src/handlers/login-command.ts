@@ -1,13 +1,11 @@
 import { CommandHandler } from "@core";
 import { userRepoToken } from "@tokens";
-import type { IHandleContext, IRepository, IUser } from "@types";
+import type { IHandleContext, IRepository, IUser, Permission } from "@types";
 import { inject, injectable } from "inversify";
 
 @injectable()
 export class LoginCommandHandler extends CommandHandler<"LoginCommand"> {
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "public",
-  ];
+  public override requiredPermissions: Permission[] = ["public"];
 
   public constructor(
     @inject(userRepoToken)

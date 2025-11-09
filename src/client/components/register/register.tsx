@@ -1,14 +1,14 @@
-import { SocketContext, useCommand, useEvents } from "@client/hooks";
+import { CommandClient, getOpenSocket, useEvents } from "@client/hooks";
 import { useNavigate } from "react-router";
-import { useContext } from "react";
+import { use } from "react";
 
 export const Register = () => {
-  const { socket } = useContext(SocketContext);
-  const { send } = useCommand("RegisterCommand", socket);
+  const socket = use(getOpenSocket());
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
-    await send({
+    const client = new CommandClient(socket);
+    await client.send("RegisterCommand", {
       username: data.get("username")?.toString() ?? "",
       email: data.get("email")?.toString() ?? "",
       password: data.get("password")?.toString() ?? "",

@@ -34,6 +34,7 @@
     "inversify": "^7.10.4",
     "react-dom": "^19.2.0",
     "react-router": "^7.9.5",
+    "react-router-dom": "^7.9.5",
     "reflect-metadata": "^0.2.2",
     "stacktracey": "^2.1.8",
     "tsyringe": "^4.10.0",

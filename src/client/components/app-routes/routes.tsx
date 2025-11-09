@@ -13,6 +13,7 @@ interface Route {
   name: string;
   tags: string[];
   path: string;
+  hideInMenu?: boolean;
   public?: boolean;
   children?: Route[];
 }
@@ -41,14 +42,13 @@ export const routes: Route[] = [
     tags: ["user"],
     name: "users",
     render: () => <Users />,
-    children: [
-      {
-        path: "edit/:userId",
-        tags: ["user"],
-        name: "editUser",
-        render: () => <EditUser />,
-      },
-    ],
+  },
+  {
+    path: "users/edit/:userId",
+    tags: ["user"],
+    name: "editUser",
+    hideInMenu: true,
+    render: () => <EditUser />,
   },
   {
     path: "",

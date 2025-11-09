@@ -9,3 +9,4 @@ export { Footer } from "./footer/index.ts";
 export { Logout } from "./logout/index.ts";
 export { Users } from "./users/index.ts";
 export { EditUser } from "./edit-user/index.ts";
+export { NotFound } from "./not-found/index.ts";

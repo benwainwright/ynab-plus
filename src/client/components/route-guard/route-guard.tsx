@@ -1,7 +1,7 @@
-import { useContext, type ReactNode } from "react";
+import { use, type ReactNode } from "react";
 import { Navigate } from "react-router";
-import { CurrentUserContext } from "@client/hooks";
 import { canAccess } from "./can-access.ts";
+import { getCurrentUser } from "@client/hooks";
 
 interface RouteGuardProps {
   children: ReactNode;
@@ -10,12 +10,10 @@ interface RouteGuardProps {
 }
 
 export const RouteGuard = ({ children, routeTags }: RouteGuardProps) => {
-  const { user, finishedLoading } = useContext(CurrentUserContext);
-
+  const user = use(getCurrentUser());
   if (
     !canAccess({
       user,
-      finishedLoading,
       routeTags,
     })
   ) {

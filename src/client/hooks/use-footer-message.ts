@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { use, useState } from "react";
 import { useEvents } from "./use-events.ts";
-import { SocketContext } from "./socket-provider.tsx";
+import { getOpenSocket } from "./get-open-socket.ts";
 
 interface FooterMessage {
   type: "error" | "info";
@@ -9,7 +9,7 @@ interface FooterMessage {
 
 export const useFooterMessage = () => {
   const [message, setMessage] = useState<FooterMessage | undefined>();
-  const { socket } = useContext(SocketContext);
+  const socket = use(getOpenSocket());
   useEvents(socket, (event) => {
     switch (event.key) {
       case "ApplicationError":

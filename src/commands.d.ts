@@ -36,6 +36,12 @@ declare global {
       request: undefined;
       response: IUser | undefined;
     };
+    GetUser: {
+      request: {
+        username: string;
+      };
+      response: IUser | undefined;
+    };
     HelloWorldCommand: {
       request: {
         data: string;

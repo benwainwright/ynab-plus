@@ -1,15 +1,51 @@
+import { getUser } from "@client/hooks";
+import { use } from "react";
 import { useParams } from "react-router";
 
 export const EditUser = () => {
-  const params = useParams();
-  if (!params) {
+  const { userId } = useParams();
+
+  if (!userId) {
     return <p>User ID expected!</p>;
+  }
+
+  const user = use(getUser(userId));
+
+  if (!user) {
+    return <p>User was not found!</p>;
   }
 
   return (
     <>
       <h2>Edit User</h2>
-      <p>{params["userId"]}</p>
+
+      <form>
+        <fieldset>
+          <label>
+            Username
+            <input name="username" placeholder="Username" value={user.id} />
+          </label>
+          <label>
+            Email
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              autoComplete="email"
+              value={user.email}
+            />
+          </label>
+          <label>
+            Permissions
+            <input
+              type="text"
+              name="permissions"
+              placeholder="Permissions"
+              value={user.permissions}
+            />
+          </label>
+        </fieldset>
+      </form>
     </>
   );
 };

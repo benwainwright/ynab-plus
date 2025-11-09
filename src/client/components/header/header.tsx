@@ -1,13 +1,13 @@
-import { CurrentUserContext } from "@client/hooks";
-import { useContext } from "react";
+import { getCurrentUser } from "@client/hooks";
 import { canAccess, routes } from "@client/components";
 import { Link } from "react-router";
+import { use } from "react";
 
 interface HeaderProps {
   title: string;
 }
 export const Header = ({ title }: HeaderProps) => {
-  const { user, finishedLoading } = useContext(CurrentUserContext);
+  const user = use(getCurrentUser());
 
   return (
     <header>
@@ -22,10 +22,10 @@ export const Header = ({ title }: HeaderProps) => {
             .filter((route) =>
               canAccess({
                 user,
-                finishedLoading,
                 routeTags: route.tags,
               }),
             )
+            .filter((route) => !route.hideInMenu)
             .map((route) => (
               <li>
                 <Link to={route.path}>{route.name}</Link>

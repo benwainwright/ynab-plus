@@ -1,22 +1,25 @@
-import { SocketContext, useCommand, useEvents } from "@client/hooks";
-import { useContext } from "react";
+import { CommandClient, getOpenSocket, useEvents } from "@client/hooks";
 import { Link, useNavigate } from "react-router";
+import { delay } from "./delay.ts";
+import { use } from "react";
 
 export const Login = () => {
-  const { socket } = useContext(SocketContext);
-  const { send } = useCommand("LoginCommand", socket);
+  const socket = use(getOpenSocket());
 
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
-    await send({
+    const client = new CommandClient(socket);
+
+    await client.send("LoginCommand", {
       username: data.get("username")?.toString() ?? "",
       password: data.get("password")?.toString() ?? "",
     });
   };
 
-  useEvents(socket, (events) => {
+  useEvents(socket, async (events) => {
     if (events.key === "LoginSuccess") {
+      await delay(2);
       navigate("/");
     }
   });

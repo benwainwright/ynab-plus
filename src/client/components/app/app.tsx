@@ -1,15 +1,15 @@
-import { CurrentUserProvider } from "@client/hooks";
+import { Suspense } from "react";
 import styles from "./app.module.css";
-import { AppRoutes, Header, Footer } from "@client/components";
+import { AppRoutes, Footer, Header } from "@client/components";
 
 export const App = () => {
   return (
-    <CurrentUserProvider>
+    <Suspense fallback={<div className={styles.wrapper} aria-busy="true" />}>
       <div className={styles.wrapper}>
         <Header title={"YNAB Plus!"} />
         <AppRoutes />
         <Footer />
       </div>
-    </CurrentUserProvider>
+    </Suspense>
   );
 };

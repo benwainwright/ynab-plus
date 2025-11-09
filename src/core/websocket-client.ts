@@ -1,7 +1,5 @@
 import type { IEventBus, IServerSocketClient, ISessionData } from "@types";
 
-import StackTracey from "stacktracey";
-
 import type { CommandHandler } from "./command-handler.ts";
 import { AppError } from "@errors";
 import type { SessionStorage } from "./session-storage.ts";

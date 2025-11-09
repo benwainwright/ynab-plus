@@ -1,42 +1,33 @@
-import { SocketContext, useCommand } from "@client/hooks";
-import { useContext, useEffect } from "react";
+import { listUsers } from "@client/hooks";
+import { use } from "react";
 import { Link } from "react-router";
 
 export const Users = () => {
-  const { socket } = useContext(SocketContext);
-  const { send, result } = useCommand("ListUsersCommand", socket);
-
-  useEffect(() => {
-    (async () => {
-      await send({ limit: 30, offset: 0 });
-    })();
-  }, []);
+  const users = use(listUsers(0, 30));
 
   return (
     <section>
       <h2>Users</h2>
-      {result && (
-        <table>
-          <thead>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Permissions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
             <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Permissions</th>
+              <td>
+                <Link to={`/users/edit/${user.id}`}>{user.id}</Link>
+              </td>
+              <td>{user.email}</td>
+              <td>{user.permissions.join(", ")}</td>
             </tr>
-          </thead>
-          <tbody>
-            {result.map((user) => (
-              <tr>
-                <td>
-                  <Link to={`/users/edit/${user.id}`}>{user.id}</Link>
-                </td>
-                <td>{user.email}</td>
-                <td>{user.permissions.join(", ")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 };
