@@ -1,14 +1,7 @@
-import type { IEventBus, IServerSocketClient } from "@types";
+import type { IEventBus } from "@types";
 import { Container, inject, injectable } from "inversify";
-import type { Server } from "bun";
-import {
-  devModeToken,
-  eventBusToken,
-  indexPageToken,
-  requestToken,
-  serverSocketClient,
-  userIdSessionStore,
-} from "@tokens";
+import { devModeToken, eventBusToken, indexPageToken } from "@tokens";
+import { socketRequestHandler } from "./socket-request-handler.ts";
 
 @injectable()
 export class AppServer {
@@ -32,36 +25,8 @@ export class AppServer {
       development: this.developmentMode ?? false,
       routes: {
         "/": this.indexPage,
-        "/socket": (
-          request,
-          server: Server<{ client: IServerSocketClient }>,
-        ) => {
-          const requestContainer = new Container({
-            parent: this.container,
-          });
-
-          requestContainer.bind(requestToken).toConstantValue(request);
-          const sessionStorage = requestContainer.get(userIdSessionStore);
-
-          const childEventBus = this.eventBus.child(
-            sessionStorage.getSessionId(),
-          );
-
-          requestContainer.bind(eventBusToken).toConstantValue(childEventBus);
-
-          if (
-            server.upgrade(request, {
-              data: {
-                client: requestContainer.get(serverSocketClient),
-              },
-            })
-          ) {
-            return;
-          }
-          return new Response("Upgrade failed", { status: 500 });
-        },
+        "/socket": socketRequestHandler(this.container, this.eventBus),
       },
-
       websocket: {
         open: async (ws) => {
           await ws.data.client.onOpen(ws);
