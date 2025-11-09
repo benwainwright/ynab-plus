@@ -1,14 +1,15 @@
 import { flatFileFolderToken } from "@tokens";
-import type { ISimpleStorage } from "@types";
+import type { IObjectStorage } from "@types";
 import { inject, injectable } from "inversify";
 import { join } from "node:path";
 
 @injectable()
-export class FlatFileStorage implements ISimpleStorage {
+export class FlatFileObjectStore implements IObjectStorage {
   public constructor(
     @inject(flatFileFolderToken)
     private folder: string,
   ) {}
+
   public async get(key: string): Promise<object | undefined> {
     const path = join(this.folder, key);
     const file = Bun.file(path);

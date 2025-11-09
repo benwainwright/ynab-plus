@@ -1,6 +1,6 @@
 let socketCache: Promise<WebSocket> | undefined;
 
-export const SOCKET_URL = `ws://localhost:3015/socket`;
+export const SOCKET_URL = `ws://localhost:/socket`;
 
 export const getOpenSocket = async () => {
   if (!socketCache) {

@@ -1,3 +1,11 @@
+import { join } from "node:path";
+import { cwd } from "node:process";
+import EventEmitter from "node:events";
+
+import { Database } from "bun:sqlite";
+
+import { Container } from "inversify";
+
 import {
   devModeToken,
   eventBusToken,
@@ -7,16 +15,12 @@ import {
   indexPageToken,
   rootEventEmitter,
   serverSocketClient,
-  sessionFileStorageToken,
+  objectStorageToken,
   sqliteDbToken,
   sqlLiteUserRepoTableName,
   userIdSessionStore,
   userRepoToken,
 } from "@tokens";
-
-import { Container } from "inversify";
-
-import { Database } from "bun:sqlite";
 
 import { indexPage } from "@client";
 
@@ -28,14 +32,15 @@ import {
   LogoutCommandHandler,
   RegisterCommandHandler,
 } from "@handlers";
-import { SessionStorage } from "./core/session-storage.ts";
-import { join } from "node:path";
-import { cwd } from "node:process";
-import { FlatFileStorage } from "./core/flat-file-storage.ts";
-import { ServerWebsocketClient } from "./core/websocket-client.ts";
-import { AppServer, EventBus } from "@core";
-import { SqliteUserRepository } from "@data";
-import EventEmitter from "node:events";
+
+import {
+  AppServer,
+  EventBus,
+  ServerWebsocketClient,
+  SessionStorage,
+} from "@core";
+
+import { FlatFileObjectStore, SqliteUserRepository } from "@data";
 
 export const container = new Container();
 
@@ -56,7 +61,7 @@ container.bind(indexPageToken).toConstantValue(indexPage);
 container.bind(Container).toConstantValue(container);
 container.bind(userIdSessionStore).to(SessionStorage);
 
-container.bind(sessionFileStorageToken).to(FlatFileStorage);
+container.bind(objectStorageToken).to(FlatFileObjectStore);
 container.bind(serverSocketClient).to(ServerWebsocketClient).inRequestScope();
 
 const database = new Database("ynab-plus.sqlite", { strict: true });

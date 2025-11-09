@@ -1,4 +1,5 @@
 import { getUser } from "@client/hooks";
+import { permissions } from "@types";
 import { use } from "react";
 import { useParams } from "react-router";
 
@@ -35,15 +36,19 @@ export const EditUser = () => {
               value={user.email}
             />
           </label>
-          <label>
-            Permissions
-            <input
-              type="text"
-              name="permissions"
-              placeholder="Permissions"
-              value={user.permissions}
-            />
-          </label>
+          <fieldset>
+            <legend>Permissions</legend>
+            {permissions.map((permission) => (
+              <label>
+                <input
+                  type="checkbox"
+                  name="permission"
+                  checked={user.permissions.includes(permission)}
+                />
+                {permission}
+              </label>
+            ))}
+          </fieldset>
         </fieldset>
       </form>
     </>

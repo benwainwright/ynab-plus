@@ -2,14 +2,14 @@ import type { CommandHandler } from "@core";
 import { Database } from "bun:sqlite";
 import type {
   IEventBus,
+  IObjectStorage,
   IRepository,
   IServerSocketClient,
   ISessionData,
   ISessionStorage,
-  ISimpleStorage,
   IUser,
 } from "@types";
-import type { BunRequest } from "bun";
+import type { BunRequest, S3Client } from "bun";
 import { type ServiceIdentifier } from "inversify";
 import type EventEmitter from "node:events";
 
@@ -30,8 +30,9 @@ export const indexPageToken: ServiceIdentifier<Bun.HTMLBundle> =
 export const requestToken: ServiceIdentifier<BunRequest> =
   Symbol.for("requestToken");
 
-export const sessionFileStorageToken: ServiceIdentifier<ISimpleStorage> =
-  Symbol.for("sessionStorageToken");
+export const objectStorageToken: ServiceIdentifier<IObjectStorage> = Symbol.for(
+  "sessionStorageToken",
+);
 
 export const userIdSessionStore: ServiceIdentifier<
   ISessionStorage<ISessionData>
@@ -55,3 +56,6 @@ export const rootEventEmitter: ServiceIdentifier<EventEmitter> =
 export const eventEmitterNamespace: ServiceIdentifier<string> = Symbol.for(
   "eventEmitterNamespace",
 );
+
+export const s3ClientToken: ServiceIdentifier<S3Client> =
+  Symbol.for("s3ClientToken");

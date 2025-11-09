@@ -1,5 +1,5 @@
-import { requestToken, sessionFileStorageToken } from "@tokens";
-import type { ISessionStorage, ISimpleStorage } from "@types";
+import { requestToken, objectStorageToken } from "@tokens";
+import type { IObjectStorage, ISessionStorage } from "@types";
 import type { BunRequest } from "bun";
 import { inject, injectable } from "inversify";
 
@@ -11,8 +11,8 @@ export class SessionStorage<T extends object> implements ISessionStorage<T> {
     @inject(requestToken)
     private request: BunRequest,
 
-    @inject(sessionFileStorageToken)
-    private storage: ISimpleStorage,
+    @inject(objectStorageToken)
+    private storage: IObjectStorage,
   ) {}
 
   public getSessionId() {
