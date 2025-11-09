@@ -61,16 +61,8 @@ export class ServerWebsocketClient implements IServerSocketClient {
         });
       }
     } catch (error) {
-      if (error instanceof Error) {
-        const stack = new StackTracey(error);
-        const parsedStack = stack.items.map((item) => ({
-          calee: item.callee,
-          file: `${item.fileRelative}:${item.line}:${item.column}`,
-        }));
-        this.eventBus.emit("ApplicationError", {
-          stack: parsedStack,
-          message: error.message,
-        });
+      if (error instanceof AppError) {
+        error.handle(this.eventBus);
       }
     }
   }

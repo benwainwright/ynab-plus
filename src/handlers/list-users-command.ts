@@ -6,7 +6,7 @@ import { inject, injectable } from "inversify";
 @injectable()
 export class ListUsersCommandHandler extends CommandHandler<"ListUsersCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "admin",
+    "user",
   ];
 
   public constructor(

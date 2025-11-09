@@ -23,7 +23,6 @@ export abstract class CommandHandler<TKey extends keyof Commands> {
     session: IStore<ISessionData>,
   ): Promise<Permission[]> {
     const data = await session.get();
-    console.log({ data, perms: data?.permissions });
 
     if (!data || !data.permissions) {
       return ["public"];
@@ -46,8 +45,10 @@ export abstract class CommandHandler<TKey extends keyof Commands> {
       const data = await session.get();
       throw new NotAuthorisedError(
         `Not authorised to execute ${this.commandName}`,
+        this.commandName,
         data?.userId,
         permissions,
+        this.requiredPermissions,
       );
     }
 

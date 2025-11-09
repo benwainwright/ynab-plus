@@ -46,6 +46,13 @@ export const useFooterMessage = () => {
           message: "Registration Successful",
         });
         break;
+
+      case "NotAuthorisedError":
+        setMessage({
+          type: "error",
+          message: `Could not execute handler ${event.data.handler}. User '${event.data.userId}' permissions: ${event.data.userPermissions.join(", ")}, required: ${event.data.requiredPermissions.join(", ")}`,
+        });
+        break;
     }
   });
 
