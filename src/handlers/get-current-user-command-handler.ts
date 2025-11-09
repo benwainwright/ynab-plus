@@ -1,6 +1,8 @@
 import { CommandHandler } from "@core";
 import type { IHandleContext, IRepository, IUser } from "@types";
+import { injectable } from "inversify";
 
+@injectable()
 export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser"> {
   public override readonly commandName = "GetCurrentUser";
 

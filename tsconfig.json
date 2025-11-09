@@ -9,6 +9,7 @@
       "@client/components": ["./src/client/components/index.ts"],
       "@client/hooks": ["./src/client/hooks/index.ts"],
       "@handlers": ["./src/handlers/index.ts"],
+      "@tokens": ["./src/tokens.ts"],
       "@errors": ["./src/errors/index.ts"],
 
       "@test-helpers": ["./src/test-helpers/index.ts"]
@@ -17,6 +18,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowJs": true,
     "resolveJsonModule": true,
     "noErrorTruncation": true,

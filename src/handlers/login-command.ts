@@ -1,6 +1,8 @@
 import { CommandHandler } from "@core";
 import type { IHandleContext, IRepository, IUser } from "@types";
+import { injectable } from "inversify";
 
+@injectable()
 export class LoginCommandHandler extends CommandHandler<"LoginCommand"> {
   public constructor(private users: IRepository<IUser>) {
     super();

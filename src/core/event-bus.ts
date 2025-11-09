@@ -1,7 +1,9 @@
 import type { EventEmitter } from "node:events";
 
 import { type IEventBus, type IEventPacket, type IListener } from "@types";
+import { injectable } from "inversify";
 
+@injectable()
 export class EventBus implements IEventBus {
   private listenerMap = new Map<string, IListener>();
   private children: IEventBus[] = [];

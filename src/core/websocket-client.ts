@@ -1,15 +1,23 @@
-import type { IEventBus, ISessionData } from "@types";
+import type { IEventBus, IServerSocketClient, ISessionData } from "@types";
 
 import StackTracey from "stacktracey";
 
 import type { CommandHandler } from "./command-handler.ts";
 import { AppError } from "@errors";
 import type { SessionStorage } from "./session-storage.ts";
+import { inject, injectable, multiInject } from "inversify";
+import { eventBusToken, handlerToken, userIdSessionStore } from "@tokens";
 
-export class ServerWebsocketClient {
+@injectable()
+export class ServerWebsocketClient implements IServerSocketClient {
   public constructor(
+    @multiInject(handlerToken)
     private handlers: CommandHandler<keyof Commands>[],
+
+    @inject(eventBusToken)
     private eventBus: IEventBus,
+
+    @inject(userIdSessionStore)
     private sessionStorage: SessionStorage<ISessionData>,
   ) {}
 

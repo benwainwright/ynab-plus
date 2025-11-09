@@ -1,5 +1,6 @@
 export { type ICommandMessage } from "./i-command-message.ts";
 export { type ISessionData } from "./i-session-data.ts";
+export { type IServerSocketClient } from "./i-server-socket-client.ts";
 export {
   type IEventEmitter,
   type IListener,
@@ -17,4 +18,7 @@ export { type IUser } from "./i-user.ts";
 
 export { type IStore } from "./i-store.ts";
 
+export { type ICommandHandler } from "./i-command-handler.ts";
 export { type IHandleContext } from "./i-handle-context.ts";
+export { type ISimpleStorage } from "./i-simple-storage.ts";
+export { type ISessionStorage } from "./i-session-storage.ts";

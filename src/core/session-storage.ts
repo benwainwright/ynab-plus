@@ -1,17 +1,18 @@
+import { requestToken, sessionFileStorageToken } from "@tokens";
+import type { ISessionStorage, ISimpleStorage } from "@types";
 import type { BunRequest } from "bun";
+import { inject, injectable } from "inversify";
 
 const SESSION_COOKIE_NAME = "ynab-plus-session-id";
 
-interface Storage {
-  get(key: string): Promise<object | undefined>;
-  set(key: string, thing: object): Promise<void>;
-}
-
-export class SessionStorage<T extends object> {
+@injectable()
+export class SessionStorage<T extends object> implements ISessionStorage<T> {
   public constructor(
-    private key: string,
+    @inject(requestToken)
     private request: BunRequest,
-    private storage: Storage,
+
+    @inject(sessionFileStorageToken)
+    private storage: ISimpleStorage,
   ) {}
 
   public getSessionId() {
@@ -29,11 +30,11 @@ export class SessionStorage<T extends object> {
 
   public async get(): Promise<T> {
     const sessionId = this.getSessionId();
-    return (await this.storage.get(`${sessionId}-${this.key}`)) as T;
+    return (await this.storage.get(`${sessionId}-session-key`)) as T;
   }
 
   async set(thing: T): Promise<void> {
     const sessionId = this.getSessionId();
-    return await this.storage.set(`${sessionId}-${this.key}`, thing);
+    return await this.storage.set(`${sessionId}-session-key`, thing);
   }
 }

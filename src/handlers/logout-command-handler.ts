@@ -1,6 +1,8 @@
 import { CommandHandler } from "@core";
 import type { IHandleContext } from "@types";
+import { injectable } from "inversify";
 
+@injectable()
 export class LogoutCommandHandler extends CommandHandler<"Logout"> {
   public override readonly commandName = "Logout";
 
