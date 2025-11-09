@@ -21,6 +21,7 @@ export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
       id: username,
       email,
       passwordHash: hash,
+      permissions: ["user"],
     });
     await session.set({ userId: username });
 

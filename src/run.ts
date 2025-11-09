@@ -10,6 +10,7 @@ import {
   RegisterCommandHandler,
   GetCurrentUserCommandHandler,
   LogoutCommandHandler,
+  ListUsersCommandHandler,
 } from "@handlers";
 
 import { SqliteUserRepository } from "@data";
@@ -27,6 +28,7 @@ userRepository.create();
 const handlers = [
   new RegisterCommandHandler(userRepository),
   new LoginCommandHandler(userRepository),
+  new ListUsersCommandHandler(userRepository),
   new LogoutCommandHandler(),
   new GetCurrentUserCommandHandler(userRepository),
 ];

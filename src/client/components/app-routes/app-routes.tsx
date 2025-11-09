@@ -1,21 +1,21 @@
 import { Route, Routes } from "react-router";
 
-import { Dashboard, Login, Register, RouteGuard } from "@client/components";
+import { routes } from "./routes.tsx";
+import { RouteGuard } from "@client/components";
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <RouteGuard>
-            <Dashboard />
-          </RouteGuard>
-        }
-      />
-
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      {routes.map((route) => (
+        <Route
+          path={route.path}
+          element={
+            <RouteGuard routeTags={route.tags} routeName={route.name}>
+              {route.render()}
+            </RouteGuard>
+          }
+        />
+      ))}
     </Routes>
   );
 };

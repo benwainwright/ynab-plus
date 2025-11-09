@@ -1,30 +1,39 @@
-import { SocketContext, useCommand, useEvents } from "@client/hooks";
+import { CurrentUserContext } from "@client/hooks";
 import styles from "./header.module.css";
 import { useContext } from "react";
-import { useNavigate } from "react-router";
+import { canAccess, routes } from "@client/components";
+import { Link } from "react-router";
 
 interface HeaderProps {
   title: string;
 }
 export const Header = ({ title }: HeaderProps) => {
-  const { socket } = useContext(SocketContext);
-  const { send } = useCommand("Logout", socket);
-  const navigate = useNavigate();
-
-  const logout = async () => {
-    await send(undefined);
-  };
-
-  useEvents(socket, (events) => {
-    if (events.key === "LogoutSuccess") {
-      navigate("/login");
-    }
-  });
+  const { user, finishedLoading } = useContext(CurrentUserContext);
 
   return (
     <header className={styles.header}>
-      <h1>{title}</h1>
-      <button onClick={logout}>Logout</button>
+      <nav>
+        <ul>
+          <li>
+            <h1>{title}</h1>
+          </li>
+        </ul>
+        <ul>
+          {routes
+            .filter((route) =>
+              canAccess({
+                user,
+                finishedLoading,
+                routeTags: route.tags,
+              }),
+            )
+            .map((route) => (
+              <li>
+                <Link to={route.path}>{route.name}</Link>
+              </li>
+            ))}
+        </ul>
+      </nav>
     </header>
   );
 };

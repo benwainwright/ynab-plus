@@ -1,7 +1,5 @@
 .header {
-  display: flex;
 }
 
 .header h1 {
-  flex-grow: 2;
 }

@@ -6,6 +6,13 @@ declare global {
       request: undefined;
       response: void;
     };
+    ListUsersCommand: {
+      request: {
+        offset: number;
+        limit: numbrer;
+      };
+      response: IUser[];
+    };
     LoginCommand: {
       request: {
         username: string;

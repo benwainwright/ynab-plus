@@ -19,8 +19,8 @@ interface ServerConfig {
 export const createServer = ({
   handlers,
   eventBus,
-  developmentMode,
   indexPage,
+  developmentMode,
 }: ServerConfig) => {
   return Bun.serve({
     port: 3015,
