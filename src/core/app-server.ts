@@ -23,9 +23,6 @@ export class AppServer {
     @inject(indexPageToken)
     private indexPage: Bun.HTMLBundle,
 
-    @inject(userIdSessionStore)
-    private sessionStorage: SessionStorage<ISessionData>,
-
     @inject(Container)
     private container: Container,
   ) {}
@@ -45,10 +42,12 @@ export class AppServer {
           });
 
           requestContainer.bind(requestToken).toConstantValue(request);
+          const sessionStorage = requestContainer.get(userIdSessionStore);
 
           const childEventBus = this.eventBus.child(
-            this.sessionStorage.getSessionId(),
+            sessionStorage.getSessionId(),
           );
+
           requestContainer.bind(eventBusToken).toConstantValue(childEventBus);
 
           if (

@@ -4,4 +4,6 @@ import { AppServer } from "@core";
 
 const rootInstance = container.get(AppServer);
 
-rootInstance.start();
+const server = rootInstance.start();
+
+console.log(`Running server on ${server.url}`);

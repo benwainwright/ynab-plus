@@ -1,9 +1,15 @@
+import { sqliteDbToken, sqlLiteUserRepoTableName } from "@tokens";
 import type { IRepository, IUser } from "@types";
 import { Database } from "bun:sqlite";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class SqliteUserRepository implements IRepository<IUser> {
   public constructor(
+    @inject(sqlLiteUserRepoTableName)
     private tableName: string,
+
+    @inject(sqliteDbToken)
     private database: Database,
   ) {}
 

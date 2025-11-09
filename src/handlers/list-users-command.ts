@@ -1,10 +1,14 @@
 import { CommandHandler } from "@core";
+import { userRepoToken } from "@tokens";
 import type { IHandleContext, IRepository, IUser } from "@types";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class ListUsersCommandHandler extends CommandHandler<"ListUsersCommand"> {
-  public constructor(private users: IRepository<IUser>) {
+  public constructor(
+    @inject(userRepoToken)
+    private users: IRepository<IUser>,
+  ) {
     super();
   }
 

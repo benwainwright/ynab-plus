@@ -1,14 +1,18 @@
 import type { EventEmitter } from "node:events";
 
 import { type IEventBus, type IEventPacket, type IListener } from "@types";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { eventEmitterNamespace, rootEventEmitter } from "@tokens";
 
 @injectable()
 export class EventBus implements IEventBus {
   private listenerMap = new Map<string, IListener>();
   private children: IEventBus[] = [];
   public constructor(
+    @inject(rootEventEmitter)
     private listener: EventEmitter,
+
+    @inject(eventEmitterNamespace)
     private namespace: string,
   ) {}
 
