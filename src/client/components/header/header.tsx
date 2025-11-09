@@ -1,5 +1,4 @@
 import { CurrentUserContext } from "@client/hooks";
-import styles from "./header.module.css";
 import { useContext } from "react";
 import { canAccess, routes } from "@client/components";
 import { Link } from "react-router";
@@ -11,7 +10,7 @@ export const Header = ({ title }: HeaderProps) => {
   const { user, finishedLoading } = useContext(CurrentUserContext);
 
   return (
-    <header className={styles.header}>
+    <header>
       <nav>
         <ul>
           <li>
