@@ -5,6 +5,10 @@ import { inject, injectable } from "inversify";
 
 @injectable()
 export class LoginCommandHandler extends CommandHandler<"LoginCommand"> {
+  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+    "public",
+  ];
+
   public constructor(
     @inject(userRepoToken)
     private users: IRepository<IUser>,
@@ -26,7 +30,7 @@ export class LoginCommandHandler extends CommandHandler<"LoginCommand"> {
     const user = await this.users.get(username);
 
     if (user && (await Bun.password.verify(password, user.passwordHash))) {
-      await session.set({ userId: username });
+      await session.set({ userId: username, permissions: user.permissions });
       eventBus.emit("LoginSuccess", undefined);
       return { success: true, id: username };
     }

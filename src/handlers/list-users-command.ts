@@ -5,6 +5,10 @@ import { inject, injectable } from "inversify";
 
 @injectable()
 export class ListUsersCommandHandler extends CommandHandler<"ListUsersCommand"> {
+  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+    "admin",
+  ];
+
   public constructor(
     @inject(userRepoToken)
     private users: IRepository<IUser>,

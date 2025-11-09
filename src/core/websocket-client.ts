@@ -48,7 +48,7 @@ export class ServerWebsocketClient implements IServerSocketClient {
           throw new AppError(message);
         }
 
-        const response = await handler.handle({
+        const response = await handler.doHandle({
           command: parsed,
           eventBus: this.eventBus,
           session: this.sessionStorage,

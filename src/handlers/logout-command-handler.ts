@@ -4,14 +4,17 @@ import { injectable } from "inversify";
 
 @injectable()
 export class LogoutCommandHandler extends CommandHandler<"Logout"> {
+  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+    "user",
+    "admin",
+  ];
   public override readonly commandName = "Logout";
 
   public override async handle({
     session,
     eventBus,
   }: IHandleContext<"Logout">): Promise<undefined> {
-    await session.set({ userId: undefined });
-
+    await session.set({ userId: undefined, permissions: undefined });
     eventBus.emit("LogoutSuccess", undefined);
   }
 }

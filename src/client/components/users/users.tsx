@@ -1,5 +1,6 @@
 import { SocketContext, useCommand } from "@client/hooks";
 import { useContext, useEffect } from "react";
+import { Link } from "react-router";
 
 export const Users = () => {
   const { socket } = useContext(SocketContext);
@@ -26,7 +27,9 @@ export const Users = () => {
           <tbody>
             {result.map((user) => (
               <tr>
-                <td>{user.id}</td>
+                <td>
+                  <Link to={`/users/edit/${user.id}`}>{user.id}</Link>
+                </td>
                 <td>{user.email}</td>
                 <td>{user.permissions.join(", ")}</td>
               </tr>

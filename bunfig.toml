@@ -1,0 +1,7 @@
+[test]
+coverage = true
+
+coveragePathIgnorePatterns = [
+  # Exclude utility files
+  "src/test-helpers/**",
+]

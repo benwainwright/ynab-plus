@@ -8,3 +8,4 @@ export { Register } from "./register/index.ts";
 export { Footer } from "./footer/index.ts";
 export { Logout } from "./logout/index.ts";
 export { Users } from "./users/index.ts";
+export { EditUser } from "./edit-user/index.ts";

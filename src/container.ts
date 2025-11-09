@@ -57,11 +57,15 @@ container.bind(userIdSessionStore).to(SessionStorage);
 container.bind(sessionFileStorageToken).to(FlatFileStorage);
 container.bind(serverSocketClient).to(ServerWebsocketClient).inRequestScope();
 
-const database = new Database("ynab-plus.sqlite");
+const database = new Database("ynab-plus.sqlite", { strict: true });
 
 container.bind(sqliteDbToken).toConstantValue(database);
 
-container.bind(userRepoToken).to(SqliteUserRepository).inSingletonScope();
+const userRepo = new SqliteUserRepository("users", database);
+
+userRepo.create();
+
+container.bind(userRepoToken).toConstantValue(userRepo);
 
 const events = new EventEmitter();
 

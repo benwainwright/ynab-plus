@@ -7,6 +7,12 @@ import { inject, injectable } from "inversify";
 export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser"> {
   public override readonly commandName = "GetCurrentUser";
 
+  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+    "public",
+    "user",
+    "admin",
+  ];
+
   public constructor(
     @inject(userRepoToken)
     private users: IRepository<IUser>,

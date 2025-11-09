@@ -6,6 +6,9 @@ import { inject, injectable } from "inversify";
 @injectable()
 export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
   public override readonly commandName = "RegisterCommand";
+  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+    "public",
+  ];
 
   public constructor(
     @inject(userRepoToken)
@@ -29,8 +32,7 @@ export class RegisterCommandHandler extends CommandHandler<"RegisterCommand"> {
       passwordHash: hash,
       permissions: ["user"],
     });
-    await session.set({ userId: username });
-
+    await session.set({ userId: username, permissions: ["user"] });
     eventBus.emit("RegisterSuccess", undefined);
     return { success: true, id: username };
   }
