@@ -1,4 +1,4 @@
-import type { IEventBus, IServerSocketClient, ISessionData } from "@types";
+import type { IEventBus, IServerSocketClient } from "@types";
 import { Container, inject, injectable } from "inversify";
 import type { Server } from "bun";
 import {
@@ -9,7 +9,6 @@ import {
   serverSocketClient,
   userIdSessionStore,
 } from "@tokens";
-import type { SessionStorage } from "./session-storage.ts";
 
 @injectable()
 export class AppServer {
