@@ -32,7 +32,7 @@ export abstract class CommandHandler<TKey extends keyof Commands> {
   }
 
   public async doHandle(context: IHandleContext<TKey>) {
-    const { session } = context;
+    const { session, command, eventBus } = context;
     const permissions = await this.currentUserPermissions(session);
 
     const hasValidPermission = Boolean(
@@ -52,7 +52,13 @@ export abstract class CommandHandler<TKey extends keyof Commands> {
       );
     }
 
-    return await this.handle(context);
+    const response = await this.handle(context);
+
+    eventBus.emit("CommandResponse", {
+      key: this.commandName,
+      data: response,
+      id: command.id,
+    });
   }
 
   protected abstract handle(

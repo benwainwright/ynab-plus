@@ -1,7 +1,7 @@
 import type { IEventBus, IServerSocketClient, ISessionData } from "@types";
 
 import type { CommandHandler } from "./command-handler.ts";
-import { AppError } from "@errors";
+import { AppError, HandlerNotFoundError } from "@errors";
 import type { SessionStorage } from "./session-storage.ts";
 import { inject, injectable, multiInject } from "inversify";
 import { eventBusToken, handlerToken, userIdSessionStore } from "@tokens";
@@ -39,23 +39,13 @@ export class ServerWebsocketClient implements IServerSocketClient {
         );
 
         if (!handler) {
-          const message =
-            "key" in parsed
-              ? `Handler for ${parsed.key} not found`
-              : `Handler not found`;
-          throw new AppError(message);
+          throw new HandlerNotFoundError(message);
         }
 
-        const response = await handler.doHandle({
+        await handler.doHandle({
           command: parsed,
           eventBus: this.eventBus,
           session: this.sessionStorage,
-        });
-
-        this.eventBus.emit("CommandResponse", {
-          key: handler.commandName,
-          data: response,
-          id: parsed.id,
         });
       }
     } catch (error) {
