@@ -22,3 +22,4 @@ export { type ICommandHandler } from "./i-command-handler.ts";
 export { type IHandleContext } from "./i-handle-context.ts";
 export { type ISimpleStorage } from "./i-simple-storage.ts";
 export { type ISessionStorage } from "./i-session-storage.ts";
+export { type Permission, permissions } from "./permissions.ts";

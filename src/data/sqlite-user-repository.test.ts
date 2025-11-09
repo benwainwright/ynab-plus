@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { Database } from "bun:sqlite";
+import type { IUser } from "@types";
 
 describe("the user repository", () => {
   it("can update and return a user", async () => {
@@ -11,12 +12,12 @@ describe("the user repository", () => {
 
     repo.create();
 
-    const data = {
+    const data: IUser = {
       email: "bwainwright28@gmail.com",
       id: "ben",
       passwordHash:
         "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-      permissions: ["blip", "blop"],
+      permissions: ["user", "public"],
     };
 
     await repo.save(data);
@@ -35,28 +36,28 @@ describe("the user repository", () => {
 
       repo.create();
 
-      const data = {
+      const data: IUser = {
         email: "bwainwright28@gmail.com",
         id: "ben",
         passwordHash:
           "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-        permissions: ["blip", "blop"],
+        permissions: ["public", "user"],
       };
 
-      const data2 = {
+      const data2: IUser = {
         email: "a@b.com",
         id: "ben2",
         passwordHash:
           "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-        permissions: ["blip", "blop"],
+        permissions: ["public", "user"],
       };
 
-      const data3 = {
+      const data3: IUser = {
         email: "a@c.com",
         id: "ben3",
         passwordHash:
           "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-        permissions: ["blop"],
+        permissions: ["user"],
       };
 
       await repo.save(data);
