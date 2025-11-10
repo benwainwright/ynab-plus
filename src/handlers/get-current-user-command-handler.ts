@@ -1,4 +1,5 @@
 import { CommandHandler } from "@core";
+import { AppError } from "@errors";
 import { userRepoToken } from "@tokens";
 import type { IHandleContext, IRepository, IUser } from "@types";
 import { inject, injectable } from "inversify";
@@ -23,10 +24,27 @@ export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser
   public override async handle({
     session,
   }: IHandleContext<"GetCurrentUserCommand">): Promise<IUser | undefined> {
-    const id = await session.get();
+    const sessionData = await session.get();
 
-    if (id?.userId) {
-      const user = this.users.get(id.userId);
+    if (sessionData?.userId) {
+      const user = await this.users.get(sessionData.userId);
+
+      if (
+        user &&
+        JSON.stringify(user.permissions) !==
+          JSON.stringify(sessionData.permissions)
+      ) {
+        session.set({
+          ...sessionData,
+          permissions: user.permissions,
+        });
+      }
+
+      if (!user) {
+        throw new AppError(
+          `Logged in user wasn't found in the database. Have they been deleted?`,
+        );
+      }
       return user;
     }
 
