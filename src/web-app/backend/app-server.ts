@@ -8,6 +8,7 @@ import z from "zod";
 
 export class AppServer implements IConfigurable {
   private developmentMode: boolean = false;
+  private port: number = 3015;
   public constructor(
     private serviceBusFactory: ServiceBusFactory,
     private eventBus: IEventBus,
@@ -19,12 +20,14 @@ export class AppServer implements IConfigurable {
       "webappDevelopmentMode",
       z.boolean(),
     );
+
+    this.port = await configurator.getConfig("webappPort", z.number());
   }
 
   public start() {
     return Bun.serve({
-      port: 3015,
-      development: this.developmentMode ?? false,
+      port: this.port,
+      development: this.developmentMode,
       routes: {
         "/": this.indexPage,
         "/socket": async (
