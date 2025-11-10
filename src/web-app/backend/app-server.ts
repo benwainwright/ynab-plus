@@ -2,14 +2,24 @@ import type { IEventBus, ServiceBusFactory } from "@application";
 import type { BunRequest, Server } from "bun";
 import { SessionIdHandler } from "./session-id-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
+import type { IConfigurable } from "../../i-configurable.ts";
+import type { IConfigurator } from "../../i-configurator.ts";
+import z from "zod";
 
-export class AppServer {
+export class AppServer implements IConfigurable {
+  private developmentMode: boolean = false;
   public constructor(
     private serviceBusFactory: ServiceBusFactory,
     private eventBus: IEventBus,
-    private developmentMode: boolean,
     private indexPage: Bun.HTMLBundle,
   ) {}
+
+  public async configure(configurator: IConfigurator): Promise<void> {
+    this.developmentMode = await configurator.getConfig(
+      "webappDevelopmentMode",
+      z.boolean(),
+    );
+  }
 
   public start() {
     return Bun.serve({

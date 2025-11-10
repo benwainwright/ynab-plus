@@ -1,8 +1,17 @@
 import type { IObjectStorage } from "@application";
 import { join } from "node:path";
+import type { IConfigurable } from "../i-configurable.ts";
+import type { IConfigurator } from "../i-configurator.ts";
+import z from "zod";
 
-export class FlatFileObjectStore implements IObjectStorage {
-  public constructor(private folder: string) {}
+export class FlatFileObjectStore implements IObjectStorage, IConfigurable {
+  private folder: string = "";
+
+  public constructor() {}
+
+  public async configure(configurator: IConfigurator): Promise<void> {
+    configurator.getConfig("sessionStorePath", z.string());
+  }
 
   public async get(key: string): Promise<object | undefined> {
     const path = join(this.folder, key);
