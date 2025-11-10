@@ -1,6 +1,7 @@
 import { ApplicationService } from "../application-service.ts";
 import type { User } from "@domain";
 import type { IHandleContext, IRepository } from "../ports/index.ts";
+import { UserNotFoundError } from "../errors/user-not-found-error.ts";
 
 export class GetUserService extends ApplicationService<"GetUser"> {
   public override readonly commandName = "GetUser";
@@ -15,11 +16,20 @@ export class GetUserService extends ApplicationService<"GetUser"> {
     super();
   }
 
-  public override async handle({
+  protected override async handle({
     command,
   }: IHandleContext<"GetUser">): Promise<User | undefined> {
     const { username } = command.data;
 
-    return this.users.get(username);
+    const user = await this.users.get(username);
+
+    if (!user) {
+      throw new UserNotFoundError(
+        `Could not find user '${username}'`,
+        username,
+      );
+    }
+
+    return user;
   }
 }
