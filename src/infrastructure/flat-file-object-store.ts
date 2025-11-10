@@ -10,7 +10,7 @@ export class FlatFileObjectStore implements IObjectStorage, IConfigurable {
   public constructor() {}
 
   public async configure(configurator: IConfigurator): Promise<void> {
-    configurator.getConfig("sessionStorePath", z.string());
+    this.folder = await configurator.getConfig("sessionStorePath", z.string());
   }
 
   public async get(key: string): Promise<object | undefined> {
