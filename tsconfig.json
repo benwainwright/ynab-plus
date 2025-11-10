@@ -4,12 +4,12 @@
     "paths": {
       "@infrastructure": ["./src/infrastructure/index.ts"],
       "@client": ["./src/web-app/client/index.ts"],
+      "@web-app": ["./src/web-app/index.ts"],
       "@client/components": ["./src/web-app/client/components/index.ts"],
       "@client/hooks": ["./src/web-app/client/hooks/index.ts"],
       "@domain": ["./src/domain/index.ts"],
       "@application": ["./src/application/index.ts"],
       "@errors": ["./src/errors/index.ts"],
-
       "@test-helpers": ["./src/test-helpers/index.ts"]
     },
     "lib": ["ESNext", "dom"],

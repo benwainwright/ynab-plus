@@ -1,6 +1,6 @@
-import { composeDataLayer } from "./infrastructure/index.ts";
+import { composeDataLayer } from "@infrastructure";
 import { composeApplicationLayer } from "@application";
-import { composeWebApp } from "./web-app/compose-web-app.ts";
+import { composeWebApp } from "@web-app";
 
 export const run = () => {
   const dataLayer = composeDataLayer();

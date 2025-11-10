@@ -1,4 +1,5 @@
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, mock as bunMock } from "bun:test";
+import { mock } from "bun-mock-extended";
 import { EventBus } from "./event-bus";
 import { EventEmitter } from "node:events";
 
@@ -6,7 +7,7 @@ describe("event bus", () => {
   describe("on", () => {
     it("correctly subscribes to an event that can be listened to", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const data = {
         url: "foo",
@@ -23,9 +24,9 @@ describe("event bus", () => {
 
     it("does not listen to events with different keys", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
-      const mockHandler = mock();
+      const mockHandler = bunMock();
       bus.on("AppInitialised", mockHandler);
       bus.emit("AppClosing", undefined);
 
@@ -36,14 +37,14 @@ describe("event bus", () => {
   describe("off", () => {
     it("removes event handlers", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const data = {
         url: "foo",
         port: 20,
       };
 
-      const mockHandler = mock();
+      const mockHandler = bunMock();
 
       const identifier = bus.on("AppInitialised", mockHandler);
       bus.off(identifier);
@@ -54,9 +55,9 @@ describe("event bus", () => {
 
     it("also removes onAllHandlers", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
-      const mockListener = mock();
+      const mockListener = bunMock();
 
       const identifier = bus.onAll(mockListener);
 
@@ -72,16 +73,16 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
 
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const data = {
         url: "foo",
         port: 20,
       };
 
-      const mockOne = mock();
-      const mockTwo = mock();
-      const mockThree = mock();
+      const mockOne = bunMock();
+      const mockTwo = bunMock();
+      const mockThree = bunMock();
 
       bus.on("AppClosing", mockOne);
       bus.on("AppInitialised", mockTwo);
@@ -100,9 +101,9 @@ describe("event bus", () => {
     it("does not remove external listener", () => {
       const emitter = new EventEmitter();
 
-      const mockExternalListener = mock();
+      const mockExternalListener = bunMock();
       emitter.on("foo", mockExternalListener);
-      const bus = new EventBus(emitter, "foobar");
+      const bus = new EventBus(emitter, "foobar", mock());
 
       bus.removeAll();
       emitter.emit("foo", "bar");
@@ -114,9 +115,9 @@ describe("event bus", () => {
   describe("onAll", () => {
     it("listens to all events emitted on this bus", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
-      const mockListener = mock();
+      const mockListener = bunMock();
 
       bus.onAll(mockListener);
 
@@ -144,15 +145,15 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
       {
-        using bus = new EventBus(emitter, "foo");
+        using bus = new EventBus(emitter, "foo", mock());
 
-        const mockOne = mock();
-        const mockTwo = mock();
+        const mockOne = bunMock();
+        const mockTwo = bunMock();
 
         bus.on("AppClosing", mockOne);
         bus.on("AppInitialised", mockTwo);
       }
-      const mockListener = mock();
+      const mockListener = bunMock();
       emitter.on("foo", mockListener);
       expect(mockListener).not.toHaveBeenCalled();
     });
@@ -161,7 +162,7 @@ describe("event bus", () => {
   describe("childbus", () => {
     it("receives events that are emitted by it", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const child = bus.child("foo-child");
 
@@ -181,7 +182,7 @@ describe("event bus", () => {
 
     it("also receives events that are emitted by the parent bus", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const child = bus.child("foo-child");
 
@@ -201,7 +202,7 @@ describe("event bus", () => {
 
     it("does not receive events emitted by other children", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const child1 = bus.child("foo-child");
       const child2 = bus.child("bar-child");
@@ -211,8 +212,8 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockListener2 = mock();
-      const mockListener1 = mock();
+      const mockListener2 = bunMock();
+      const mockListener1 = bunMock();
 
       child2.on("AppInitialised", mockListener2);
       child1.on("AppInitialised", mockListener1);
@@ -224,7 +225,7 @@ describe("event bus", () => {
 
     it("does not emit events on the parent bus", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo");
+      const bus = new EventBus(emitter, "foo", mock());
 
       const child1 = bus.child("foo-child");
 
@@ -233,7 +234,7 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockListener1 = mock();
+      const mockListener1 = bunMock();
 
       child1.emit("AppInitialised", data);
       bus.on("AppInitialised", mockListener1);
