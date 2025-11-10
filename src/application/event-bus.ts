@@ -1,6 +1,11 @@
 import type { EventEmitter } from "node:events";
 
-import type { IEventBus, IEventPacket, IListener } from "./ports/index.ts";
+import type {
+  IEventBus,
+  IEventPacket,
+  IListener,
+  IUUIDGenerator,
+} from "./ports/index.ts";
 
 export class EventBus implements IEventBus {
   private listenerMap = new Map<string, IListener>();
@@ -8,16 +13,22 @@ export class EventBus implements IEventBus {
   public constructor(
     private listener: EventEmitter,
     private namespace: string,
+    private uuidGenerator: IUUIDGenerator,
   ) {}
 
   public child(namespace: string): IEventBus {
-    const child = new EventBus(this.listener, `${this.namespace}-${namespace}`);
+    const child = new EventBus(
+      this.listener,
+      `${this.namespace}-${namespace}`,
+      this.uuidGenerator,
+    );
+
     this.children.push(child);
     return child;
   }
 
   public onAll(listener: IListener) {
-    const listenerId = Bun.randomUUIDv7();
+    const listenerId = this.uuidGenerator.getUUID();
     this.listener.on(this.namespace, listener);
     this.listenerMap.set(listenerId, listener);
     return listenerId;

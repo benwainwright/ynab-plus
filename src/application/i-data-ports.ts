@@ -5,6 +5,7 @@ import type {
   IPasswordHasher,
   IPasswordVerifier,
   IRepository,
+  IUUIDGenerator,
 } from "./ports/index.ts";
 
 export interface IInfrastructurePorts {
@@ -12,4 +13,5 @@ export interface IInfrastructurePorts {
   passwordVerifier: IPasswordVerifier;
   userRepository: IRepository<User>;
   sessionStorage: IObjectStorage;
+  uuidGenerator: IUUIDGenerator;
 }

@@ -17,6 +17,7 @@ export const composeApplicationLayer = ({
   passwordHasher,
   passwordVerifier,
   sessionStorage,
+  uuidGenerator,
 }: IInfrastructurePorts) => {
   const services = [
     new GetCurrentUserService(userRepository),
@@ -28,7 +29,7 @@ export const composeApplicationLayer = ({
   ];
 
   const events = new EventEmitter();
-  const eventBus = new EventBus(events, `ynab-plus`);
+  const eventBus = new EventBus(events, `ynab-plus`, uuidGenerator);
 
   const serviceBusFactory = async ({
     sessionIdRequester,

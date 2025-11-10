@@ -8,6 +8,7 @@ export {
   type IPasswordVerifier,
   type ISessionIdRequester,
   type IRepository,
+  type IUUIDGenerator,
   type IListener,
   type IObjectStorage,
   type ICommandMessage,

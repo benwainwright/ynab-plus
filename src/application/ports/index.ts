@@ -7,6 +7,7 @@ export type { IEventBus } from "./i-event-bus.ts";
 export type { IHandleContext } from "./i-handle-context.ts";
 export type { IServiceBus } from "./i-service-bus.ts";
 export type { ISessionIdRequester } from "./i-session-id-requester.ts";
+export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export { type ServiceBusFactory } from "./service-bus-factory.ts";
 
 export {
