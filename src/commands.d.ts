@@ -32,7 +32,7 @@ declare global {
       request: undefined;
       response: undefined;
     };
-    GetCurrentUser: {
+    GetCurrentUserCommand: {
       request: undefined;
       response: IUser | undefined;
     };

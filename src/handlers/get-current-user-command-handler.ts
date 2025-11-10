@@ -4,8 +4,8 @@ import type { IHandleContext, IRepository, IUser } from "@types";
 import { inject, injectable } from "inversify";
 
 @injectable()
-export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser"> {
-  public override readonly commandName = "GetCurrentUser";
+export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUserCommand"> {
+  public override readonly commandName = "GetCurrentUserCommand";
 
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "public",
@@ -22,7 +22,7 @@ export class GetCurrentUserCommandHandler extends CommandHandler<"GetCurrentUser
 
   public override async handle({
     session,
-  }: IHandleContext<"GetCurrentUser">): Promise<IUser | undefined> {
+  }: IHandleContext<"GetCurrentUserCommand">): Promise<IUser | undefined> {
     const id = await session.get();
 
     if (id?.userId) {

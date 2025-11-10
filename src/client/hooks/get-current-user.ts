@@ -9,7 +9,7 @@ export const getCurrentUser = () => {
   if (!currentUser) {
     const socket = use(getOpenSocket());
     const client = new CommandClient(socket);
-    currentUser = client.send("GetCurrentUser", undefined);
+    currentUser = client.send("GetCurrentUserCommand", undefined);
   }
 
   return currentUser;
