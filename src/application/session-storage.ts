@@ -2,6 +2,7 @@ import type {
   IObjectStorage,
   ISessionIdRequester,
   ISingleItemStore,
+  IUUIDGenerator,
 } from "./ports/index.ts";
 
 export class SessionStorage<T extends object | undefined>
@@ -10,6 +11,7 @@ export class SessionStorage<T extends object | undefined>
   public constructor(
     private storage: IObjectStorage,
     private sessionIdRequester: ISessionIdRequester,
+    private uuidGenerator: IUUIDGenerator,
   ) {}
 
   public async getSessionId() {
@@ -19,7 +21,7 @@ export class SessionStorage<T extends object | undefined>
       return sessionId;
     }
 
-    const newId = Bun.randomUUIDv7();
+    const newId = this.uuidGenerator.getUUID();
     await this.sessionIdRequester.setSessionId(newId);
 
     return newId;

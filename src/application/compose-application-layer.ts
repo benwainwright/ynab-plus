@@ -39,6 +39,7 @@ export const composeApplicationLayer = ({
     const currentUserCache = new SessionStorage<User | undefined>(
       sessionStorage,
       sessionIdRequester,
+      uuidGenerator,
     );
     return new ServiceBus(
       services,
