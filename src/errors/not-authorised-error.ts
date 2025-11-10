@@ -4,10 +4,10 @@ import { AppError } from "./app-error.ts";
 export class NotAuthorisedError extends AppError {
   public constructor(
     message: string,
-    private handler: string,
-    private userId: string | undefined,
-    private actualPermissions: Permission[],
-    private requiredPermissions: Permission[],
+    public readonly handler: keyof Commands,
+    public readonly userId: string | undefined,
+    public readonly actualPermissions: Permission[],
+    public readonly requiredPermissions: Permission[],
   ) {
     super(message);
   }
