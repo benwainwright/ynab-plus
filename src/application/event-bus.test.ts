@@ -2,12 +2,17 @@ import { describe, expect, it, mock as bunMock } from "bun:test";
 import { mock } from "bun-mock-extended";
 import { EventBus } from "./event-bus";
 import { EventEmitter } from "node:events";
+import type { IUUIDGenerator } from "./ports/i-uuid-generator.ts";
+
+const mockUuidGenerator = mock<IUUIDGenerator>({
+  getUUID: () => Bun.randomUUIDv7(),
+});
 
 describe("event bus", () => {
   describe("on", () => {
     it("correctly subscribes to an event that can be listened to", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const data = {
         url: "foo",
@@ -24,7 +29,7 @@ describe("event bus", () => {
 
     it("does not listen to events with different keys", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const mockHandler = bunMock();
       bus.on("AppInitialised", mockHandler);
@@ -37,7 +42,7 @@ describe("event bus", () => {
   describe("off", () => {
     it("removes event handlers", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const data = {
         url: "foo",
@@ -55,7 +60,7 @@ describe("event bus", () => {
 
     it("also removes onAllHandlers", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const mockListener = bunMock();
 
@@ -73,7 +78,7 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
 
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const data = {
         url: "foo",
@@ -103,7 +108,7 @@ describe("event bus", () => {
 
       const mockExternalListener = bunMock();
       emitter.on("foo", mockExternalListener);
-      const bus = new EventBus(emitter, "foobar", mock());
+      const bus = new EventBus(emitter, "foobar", mockUuidGenerator);
 
       bus.removeAll();
       emitter.emit("foo", "bar");
@@ -115,7 +120,7 @@ describe("event bus", () => {
   describe("onAll", () => {
     it("listens to all events emitted on this bus", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const mockListener = bunMock();
 
@@ -145,7 +150,7 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
       {
-        using bus = new EventBus(emitter, "foo", mock());
+        using bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
         const mockOne = bunMock();
         const mockTwo = bunMock();
@@ -162,7 +167,7 @@ describe("event bus", () => {
   describe("childbus", () => {
     it("receives events that are emitted by it", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const child = bus.child("foo-child");
 
@@ -182,7 +187,7 @@ describe("event bus", () => {
 
     it("also receives events that are emitted by the parent bus", async () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const child = bus.child("foo-child");
 
@@ -202,7 +207,7 @@ describe("event bus", () => {
 
     it("does not receive events emitted by other children", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const child1 = bus.child("foo-child");
       const child2 = bus.child("bar-child");
@@ -225,7 +230,7 @@ describe("event bus", () => {
 
     it("does not emit events on the parent bus", () => {
       const emitter = new EventEmitter();
-      const bus = new EventBus(emitter, "foo", mock());
+      const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
       const child1 = bus.child("foo-child");
 

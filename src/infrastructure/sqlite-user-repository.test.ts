@@ -1,8 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { mock } from "bun-mock-extended";
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { Database } from "bun:sqlite";
-import type { User } from "@domain";
+import { User } from "@domain";
 
 describe("the user repository", () => {
   it("can update and return a user", async () => {
@@ -13,7 +12,7 @@ describe("the user repository", () => {
 
     repo.create();
 
-    const data = mock<User>({
+    const data = new User({
       email: "bwainwright28@gmail.com",
       id: "ben",
       passwordHash:
@@ -37,7 +36,7 @@ describe("the user repository", () => {
 
       repo.create();
 
-      const data = mock<User>({
+      const data = new User({
         email: "bwainwright28@gmail.com",
         id: "ben",
         passwordHash:
@@ -45,7 +44,7 @@ describe("the user repository", () => {
         permissions: ["public", "user"],
       });
 
-      const data2 = mock<User>({
+      const data2 = new User({
         email: "a@b.com",
         id: "ben2",
         passwordHash:
@@ -53,7 +52,7 @@ describe("the user repository", () => {
         permissions: ["public", "user"],
       });
 
-      const data3 = mock<User>({
+      const data3 = new User({
         email: "a@c.com",
         id: "ben3",
         passwordHash:

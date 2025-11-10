@@ -11,7 +11,7 @@ import type {
   IRepository,
   ISingleItemStore,
 } from "../ports/index.ts";
-import type { User } from "@domain";
+import { User } from "@domain";
 
 describe("get user command handler", () => {
   it("gets a user from the repository and returns it", async () => {
@@ -51,17 +51,13 @@ describe("get user command handler", () => {
 
     const context = { command, eventBus, currentUserCache };
 
-    await handler.doHandle(context);
+    const response = await handler.doHandle(context);
 
-    expect(eventBus.emit).toHaveBeenCalledWith("CommandResponse", {
-      key: "GetCurrentUserCommand",
-      data: mockUser,
-      id: "foo",
-    });
+    expect(response).toEqual(mockUser);
   });
 
   it("returns undefined if there is no logged in user", async () => {
-    const mockUser: User = mock({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -95,17 +91,13 @@ describe("get user command handler", () => {
 
     const context = { command, eventBus, currentUserCache };
 
-    await handler.doHandle(context);
+    const response = await handler.doHandle(context);
 
-    expect(eventBus.emit).toHaveBeenCalledWith("CommandResponse", {
-      key: "GetCurrentUserCommand",
-      data: undefined,
-      id: "foo",
-    });
+    expect(response).toEqual(undefined);
   });
 
   it("updates session with permissions if they've changed", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
@@ -132,7 +124,7 @@ describe("get user command handler", () => {
 
     const currentUserCache = mock<ISingleItemStore<User>>({
       get: bunMock().mockResolvedValue(
-        mock<User>({
+        new User({
           id: "ben",
           permissions: ["admin"],
           email: "bwainwright28@gmail.com",
@@ -146,8 +138,10 @@ describe("get user command handler", () => {
     await handler.doHandle(context);
 
     expect(currentUserCache.set).toHaveBeenCalledWith({
-      userId: "ben",
+      id: "ben",
       permissions: ["user"],
+      email: "bwainwright28@gmail.com",
+      passwordHash: "foo",
     });
   });
 
