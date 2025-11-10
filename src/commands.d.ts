@@ -1,4 +1,4 @@
-import type { IUser } from "@types";
+import type { User } from "@domain";
 
 declare global {
   interface Commands {
@@ -11,7 +11,7 @@ declare global {
         offset: number;
         limit: numbrer;
       };
-      response: IUser[];
+      response: User[];
     };
     LoginCommand: {
       request: {
@@ -34,13 +34,13 @@ declare global {
     };
     GetCurrentUserCommand: {
       request: undefined;
-      response: IUser | undefined;
+      response: User | undefined;
     };
     GetUser: {
       request: {
         username: string;
       };
-      response: IUser | undefined;
+      response: User | undefined;
     };
     HelloWorldCommand: {
       request: {

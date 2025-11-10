@@ -2,14 +2,12 @@
   "$schema": "https://www.schemastore.org/tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@types": ["./src/types/index.ts"],
-      "@core": ["./src/core/index.ts"],
-      "@data": ["./src/data/index.ts"],
-      "@client": ["./src/client/index.ts"],
-      "@client/components": ["./src/client/components/index.ts"],
-      "@client/hooks": ["./src/client/hooks/index.ts"],
-      "@handlers": ["./src/handlers/index.ts"],
-      "@tokens": ["./src/tokens.ts"],
+      "@infrastructure": ["./src/infrastructure/index.ts"],
+      "@client": ["./src/web-app/client/index.ts"],
+      "@client/components": ["./src/web-app/client/components/index.ts"],
+      "@client/hooks": ["./src/web-app/client/hooks/index.ts"],
+      "@domain": ["./src/domain/index.ts"],
+      "@application": ["./src/application/index.ts"],
       "@errors": ["./src/errors/index.ts"],
 
       "@test-helpers": ["./src/test-helpers/index.ts"]

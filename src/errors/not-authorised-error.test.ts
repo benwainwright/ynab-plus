@@ -1,7 +1,7 @@
 import { describe, it, expect } from "bun:test";
 import { NotAuthorisedError } from "./not-authorised-error.ts";
 import { mock } from "bun-mock-extended";
-import type { IEventBus } from "@types";
+import type { IEventBus } from "@application";
 
 describe("not authorised error", () => {
   it("stores details about the auth failure", () => {

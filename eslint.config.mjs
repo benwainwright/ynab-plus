@@ -31,7 +31,6 @@ export default tseslint.config(
           rules: [],
         },
       ],
-      "import/no-relative-parent-imports": "error",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_" },

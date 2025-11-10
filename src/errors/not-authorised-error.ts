@@ -1,5 +1,6 @@
-import type { IEventBus, Permission } from "@types";
+import type { Permission } from "@domain";
 import { AppError } from "./app-error.ts";
+import type { IEventBus } from "@application";
 
 export class NotAuthorisedError extends AppError {
   public constructor(
