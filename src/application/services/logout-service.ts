@@ -1,7 +1,7 @@
-import { ApplicationService } from "../application-service.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type { IHandleContext } from "../ports/index.ts";
 
-export class LogoutService extends ApplicationService<"Logout"> {
+export class LogoutService extends AbstractApplicationService<"Logout"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "user",
     "admin",

@@ -10,6 +10,9 @@
       "@client/hooks": ["./src/web-app/client/hooks/index.ts"],
       "@domain": ["./src/domain/index.ts"],
       "@application": ["./src/application/index.ts"],
+      "@application/ports": ["./src/application/ports/index.ts"],
+      "@application/services": ["./src/application/services/index.ts"],
+      "@application/errors": ["./src/application/errors/index.ts"],
       "@errors": ["./src/errors/index.ts"],
       "@test-helpers": ["./src/test-helpers/index.ts"]
     },

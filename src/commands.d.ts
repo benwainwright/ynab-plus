@@ -2,6 +2,19 @@ import type { User } from "@domain";
 
 declare global {
   interface Commands {
+    CheckOauthIntegrationStatusCommand: {
+      request: {
+        provider: string;
+      };
+      response:
+        | {
+            status: "connected";
+          }
+        | {
+            status: "not_connected";
+            redirectUrl: string;
+          };
+    };
     ListTransactionsCommand: {
       request: undefined;
       response: void;

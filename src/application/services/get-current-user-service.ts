@@ -1,9 +1,9 @@
-import { ApplicationService } from "../application-service.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type { User } from "@domain";
 import { AppError } from "@errors";
 import type { IHandleContext, IRepository } from "../ports/index.ts";
 
-export class GetCurrentUserService extends ApplicationService<"GetCurrentUserCommand"> {
+export class GetCurrentUserService extends AbstractApplicationService<"GetCurrentUserCommand"> {
   public override readonly commandName = "GetCurrentUserCommand";
 
   public override requiredPermissions: ("public" | "user" | "admin")[] = [

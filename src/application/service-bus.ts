@@ -1,15 +1,19 @@
 import type { User } from "@domain";
 
-import { ServiceNotFoundError } from "./errors/service-not-found-error.ts";
-import type { ISingleItemStore } from "./ports/i-single-item-store.ts";
-import type { ICommandMessage, IEventBus } from "./ports/index.ts";
+import { ServiceNotFoundError } from "@application/errors";
 
-import type { IServiceBus } from "./ports/i-service-bus.ts";
-import type { ApplicationService } from "./application-service.ts";
+import type {
+  IServiceBus,
+  ISingleItemStore,
+  ICommandMessage,
+  IEventBus,
+} from "@application/ports";
+
+import type { AbstractApplicationService } from "@application/services";
 
 export class ServiceBus implements IServiceBus {
   public constructor(
-    private services: ApplicationService<keyof Commands>[],
+    private services: AbstractApplicationService<keyof Commands>[],
     private eventBus: IEventBus,
     private currentUserCache: ISingleItemStore<User | undefined>,
   ) {}

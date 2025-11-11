@@ -1,9 +1,11 @@
-import { ApplicationService } from "../application-service.ts";
-import type { User } from "@domain";
-import type { IHandleContext, IRepository } from "../ports/index.ts";
-import { UserNotFoundError } from "../errors/user-not-found-error.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
-export class GetUserService extends ApplicationService<"GetUser"> {
+import type { User } from "@domain";
+import type { IHandleContext, IRepository } from "@application/ports";
+
+import { UserNotFoundError } from "@application/errors";
+
+export class GetUserService extends AbstractApplicationService<"GetUser"> {
   public override readonly commandName = "GetUser";
 
   public override requiredPermissions: ("public" | "user" | "admin")[] = [

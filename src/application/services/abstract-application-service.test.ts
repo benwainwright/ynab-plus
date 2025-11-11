@@ -1,19 +1,19 @@
 import { describe, expect, it } from "bun:test";
-import { ApplicationService } from "./application-service.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { mock } from "bun-mock-extended";
 import { NotAuthorisedError } from "@errors";
-import type { ISingleItemStore } from "./ports/i-single-item-store.ts";
 import type { Permission, User } from "@domain";
 import type {
   ICommandMessage,
   IEventBus,
   IHandleContext,
-} from "./ports/index.ts";
+  ISingleItemStore,
+} from "@application/ports";
 
 describe("application service", () => {
   describe("canHandle", () => {
     it("returns false if the keys don't match", () => {
-      class TestHandler extends ApplicationService<"Logout"> {
+      class TestHandler extends AbstractApplicationService<"Logout"> {
         public override readonly commandName = "Logout";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
@@ -34,7 +34,7 @@ describe("application service", () => {
     });
 
     it("returns true if the keys match", () => {
-      class TestHandler extends ApplicationService<"Logout"> {
+      class TestHandler extends AbstractApplicationService<"Logout"> {
         public override readonly commandName = "Logout";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
@@ -57,7 +57,7 @@ describe("application service", () => {
   describe("doHandle", () => {
     it.only("executes the handle method when doHandle is called", async () => {
       let passed: IHandleContext<"Logout"> | undefined;
-      class TestHandler extends ApplicationService<"Logout"> {
+      class TestHandler extends AbstractApplicationService<"Logout"> {
         public override readonly commandName = "Logout";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
@@ -85,7 +85,7 @@ describe("application service", () => {
 
     it("throws an error and doesn't execute handle if the user doesn't have the right permissions", async () => {
       let handled = false;
-      class TestHandler extends ApplicationService<"Logout"> {
+      class TestHandler extends AbstractApplicationService<"Logout"> {
         public override readonly commandName = "Logout";
 
         public override readonly requiredPermissions: Permission[] = ["admin"];

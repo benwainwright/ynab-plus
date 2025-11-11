@@ -8,7 +8,10 @@ export type { IHandleContext } from "./i-handle-context.ts";
 export type { IServiceBus } from "./i-service-bus.ts";
 export type { ISessionIdRequester } from "./i-session-id-requester.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";
-export { type ServiceBusFactory } from "./service-bus-factory.ts";
+export type { ServiceBusFactory } from "./service-bus-factory.ts";
+export type { IOauthTokenRepository } from "./i-oauth-token-repository.ts";
+export type { IOAuthRedirectUrlGenerator } from "./i-oauth-redirect-url-generator.ts";
+export type { IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
 
 export {
   type IEventListener,

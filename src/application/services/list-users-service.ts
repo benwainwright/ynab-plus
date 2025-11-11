@@ -1,8 +1,8 @@
-import { ApplicationService } from "../application-service.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type { User } from "@domain";
 import type { IHandleContext, IRepository } from "../ports/index.ts";
 
-export class ListUsersService extends ApplicationService<"ListUsersCommand"> {
+export class ListUsersService extends AbstractApplicationService<"ListUsersCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "user",
   ];

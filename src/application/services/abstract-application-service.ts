@@ -1,9 +1,13 @@
 import { NotAuthorisedError } from "@errors";
-import type { ISingleItemStore } from "./ports/i-single-item-store.ts";
 import type { Permission, User } from "@domain";
-import type { ICommandMessage, IHandleContext } from "./ports/index.ts";
 
-export abstract class ApplicationService<TKey extends keyof Commands> {
+import type {
+  ISingleItemStore,
+  ICommandMessage,
+  IHandleContext,
+} from "@application/ports";
+
+export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   public constructor() {}
 
   public abstract readonly commandName: TKey;

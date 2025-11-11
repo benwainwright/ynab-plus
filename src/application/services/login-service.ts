@@ -1,4 +1,4 @@
-import { ApplicationService } from "../application-service.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type {
   IHandleContext,
   IPasswordVerifier,
@@ -6,7 +6,7 @@ import type {
 } from "../ports/index.ts";
 import type { Permission, User } from "@domain";
 
-export class LoginService extends ApplicationService<"LoginCommand"> {
+export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public override requiredPermissions: Permission[] = ["public"];
 
   public constructor(

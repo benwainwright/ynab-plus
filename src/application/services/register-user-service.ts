@@ -1,10 +1,14 @@
-import { ApplicationService } from "../application-service.ts";
-import type { IPasswordHasher } from "../ports/i-password-hasher.ts";
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 import { User } from "@domain";
-import type { IHandleContext, IRepository } from "../ports/index.ts";
 
-export class RegisterUserService extends ApplicationService<"RegisterCommand"> {
+import type {
+  IPasswordHasher,
+  IHandleContext,
+  IRepository,
+} from "@application/ports";
+
+export class RegisterUserService extends AbstractApplicationService<"RegisterCommand"> {
   public override readonly commandName = "RegisterCommand";
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "public",
