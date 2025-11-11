@@ -40,7 +40,6 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     }
 
     const token = await this.tokenRepository.get(currentUser.id, provider);
-    console.log({ token });
 
     if (!token) {
       return {
