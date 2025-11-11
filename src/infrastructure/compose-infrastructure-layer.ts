@@ -1,11 +1,11 @@
+import z from "zod";
 import type { IInfrastructurePorts } from "@application";
 
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { PasswordHashValidator } from "./password-hash-validator.ts";
 import { FlatFileObjectStore } from "./flat-file-object-store.ts";
 import { BunUUIDGenerator } from "./bun-uuid-generator.ts";
-import type { IBootstrapper } from "../bootstrap/i-bootstrapper.ts";
-import z from "zod";
+import type { IBootstrapper } from "@bootstrap";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 export const composeInfrastructureLayer = async (

@@ -7,7 +7,5 @@ export interface IBootstrapper {
     schema: TConfigValue,
   ): ConfigValue<StandardSchemaV1.InferOutput<TConfigValue>>;
 
-  start(): void;
-
   addInitStep(callback: () => Promise<void>): void;
 }
