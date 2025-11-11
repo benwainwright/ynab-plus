@@ -1,3 +1,3 @@
 export interface IOAuthRedirectUrlGenerator {
-  getRedirectUrl(): string;
+  getRedirectUrl(): Promise<string>;
 }

@@ -42,7 +42,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     if (!token) {
       return {
         status: "not_connected",
-        redirectUrl: this.redirectUrlGenerator.getRedirectUrl(),
+        redirectUrl: await this.redirectUrlGenerator.getRedirectUrl(),
       };
     }
 
