@@ -1,20 +1,32 @@
-import { permissions } from "@domain";
+import { type Permission } from "@domain";
 import { getUser } from "../../hooks";
-import { use } from "react";
+import { use, useState, type ChangeEvent } from "react";
 import { useParams } from "react-router";
 
 export const EditUser = () => {
   const { userId } = useParams();
-
-  if (!userId) {
-    return <p>User ID expected!</p>;
-  }
-
   const user = use(getUser(userId));
+  const [email, setEmail] = useState(user?.email);
+  const [permissions, setPermissions] = useState(user?.permissions ?? []);
 
   if (!user) {
     return <p>User was not found!</p>;
   }
+
+  const permissionChange = (
+    permission: Permission,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.checked) {
+      setPermissions([...permissions, permission]);
+    } else {
+      setPermissions(
+        permissions.filter(
+          (existingPermission) => permission === existingPermission,
+        ),
+      );
+    }
+  };
 
   return (
     <>
@@ -24,7 +36,12 @@ export const EditUser = () => {
         <fieldset>
           <label>
             Username
-            <input name="username" placeholder="Username" value={user.id} />
+            <input
+              name="username"
+              placeholder="Username"
+              value={user.id}
+              disabled
+            />
           </label>
           <label>
             Email
@@ -33,7 +50,8 @@ export const EditUser = () => {
               name="email"
               placeholder="Email"
               autoComplete="email"
-              value={user.email}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </label>
           <fieldset>
@@ -44,6 +62,7 @@ export const EditUser = () => {
                   type="checkbox"
                   name="permission"
                   checked={user.permissions.includes(permission)}
+                  onChange={(event) => permissionChange(permission, event)}
                 />
                 {permission}
               </label>

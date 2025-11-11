@@ -5,7 +5,10 @@ import type { User } from "@domain";
 
 const userCache = new Map<string, Promise<User | undefined>>();
 
-export const getUser = (username: string) => {
+export const getUser = (username?: string) => {
+  if (!username) {
+    throw new Error(`Cannot get user without username!`);
+  }
   const user = userCache.get(username);
 
   if (!user) {
