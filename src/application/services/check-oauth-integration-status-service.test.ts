@@ -56,6 +56,7 @@ describe("check oauth-integration-status-service", () => {
 
     const mockToken = new OauthToken({
       token: "foo",
+      userId: "ben",
       refreshToken: "foo-refresh",
       provider: "ynab",
       expiry: new Date("2021-01-01T00:00:00.000Z"),
@@ -114,12 +115,14 @@ describe("check oauth-integration-status-service", () => {
       token: "foo",
       refreshToken: "foo-refresh",
       provider: "ynab",
+      userId: "ben",
       expiry: new Date("2019-01-01T00:00:00.000Z"),
     });
 
     const mockSecondToken = new OauthToken({
       token: "bar",
       refreshToken: "foo-refresh-2",
+      userId: "ben",
       provider: "ynab",
       expiry: new Date("2021-01-01T00:00:00.000Z"),
     });
