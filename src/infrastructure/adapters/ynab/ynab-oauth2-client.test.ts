@@ -18,7 +18,7 @@ describe("ynab auth client", () => {
     const url = await client.getRedirectUrl();
 
     expect(url).toEqual(
-      `https://app.ynab.com/oauth/authorize?client_id=client-id&redirect_uri=https%3A%2F%2Fwww.google.com&response_type=token`,
+      `https://app.ynab.com/oauth/authorize?client_id=client-id&redirect_uri=https%3A%2F%2Fwww.google.com&response_type=code`,
     );
   });
 });
