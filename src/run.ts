@@ -1,19 +1,17 @@
 import { composeDataLayer } from "@infrastructure";
 import { composeApplicationLayer } from "@application";
 import { composeWebApp } from "@web-app";
-import { JsonFileConfigReader } from "./configuration.ts";
+import { Bootstrapper } from "./bootstrapper.ts";
 
-export const run = async () => {
-  const config = new JsonFileConfigReader(`ynab-plus.json`);
+const bootstrapper = new Bootstrapper({ configFile: `ynab-plus.config.json` });
 
-  const dataLayer = await composeDataLayer(config);
+const dataLayer = await composeDataLayer(bootstrapper);
 
-  const applicationLayer = composeApplicationLayer(dataLayer);
+const applicationLayer = composeApplicationLayer(dataLayer);
 
-  const server = await composeWebApp({
-    ...applicationLayer,
-    configurator: config,
-  });
+await composeWebApp({
+  ...applicationLayer,
+  configurator: bootstrapper,
+});
 
-  server.start();
-};
+await bootstrapper.start();

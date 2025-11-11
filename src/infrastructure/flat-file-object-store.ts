@@ -1,20 +1,12 @@
 import type { IObjectStorage } from "@application";
 import { join } from "node:path";
-import type { IConfigurable } from "../i-configurable.ts";
-import type { IConfigurator } from "../i-configurator.ts";
-import z from "zod";
+import type { IConfigValue } from "../i-config-value.ts";
 
-export class FlatFileObjectStore implements IObjectStorage, IConfigurable {
-  private folder: string = "";
-
-  public constructor() {}
-
-  public async configure(configurator: IConfigurator): Promise<void> {
-    this.folder = await configurator.getConfig("sessionStorePath", z.string());
-  }
+export class FlatFileObjectStore implements IObjectStorage {
+  public constructor(private folder: IConfigValue<string>) {}
 
   public async get(key: string): Promise<object | undefined> {
-    const path = join(this.folder, key);
+    const path = join(await this.folder.value, key);
     const file = Bun.file(path);
     if (!(await file.exists())) {
       return undefined;
@@ -23,7 +15,7 @@ export class FlatFileObjectStore implements IObjectStorage, IConfigurable {
   }
 
   public async set(key: string, thing: object): Promise<void> {
-    const path = join(this.folder, key);
+    const path = join(await this.folder.value, key);
     await Bun.write(path, JSON.stringify(thing), { createPath: true });
   }
 }

@@ -1,26 +1,32 @@
-import { Database } from "bun:sqlite";
-
 import type { IInfrastructurePorts } from "@application";
 
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { PasswordHashValidator } from "./password-hash-validator.ts";
 import { FlatFileObjectStore } from "./flat-file-object-store.ts";
 import { BunUUIDGenerator } from "./bun-uuid-generator.ts";
-import type { IConfigurator } from "../i-configurator.ts";
+import type { IBootstrapper } from "../i-bootstrapper.ts";
 import z from "zod";
+import { SqliteDatabase } from "./sqlite-database.ts";
 
 export const composeInfrastructureLayer = async (
-  configurator: IConfigurator,
+  bootstrapper: IBootstrapper,
 ): Promise<IInfrastructurePorts> => {
-  const filename = await configurator.getConfig(`sqliteFilename`, z.string());
+  const database = new SqliteDatabase(
+    bootstrapper.configValue(`sqliteFilename`, z.string()),
+  );
 
-  const database = new Database(filename, { strict: true });
+  const userRepository = new SqliteUserRepository(
+    bootstrapper.configValue("userTableName", z.string()),
+    database,
+  );
 
-  const userRepository = new SqliteUserRepository("users", database);
+  bootstrapper.addInitStep(async () => await userRepository.create());
+
   const passwordHasher = new PasswordHashValidator();
-  const sessionStorage = new FlatFileObjectStore();
 
-  await sessionStorage.configure(configurator);
+  const sessionStorage = new FlatFileObjectStore(
+    bootstrapper.configValue("sessionPath", z.string()),
+  );
 
   const uuidGenerator = new BunUUIDGenerator();
 

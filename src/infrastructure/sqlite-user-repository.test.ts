@@ -1,16 +1,22 @@
 import { describe, expect, it } from "bun:test";
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
-import { Database } from "bun:sqlite";
 import { User } from "@domain";
+import type { IConfigValue } from "../i-config-value.ts";
+import { SqliteDatabase } from "./sqlite-database.ts";
 
 describe("the user repository", () => {
   it("can update and return a user", async () => {
-    const repo = new SqliteUserRepository(
-      "user",
-      new Database(":memory:", { strict: true }),
-    );
+    const database = new SqliteDatabase({
+      value: Promise.resolve(":memory:"),
+    });
 
-    repo.create();
+    const tableName: IConfigValue<string> = {
+      value: Promise.resolve("user"),
+    };
+
+    const repo = new SqliteUserRepository(tableName, database);
+
+    await repo.create();
 
     const data = new User({
       email: "bwainwright28@gmail.com",
@@ -29,12 +35,17 @@ describe("the user repository", () => {
 
   describe("getMany", () => {
     it("can return many users", async () => {
-      const repo = new SqliteUserRepository(
-        "user",
-        new Database(":memory:", { strict: true }),
-      );
+      const tableName: IConfigValue<string> = {
+        value: Promise.resolve("user"),
+      };
 
-      repo.create();
+      const database = new SqliteDatabase({
+        value: Promise.resolve(":memory:"),
+      });
+
+      const repo = new SqliteUserRepository(tableName, database);
+
+      await repo.create();
 
       const data = new User({
         email: "bwainwright28@gmail.com",
@@ -71,12 +82,17 @@ describe("the user repository", () => {
   });
 
   it("returns undefined if not present", async () => {
-    const repo = new SqliteUserRepository(
-      "user",
-      new Database(":memory:", { strict: true }),
-    );
+    const tableName: IConfigValue<string> = {
+      value: Promise.resolve("user"),
+    };
 
-    repo.create();
+    const database = new SqliteDatabase({
+      value: Promise.resolve(":memory:"),
+    });
+
+    const repo = new SqliteUserRepository(tableName, database);
+
+    await repo.create();
 
     const user = await repo.get("foo");
 

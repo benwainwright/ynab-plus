@@ -1,5 +1,5 @@
-import type { IConfigurator } from "./i-configurator.ts";
+import type { IBootstrapper } from "./i-bootstrapper.ts";
 
 export interface IConfigurable {
-  configure(configurator: IConfigurator): Promise<void>;
+  configure(configurator: IBootstrapper): Promise<void>;
 }
