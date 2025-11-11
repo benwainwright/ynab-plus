@@ -1,12 +1,14 @@
 import z from "zod";
+
+import type { IBootstrapper } from "@bootstrap";
 import type { IInfrastructurePorts } from "@application";
 
 import { SqliteUserRepository } from "./adapters/sqlite-user-repository.ts";
 import { PasswordHashValidator } from "./adapters/password-hash-validator.ts";
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
 import { BunUUIDGenerator } from "./adapters/bun-uuid-generator.ts";
-import type { IBootstrapper } from "@bootstrap";
 import { SqliteDatabase } from "./adapters/sqlite-database.ts";
+import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite-oauth2-token-repository.ts";
 
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
@@ -19,8 +21,13 @@ export const composeInfrastructureLayer = async (
     bootstrapper.configValue("userTableName", z.string()),
     database,
   );
-
   bootstrapper.addInitStep(async () => await userRepository.create());
+
+  const oauthTokenRepository = new SqliteOauth2TokenRepsoitory(
+    bootstrapper.configValue("tokenTableName", z.string()),
+    database,
+  );
+  bootstrapper.addInitStep(async () => await oauthTokenRepository.create());
 
   const passwordHasher = new PasswordHashValidator();
 
@@ -35,6 +42,7 @@ export const composeInfrastructureLayer = async (
     passwordHasher,
     passwordVerifier: passwordHasher,
     sessionStorage,
+    oauthTokenRepository,
     uuidGenerator,
   };
 };
