@@ -5,7 +5,6 @@ import { cwd } from "process";
 import { readFileSync } from "fs";
 import EventEmitter from "events";
 import z, { ZodError } from "zod";
-import type { IConfigValue } from "./i-config-value.ts";
 import { ConfigValue } from "./config-value.ts";
 
 const RESOLVE_CONFIG = "resolve-config";
@@ -46,7 +45,7 @@ export class Bootstrapper implements IBootstrapper {
   public configValue<TConfigValue extends StandardSchemaV1>(
     key: string,
     schema: TConfigValue,
-  ): IConfigValue<StandardSchemaV1.InferOutput<TConfigValue>> {
+  ): ConfigValue<StandardSchemaV1.InferOutput<TConfigValue>> {
     const value = this._config[key];
     this.fullSchema[key] = schema;
 

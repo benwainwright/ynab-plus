@@ -2,15 +2,15 @@ import type { IEventBus, ServiceBusFactory } from "@application";
 import type { BunRequest, Server } from "bun";
 import { SessionIdHandler } from "./session-id-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
-import type { IConfigValue } from "../../i-config-value.ts";
+import { ConfigValue } from "@bootstrap";
 
 export class AppServer {
   public constructor(
     private serviceBusFactory: ServiceBusFactory,
     private eventBus: IEventBus,
     private indexPage: Bun.HTMLBundle,
-    private developmentMode: IConfigValue<boolean>,
-    private port: IConfigValue<number>,
+    private developmentMode: ConfigValue<boolean>,
+    private port: ConfigValue<number>,
   ) {}
 
   public async start() {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { User } from "@domain";
-import type { IConfigValue } from "../i-config-value.ts";
+import type { ConfigValue } from "@bootstrap";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 describe("the user repository", () => {
@@ -10,7 +10,7 @@ describe("the user repository", () => {
       value: Promise.resolve(":memory:"),
     });
 
-    const tableName: IConfigValue<string> = {
+    const tableName: ConfigValue<string> = {
       value: Promise.resolve("user"),
     };
 
@@ -35,7 +35,7 @@ describe("the user repository", () => {
 
   describe("getMany", () => {
     it("can return many users", async () => {
-      const tableName: IConfigValue<string> = {
+      const tableName: ConfigValue<string> = {
         value: Promise.resolve("user"),
       };
 
@@ -82,7 +82,7 @@ describe("the user repository", () => {
   });
 
   it("returns undefined if not present", async () => {
-    const tableName: IConfigValue<string> = {
+    const tableName: ConfigValue<string> = {
       value: Promise.resolve("user"),
     };
 

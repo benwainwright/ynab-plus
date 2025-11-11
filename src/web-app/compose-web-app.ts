@@ -2,7 +2,7 @@ import type { IEventBus, ServiceBusFactory } from "@application";
 
 import indexPage from "./client/index.html";
 import { AppServer } from "./backend/app-server.ts";
-import type { IBootstrapper } from "../i-bootstrapper.ts";
+import type { IBootstrapper } from "../bootstrap/i-bootstrapper.ts";
 import z from "zod";
 
 interface WebAppDependencies {

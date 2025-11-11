@@ -1,12 +1,12 @@
 import { User } from "@domain";
 import type { IRepository } from "@application";
 
-import type { IConfigValue } from "../i-config-value.ts";
+import type { ConfigValue } from "@bootstrap";
 import type { SqliteDatabase } from "./sqlite-database.ts";
 
 export class SqliteUserRepository implements IRepository<User> {
   public constructor(
-    private tableName: IConfigValue<string>,
+    private tableName: ConfigValue<string>,
     private database: SqliteDatabase,
   ) {}
 

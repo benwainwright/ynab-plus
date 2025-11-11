@@ -1,11 +1,11 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type { IConfigValue } from "./i-config-value.ts";
+import type { ConfigValue } from "./config-value.ts";
 
 export interface IBootstrapper {
   configValue<TConfigValue extends StandardSchemaV1>(
     key: string,
     schema: TConfigValue,
-  ): IConfigValue<StandardSchemaV1.InferOutput<TConfigValue>>;
+  ): ConfigValue<StandardSchemaV1.InferOutput<TConfigValue>>;
 
   start(): void;
 

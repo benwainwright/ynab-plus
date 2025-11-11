@@ -1,9 +1,11 @@
 import { composeDataLayer } from "@infrastructure";
 import { composeApplicationLayer } from "@application";
 import { composeWebApp } from "@web-app";
-import { Bootstrapper } from "./bootstrapper.ts";
+import { Bootstrapper } from "@bootstrap";
 
-const bootstrapper = new Bootstrapper({ configFile: `ynab-plus.config.json` });
+const bootstrapper = new Bootstrapper({
+  configFile: `ynab-plus.config.json`,
+});
 
 const dataLayer = await composeDataLayer(bootstrapper);
 

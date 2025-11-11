@@ -1,9 +1,9 @@
 import type { IObjectStorage } from "@application";
 import { join } from "node:path";
-import type { IConfigValue } from "../i-config-value.ts";
+import type { ConfigValue } from "@bootstrap";
 
 export class FlatFileObjectStore implements IObjectStorage {
-  public constructor(private folder: IConfigValue<string>) {}
+  public constructor(private folder: ConfigValue<string>) {}
 
   public async get(key: string): Promise<object | undefined> {
     const path = join(await this.folder.value, key);
