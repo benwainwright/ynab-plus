@@ -6,6 +6,7 @@ import type {
 } from "@application/ports";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { AppError } from "@application/errors";
+import type { Permission } from "@domain";
 
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
@@ -18,10 +19,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
   public override readonly commandName = "CheckOauthIntegrationStatusCommand";
 
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "user",
-    "admin",
-  ];
+  public override requiredPermissions: Permission[] = ["user", "admin"];
 
   protected override async handle({
     currentUserCache,
