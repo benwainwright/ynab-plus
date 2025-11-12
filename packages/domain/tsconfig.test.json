@@ -5,7 +5,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.test.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "paths": {
       "@ports": ["./src/ports/index.ts"],
       "@errors": ["./src/errors/index.ts"],

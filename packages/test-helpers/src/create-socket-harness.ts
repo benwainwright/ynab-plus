@@ -1,18 +1,19 @@
-import { mock, type Mock } from "bun:test";
-import { mock as mockExtended } from "bun-mock-extended";
+import { vi, type Mock } from "vitest";
+import { mock as mockExtended } from "vitest-mock-extended";
 
 type MessageListener = (event: MessageEvent) => void;
 type EventListenerRef = EventListenerOrEventListenerObject;
 
 type WithMocks<T> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends (...args: any[]) => any ? Mock<T[K]> : T[K];
+  [K in keyof T]: T[K] extends (...args: infer TArgs) => infer TReturn
+    ? Mock<TArgs, TReturn>
+    : T[K];
 };
 
 export const createSocketHarness = () => {
   const socket = mockExtended<WithMocks<WebSocket>>({
-    addEventListener: mock(),
-    removeEventListener: mock(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
   });
 
   const listeners = new Set<MessageListener>();

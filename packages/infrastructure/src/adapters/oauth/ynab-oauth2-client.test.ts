@@ -1,20 +1,9 @@
-import {
-  afterAll,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  setSystemTime,
-} from "bun:test";
-import getPort from "get-port";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { YnabOauth2Client } from "./ynab-oauth2-client.ts";
-import type { BunRequest, Server } from "bun";
-import { waitFor } from "@ynab-plus/test-helpers";
 import { OauthToken } from "@ynab-plus/domain";
 
-let server: Server<undefined> | undefined;
 let formData: FormData | undefined;
-let port: number | undefined;
+let fetchMock: ReturnType<typeof vi.fn>;
 
 const first_token_response = {
   access_token: "0cd3d1c4-1107-11e8-b642-0ed5f89f718b",
@@ -30,32 +19,16 @@ const refreshedToken = {
   refresh_token: "new_refresh",
 };
 
-beforeAll(async () => {
-  port = await getPort();
-  server = Bun.serve({
-    port,
-    websocket: {
-      message: () => {},
-    },
-    routes: {
-      "/oauth/token": async (request: BunRequest) => {
-        formData = await request.formData();
-        if (
-          request.method === "POST" &&
-          formData.get("code") &&
-          formData.get("grant_type") === "authorization_code"
-        ) {
-          return Response.json(first_token_response);
-        } else if (formData.get("grant_type") === "refresh_token")
-          return Response.json(refreshedToken);
-        return Response.json({ error: "unauthorised" }, { status: 403 });
-      },
-    },
-  });
+beforeEach(() => {
+  formData = undefined;
+  fetchMock = vi.fn();
+  vi.stubGlobal("fetch", fetchMock);
 });
 
-afterAll(() => {
-  server?.stop();
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+  vi.useRealTimers();
   formData = undefined;
 });
 
@@ -91,13 +64,14 @@ describe("ynab auth client", () => {
   describe("newToken", async () => {
     it("requests the code from the ynab API", async () => {
       const startDate = new Date(1762930654);
-      setSystemTime(startDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(startDate);
       const clientId = "client-id";
       const clientSecret = "client-secret";
       const redirectUrl = "https://www.google.com";
 
       const client = new YnabOauth2Client(
-        `http://localhost:${port}`,
+        `https://api.ynab.com`,
         {
           value: Promise.resolve(clientId),
         },
@@ -110,11 +84,17 @@ describe("ynab auth client", () => {
         "ynab",
       );
 
+      fetchMock.mockImplementation(async (_input, init) => {
+        formData = init?.body as FormData;
+        return new Response(JSON.stringify(first_token_response), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      });
+
       const newToken = await client.newToken("ben", "1-2-3");
 
-      await waitFor(() => {
-        expect(formData).toBeDefined();
-      });
+      expect(formData).toBeDefined();
 
       expect(formData?.get("client_id")).toEqual(clientId);
       expect(formData?.get("client_secret")).toEqual(clientSecret);
@@ -130,21 +110,21 @@ describe("ynab auth client", () => {
       expect(newToken.provider).toEqual("ynab");
       expect(newToken.token).toEqual(first_token_response.access_token);
       expect(newToken.refreshToken).toEqual(first_token_response.refresh_token);
-
-      setSystemTime();
+      vi.useRealTimers();
     });
   });
 
   describe("refreshToken", async () => {
     it("requests the token via the ynab API", async () => {
       const startDate = new Date(1762930754);
-      setSystemTime(startDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(startDate);
       const clientId = "client-id";
       const clientSecret = "client-secret";
       const redirectUrl = "https://www.google.com";
 
       const client = new YnabOauth2Client(
-        `http://localhost:${port}`,
+        `https://api.ynab.com`,
         {
           value: Promise.resolve(clientId),
         },
@@ -165,11 +145,17 @@ describe("ynab auth client", () => {
         provider: "monzo",
       });
 
+      fetchMock.mockImplementation(async (_input, init) => {
+        formData = init?.body as FormData;
+        return new Response(JSON.stringify(refreshedToken), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      });
+
       const newToken = await client.refreshToken(token);
 
-      await waitFor(() => {
-        expect(formData).toBeDefined();
-      });
+      expect(formData).toBeDefined();
 
       expect(formData?.get("client_id")).toEqual(clientId);
       expect(formData?.get("client_secret")).toEqual(clientSecret);
@@ -182,8 +168,7 @@ describe("ynab auth client", () => {
       expect(newToken.provider).toEqual("ynab");
       expect(newToken.token).toEqual(refreshedToken.access_token);
       expect(newToken.refreshToken).toEqual(refreshedToken.refresh_token);
-
-      setSystemTime();
+      vi.useRealTimers();
     });
   });
 });

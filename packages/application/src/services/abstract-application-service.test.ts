@@ -1,6 +1,6 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
-import { mock } from "bun-mock-extended";
+import { mock } from "vitest-mock-extended";
 import { NotAuthorisedError } from "@errors";
 import type { Permission, User } from "@ynab-plus/domain";
 import type {
@@ -30,7 +30,7 @@ describe("application service", () => {
       });
 
       const result = handler.canHandle(command);
-      expect(result).toBeFalse();
+      expect(result).toBe(false);
     });
 
     it("returns true if the keys match", () => {
@@ -51,11 +51,11 @@ describe("application service", () => {
       });
 
       const result = handler.canHandle(command);
-      expect(result).toBeTrue();
+      expect(result).toBe(true);
     });
   });
   describe("doHandle", () => {
-    it.only("executes the handle method when doHandle is called", async () => {
+    it("executes the handle method when doHandle is called", async () => {
       let passed: IHandleContext<"Logout"> | undefined;
       class TestHandler extends AbstractApplicationService<"Logout"> {
         public override readonly commandName = "Logout";
@@ -119,7 +119,7 @@ describe("application service", () => {
       await expect(handler.doHandle(context)).rejects.toThrow(
         NotAuthorisedError,
       );
-      expect(handled).toBeFalse();
+      expect(handled).toBe(false);
     });
   });
 });

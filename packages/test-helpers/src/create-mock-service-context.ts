@@ -1,5 +1,5 @@
-import { mock as bunMock } from "bun:test";
-import { mock } from "bun-mock-extended";
+import { vi } from "vitest";
+import { mock } from "vitest-mock-extended";
 
 import type {
   ICommandMessage,
@@ -27,7 +27,7 @@ export const createMockServiceContext = <TCommandKey extends keyof Commands>(
   const eventBus = mock<IEventBus>();
 
   const currentUserCache = mock<ISingleItemStore<User>>({
-    get: bunMock().mockResolvedValue(currentUser),
+    get: vi.fn().mockResolvedValue(currentUser),
   });
 
   return { command, eventBus, currentUserCache };

@@ -1,11 +1,12 @@
-import { describe, expect, it, mock as bunMock } from "bun:test";
-import { mock } from "bun-mock-extended";
+import { describe, expect, it, vi } from "vitest";
+import { mock } from "vitest-mock-extended";
 import { EventBus } from "./event-bus";
 import { EventEmitter } from "node:events";
 import type { IUUIDGenerator } from "./ports/i-uuid-generator.ts";
+import { randomUUID } from "node:crypto";
 
 const mockUuidGenerator = mock<IUUIDGenerator>({
-  getUUID: () => Bun.randomUUIDv7(),
+  getUUID: () => randomUUID(),
 });
 
 describe("event bus", () => {
@@ -31,7 +32,7 @@ describe("event bus", () => {
       const emitter = new EventEmitter();
       const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
-      const mockHandler = bunMock();
+      const mockHandler = vi.fn();
       bus.on("AppInitialised", mockHandler);
       bus.emit("AppClosing", undefined);
 
@@ -49,7 +50,7 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockHandler = bunMock();
+      const mockHandler = vi.fn();
 
       const identifier = bus.on("AppInitialised", mockHandler);
       bus.off(identifier);
@@ -62,7 +63,7 @@ describe("event bus", () => {
       const emitter = new EventEmitter();
       const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
-      const mockListener = bunMock();
+      const mockListener = vi.fn();
 
       const identifier = bus.onAll(mockListener);
 
@@ -85,9 +86,9 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockOne = bunMock();
-      const mockTwo = bunMock();
-      const mockThree = bunMock();
+      const mockOne = vi.fn();
+      const mockTwo = vi.fn();
+      const mockThree = vi.fn();
 
       bus.on("AppClosing", mockOne);
       bus.on("AppInitialised", mockTwo);
@@ -106,7 +107,7 @@ describe("event bus", () => {
     it("does not remove external listener", () => {
       const emitter = new EventEmitter();
 
-      const mockExternalListener = bunMock();
+      const mockExternalListener = vi.fn();
       emitter.on("foo", mockExternalListener);
       const bus = new EventBus(emitter, "foobar", mockUuidGenerator);
 
@@ -122,7 +123,7 @@ describe("event bus", () => {
       const emitter = new EventEmitter();
       const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
-      const mockListener = bunMock();
+      const mockListener = vi.fn();
 
       bus.onAll(mockListener);
 
@@ -152,13 +153,13 @@ describe("event bus", () => {
       {
         using bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
-        const mockOne = bunMock();
-        const mockTwo = bunMock();
+        const mockOne = vi.fn();
+        const mockTwo = vi.fn();
 
         bus.on("AppClosing", mockOne);
         bus.on("AppInitialised", mockTwo);
       }
-      const mockListener = bunMock();
+      const mockListener = vi.fn();
       emitter.on("foo", mockListener);
       expect(mockListener).not.toHaveBeenCalled();
     });
@@ -217,8 +218,8 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockListener2 = bunMock();
-      const mockListener1 = bunMock();
+      const mockListener2 = vi.fn();
+      const mockListener1 = vi.fn();
 
       child2.on("AppInitialised", mockListener2);
       child1.on("AppInitialised", mockListener1);
@@ -239,7 +240,7 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const mockListener1 = bunMock();
+      const mockListener1 = vi.fn();
 
       child1.emit("AppInitialised", data);
       bus.on("AppInitialised", mockListener1);

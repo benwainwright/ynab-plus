@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { OauthToken } from "@ynab-plus/domain";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { SqliteDatabase } from "./sqlite-database.ts";
