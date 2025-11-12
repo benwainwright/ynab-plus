@@ -37,6 +37,61 @@
         "typescript": "^5",
       },
     },
+    "packages/application": {
+      "name": "@ynab-plus/app",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ynab-plus/domain": "workspace:*",
+        "@ynab-plus/test-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "^1.3.2",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
+    "packages/bootstrap": {
+      "name": "@ynab-plus/bootstrap",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ynab-plus/domain": "workspace:*",
+      },
+    },
+    "packages/domain": {
+      "name": "@ynab-plus/domain",
+      "version": "1.0.0",
+    },
+    "packages/infrastructure": {
+      "name": "@ynab-plus/infrastructure",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ynab-plus/app": "workspace:*",
+        "@ynab-plus/bootstrap": "workspace:*",
+        "@ynab-plus/domain": "workspace:*",
+      },
+    },
+    "packages/test-helpers": {
+      "name": "@ynab-plus/test-helpers",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ynab-plus/app": "workspace:*",
+        "@ynab-plus/domain": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "^1.3.2",
+      },
+    },
+    "packages/web-app": {
+      "name": "@ynab-plus/web-app",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ynab-plus/app": "workspace:*",
+        "@ynab-plus/bootstrap": "workspace:*",
+        "@ynab-plus/domain": "workspace:*",
+        "@ynab-plus/test-helpers": "workspace:*",
+      },
+    },
   },
   "packages": {
     "@colors/colors": ["@colors/colors@1.6.0", "", {}, "sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA=="],
@@ -148,6 +203,18 @@
     "@typescript/native-preview-win32-arm64": ["@typescript/native-preview-win32-arm64@7.0.0-dev.20251108.1", "", { "os": "win32", "cpu": "arm64" }, "sha512-Aeyrj7sdc6GBnLIw9o5dQPzEqrfsJodDYsi7RePm0QLvGVyxOeZVd9CcfdXqPKnD2goEJNOzFoTRyvvi7DjNUg=="],
 
     "@typescript/native-preview-win32-x64": ["@typescript/native-preview-win32-x64@7.0.0-dev.20251108.1", "", { "os": "win32", "cpu": "x64" }, "sha512-rgfq7AZ7IFfE5EyDuHdpDEPUH3LEesyOVuIHE6YWOSqGOFnlzYbOf37VUYxQTIxFrR7IopgvM4pSDR3KeDcMjQ=="],
+
+    "@ynab-plus/app": ["@ynab-plus/app@workspace:packages/application"],
+
+    "@ynab-plus/bootstrap": ["@ynab-plus/bootstrap@workspace:packages/bootstrap"],
+
+    "@ynab-plus/domain": ["@ynab-plus/domain@workspace:packages/domain"],
+
+    "@ynab-plus/infrastructure": ["@ynab-plus/infrastructure@workspace:packages/infrastructure"],
+
+    "@ynab-plus/test-helpers": ["@ynab-plus/test-helpers@workspace:packages/test-helpers"],
+
+    "@ynab-plus/web-app": ["@ynab-plus/web-app@workspace:packages/web-app"],
 
     "acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
 

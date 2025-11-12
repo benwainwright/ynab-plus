@@ -1,0 +1,16 @@
+{
+  "name": "@ynab-plus/infrastructure",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@ynab-plus/domain": "workspace:*",
+    "@ynab-plus/app": "workspace:*",
+    "@ynab-plus/bootstrap": "workspace:*"
+  }
+}

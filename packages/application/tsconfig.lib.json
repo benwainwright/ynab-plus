@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["bun"],
+    "paths": {
+      "@ports": ["./src/ports/index.ts"],
+      "@errors": ["./src/errors/index.ts"],
+      "@services": ["./src/services/index.ts"]
+    }
+  },
+  "references": [
+    {
+      "path": "../domain"
+    }
+  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

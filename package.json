@@ -3,11 +3,14 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
-    "type-check": "tsgo",
+    "type-check": "tsgo --build",
     "prepare": "husky",
     "format": "prettier --write ."
   },

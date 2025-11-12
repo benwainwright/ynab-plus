@@ -1,48 +1,24 @@
 {
-  "$schema": "https://www.schemastore.org/tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "@bootstrap": ["./src/bootstrap/index.ts"],
-      "@infrastructure": ["./src/infrastructure/index.ts"],
-      "@client": ["./src/web-app/client/index.ts"],
-      "@web-app": ["./src/web-app/index.ts"],
-      "@client/components": ["./src/web-app/client/components/index.ts"],
-      "@client/hooks": ["./src/web-app/client/hooks/index.ts"],
-      "@domain": ["./src/domain/index.ts"],
-      "@application": ["./src/application/index.ts"],
-      "@application/ports": ["./src/application/ports/index.ts"],
-      "@application/services": ["./src/application/services/index.ts"],
-      "@application/errors": ["./src/application/errors/index.ts"],
-      "@errors": ["./src/errors/index.ts"],
-      "@test-helpers": ["./src/test-helpers/index.ts"]
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/application"
     },
-    "lib": ["ESNext", "dom"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "noErrorTruncation": true,
-    "isolatedModules": true,
-    "noEmitOnError": true,
-    "allowImportingTsExtensions": true,
-    "skipLibCheck": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUnusedParameters": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": false
-  }
+    {
+      "path": "./packages/bootstrap"
+    },
+    {
+      "path": "./packages/domain"
+    },
+    {
+      "path": "./packages/infrastructure"
+    },
+    {
+      "path": "./packages/test-helpers"
+    },
+    {
+      "path": "./packages/web-app"
+    }
+  ]
 }

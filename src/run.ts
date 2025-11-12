@@ -1,7 +1,7 @@
 import { composeDataLayer } from "@infrastructure";
-import { composeApplicationLayer } from "@application";
-import { composeWebApp } from "@web-app";
-import { Bootstrapper } from "@bootstrap";
+import { composeApplicationLayer } from "@ynab-plus/app";
+import { composeWebApp } from "@ynab-plus/web-app";
+import { Bootstrapper } from "@ynab-plus/bootstrap";
 
 const bootstrapper = new Bootstrapper({
   configFile: `ynab-plus.config.json`,

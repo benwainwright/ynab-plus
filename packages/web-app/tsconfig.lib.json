@@ -1,0 +1,31 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "paths": {
+      "@components": ["./src/client/components/index.ts"],
+      "@hooks": ["./src/client/hooks/index.ts"]
+    }
+  },
+  "references": [
+    {
+      "path": "../domain"
+    },
+    {
+      "path": "../application"
+    },
+    {
+      "path": "../bootstrap"
+    },
+    {
+      "path": "../test-helpers"
+    }
+  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["src/**/*.test.ts"]
+}
