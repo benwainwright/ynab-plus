@@ -1,7 +1,6 @@
-import type { IOAuthRedirectUrlGenerator } from "@application/ports";
 import type { ConfigValue } from "@bootstrap";
 
-export class YnabOauth2Client implements IOAuthRedirectUrlGenerator {
+export class YnabOauth2Client {
   public constructor(
     private clientId: ConfigValue<string>,
     private redirectUri: ConfigValue<string>,

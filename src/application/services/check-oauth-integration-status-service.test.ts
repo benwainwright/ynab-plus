@@ -1,10 +1,6 @@
 import { describe, expect, it, mock, setSystemTime } from "bun:test";
 import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
-import type {
-  IOAuthRedirectUrlGenerator,
-  IOAuthTokenRefresher,
-  IOauthTokenRepository,
-} from "@application/ports";
+import type { IOauthClient, IOauthTokenRepository } from "@application/ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@domain";
 
@@ -17,18 +13,16 @@ describe("check oauth-integration-status-service", () => {
 
     const redirectUrl = "foo";
 
-    const mockRedirectUrlGenerator: IOAuthRedirectUrlGenerator = {
-      getRedirectUrl: mock().mockReturnValue(redirectUrl),
-    };
-
-    const mockTokenRefresher: IOAuthTokenRefresher = {
+    const mockOauthClient: IOauthClient = {
+      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
       refresh: mock(),
     };
 
+    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+
     const service = new CheckOauthIntegrationStatusService(
       mockTokenRepo,
-      mockRedirectUrlGenerator,
-      mockTokenRefresher,
+      oauthClientFactory,
     );
 
     const context = createMockServiceContext(
@@ -76,18 +70,16 @@ describe("check oauth-integration-status-service", () => {
 
     const redirectUrl = "foo";
 
-    const mockRedirectUrlGenerator: IOAuthRedirectUrlGenerator = {
-      getRedirectUrl: mock().mockReturnValue(redirectUrl),
-    };
-
-    const mockTokenRefresher: IOAuthTokenRefresher = {
+    const mockOauthClient: IOauthClient = {
+      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
       refresh: mock(),
     };
 
+    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+
     const service = new CheckOauthIntegrationStatusService(
       mockTokenRepo,
-      mockRedirectUrlGenerator,
-      mockTokenRefresher,
+      oauthClientFactory,
     );
 
     const context = createMockServiceContext(
@@ -108,7 +100,7 @@ describe("check oauth-integration-status-service", () => {
     expect(save).not.toHaveBeenCalled();
   });
 
-  it.only("refreshes and stores token if the token if it is out of date", async () => {
+  it("refreshes and stores token if the token if it is out of date", async () => {
     setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
 
     const mockFirstToken = new OauthToken({
@@ -139,9 +131,7 @@ describe("check oauth-integration-status-service", () => {
       save,
     };
 
-    const mockRedirectUrlGenerator: IOAuthRedirectUrlGenerator = {
-      getRedirectUrl: mock(),
-    };
+    const redirectUrl = "foo";
 
     const refresh = mock((token: OauthToken) => {
       if (token === mockFirstToken) {
@@ -150,14 +140,16 @@ describe("check oauth-integration-status-service", () => {
       throw new Error("Wrong token");
     });
 
-    const mockTokenRefresher: IOAuthTokenRefresher = {
+    const mockOauthClient: IOauthClient = {
+      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
       refresh,
     };
 
+    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+
     const service = new CheckOauthIntegrationStatusService(
       mockTokenRepo,
-      mockRedirectUrlGenerator,
-      mockTokenRefresher,
+      oauthClientFactory,
     );
 
     const context = createMockServiceContext(

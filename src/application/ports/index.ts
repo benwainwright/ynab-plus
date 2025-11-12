@@ -10,8 +10,9 @@ export type { ISessionIdRequester } from "./i-session-id-requester.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export type { ServiceBusFactory } from "./service-bus-factory.ts";
 export type { IOauthTokenRepository } from "./i-oauth-token-repository.ts";
-export type { IOAuthRedirectUrlGenerator } from "./i-oauth-redirect-url-generator.ts";
 export type { IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
+export type { IOauthClient } from "./i-oauth-client.ts";
+export type { OauthClientFactory } from "./oauth-client-factory.ts";
 
 export {
   type IEventListener,

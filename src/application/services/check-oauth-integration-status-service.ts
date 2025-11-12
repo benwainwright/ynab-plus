@@ -1,8 +1,7 @@
 import type {
   IHandleContext,
-  IOAuthRedirectUrlGenerator,
-  IOAuthTokenRefresher,
   IOauthTokenRepository,
+  OauthClientFactory,
 } from "@application/ports";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { AppError } from "@application/errors";
@@ -11,8 +10,7 @@ import type { Permission } from "@domain";
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
-    private redirectUrlGenerator: IOAuthRedirectUrlGenerator,
-    private oauthTokenRefresher: IOAuthTokenRefresher,
+    private oauthClientFactory: OauthClientFactory,
   ) {
     super();
   }
@@ -39,15 +37,17 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
     const token = await this.tokenRepository.get(currentUser.id, provider);
 
+    const oauthClient = this.oauthClientFactory(provider);
+
     if (!token) {
       return {
         status: "not_connected",
-        redirectUrl: await this.redirectUrlGenerator.getRedirectUrl(),
+        redirectUrl: await oauthClient.generateRedirectUrl(),
       };
     }
 
     if (token.expiry < new Date()) {
-      const newToken = await this.oauthTokenRefresher.refresh(token);
+      const newToken = await oauthClient.refresh(token);
       await this.tokenRepository.save(newToken);
     }
 
