@@ -2,6 +2,9 @@
   "name": "@ynab-plus/web-app",
   "type": "module",
   "version": "1.0.0",
+  "scripts": {
+    "test": "bun test --tsconfig-override tsconfig.test.json"
+  },
   "exports": {
     "./package.json": "./package.json",
     ".": {

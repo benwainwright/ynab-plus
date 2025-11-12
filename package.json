@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
+    "test": "bun run --filter '*' test",
     "type-check": "tsgo --build",
     "prepare": "husky",
     "format": "prettier --write ."
@@ -35,7 +36,6 @@
     "@standard-schema/spec": "^1.0.0",
     "@types/react-dom": "^19.2.2",
     "@types/stack-trace": "^0.0.33",
-    "inversify": "^7.10.4",
     "react-dom": "^19.2.0",
     "react-router": "^7.9.5",
     "react-router-dom": "^7.9.5",

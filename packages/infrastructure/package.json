@@ -8,6 +8,9 @@
       "import": "./src/index.ts"
     }
   },
+  "scripts": {
+    "test": "bun test --tsconfig-override tsconfig.test.json"
+  },
   "dependencies": {
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/app": "workspace:*",

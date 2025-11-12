@@ -13,6 +13,9 @@
     "@ynab-plus/test-helpers": "workspace:*"
   },
   "module": "src/index.ts",
+  "scripts": {
+    "test": "bun test --tsconfig-override tsconfig.test.json"
+  },
   "private": true,
   "devDependencies": {
     "@types/bun": "^1.3.2"

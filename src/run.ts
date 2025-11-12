@@ -1,5 +1,5 @@
-import { composeDataLayer } from "@infrastructure";
 import { composeApplicationLayer } from "@ynab-plus/app";
+import { composeDataLayer } from "@ynab-plus/infrastructure";
 import { composeWebApp } from "@ynab-plus/web-app";
 import { Bootstrapper } from "@ynab-plus/bootstrap";
 
