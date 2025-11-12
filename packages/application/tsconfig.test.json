@@ -6,7 +6,7 @@
     "tsBuildInfoFile": "dist/tsconfig.test.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["bun"],
+    "types": ["vitest/globals"],
     "paths": {
       "@ports": ["./src/ports/index.ts"],
       "@errors": ["./src/errors/index.ts"],

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import { NotAuthorisedError } from "./not-authorised-error.ts";
-import { mock } from "bun-mock-extended";
+import { mock } from "vitest-mock-extended";
 import type { IEventBus } from "@ynab-plus/app";
 
 describe("not authorised error", () => {

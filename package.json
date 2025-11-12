@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
-    "test": "bun run --filter '*' test",
+    "test": "vitest run",
     "type-check": "tsgo --build",
     "prepare": "husky",
     "format": "prettier --write ."
@@ -19,7 +19,6 @@
     "@types/bun": "latest",
     "@types/ws": "^8.18.1",
     "@typescript/native-preview": "^7.0.0-dev.20251108.1",
-    "bun-mock-extended": "^3.0.5",
     "eslint": "^9.39.1",
     "eslint-plugin-boundaries": "^5.1.0",
     "eslint-plugin-import": "^2.32.0",
@@ -27,6 +26,9 @@
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "typescript-eslint": "^8.46.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.4",
+    "vitest-mock-extended": "^1.5.3",
     "ws": "^8.18.3"
   },
   "peerDependencies": {

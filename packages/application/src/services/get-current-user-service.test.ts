@@ -1,7 +1,7 @@
-import { describe, it, mock as bunMock, expect } from "bun:test";
+import { describe, it, expect, vi } from "vitest";
 
 import { GetCurrentUserService } from "./get-current-user-service.ts";
-import { mock } from "bun-mock-extended";
+import { mock } from "vitest-mock-extended";
 
 import type {
   ICommandMessage,
@@ -24,7 +24,7 @@ describe("get user command handler", () => {
     });
 
     const repo = mock<IRepository<User>>({
-      get: bunMock(async (id: string) => {
+      get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return mockUser;
         }
@@ -42,7 +42,7 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: bunMock().mockResolvedValue({
+      get: vi.fn().mockResolvedValue({
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
@@ -66,7 +66,7 @@ describe("get user command handler", () => {
     });
 
     const repo = mock<IRepository<User>>({
-      get: bunMock(async (id: string) => {
+      get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return mockUser;
         }
@@ -84,7 +84,7 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: bunMock().mockResolvedValue({
+      get: vi.fn().mockResolvedValue({
         userId: undefined,
         permissions: undefined,
       }),
@@ -106,7 +106,7 @@ describe("get user command handler", () => {
     });
 
     const repo = mock<IRepository<User>>({
-      get: bunMock(async (id: string) => {
+      get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return mockUser;
         }
@@ -124,7 +124,7 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: bunMock().mockResolvedValue(
+      get: vi.fn().mockResolvedValue(
         new User({
           id: "ben",
           permissions: ["admin"],
@@ -148,7 +148,7 @@ describe("get user command handler", () => {
 
   it("throws an error if the logged in user does not exist in the database", async () => {
     const repo = mock<IRepository<User>>({
-      get: bunMock().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(undefined),
     });
 
     const handler = new GetCurrentUserService(repo);
@@ -161,7 +161,7 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: bunMock().mockResolvedValue(
+      get: vi.fn().mockResolvedValue(
         mock<User>({
           id: "ben",
           permissions: ["admin"],

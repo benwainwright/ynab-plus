@@ -1,5 +1,5 @@
-import { describe, it, mock as bunMock, expect } from "bun:test";
-import { mock } from "bun-mock-extended";
+import { describe, it, expect, vi } from "vitest";
+import { mock } from "vitest-mock-extended";
 import { GetUserService } from "./get-user-service.ts";
 import { User } from "@ynab-plus/domain";
 import type {
@@ -21,7 +21,7 @@ describe("get user service", () => {
     });
 
     const mockUserRepo = mock<IRepository<User>>({
-      get: bunMock(async (id: string) => {
+      get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return user;
         }
@@ -50,7 +50,7 @@ describe("get user service", () => {
 
   it("throws an error if the user is not found", async () => {
     const mockUserRepo = mock<IRepository<User>>({
-      get: bunMock().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(undefined),
     });
 
     const service = new GetUserService(mockUserRepo);
@@ -67,6 +67,6 @@ describe("get user service", () => {
     const eventBus = mock<IEventBus>();
     const context = { command, eventBus, currentUserCache };
 
-    expect(service.doHandle(context)).rejects.toThrow(UserNotFoundError);
+    await expect(service.doHandle(context)).rejects.toThrow(UserNotFoundError);
   });
 });

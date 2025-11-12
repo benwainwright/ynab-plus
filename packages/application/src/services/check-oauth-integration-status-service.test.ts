@@ -1,4 +1,4 @@
-import { describe, expect, it, mock, setSystemTime } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
 import type {
   IOAuthTokenRefresher,
@@ -11,18 +11,18 @@ import { OauthToken, User } from "@ynab-plus/domain";
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {
     const mockTokenRepo: IOauthTokenRepository = {
-      get: mock().mockResolvedValue(undefined),
-      save: mock(),
+      get: vi.fn().mockResolvedValue(undefined),
+      save: vi.fn(),
     };
 
     const redirectUrl = "foo";
 
     const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
-      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refreshToken: mock(),
+      generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
+      refreshToken: vi.fn(),
     };
 
-    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+    const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
 
     const service = new CheckOauthIntegrationStatusService(
       mockTokenRepo,
@@ -50,129 +50,136 @@ describe("check oauth-integration-status-service", () => {
   });
 
   it("returns success if there is a token that is in date", async () => {
-    setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
 
-    const mockToken = new OauthToken({
-      token: "foo",
-      userId: "ben",
-      refreshToken: "foo-refresh",
-      provider: "ynab",
-      expiry: new Date("2021-01-01T00:00:00.000Z"),
-    });
+    try {
+      const mockToken = new OauthToken({
+        token: "foo",
+        userId: "ben",
+        refreshToken: "foo-refresh",
+        provider: "ynab",
+        expiry: new Date("2021-01-01T00:00:00.000Z"),
+      });
 
-    const save = mock();
+      const save = vi.fn();
 
-    const mockTokenRepo: IOauthTokenRepository = {
-      get: mock((userId: string, provider: string) => {
-        if (userId === "ben" && provider === "ynab") {
-          return Promise.resolve(mockToken);
-        }
-        return Promise.resolve(undefined);
-      }),
-      save,
-    };
+      const mockTokenRepo: IOauthTokenRepository = {
+        get: vi.fn((userId: string, provider: string) => {
+          if (userId === "ben" && provider === "ynab") {
+            return Promise.resolve(mockToken);
+          }
+          return Promise.resolve(undefined);
+        }),
+        save,
+      };
 
-    const redirectUrl = "foo";
+      const redirectUrl = "foo";
 
-    const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
-      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refreshToken: mock(),
-    };
+      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
+        generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
+        refreshToken: vi.fn(),
+      };
 
-    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+      const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
 
-    const service = new CheckOauthIntegrationStatusService(
-      mockTokenRepo,
-      oauthClientFactory,
-    );
+      const service = new CheckOauthIntegrationStatusService(
+        mockTokenRepo,
+        oauthClientFactory,
+      );
 
-    const context = createMockServiceContext(
-      "CheckOauthIntegrationStatusCommand",
-      { provider: "ynab" },
+      const context = createMockServiceContext(
+        "CheckOauthIntegrationStatusCommand",
+        { provider: "ynab" },
 
-      new User({
-        id: "ben",
-        email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-        permissions: ["admin"],
-      }),
-    );
+        new User({
+          id: "ben",
+          email: "bwainwright28@gmail.com",
+          passwordHash: "foo",
+          permissions: ["admin"],
+        }),
+      );
 
-    const response = await service.doHandle(context);
+      const response = await service.doHandle(context);
 
-    expect(response.status).toEqual("connected");
-    expect(save).not.toHaveBeenCalled();
-    setSystemTime();
+      expect(response.status).toEqual("connected");
+      expect(save).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("refreshes and stores token if the token if it is out of date", async () => {
-    setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
+    try {
+      const mockFirstToken = new OauthToken({
+        token: "foo",
+        refreshToken: "foo-refresh",
+        provider: "ynab",
+        userId: "ben",
+        expiry: new Date("2019-01-01T00:00:00.000Z"),
+      });
 
-    const mockFirstToken = new OauthToken({
-      token: "foo",
-      refreshToken: "foo-refresh",
-      provider: "ynab",
-      userId: "ben",
-      expiry: new Date("2019-01-01T00:00:00.000Z"),
-    });
+      const mockSecondToken = new OauthToken({
+        token: "bar",
+        refreshToken: "foo-refresh-2",
+        userId: "ben",
+        provider: "ynab",
+        expiry: new Date("2021-01-01T00:00:00.000Z"),
+      });
 
-    const mockSecondToken = new OauthToken({
-      token: "bar",
-      refreshToken: "foo-refresh-2",
-      userId: "ben",
-      provider: "ynab",
-      expiry: new Date("2021-01-01T00:00:00.000Z"),
-    });
+      const save = vi.fn();
 
-    const save = mock();
+      const mockTokenRepo: IOauthTokenRepository = {
+        get: vi.fn((userId: string, provider: string) => {
+          if (userId === "ben" && provider === "ynab") {
+            return Promise.resolve(mockFirstToken);
+          }
+          return Promise.resolve(undefined);
+        }),
+        save,
+      };
 
-    const mockTokenRepo: IOauthTokenRepository = {
-      get: mock((userId: string, provider: string) => {
-        if (userId === "ben" && provider === "ynab") {
-          return Promise.resolve(mockFirstToken);
+      const redirectUrl = "foo";
+
+      const refresh = vi.fn((token: OauthToken) => {
+        if (token === mockFirstToken) {
+          return Promise.resolve(mockSecondToken);
         }
-        return Promise.resolve(undefined);
-      }),
-      save,
-    };
+        throw new Error("Wrong token");
+      });
 
-    const redirectUrl = "foo";
+      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
+        generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
+        refreshToken: refresh,
+      };
 
-    const refresh = mock((token: OauthToken) => {
-      if (token === mockFirstToken) {
-        return Promise.resolve(mockSecondToken);
-      }
-      throw new Error("Wrong token");
-    });
+      const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
 
-    const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
-      generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refreshToken: refresh,
-    };
+      const service = new CheckOauthIntegrationStatusService(
+        mockTokenRepo,
+        oauthClientFactory,
+      );
 
-    const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
+      const context = createMockServiceContext(
+        "CheckOauthIntegrationStatusCommand",
+        { provider: "ynab" },
 
-    const service = new CheckOauthIntegrationStatusService(
-      mockTokenRepo,
-      oauthClientFactory,
-    );
+        new User({
+          id: "ben",
+          email: "bwainwright28@gmail.com",
+          passwordHash: "foo",
+          permissions: ["admin"],
+        }),
+      );
 
-    const context = createMockServiceContext(
-      "CheckOauthIntegrationStatusCommand",
-      { provider: "ynab" },
+      const response = await service.doHandle(context);
+      expect(save).toHaveBeenCalledWith(mockSecondToken);
 
-      new User({
-        id: "ben",
-        email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-        permissions: ["admin"],
-      }),
-    );
-
-    const response = await service.doHandle(context);
-    expect(save).toHaveBeenCalledWith(mockSecondToken);
-
-    expect(response.status).toEqual("connected");
-    setSystemTime();
+      expect(response.status).toEqual("connected");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

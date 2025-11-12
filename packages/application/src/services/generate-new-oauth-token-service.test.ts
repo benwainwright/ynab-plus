@@ -1,6 +1,6 @@
 import { OauthToken, User } from "@ynab-plus/domain";
 import { createMockServiceContext } from "@ynab-plus/test-helpers";
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 import type { IOauthNewTokenRequester, IOauthTokenRepository } from "@ports";
 
@@ -18,10 +18,10 @@ describe("generate new oauth token service", () => {
       }),
     );
 
-    const save = mock();
+    const save = vi.fn();
 
     const mockTokenRepo: IOauthTokenRepository = {
-      get: mock(),
+      get: vi.fn(),
       save,
     };
 
@@ -43,7 +43,7 @@ describe("generate new oauth token service", () => {
       },
     };
 
-    const factory = mock().mockReturnValue(requester);
+    const factory = vi.fn().mockReturnValue(requester);
 
     const service = new GenerateNewOauthTokenService(mockTokenRepo, factory);
 

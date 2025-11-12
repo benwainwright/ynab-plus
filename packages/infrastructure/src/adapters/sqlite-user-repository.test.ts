@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 import { User } from "@ynab-plus/domain";
 

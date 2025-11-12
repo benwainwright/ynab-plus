@@ -1,4 +1,4 @@
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { createSocketHarness, waitFor } from "@ynab-plus/test-helpers";
 import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IEventPacket } from "@ynab-plus/app";
@@ -9,7 +9,7 @@ describe("socket-event-bus", () => {
       const { socket, send } = createSocketHarness();
       const bus = new SocketEventListener(socket);
 
-      const mockListener = mock();
+      const mockListener = vi.fn();
 
       const data: IEventPacket<"AppInitialised"> = {
         key: "AppInitialised",
@@ -35,7 +35,7 @@ describe("socket-event-bus", () => {
       const { socket, send } = createSocketHarness();
       const bus = new SocketEventListener(socket);
 
-      const mockListener = mock();
+      const mockListener = vi.fn();
 
       const data: IEventPacket<"AppInitialised"> = {
         key: "AppInitialised",
@@ -63,7 +63,7 @@ describe("socket-event-bus", () => {
 
       const bus = new SocketEventListener(socket);
 
-      const mockListener = mock();
+      const mockListener = vi.fn();
 
       const data: IEventPacket<"AppInitialised"> = {
         key: "AppInitialised",
@@ -89,8 +89,8 @@ describe("socket-event-bus", () => {
 
       const bus = new SocketEventListener(socket);
 
-      const mockListener = mock();
-      const mockListener2 = mock();
+      const mockListener = vi.fn();
+      const mockListener2 = vi.fn();
 
       bus.on("AppInitialised", mockListener);
       bus.on("AppClosing", mockListener2);
@@ -107,8 +107,8 @@ describe("socket-event-bus", () => {
       {
         using bus = new SocketEventListener(socket);
 
-        const mockListener = mock();
-        const mockListener2 = mock();
+        const mockListener = vi.fn();
+        const mockListener2 = vi.fn();
 
         bus.on("AppInitialised", mockListener);
         bus.on("AppClosing", mockListener2);
