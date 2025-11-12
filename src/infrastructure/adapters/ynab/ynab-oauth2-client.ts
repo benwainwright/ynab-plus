@@ -2,11 +2,15 @@ import type { ConfigValue } from "@bootstrap";
 import type {
   IOauthNewTokenRequester,
   IOauthRedirectUrlGenerator,
+  IOAuthTokenRefresher,
 } from "@application/ports";
 import { OauthToken } from "@domain";
 
 export class YnabOauth2Client
-  implements IOauthRedirectUrlGenerator, IOauthNewTokenRequester
+  implements
+    IOauthRedirectUrlGenerator,
+    IOauthNewTokenRequester,
+    IOAuthTokenRefresher
 {
   public constructor(
     private baseUrl: string,
@@ -15,6 +19,33 @@ export class YnabOauth2Client
     private redirectUri: ConfigValue<string>,
     private providerName: string,
   ) {}
+  public async refreshToken(token: OauthToken): Promise<OauthToken> {
+    const formData = new FormData();
+    formData.set("client_id", await this.clientId.value);
+    formData.set("client_secret", await this.clientSecret.value);
+
+    formData.set("grant_type", "refresh_token");
+    formData.set("refresh_token", token.refreshToken);
+
+    const response = await fetch(`${this.baseUrl}/oauth/token`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Status code ${response.status} was returned`);
+    }
+
+    const json = await response.json();
+
+    return new OauthToken({
+      provider: this.providerName,
+      token: json.access_token,
+      refreshToken: json.refresh_token,
+      expiry: new Date(Date.now() + json.expires_in * 1000),
+      userId: token.userId,
+    });
+  }
 
   public async newToken(userId: string, code: string): Promise<OauthToken> {
     const formData = new FormData();
