@@ -2,6 +2,15 @@ import type { User } from "@domain";
 
 declare global {
   interface Commands {
+    GenerateNewOauthTokenCommand: {
+      request: {
+        provider: string;
+        code: string;
+      };
+      response: {
+        status: "connected";
+      };
+    };
     CheckOauthIntegrationStatusCommand: {
       request: {
         provider: string;

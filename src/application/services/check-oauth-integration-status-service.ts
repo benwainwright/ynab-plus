@@ -1,7 +1,7 @@
 import type {
   IHandleContext,
+  IOauthCheckerFactory,
   IOauthTokenRepository,
-  OauthClientFactory,
 } from "@application/ports";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { AppError } from "@application/errors";
@@ -10,7 +10,7 @@ import type { Permission } from "@domain";
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
-    private oauthClientFactory: OauthClientFactory,
+    private oauthClientFactory: IOauthCheckerFactory,
   ) {
     super();
   }
@@ -47,7 +47,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     }
 
     if (token.expiry < new Date()) {
-      const newToken = await oauthClient.refresh(token);
+      const newToken = await oauthClient.refreshToken(token);
       await this.tokenRepository.save(newToken);
     }
 

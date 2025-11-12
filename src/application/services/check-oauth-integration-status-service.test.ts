@@ -1,8 +1,12 @@
 import { describe, expect, it, mock, setSystemTime } from "bun:test";
 import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
-import type { IOauthClient, IOauthTokenRepository } from "@application/ports";
+import type {
+  IOAuthTokenRefresher,
+  IOauthTokenRepository,
+} from "@application/ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@domain";
+import type { IOauthRedirectUrlGenerator } from "../ports/i-redirect-url-generator.ts";
 
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {
@@ -13,9 +17,9 @@ describe("check oauth-integration-status-service", () => {
 
     const redirectUrl = "foo";
 
-    const mockOauthClient: IOauthClient = {
+    const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
       generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refresh: mock(),
+      refreshToken: mock(),
     };
 
     const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
@@ -70,9 +74,9 @@ describe("check oauth-integration-status-service", () => {
 
     const redirectUrl = "foo";
 
-    const mockOauthClient: IOauthClient = {
+    const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
       generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refresh: mock(),
+      refreshToken: mock(),
     };
 
     const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
@@ -98,6 +102,7 @@ describe("check oauth-integration-status-service", () => {
 
     expect(response.status).toEqual("connected");
     expect(save).not.toHaveBeenCalled();
+    setSystemTime();
   });
 
   it("refreshes and stores token if the token if it is out of date", async () => {
@@ -140,9 +145,9 @@ describe("check oauth-integration-status-service", () => {
       throw new Error("Wrong token");
     });
 
-    const mockOauthClient: IOauthClient = {
+    const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
       generateRedirectUrl: mock().mockReturnValue(redirectUrl),
-      refresh,
+      refreshToken: refresh,
     };
 
     const oauthClientFactory = mock().mockReturnValue(mockOauthClient);
@@ -168,5 +173,6 @@ describe("check oauth-integration-status-service", () => {
     expect(save).toHaveBeenCalledWith(mockSecondToken);
 
     expect(response.status).toEqual("connected");
+    setSystemTime();
   });
 });
