@@ -3,10 +3,10 @@ import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-st
 import type {
   IOAuthTokenRefresher,
   IOauthTokenRepository,
+  IOauthRedirectUrlGenerator,
 } from "@application/ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@domain";
-import type { IOauthRedirectUrlGenerator } from "../ports/i-redirect-url-generator.ts";
 
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {

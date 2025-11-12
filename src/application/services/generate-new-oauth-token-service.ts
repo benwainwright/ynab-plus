@@ -19,6 +19,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   }
 
   protected override async handle({
+    currentUserCache,
     command: {
       data: { code, provider },
     },
@@ -27,7 +28,13 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   }> {
     const requester = this.newTokenRequesterFactory(provider);
 
-    const token = await requester.newToken(code);
+    const currentUser = await currentUserCache.get();
+
+    if (!currentUser) {
+      throw new Error(`No current user`);
+    }
+
+    const token = await requester.newToken(currentUser.id, code);
 
     this.tokenRepository.save(token);
 

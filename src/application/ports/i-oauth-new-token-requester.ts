@@ -1,5 +1,5 @@
 import type { OauthToken } from "@domain";
 
 export interface IOauthNewTokenRequester {
-  newToken: (code: string) => Promise<OauthToken>;
+  newToken: (userId: string, code: string) => Promise<OauthToken>;
 }

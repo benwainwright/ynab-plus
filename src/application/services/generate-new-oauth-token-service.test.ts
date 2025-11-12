@@ -37,8 +37,8 @@ describe("generate new oauth token service", () => {
     });
 
     const requester: IOauthNewTokenRequester = {
-      newToken: (code: string) => {
-        if (code === "1-2-3") {
+      newToken: (userId: string, code: string) => {
+        if (code === "1-2-3" && userId === "ben") {
           return Promise.resolve(mockToken);
         }
 
