@@ -41,13 +41,21 @@ export const composeInfrastructureLayer = async (
   const oauthClients = oauthClientFactory(bootstrapper);
 
   return {
-    userRepository,
-    passwordHasher,
-    passwordVerifier: passwordHasher,
-    sessionStorage,
-    oauthTokenRepository,
-    uuidGenerator,
-    oauthCheckerFactory: oauthClients,
-    newTokenRequesterFactory: oauthClients,
+    misc: {
+      uuidGenerator,
+    },
+    auth: {
+      passwordVerifier: passwordHasher,
+      passwordHasher,
+    },
+    data: {
+      userRepository,
+      sessionStorage,
+    },
+    oauth: {
+      oauthCheckerFactory: oauthClients,
+      oauthTokenRepository,
+      newTokenRequesterFactory: oauthClients,
+    },
   };
 };

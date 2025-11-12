@@ -12,12 +12,20 @@ import type {
 } from "@application/ports";
 
 export interface IInfrastructurePorts {
-  passwordHasher: IPasswordHasher;
-  passwordVerifier: IPasswordVerifier;
-  userRepository: IRepository<User>;
-  oauthTokenRepository: IOauthTokenRepository;
-  sessionStorage: IObjectStorage;
-  uuidGenerator: IUUIDGenerator;
-  newTokenRequesterFactory: NewTokenRequesterFactory;
-  oauthCheckerFactory: IOauthCheckerFactory;
+  misc: {
+    uuidGenerator: IUUIDGenerator;
+  };
+  auth: {
+    passwordHasher: IPasswordHasher;
+    passwordVerifier: IPasswordVerifier;
+  };
+  data: {
+    sessionStorage: IObjectStorage;
+    userRepository: IRepository<User>;
+  };
+  oauth: {
+    oauthTokenRepository: IOauthTokenRepository;
+    newTokenRequesterFactory: NewTokenRequesterFactory;
+    oauthCheckerFactory: IOauthCheckerFactory;
+  };
 }

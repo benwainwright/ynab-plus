@@ -21,14 +21,14 @@ import { ServiceBus } from "./service-bus.ts";
 import { SessionStorage } from "./session-storage.ts";
 
 export const composeApplicationLayer = ({
-  userRepository,
-  passwordHasher,
-  passwordVerifier,
-  sessionStorage,
-  uuidGenerator,
-  oauthTokenRepository,
-  oauthCheckerFactory,
-  newTokenRequesterFactory,
+  data: { userRepository, sessionStorage },
+  misc: { uuidGenerator },
+  auth: { passwordHasher, passwordVerifier },
+  oauth: {
+    oauthTokenRepository,
+    oauthCheckerFactory,
+    newTokenRequesterFactory,
+  },
 }: IInfrastructurePorts) => {
   const services = [
     new GetCurrentUserService(userRepository),
