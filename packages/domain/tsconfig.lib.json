@@ -5,7 +5,6 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
     "paths": {}
   },
   "include": ["src/**/*.ts"],

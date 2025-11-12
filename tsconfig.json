@@ -12,13 +12,13 @@
       "path": "./packages/domain"
     },
     {
+      "path": "./packages/ui"
+    },
+    {
       "path": "./packages/infrastructure"
     },
     {
       "path": "./packages/test-helpers"
-    },
-    {
-      "path": "./packages/web-app"
     }
   ]
 }

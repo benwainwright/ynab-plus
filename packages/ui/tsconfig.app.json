@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "**/.server/**/*",
+    "**/.client/**/*",
+    ".react-router/types/**/*"
+  ],
+  "compilerOptions": {
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "types": ["vite/client"],
+    "rootDirs": [".", "./.react-router/types"],
+    "outDir": "dist",
+    "paths": {
+      "@routes": ["./app/routes.ts"],
+      "@data": ["./app/data/index.ts"],
+      "@errors": ["./app/errors/index.ts"],
+      "@components": ["./app/components/index.ts"]
+    }
+  },
+  "references": [
+    {
+      "path": "../domain"
+    },
+    {
+      "path": "../application"
+    },
+    {
+      "path": "../bootstrap"
+    },
+    {
+      "path": "../test-helpers"
+    }
+  ]
+}

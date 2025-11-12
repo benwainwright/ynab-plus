@@ -5,7 +5,7 @@ import type {
   IOauthTokenRepository,
   IOauthRedirectUrlGenerator,
 } from "@ports";
-import { createMockServiceContext } from "@ynab-plus/test-helpers";
+import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@ynab-plus/domain";
 
 describe("check oauth-integration-status-service", () => {
@@ -76,10 +76,11 @@ describe("check oauth-integration-status-service", () => {
 
       const redirectUrl = "foo";
 
-      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
-        generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
-        refreshToken: vi.fn(),
-      };
+      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher =
+        {
+          generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
+          refreshToken: vi.fn(),
+        };
 
       const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
 
@@ -150,10 +151,11 @@ describe("check oauth-integration-status-service", () => {
         throw new Error("Wrong token");
       });
 
-      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
-        generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
-        refreshToken: refresh,
-      };
+      const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher =
+        {
+          generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
+          refreshToken: refresh,
+        };
 
       const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
 

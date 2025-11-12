@@ -9,14 +9,7 @@
     "types": ["bun"],
     "paths": {}
   },
-  "references": [
-    {
-      "path": "../domain"
-    },
-    {
-      "path": "../application"
-    }
-  ],
+  "references": [],
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"]
 }

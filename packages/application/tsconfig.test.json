@@ -6,11 +6,12 @@
     "tsBuildInfoFile": "dist/tsconfig.test.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node"],
     "paths": {
       "@ports": ["./src/ports/index.ts"],
       "@errors": ["./src/errors/index.ts"],
-      "@services": ["./src/services/index.ts"]
+      "@services": ["./src/services/index.ts"],
+      "@test-helpers": ["./src/test-helpers/index.ts"]
     }
   },
   "include": ["src/**/*.test.ts"],

@@ -3,10 +3,11 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "baseUrl": ".",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["bun"],
+    "types": ["node"],
     "paths": {
       "@ports": ["./src/ports/index.ts"],
       "@errors": ["./src/errors/index.ts"],
@@ -16,8 +17,14 @@
   "references": [
     {
       "path": "../domain"
+    },
+    {
+      "path": "../bootstrap"
+    },
+    {
+      "path": "../test-helpers"
     }
   ],
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["./src/**/*.ts"],
+  "exclude": ["./src/**/*.test.ts"]
 }

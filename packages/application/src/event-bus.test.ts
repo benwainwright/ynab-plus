@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
-import { EventBus } from "./event-bus";
+import { EventBus } from "./event-bus.ts";
 import { EventEmitter } from "node:events";
 import type { IUUIDGenerator } from "./ports/i-uuid-generator.ts";
 import { randomUUID } from "node:crypto";

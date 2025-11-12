@@ -11,12 +11,14 @@
     "lint:fix": "eslint . --fix",
     "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
     "test": "vitest run",
-    "type-check": "tsgo --build",
+    "type-check": "tsc --build",
+    "type-check:watch": "tsc --build --watch",
     "prepare": "husky",
     "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/node": "^24.10.1",
     "@types/ws": "^8.18.1",
     "@typescript/native-preview": "^7.0.0-dev.20251108.1",
     "eslint": "^9.39.1",
@@ -27,8 +29,7 @@
     "prettier": "^3.6.2",
     "typescript-eslint": "^8.46.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.4",
-    "vitest-mock-extended": "^1.5.3",
+    "vitest": "^4.0.8",
     "ws": "^8.18.3"
   },
   "peerDependencies": {
@@ -39,8 +40,6 @@
     "@types/react-dom": "^19.2.2",
     "@types/stack-trace": "^0.0.33",
     "react-dom": "^19.2.0",
-    "react-router": "^7.9.5",
-    "react-router-dom": "^7.9.5",
     "reflect-metadata": "^0.2.2",
     "stacktracey": "^2.1.8",
     "tsyringe": "^4.10.0",

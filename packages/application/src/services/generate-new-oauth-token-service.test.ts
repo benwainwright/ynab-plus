@@ -1,5 +1,5 @@
 import { OauthToken, User } from "@ynab-plus/domain";
-import { createMockServiceContext } from "@ynab-plus/test-helpers";
+import { createMockServiceContext } from "@test-helpers";
 import { describe, expect, it, vi } from "vitest";
 import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 import type { IOauthNewTokenRequester, IOauthTokenRepository } from "@ports";

@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "backend",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.backend.tsbuildinfo",
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "paths": {}
+  },
+  "references": [
+    {
+      "path": "../domain"
+    },
+    {
+      "path": "../application"
+    },
+    {
+      "path": "../infrastructure"
+    },
+    {
+      "path": "../bootstrap"
+    },
+    {
+      "path": "../test-helpers"
+    }
+  ],
+  "include": ["backend/**/*.ts"],
+  "exclude": ["backend/**/*.test.ts"]
+}

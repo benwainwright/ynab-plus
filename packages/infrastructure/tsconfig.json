@@ -2,7 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "files": [],
   "include": [],
-  "compilerOptions": {},
+  "compilerOptions": {
+    "paths": {
+      "@adapters": ["./src/adapters/index.ts"]
+    }
+  },
   "references": [
     {
       "path": "./tsconfig.lib.json"

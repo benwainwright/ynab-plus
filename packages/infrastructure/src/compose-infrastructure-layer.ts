@@ -3,13 +3,13 @@ import z from "zod";
 import type { IBootstrapper } from "@ynab-plus/bootstrap";
 import type { IInfrastructurePorts } from "@ynab-plus/app";
 
-import { SqliteUserRepository } from "./adapters/sqlite-user-repository.ts";
+import { SqliteUserRepository } from "./adapters/sqlite/sqlite-user-repository.ts";
 import { PasswordHashValidator } from "./adapters/password-hash-validator.ts";
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
-import { BunUUIDGenerator } from "./adapters/bun-uuid-generator.ts";
-import { SqliteDatabase } from "./adapters/sqlite-database.ts";
-import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite-oauth2-token-repository.ts";
+import { SqliteDatabase } from "./adapters/sqlite/sqlite-database.ts";
+import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite/sqlite-oauth2-token-repository.ts";
 import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
+import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
 
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
@@ -36,7 +36,7 @@ export const composeInfrastructureLayer = async (
     bootstrapper.configValue("sessionPath", z.string()),
   );
 
-  const uuidGenerator = new BunUUIDGenerator();
+  const uuidGenerator = new NodeUUIDGenerator();
 
   const oauthClients = oauthClientFactory(bootstrapper);
 

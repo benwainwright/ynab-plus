@@ -1,15 +1,17 @@
 {
   "$schema": "https://www.schemastore.org/tsconfig.json",
   "compilerOptions": {
-    "lib": ["ESNext", "dom"],
+    "lib": ["ESNext", "dom", "DOM.Iterable"],
     "composite": true,
     "incremental": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "target": "ESNext",
-    "module": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "moduleDetection": "force",
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
     "resolveJsonModule": true,
@@ -28,7 +30,6 @@
     "exactOptionalPropertyTypes": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": false

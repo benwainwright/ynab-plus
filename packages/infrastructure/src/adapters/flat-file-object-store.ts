@@ -1,21 +1,37 @@
 import type { IObjectStorage } from "@ynab-plus/app";
 import { join } from "node:path";
+import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 
 export class FlatFileObjectStore implements IObjectStorage {
   public constructor(private folder: ConfigValue<string>) {}
 
+  private async resolvePath(key: string) {
+    const base = await this.folder.value;
+    return join(base, key);
+  }
+
   public async get(key: string): Promise<object | undefined> {
-    const path = join(await this.folder.value, key);
-    const file = Bun.file(path);
-    if (!(await file.exists())) {
-      return undefined;
+    const path = await this.resolvePath(key);
+
+    try {
+      const fileStat = await stat(path);
+      if (!fileStat.isFile()) return undefined;
+
+      const raw = await readFile(path, "utf8");
+      return JSON.parse(raw);
+    } catch (err: any) {
+      if (err.code === "ENOENT") return undefined;
+      throw err;
     }
-    return await file.json();
   }
 
   public async set(key: string, thing: object): Promise<void> {
-    const path = join(await this.folder.value, key);
-    await Bun.write(path, JSON.stringify(thing), { createPath: true });
+    const path = await this.resolvePath(key);
+    const dir = path.substring(0, path.lastIndexOf("/"));
+
+    await mkdir(dir, { recursive: true });
+
+    await writeFile(path, JSON.stringify(thing));
   }
 }
