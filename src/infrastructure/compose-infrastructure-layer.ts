@@ -9,6 +9,7 @@ import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
 import { BunUUIDGenerator } from "./adapters/bun-uuid-generator.ts";
 import { SqliteDatabase } from "./adapters/sqlite-database.ts";
 import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite-oauth2-token-repository.ts";
+import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
 
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
@@ -37,6 +38,8 @@ export const composeInfrastructureLayer = async (
 
   const uuidGenerator = new BunUUIDGenerator();
 
+  const oauthClients = oauthClientFactory(bootstrapper);
+
   return {
     userRepository,
     passwordHasher,
@@ -44,5 +47,7 @@ export const composeInfrastructureLayer = async (
     sessionStorage,
     oauthTokenRepository,
     uuidGenerator,
+    oauthCheckerFactory: oauthClients,
+    newTokenRequesterFactory: oauthClients,
   };
 };

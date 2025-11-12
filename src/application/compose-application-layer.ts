@@ -3,6 +3,8 @@ import { EventEmitter } from "node:events";
 import type { User } from "@domain";
 
 import {
+  CheckOauthIntegrationStatusService,
+  GenerateNewOauthTokenService,
   GetCurrentUserService,
   GetUserService,
   ListUsersService,
@@ -24,6 +26,9 @@ export const composeApplicationLayer = ({
   passwordVerifier,
   sessionStorage,
   uuidGenerator,
+  oauthTokenRepository,
+  oauthCheckerFactory,
+  newTokenRequesterFactory,
 }: IInfrastructurePorts) => {
   const services = [
     new GetCurrentUserService(userRepository),
@@ -32,6 +37,16 @@ export const composeApplicationLayer = ({
     new LoginService(userRepository, passwordVerifier),
     new LogoutService(),
     new RegisterUserService(userRepository, passwordHasher),
+
+    new CheckOauthIntegrationStatusService(
+      oauthTokenRepository,
+      oauthCheckerFactory,
+    ),
+
+    new GenerateNewOauthTokenService(
+      oauthTokenRepository,
+      newTokenRequesterFactory,
+    ),
   ];
 
   const events = new EventEmitter();

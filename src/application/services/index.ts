@@ -4,4 +4,6 @@ export { RegisterUserService } from "./register-user-service.ts";
 export { GetCurrentUserService } from "./get-current-user-service.ts";
 export { ListUsersService } from "./list-users-service.ts";
 export { GetUserService } from "./get-user-service.ts";
+export { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
+export { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 export { AbstractApplicationService } from "./abstract-application-service.ts";

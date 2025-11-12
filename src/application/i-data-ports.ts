@@ -1,13 +1,15 @@
 import type { User } from "@domain";
 
 import type {
+  IOauthCheckerFactory,
   IOauthTokenRepository,
   IObjectStorage,
   IPasswordHasher,
   IPasswordVerifier,
   IRepository,
   IUUIDGenerator,
-} from "./ports/index.ts";
+  NewTokenRequesterFactory,
+} from "@application/ports";
 
 export interface IInfrastructurePorts {
   passwordHasher: IPasswordHasher;
@@ -16,4 +18,6 @@ export interface IInfrastructurePorts {
   oauthTokenRepository: IOauthTokenRepository;
   sessionStorage: IObjectStorage;
   uuidGenerator: IUUIDGenerator;
+  newTokenRequesterFactory: NewTokenRequesterFactory;
+  oauthCheckerFactory: IOauthCheckerFactory;
 }
