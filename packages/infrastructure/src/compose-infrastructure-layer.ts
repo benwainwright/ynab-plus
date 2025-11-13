@@ -44,6 +44,7 @@ export const composeInfrastructureLayer = async (
 
   const sessionStorage = new FlatFileObjectStore(
     bootstrapper.configValue("sessionPath", z.string()),
+    logger,
   );
 
   const uuidGenerator = new NodeUUIDGenerator();

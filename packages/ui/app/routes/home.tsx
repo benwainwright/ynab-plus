@@ -1,3 +1,7 @@
+import { needsPermissions } from "@middleware";
+
+export const clientMidleware = [needsPermissions(["admin", "user"])];
+
 const Home = () => {
   return (
     <>
