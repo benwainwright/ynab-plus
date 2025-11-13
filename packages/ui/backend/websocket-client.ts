@@ -14,7 +14,7 @@ export class ServerWebsocketClient {
     private logger: ILogger,
   ) {}
 
-  public async onConnect(socket: WebSocket) {
+  public onConnect(socket: WebSocket) {
     this.logger.debug(`Socket connected`, LOG_CONTEXT);
     this.eventBus.emit("SocketOpened", undefined);
     this.eventBus.onAll((packet) => {
@@ -56,11 +56,16 @@ export class ServerWebsocketClient {
         data: response,
       });
     } catch (error) {
-      console.log(error);
-      // TODO handle web app errors only here, application should be handling its own errors
-      if (error instanceof WebAppError) {
+      if (
+        error instanceof Error &&
+        "handle" in error &&
+        typeof error.handle === "function"
+      ) {
         error.handle(this.eventBus);
+        return;
       }
+
+      throw error;
     }
   }
 }

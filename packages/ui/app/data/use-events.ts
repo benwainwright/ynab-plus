@@ -24,6 +24,6 @@ export const useEvents =
           }
 
           return () => listener?.removeAll();
-        }, []);
+        }, [listener]);
       }
     : () => {};

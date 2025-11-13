@@ -1,4 +1,4 @@
-import { Header } from "@components";
+import { Footer, Header } from "@components";
 import { Suspense, type ReactNode } from "react";
 
 interface AppProps {
@@ -10,6 +10,7 @@ export const AppLayout = ({ children }: AppProps) => {
     <Suspense fallback={<div aria-busy></div>}>
       <Header title="YNAB Plus!" />
       {children}
+      <Footer />
     </Suspense>
   );
 };
