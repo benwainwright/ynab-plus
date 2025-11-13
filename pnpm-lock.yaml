@@ -225,8 +225,14 @@ importers:
         specifier: 5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
 
-  packages/web-app:
+  packages/websocket-server:
     dependencies:
+      '@react-router/node':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
+      '@react-router/serve':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
       '@ynab-plus/app':
         specifier: workspace:*
         version: link:../application
@@ -236,9 +242,61 @@ importers:
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      '@ynab-plus/infrastructure':
+        specifier: workspace:*
+        version: link:../infrastructure
       '@ynab-plus/test-helpers':
         specifier: workspace:*
         version: link:../test-helpers
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
+      isbot:
+        specifier: ^5.1.31
+        version: 5.1.32
+      react:
+        specifier: '19.2'
+        version: 19.2.0
+      react-dom:
+        specifier: '19.2'
+        version: 19.2.0(react@19.2.0)
+      react-router:
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
+      winston:
+        specifier: ^3.18.3
+        version: 3.18.3
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3
+    devDependencies:
+      '@react-router/dev':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(@react-router/serve@7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3))(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
+      '@types/node':
+        specifier: ^22
+        version: 22.19.1
+      '@types/react':
+        specifier: ^19.1.13
+        version: 19.2.4
+      '@types/react-dom':
+        specifier: ^19.1.9
+        version: 19.2.3(@types/react@19.2.4)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+      vite:
+        specifier: 7.2.2
+        version: 7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)
+      vite-node:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)
+      vite-tsconfig-paths:
+        specifier: 5.1.4
+        version: 5.1.4(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
 

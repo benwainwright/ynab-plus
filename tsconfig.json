@@ -12,6 +12,9 @@
       "path": "./packages/domain"
     },
     {
+      "path": "./packages/websocket-server"
+    },
+    {
       "path": "./packages/ui"
     },
     {
