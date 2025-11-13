@@ -34,8 +34,9 @@ export class SessionIdHandler {
       const cookies = cookie.parse(request.headers.cookie ?? "");
       const key = cookies[SESSION_ID_COOKIE_KEY];
       this.logger.silly(`Found session id in cookies: ${key}`, LOG_CONTEXT);
+    } else {
+      this.logger.silly(`No session id found in cookies`, LOG_CONTEXT);
     }
-    this.logger.silly(`No session id found in cookies`, LOG_CONTEXT);
     return undefined;
   }
 
