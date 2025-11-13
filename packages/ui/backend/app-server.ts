@@ -4,7 +4,6 @@ import type { ServiceBusFactory } from "@ynab-plus/app";
 import { SessionIdHandler } from "./session-id-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
 import { WebSocketServer } from "ws";
-import { Session } from "inspector/promises";
 
 export const LOG_CONTEXT = {
   context: "app-server",

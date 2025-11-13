@@ -37,6 +37,7 @@ export const composeApplicationLayer = (
   }: IInfrastructurePorts,
   logger: ILogger,
 ) => {
+  logger.info(`Composing application layer`, LOG_CONTEXT);
   const services = [
     new GetCurrentUserService(userRepository, logger),
     new GetUserService(userRepository, logger),

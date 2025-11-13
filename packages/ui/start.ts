@@ -6,6 +6,10 @@ import { composeWebApp } from "./backend/compose.ts";
 
 const logger = getWinstonLogger();
 
+const LOG_CONTEXT = { context: "start" };
+
+logger.info(`Starting composition`, LOG_CONTEXT);
+
 const bootstrapper = new Bootstrapper({
   configFile: `ynab-plus.config.json`,
   logger,
@@ -20,5 +24,7 @@ await composeWebApp({
   configurator: bootstrapper,
   logger,
 });
+
+logger.info(`Application composed`, LOG_CONTEXT);
 
 await bootstrapper.start();

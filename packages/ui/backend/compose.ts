@@ -11,11 +11,14 @@ interface WebAppDependencies {
   logger: ILogger;
 }
 
+export const LOG_CONTEXT = { context: "web-app" };
+
 export const composeWebApp = async ({
   serviceBusFactory,
   configurator,
   logger,
 }: WebAppDependencies) => {
+  logger.info(`Composing web application`, LOG_CONTEXT);
   const server = new AppServer(
     serviceBusFactory,
     configurator.configValue("websocketPort", z.number()),
@@ -24,6 +27,8 @@ export const composeWebApp = async ({
   );
 
   configurator.addInitStep(async () => {
-    await server.start();
+    logger.info(`Starting websocket server`, LOG_CONTEXT);
+    server.start();
+    logger.info(`Websocket server started`, LOG_CONTEXT);
   });
 };

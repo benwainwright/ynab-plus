@@ -1,5 +1,5 @@
 import BetterSqlite3 from "better-sqlite3";
-import type { ConfigValue } from "@ynab-plus/bootstrap";
+import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
 
 export class SqliteDatabase {
   private database: InstanceType<typeof BetterSqlite3> | undefined;

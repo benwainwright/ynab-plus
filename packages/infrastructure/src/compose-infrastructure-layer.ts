@@ -11,10 +11,13 @@ import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
 import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
 import { NodePasswordHashValidator } from "./adapters/node-password-hash-validator.ts";
 
+export const LOG_CONTEXT = { context: "compose-infra-layer" };
+
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
   logger: ILogger,
 ): Promise<IInfrastructurePorts> => {
+  logger.info(`Composing infrastructure layer`, LOG_CONTEXT);
   const database = new SqliteDatabase(
     bootstrapper.configValue(`sqliteFilename`, z.string()),
   );
@@ -23,13 +26,19 @@ export const composeInfrastructureLayer = async (
     bootstrapper.configValue("userTableName", z.string()),
     database,
   );
-  bootstrapper.addInitStep(async () => await userRepository.create());
+  bootstrapper.addInitStep(async () => {
+    logger.debug(`Creating user repository if it doesn't exist`, LOG_CONTEXT);
+    await userRepository.create();
+  });
 
   const oauthTokenRepository = new SqliteOauth2TokenRepsoitory(
     bootstrapper.configValue("tokenTableName", z.string()),
     database,
   );
-  bootstrapper.addInitStep(async () => await oauthTokenRepository.create());
+  bootstrapper.addInitStep(async () => {
+    logger.debug(`Creating oauth repository if it doesn't exist`, LOG_CONTEXT);
+    await oauthTokenRepository.create();
+  });
 
   const passwordHasher = new NodePasswordHashValidator();
 

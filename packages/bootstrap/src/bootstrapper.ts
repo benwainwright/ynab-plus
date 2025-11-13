@@ -8,6 +8,8 @@ import z, { ZodError } from "zod";
 import { ConfigValue } from "./config-value.ts";
 import type { ILogger } from "./i-logger.ts";
 
+export const LOG_CONTEXT = { context: "bootstrapper " };
+
 const RESOLVE_CONFIG = "resolve-config";
 
 export class Bootstrapper implements IBootstrapper {
@@ -30,6 +32,7 @@ export class Bootstrapper implements IBootstrapper {
   }
 
   public async start(): Promise<void> {
+    this.config.logger.debug(`Starting application`, LOG_CONTEXT);
     try {
       z.object(this.fullSchema).parse(this._config);
     } catch (error) {
@@ -38,6 +41,11 @@ export class Bootstrapper implements IBootstrapper {
         return;
       }
     }
+
+    this.config.logger.debug(
+      `Application config ${JSON.stringify(this._config)}`,
+      LOG_CONTEXT,
+    );
 
     this.emitter.emit(RESOLVE_CONFIG);
     await this.bootstrappingSteps.reduce(async (last, current) => {

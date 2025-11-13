@@ -21,7 +21,11 @@ export class ServiceBus implements IServiceBus {
     private eventBus: IEventBus,
     private currentUserCache: ISingleItemStore<User | undefined>,
     private logger: ILogger,
-  ) {}
+  ) {
+    this.services.forEach((service) => {
+      this.logger.verbose(`${service.commandName} registered`, LOG_CONTEXT);
+    });
+  }
 
   public async handleCommand<TKey extends keyof Commands>(
     command: ICommandMessage<keyof Commands>,
