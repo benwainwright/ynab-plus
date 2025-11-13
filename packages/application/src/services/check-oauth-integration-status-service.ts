@@ -6,13 +6,15 @@ import type {
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { AppError } from "@errors";
 import type { Permission } from "@ynab-plus/domain";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private oauthClientFactory: IOauthCheckerFactory,
+    logger: ILogger,
   ) {
-    super();
+    super(logger);
   }
 
   public override readonly commandName = "CheckOauthIntegrationStatusCommand";

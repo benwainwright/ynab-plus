@@ -30,7 +30,7 @@ describe("get user service", () => {
       }),
     });
 
-    const service = new GetUserService(mockUserRepo);
+    const service = new GetUserService(mockUserRepo, mock());
 
     const command = mock<ICommandMessage<"GetUser">>({
       key: "GetUser",
@@ -53,7 +53,7 @@ describe("get user service", () => {
       get: vi.fn().mockResolvedValue(undefined),
     });
 
-    const service = new GetUserService(mockUserRepo);
+    const service = new GetUserService(mockUserRepo, mock());
 
     const command = mock<ICommandMessage<"GetUser">>({
       key: "GetUser",

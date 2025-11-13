@@ -1,3 +1,4 @@
+import type { ILogger } from "@ynab-plus/bootstrap";
 import type { User } from "@ynab-plus/domain";
 
 import type {

@@ -5,6 +5,7 @@ import type {
 } from "@ports";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type { Permission } from "@ynab-plus/domain";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export class GenerateNewOauthTokenService extends AbstractApplicationService<"GenerateNewOauthTokenCommand"> {
   public override readonly commandName = "GenerateNewOauthTokenCommand";
@@ -14,8 +15,9 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private newTokenRequesterFactory: NewTokenRequesterFactory,
+    logger: ILogger,
   ) {
-    super();
+    super(logger);
   }
 
   protected override async handle({

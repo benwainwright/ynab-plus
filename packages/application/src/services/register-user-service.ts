@@ -3,6 +3,7 @@ import { AbstractApplicationService } from "./abstract-application-service.ts";
 import { User } from "@ynab-plus/domain";
 
 import type { IPasswordHasher, IHandleContext, IRepository } from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export class RegisterUserService extends AbstractApplicationService<"RegisterCommand"> {
   public override readonly commandName = "RegisterCommand";
@@ -12,10 +13,10 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
 
   public constructor(
     private users: IRepository<User>,
-
     private passwordHasher: IPasswordHasher,
+    logger: ILogger,
   ) {
-    super();
+    super(logger);
   }
 
   public override async handle({

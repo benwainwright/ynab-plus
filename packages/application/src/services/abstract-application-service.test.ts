@@ -23,7 +23,7 @@ describe("application service", () => {
         ): Promise<undefined> {}
       }
 
-      const handler = new TestHandler();
+      const handler = new TestHandler(mock());
 
       const command = mock<ICommandMessage<"LoginCommand">>({
         key: "LoginCommand",
@@ -44,7 +44,7 @@ describe("application service", () => {
         ): Promise<undefined> {}
       }
 
-      const handler = new TestHandler();
+      const handler = new TestHandler(mock());
 
       const command = mock<ICommandMessage<"Logout">>({
         key: "Logout",
@@ -69,7 +69,7 @@ describe("application service", () => {
         }
       }
 
-      const handler = new TestHandler();
+      const handler = new TestHandler(mock());
 
       const command = mock<ICommandMessage<"Logout">>({
         key: "Logout",
@@ -112,7 +112,7 @@ describe("application service", () => {
           }),
       });
 
-      const handler = new TestHandler();
+      const handler = new TestHandler(mock());
 
       const context = { command, eventBus, currentUserCache };
 

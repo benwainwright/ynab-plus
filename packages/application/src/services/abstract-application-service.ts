@@ -2,9 +2,12 @@ import { NotAuthorisedError } from "@errors";
 import type { Commands, Permission, User } from "@ynab-plus/domain";
 
 import type { ISingleItemStore, ICommandMessage, IHandleContext } from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
+
+export const LOG_CONTEXT = { context: "abstract-application-service" };
 
 export abstract class AbstractApplicationService<TKey extends keyof Commands> {
-  public constructor() {}
+  public constructor(protected logger: ILogger) {}
 
   public abstract readonly commandName: TKey;
   public abstract readonly requiredPermissions: Permission[];
@@ -12,7 +15,14 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   public canHandle(
     command: ICommandMessage<keyof Commands>,
   ): command is ICommandMessage<TKey> {
-    return command.key === this.commandName;
+    const result = command.key === this.commandName;
+
+    this.logger.silly(
+      `Can ${this.commandName} handle ${command.key}? ${result ? "yes" : "no"}`,
+      LOG_CONTEXT,
+    );
+
+    return result;
   }
 
   private async currentUserPermissions(
@@ -30,7 +40,13 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   public async doHandle(
     context: IHandleContext<TKey>,
   ): Promise<Commands[TKey]["response"]> {
-    const { currentUserCache } = context;
+    const { currentUserCache, command } = context;
+
+    this.logger.debug(`Attempting to handle command`, {
+      ...LOG_CONTEXT,
+      command,
+    });
+
     const permissions = await this.currentUserPermissions(currentUserCache);
 
     const hasValidPermission = Boolean(
@@ -40,7 +56,12 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
     );
 
     if (!hasValidPermission) {
+      this.logger.silly(`Did not have valid permissions`, {
+        ...LOG_CONTEXT,
+      });
+
       const data = await currentUserCache.get();
+
       throw new NotAuthorisedError(
         `Not authorised to execute ${this.commandName}`,
         this.commandName,
@@ -50,7 +71,16 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
       );
     }
 
-    return await this.handle(context);
+    this.logger.silly(
+      `Permissions are valid, proceeding to handle`,
+      LOG_CONTEXT,
+    );
+
+    const result = await this.handle(context);
+
+    this.logger.debug(`Handling complete`, { ...LOG_CONTEXT, result });
+
+    return result;
   }
 
   protected abstract handle(

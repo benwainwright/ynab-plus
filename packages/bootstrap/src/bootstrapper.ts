@@ -6,6 +6,7 @@ import { readFileSync } from "fs";
 import EventEmitter from "events";
 import z, { ZodError } from "zod";
 import { ConfigValue } from "./config-value.ts";
+import type { ILogger } from "./i-logger.ts";
 
 const RESOLVE_CONFIG = "resolve-config";
 
@@ -16,8 +17,11 @@ export class Bootstrapper implements IBootstrapper {
 
   private _config: Record<string, unknown>;
 
-  public constructor({ configFile }: { configFile: string }) {
-    const configFilePath = join(cwd(), configFile);
+  public constructor(private config: { configFile: string; logger: ILogger }) {
+    this.config.logger.silly("Initialising bootstrapper", {
+      context: "bootstrapper",
+    });
+    const configFilePath = join(cwd(), config.configFile);
     this._config = JSON.parse(readFileSync(configFilePath, "utf-8"));
   }
 

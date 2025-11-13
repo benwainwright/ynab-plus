@@ -1,4 +1,3 @@
 export interface ISessionIdRequester {
-  getSessionId(): Promise<string | undefined>;
-  setSessionId(id: string): Promise<void>;
+  getSessionId(): Promise<string>;
 }

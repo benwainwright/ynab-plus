@@ -25,7 +25,9 @@ export const Register = () => {
       <input name="email" type="email" placeholder="Email" />
       <input name="password" type="password" placeholder="Password" />
       <input name="verify" type="password" placeholder="Verify Password" />
-      <input type="submit" value="Log in" />
+      <input type="submit" value="Submit" />
     </form>
   );
 };
+
+export default Register;

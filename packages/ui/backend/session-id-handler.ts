@@ -1,30 +1,49 @@
 import type { ISessionIdRequester } from "@ynab-plus/app";
+import type { ILogger } from "@ynab-plus/bootstrap";
+import { v7 } from "uuid";
 import cookie from "cookie";
 import { IncomingMessage } from "http";
-import WebSocket from "ws";
+import WebSocket, { WebSocketServer } from "ws";
+import { WebAppError } from "./web-app-error.ts";
 
 export const SESSION_ID_COOKIE_KEY = `ynab-plus-session-id`;
 
-export class SessionIdHandler implements ISessionIdRequester {
-  public constructor(
-    private server: WebSocket,
-    private request: IncomingMessage,
-  ) {}
-  async getSessionId(): Promise<string | undefined> {
-    if (this.request.headers.cookie) {
-      const cookies = cookie.parse(this.request.headers.cookie);
-      return cookies[SESSION_ID_COOKIE_KEY];
+export const LOG_CONTEXT = { context: "session-id-handler" };
+
+export class SessionIdHandler {
+  public constructor(private logger: ILogger) {}
+
+  private sessionIds = new WeakMap<IncomingMessage, string>();
+
+  public setSesionId(headers: string[], request: IncomingMessage) {
+    const existingId = this.parseSessionIdFromRequest(request);
+
+    const newId = v7();
+
+    if (!existingId) {
+      headers.push(`Set-Cookie: ${SESSION_ID_COOKIE_KEY}=${newId}`);
     }
+
+    this.sessionIds.set(request, newId);
+  }
+
+  private parseSessionIdFromRequest(
+    request: IncomingMessage,
+  ): string | undefined {
+    if (request) {
+      const cookies = cookie.parse(request.headers.cookie ?? "");
+      const key = cookies[SESSION_ID_COOKIE_KEY];
+      this.logger.silly(`Found session id in cookies: ${key}`, LOG_CONTEXT);
+    }
+    this.logger.silly(`No session id found in cookies`, LOG_CONTEXT);
     return undefined;
   }
-  async setSessionId(id: string): Promise<void> {
-    return await new Promise((accept) => {
-      this.server.once("headers", (headers) => {
-        headers.push(
-          "Set-Cookie: " + cookie.serialize(SESSION_ID_COOKIE_KEY, id),
-        );
-        accept();
-      });
-    });
+
+  public getSessionId(request: IncomingMessage): string {
+    const id = this.sessionIds.get(request);
+    if (!id) {
+      throw new WebAppError(`No id was found`);
+    }
+    return id;
   }
 }

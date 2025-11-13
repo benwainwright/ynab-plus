@@ -13,5 +13,6 @@ export const getOpenSocket = async () => {
 
     socketCache = socketPromise;
   }
+
   return socketCache;
 };

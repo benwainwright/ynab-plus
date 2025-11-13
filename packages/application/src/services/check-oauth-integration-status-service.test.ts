@@ -7,6 +7,7 @@ import type {
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@ynab-plus/domain";
+import { mock } from "vitest-mock-extended";
 
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {
@@ -27,6 +28,7 @@ describe("check oauth-integration-status-service", () => {
     const service = new CheckOauthIntegrationStatusService(
       mockTokenRepo,
       oauthClientFactory,
+      mock(),
     );
 
     const context = createMockServiceContext(
@@ -87,6 +89,7 @@ describe("check oauth-integration-status-service", () => {
       const service = new CheckOauthIntegrationStatusService(
         mockTokenRepo,
         oauthClientFactory,
+        mock(),
       );
 
       const context = createMockServiceContext(
@@ -162,6 +165,7 @@ describe("check oauth-integration-status-service", () => {
       const service = new CheckOauthIntegrationStatusService(
         mockTokenRepo,
         oauthClientFactory,
+        mock(),
       );
 
       const context = createMockServiceContext(

@@ -1,6 +1,7 @@
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 import type { IHandleContext, IPasswordVerifier, IRepository } from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 import type { Commands, Permission, User } from "@ynab-plus/domain";
 
@@ -10,8 +11,9 @@ export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public constructor(
     private users: IRepository<User>,
     private passwordVerifier: IPasswordVerifier,
+    logger: ILogger,
   ) {
-    super();
+    super(logger);
   }
 
   public override readonly commandName = "LoginCommand";

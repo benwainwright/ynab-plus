@@ -1,18 +1,19 @@
 import z from "zod";
 
-import type { IBootstrapper } from "@ynab-plus/bootstrap";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import type { IInfrastructurePorts } from "@ynab-plus/app";
 
 import { SqliteUserRepository } from "./adapters/sqlite/sqlite-user-repository.ts";
-import { PasswordHashValidator } from "./adapters/password-hash-validator.ts";
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
 import { SqliteDatabase } from "./adapters/sqlite/sqlite-database.ts";
 import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite/sqlite-oauth2-token-repository.ts";
 import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
 import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
+import { NodePasswordHashValidator } from "./adapters/node-password-hash-validator.ts";
 
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
+  logger: ILogger,
 ): Promise<IInfrastructurePorts> => {
   const database = new SqliteDatabase(
     bootstrapper.configValue(`sqliteFilename`, z.string()),
@@ -30,7 +31,7 @@ export const composeInfrastructureLayer = async (
   );
   bootstrapper.addInitStep(async () => await oauthTokenRepository.create());
 
-  const passwordHasher = new PasswordHashValidator();
+  const passwordHasher = new NodePasswordHashValidator();
 
   const sessionStorage = new FlatFileObjectStore(
     bootstrapper.configValue("sessionPath", z.string()),

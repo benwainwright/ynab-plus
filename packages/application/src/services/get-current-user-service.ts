@@ -2,6 +2,7 @@ import { AbstractApplicationService } from "./abstract-application-service.ts";
 import type { User } from "@ynab-plus/domain";
 import { AppError } from "@errors";
 import type { IHandleContext, IRepository } from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export class GetCurrentUserService extends AbstractApplicationService<"GetCurrentUserCommand"> {
   public override readonly commandName = "GetCurrentUserCommand";
@@ -12,8 +13,11 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
     "admin",
   ];
 
-  public constructor(private users: IRepository<User>) {
-    super();
+  public constructor(
+    private users: IRepository<User>,
+    logger: ILogger,
+  ) {
+    super(logger);
   }
 
   public override async handle({

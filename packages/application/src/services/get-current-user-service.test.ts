@@ -32,7 +32,7 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo);
+    const handler = new GetCurrentUserService(repo, mock());
 
     const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
       key: "GetCurrentUserCommand",
@@ -74,7 +74,7 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo);
+    const handler = new GetCurrentUserService(repo, mock());
 
     const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
       key: "GetCurrentUserCommand",
@@ -114,7 +114,7 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo);
+    const handler = new GetCurrentUserService(repo, mock());
 
     const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
       key: "GetCurrentUserCommand",
@@ -151,7 +151,7 @@ describe("get user command handler", () => {
       get: vi.fn().mockResolvedValue(undefined),
     });
 
-    const handler = new GetCurrentUserService(repo);
+    const handler = new GetCurrentUserService(repo, mock());
 
     const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
       key: "GetCurrentUserCommand",

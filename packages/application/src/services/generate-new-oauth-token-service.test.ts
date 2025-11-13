@@ -3,6 +3,7 @@ import { createMockServiceContext } from "@test-helpers";
 import { describe, expect, it, vi } from "vitest";
 import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 import type { IOauthNewTokenRequester, IOauthTokenRepository } from "@ports";
+import { mock } from "vitest-mock-extended";
 
 describe("generate new oauth token service", () => {
   it("gets a new token from the requester and saves it in the repository", async () => {
@@ -45,7 +46,11 @@ describe("generate new oauth token service", () => {
 
     const factory = vi.fn().mockReturnValue(requester);
 
-    const service = new GenerateNewOauthTokenService(mockTokenRepo, factory);
+    const service = new GenerateNewOauthTokenService(
+      mockTokenRepo,
+      factory,
+      mock(),
+    );
 
     const result = await service.doHandle(context);
 

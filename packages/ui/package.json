@@ -20,10 +20,11 @@
     "@ynab-plus/test-helpers": "workspace:*",
     "cookie": "^1.0.2",
     "isbot": "^5.1.31",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "19.2",
+    "react-dom": "19.2",
     "react-router": "7.9.6-pre.0",
     "uuid": "^13.0.0",
+    "winston": "^3.18.3",
     "ws": "^8.18.3"
   },
   "devDependencies": {

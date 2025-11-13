@@ -1,28 +1,29 @@
-import type { IEventBus, ServiceBusFactory } from "@ynab-plus/app";
+import z from "zod";
+
+import type { ServiceBusFactory } from "@ynab-plus/app";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 
 import { AppServer } from "./app-server.ts";
-import type { IBootstrapper } from "@ynab-plus/bootstrap";
-import z from "zod";
 
 interface WebAppDependencies {
   serviceBusFactory: ServiceBusFactory;
-  eventBus: IEventBus;
   configurator: IBootstrapper;
+  logger: ILogger;
 }
 
 export const composeWebApp = async ({
   serviceBusFactory,
-  eventBus: bus,
   configurator,
+  logger,
 }: WebAppDependencies) => {
   const server = new AppServer(
     serviceBusFactory,
-    bus,
     configurator.configValue("websocketPort", z.number()),
+    configurator.configValue("websocketHost", z.string()),
+    logger,
   );
 
   configurator.addInitStep(async () => {
-    const bunServer = await server.start();
-    console.log(`Application server now running`);
+    await server.start();
   });
 };

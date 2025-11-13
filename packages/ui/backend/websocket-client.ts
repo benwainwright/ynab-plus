@@ -1,18 +1,24 @@
 import type { IEventBus, IServiceBus } from "@ynab-plus/app";
 import { WebAppError } from "./web-app-error.ts";
 import { WebSocket } from "ws";
+import type { ILogger } from "@ynab-plus/bootstrap";
+
+export const LOG_CONTEXT = {
+  context: "websocket-server-socket-client",
+};
 
 export class ServerWebsocketClient {
   public constructor(
     private serviceBus: IServiceBus,
     private eventBus: IEventBus,
+    private logger: ILogger,
   ) {}
 
-  public async onOpen(socket: WebSocket) {
-    console.log("ONOPEN");
+  public async onConnect(socket: WebSocket) {
+    this.logger.debug(`Socket connected`, LOG_CONTEXT);
     this.eventBus.emit("SocketOpened", undefined);
     this.eventBus.onAll((packet) => {
-      console.log("PACKET", packet);
+      this.logger.debug(`Event recieved`, { ...LOG_CONTEXT, packet });
       socket.send(JSON.stringify(packet));
     });
   }
@@ -33,13 +39,16 @@ export class ServerWebsocketClient {
   }
 
   public async onMessage(message: WebSocket.RawData) {
-    console.log(message.toString("utf-8"));
+    this.logger.silly(`Message received on socket`, LOG_CONTEXT);
     try {
       const parsed = this.parseMessage(message);
-      console.log(parsed);
+
+      this.logger.debug(`Message parsed`, {
+        ...LOG_CONTEXT,
+        message: JSON.stringify(parsed),
+      });
 
       const response = await this.serviceBus.handleCommand(parsed);
-      console.log("after");
 
       this.eventBus.emit("CommandResponse", {
         id: parsed.id,

@@ -2,23 +2,28 @@ import { use, useEffect, useState } from "react";
 import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IListener } from "@ynab-plus/app";
 import { getOpenSocket } from "./get-open-socket.ts";
+import { useSocket } from "./use-socket.ts";
 
-export const useEvents = (callback: IListener) => {
-  if (typeof window === "undefined") {
-    return;
-  }
-  const socket = use(getOpenSocket());
-  const [listener, setSocketEventListener] = useState<SocketEventListener>();
+export const useEvents =
+  typeof window !== "undefined"
+    ? (callback: IListener) => {
+        const socket = useSocket();
 
-  useEffect(() => {
-    setSocketEventListener(new SocketEventListener(socket));
-  }, []);
+        const [listener, setSocketEventListener] =
+          useState<SocketEventListener>();
 
-  useEffect(() => {
-    if (listener) {
-      listener.onAll(callback);
-    }
+        useEffect(() => {
+          if (socket) {
+            setSocketEventListener(new SocketEventListener(socket));
+          }
+        }, [socket]);
 
-    return () => listener?.removeAll();
-  }, [listener]);
-};
+        useEffect(() => {
+          if (listener) {
+            listener.onAll(callback);
+          }
+
+          return () => listener?.removeAll();
+        }, []);
+      }
+    : () => {};

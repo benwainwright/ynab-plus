@@ -7,9 +7,10 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-import type { Route } from "./+types/root";
+import type { Route } from "./+types/root.ts";
 import "./app.css";
-import { Footer, Header } from "@components";
+import { Header } from "@components";
+import { AppLayout } from "./components/app-layout/app-layout.tsx";
 
 export const links: Route.LinksFunction = () => [
   {
@@ -32,10 +33,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Header title="YNAB Plus!" />
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+        <AppLayout>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </AppLayout>
       </body>
     </html>
   );

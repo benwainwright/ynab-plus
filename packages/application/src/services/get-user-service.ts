@@ -4,6 +4,7 @@ import type { User } from "@ynab-plus/domain";
 import type { IHandleContext, IRepository } from "@ports";
 
 import { UserNotFoundError } from "@errors";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export class GetUserService extends AbstractApplicationService<"GetUser"> {
   public override readonly commandName = "GetUser";
@@ -14,8 +15,11 @@ export class GetUserService extends AbstractApplicationService<"GetUser"> {
     "user",
   ];
 
-  public constructor(private users: IRepository<User>) {
-    super();
+  public constructor(
+    private users: IRepository<User>,
+    logger: ILogger,
+  ) {
+    super(logger);
   }
 
   protected override async handle({
