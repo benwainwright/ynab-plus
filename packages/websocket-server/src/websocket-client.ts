@@ -25,7 +25,11 @@ export class ServerWebsocketClient {
 
   private parseMessage(message: unknown) {
     const content =
-      message instanceof Buffer ? message.toString("utf-8") : message;
+      message instanceof Buffer
+        ? JSON.stringify(message.toString("utf-8"))
+        : typeof message === "string"
+          ? JSON.stringify(message)
+          : message;
 
     const commandMessage = z.object({
       id: z.string(),
