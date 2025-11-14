@@ -2,7 +2,7 @@ import { composeApplicationLayer } from "@ynab-plus/app";
 import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
 import { composeDataLayer } from "@ynab-plus/infrastructure";
 
-import { composeWebApp } from "./backend/compose.ts";
+import { composeWebApp } from "./src/compose.ts";
 
 const logger = getWinstonLogger();
 

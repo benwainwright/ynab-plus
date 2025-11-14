@@ -1,5 +1,5 @@
 {
-  "name": "@ynab-plus/ui",
+  "name": "@ynab-plus/frontend",
   "private": true,
   "type": "module",
   "scripts": {

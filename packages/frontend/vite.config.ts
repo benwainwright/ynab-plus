@@ -9,6 +9,7 @@ export default defineConfig({
 
   plugins: [
     reactRouter(),
+    // @ts-expect-error
     tsconfigPaths({
       projects: [
         "./tsconfig.json",

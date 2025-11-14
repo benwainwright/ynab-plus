@@ -15,7 +15,7 @@
       "path": "./packages/websocket-server"
     },
     {
-      "path": "./packages/ui"
+      "path": "./packages/frontend"
     },
     {
       "path": "./packages/infrastructure"
