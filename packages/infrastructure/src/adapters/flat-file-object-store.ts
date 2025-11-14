@@ -1,5 +1,6 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cwd } from "node:process";
 
 import type { IObjectStorage } from "@ynab-plus/app";
 import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
@@ -16,14 +17,22 @@ export class FlatFileObjectStore<TObject extends object>
 
   private async resolvePath(key: string) {
     const base = await this.folder.value;
-    return join(base, key);
+    return join(cwd(), base, key);
   }
 
   public async get(key: string): Promise<TObject | undefined> {
     const path = await this.resolvePath(key);
+    this.logger.silly(`Path resolved at ${path}`, LOG_CONTEXT);
 
     try {
       const fileStat = await stat(path);
+      const isFile = fileStat.isFile();
+
+      this.logger.silly(
+        `Path is a file? ${isFile ? "yes" : "no"}`,
+        LOG_CONTEXT,
+      );
+
       if (!fileStat.isFile()) return undefined;
 
       const raw = await readFile(path, "utf8");
@@ -34,13 +43,14 @@ export class FlatFileObjectStore<TObject extends object>
         typeof err === "object" &&
         "code" in err &&
         err.code === "ENOENT"
-      )
+      ) {
         return undefined;
+      }
       throw err;
     }
   }
 
-  public async set(key: string, thing: TObject): Promise<void> {
+  public async set(key: string, thing: TObject | undefined): Promise<void> {
     const path = await this.resolvePath(key);
     const dir = path.substring(0, path.lastIndexOf("/"));
 
@@ -51,6 +61,10 @@ export class FlatFileObjectStore<TObject extends object>
       LOG_CONTEXT,
     );
 
-    await writeFile(path, JSON.stringify(thing));
+    if (typeof thing === "undefined") {
+      await rm(path);
+    } else {
+      await writeFile(path, JSON.stringify(thing));
+    }
   }
 }

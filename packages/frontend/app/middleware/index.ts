@@ -1,1 +1,1 @@
-export { needsPermissions } from "./needs-permissions.ts";
+export { protectedRoute } from "./protected-route.ts";

@@ -40,7 +40,7 @@ describe("get user service", () => {
       },
     });
 
-    const currentUserCache = mock<ISingleItemStore<User | undefined>>();
+    const currentUserCache = mock<ISingleItemStore<User>>();
     const eventBus = mock<IEventBus>();
     const context = { command, eventBus, currentUserCache };
 
@@ -63,7 +63,7 @@ describe("get user service", () => {
       },
     });
 
-    const currentUserCache = mock<ISingleItemStore<User | undefined>>();
+    const currentUserCache = mock<ISingleItemStore<User>>();
     const eventBus = mock<IEventBus>();
     const context = { command, eventBus, currentUserCache };
 

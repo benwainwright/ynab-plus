@@ -16,9 +16,10 @@ export class SessionStorage<T extends object> implements ISingleItemStore<T> {
 
   public async get(): Promise<T | undefined> {
     const sessionId = await this.sessionIdRequester.getSessionId();
-    const sessionData = (await this.storage.get(
-      `${sessionId}-session-key`,
-    )) as T;
+    const key = `${sessionId}-session-key`;
+
+    this.logger.silly(`Received session key: ${key}`, LOG_CONTEXT);
+    const sessionData = (await this.storage.get(key)) as T;
     this.logger.silly(
       `Received session data: ${JSON.stringify(sessionData)}`,
       LOG_CONTEXT,
@@ -26,7 +27,7 @@ export class SessionStorage<T extends object> implements ISingleItemStore<T> {
     return sessionData;
   }
 
-  async set(thing: T): Promise<void> {
+  async set(thing: T | undefined): Promise<void> {
     const sessionId = await this.sessionIdRequester.getSessionId();
 
     this.logger.silly(

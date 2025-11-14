@@ -10,7 +10,6 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root.ts";
-import { AppLayout } from "./components/app-layout/app-layout.tsx";
 
 export const links: Route.LinksFunction = () => [
   {
@@ -33,11 +32,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <AppLayout>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-        </AppLayout>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   );

@@ -1,20 +1,33 @@
-import { command } from "@data";
-import { useEffect } from "react";
+import { ProtectedRoute, CurrentUserContext } from "@components";
+import { command, useEvents } from "@data";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 export const Logout = () => {
   const navigate = useNavigate();
+  const { currentUser, reloadUser } = useContext(CurrentUserContext);
+
   useEffect(() => {
+    console.log({ currentUser });
     void (async () => {
-      await command("Logout", undefined);
-      await navigate("/login");
+      if (currentUser) {
+        await command("Logout", undefined);
+      } else {
+        await navigate("/login");
+      }
     })();
+  }, [currentUser]);
+
+  useEvents((event) => {
+    if (event.key === "LogoutSuccess") {
+      reloadUser();
+    }
   });
 
   return (
-    <>
+    <ProtectedRoute routeName="logout">
       <p>Logging out...</p>
-    </>
+    </ProtectedRoute>
   );
 };
 

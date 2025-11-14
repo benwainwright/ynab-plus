@@ -3,9 +3,7 @@
   "files": ["./vitest.config.ts"],
   "include": [],
   "compilerOptions": {
-    "paths": {
-      "@adapters": ["./src/adapters/index.ts"]
-    }
+    "outDir": ".temp"
   },
   "references": [
     {

@@ -23,7 +23,7 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   }
 
   private async currentUserPermissions(
-    session: ISingleItemStore<User | undefined>,
+    session: ISingleItemStore<User>,
   ): Promise<Permission[]> {
     const data = await session.get();
 

@@ -34,6 +34,7 @@ export class ServerWebsocketClient {
     const commandMessage = z.object({
       id: z.string(),
       key: z.string(),
+      data: z.any(),
     });
 
     return commandMessage.parse(content) as ICommandMessage;

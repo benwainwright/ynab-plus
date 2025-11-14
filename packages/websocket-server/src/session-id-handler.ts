@@ -17,13 +17,13 @@ export class SessionIdHandler {
   public setSesionId(headers: string[], request: IncomingMessage) {
     const existingId = this.parseSessionIdFromRequest(request);
 
-    const newId = v7();
-
-    if (!existingId) {
+    if (existingId) {
+      this.sessionIds.set(request, existingId);
+    } else {
+      const newId = v7();
       headers.push(`Set-Cookie: ${SESSION_ID_COOKIE_KEY}=${newId}`);
+      this.sessionIds.set(request, newId);
     }
-
-    this.sessionIds.set(request, newId);
   }
 
   private parseSessionIdFromRequest(
@@ -42,6 +42,10 @@ export class SessionIdHandler {
 
   public getSessionId(request: IncomingMessage): string {
     const id = this.sessionIds.get(request);
+    this.logger.info(
+      `Retrieving session id ${String(id)} from session id store`,
+      LOG_CONTEXT,
+    );
     if (!id) {
       throw new WebAppError(`No id was found`);
     }

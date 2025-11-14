@@ -11,7 +11,6 @@ export class CommandClient {
     command: TName,
     data: Commands[TName]["request"],
   ): Promise<Commands[TName]["response"]> {
-    console.log({ command, data });
     const uuid = v7();
 
     const message: ICommandMessage<TName> = {

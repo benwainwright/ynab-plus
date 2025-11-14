@@ -6,5 +6,5 @@ import type { ISingleItemStore } from "./i-single-item-store.ts";
 export interface IHandleContext<TKey extends keyof Commands> {
   command: ICommandMessage<TKey>;
   eventBus: IEventBus;
-  currentUserCache: ISingleItemStore<IUser | undefined>;
+  currentUserCache: ISingleItemStore<IUser>;
 }

@@ -1,16 +1,21 @@
 import { getCurrentUser } from "@data";
-import type { Permission } from "@ynab-plus/domain";
 import { redirect } from "react-router";
 
+import { routesList } from "../routes-list.ts";
 import { canAccess } from "./can-access.ts";
 
-export const needsPermissions = (routeTags: Permission[]) => {
+export const protectedRoute = ({
+  routeName,
+}: {
+  routeName: keyof typeof routesList;
+}) => {
+  const routeConfig = routesList[routeName];
   return async () => {
     const user = await getCurrentUser();
     if (
       !canAccess({
         user,
-        routeTags,
+        routeTags: routeConfig.permissionsRequired,
       })
     ) {
       // eslint-disable-next-line @typescript-eslint/only-throw-error

@@ -1,4 +1,4 @@
-export interface ISingleItemStore<T extends object | undefined> {
+export interface ISingleItemStore<T extends object> {
   get(): Promise<T | undefined>;
-  set(thing: T): Promise<void>;
+  set(thing: T | undefined): Promise<void>;
 }

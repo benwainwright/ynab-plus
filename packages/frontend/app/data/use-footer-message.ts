@@ -10,7 +10,6 @@ interface FooterMessage {
 export const useFooterMessage = () => {
   const [message, setMessage] = useState<FooterMessage | undefined>();
   useEvents((event) => {
-    console.log(event);
     switch (event.key) {
       case "ApplicationError":
         setMessage({
