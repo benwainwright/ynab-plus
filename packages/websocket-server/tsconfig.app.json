@@ -10,19 +10,10 @@
   },
   "references": [
     {
-      "path": "../domain"
-    },
-    {
       "path": "../application"
     },
     {
-      "path": "../infrastructure"
-    },
-    {
       "path": "../bootstrap"
-    },
-    {
-      "path": "../test-helpers"
     }
   ],
   "include": ["backend/**/*.ts"],
