@@ -1,10 +1,9 @@
-import { AbstractApplicationService } from "./abstract-application-service.ts";
-
-import type { User } from "@ynab-plus/domain";
-import type { IHandleContext, IRepository } from "@ports";
-
 import { UserNotFoundError } from "@errors";
+import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
+import type { User } from "@ynab-plus/domain";
+
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class GetUserService extends AbstractApplicationService<"GetUser"> {
   public override readonly commandName = "GetUser";

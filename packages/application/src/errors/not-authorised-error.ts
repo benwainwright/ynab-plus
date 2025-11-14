@@ -1,6 +1,7 @@
-import type { Commands, Permission } from "@ynab-plus/domain";
-import { AppError } from "./app-error.ts";
 import type { IEventBus } from "@ports";
+import type { Commands, Permission } from "@ynab-plus/domain";
+
+import { AppError } from "./app-error.ts";
 
 export class NotAuthorisedError extends AppError {
   public constructor(

@@ -1,1 +1,1 @@
-export { User, OauthToken, type Permission, permissions } from "./src/index.ts";
+export { OauthToken, type Permission, permissions,User } from "./src/index.ts";

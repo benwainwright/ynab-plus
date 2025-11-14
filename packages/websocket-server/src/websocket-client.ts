@@ -1,7 +1,8 @@
 import type { IEventBus, IServiceBus } from "@ynab-plus/app";
-import { WebAppError } from "./web-app-error.ts";
-import { WebSocket } from "ws";
 import type { ILogger } from "@ynab-plus/bootstrap";
+import { WebSocket } from "ws";
+
+import { WebAppError } from "./web-app-error.ts";
 
 export const LOG_CONTEXT = {
   context: "websocket-server-socket-client",

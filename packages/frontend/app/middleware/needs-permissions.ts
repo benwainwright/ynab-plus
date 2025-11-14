@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@data";
 import type { Permission } from "@ynab-plus/domain";
-import { redirect, Route } from "react-router";
+import { redirect } from "react-router";
+
 import { canAccess } from "./can-access.ts";
 
 export const needsPermissions = (routeTags: Permission[]) => {

@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { YnabOauth2Client } from "./ynab-oauth2-client.ts";
 import { OauthToken } from "@ynab-plus/domain";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { YnabOauth2Client } from "./ynab-oauth2-client.ts";
 
 let formData: FormData | undefined;
 let fetchMock: ReturnType<typeof vi.fn>;

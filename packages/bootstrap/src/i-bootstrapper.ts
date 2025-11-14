@@ -1,4 +1,5 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
+
 import type { ConfigValue } from "./config-value.ts";
 
 export interface IBootstrapper {

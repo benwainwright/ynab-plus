@@ -1,9 +1,8 @@
-import { AbstractApplicationService } from "./abstract-application-service.ts";
-
 import type { IHandleContext, IPasswordVerifier, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-
 import type { Commands, Permission, User } from "@ynab-plus/domain";
+
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public override requiredPermissions: Permission[] = ["public"];

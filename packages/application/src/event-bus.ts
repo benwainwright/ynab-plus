@@ -1,5 +1,4 @@
 import type { EventEmitter } from "node:events";
-import { type Events } from "@ynab-plus/domain";
 
 import type {
   IEventBus,
@@ -7,6 +6,7 @@ import type {
   IListener,
   IUUIDGenerator,
 } from "@ports";
+import { type Events } from "@ynab-plus/domain";
 
 export class EventBus implements IEventBus {
   private listenerMap = new Map<string, IListener>();

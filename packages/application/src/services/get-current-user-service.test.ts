@@ -1,18 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
-
-import { GetCurrentUserService } from "./get-current-user-service.ts";
-import { mock } from "vitest-mock-extended";
-
+import { AppError } from "@errors";
 import type {
   ICommandMessage,
   IEventBus,
   IRepository,
   ISingleItemStore,
 } from "@ports";
-
-import { AppError } from "@errors";
-
 import { User } from "@ynab-plus/domain";
+import { describe, expect, it, vi } from "vitest";
+import { mock } from "vitest-mock-extended";
+
+import { GetCurrentUserService } from "./get-current-user-service.ts";
 
 describe("get user command handler", () => {
   it("gets a user from the repository and returns it", async () => {

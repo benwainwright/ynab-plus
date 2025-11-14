@@ -1,7 +1,4 @@
-import { EventEmitter } from "node:events";
-
-import type { User } from "@ynab-plus/domain";
-
+import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
 import {
   CheckOauthIntegrationStatusService,
   GenerateNewOauthTokenService,
@@ -12,13 +9,12 @@ import {
   LogoutService,
   RegisterUserService,
 } from "@services";
-
-import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
+import type { User } from "@ynab-plus/domain";
 
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
 import { SessionStorage } from "./session-storage.ts";
-import type { ILogger } from "@ynab-plus/bootstrap";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 

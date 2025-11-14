@@ -1,5 +1,6 @@
 import { FrontendError } from "@errors";
 import type { Commands } from "@ynab-plus/domain";
+
 import { CommandClient } from "./command-client.ts";
 import { getOpenSocket } from "./get-open-socket.ts";
 

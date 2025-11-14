@@ -1,15 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
-import { mock } from "vitest-mock-extended";
-import { GetUserService } from "./get-user-service.ts";
-import { User } from "@ynab-plus/domain";
+import { UserNotFoundError } from "@errors";
 import type {
   ICommandMessage,
   IEventBus,
   IRepository,
   ISingleItemStore,
 } from "@ports";
+import { User } from "@ynab-plus/domain";
+import { describe, expect, it, vi } from "vitest";
+import { mock } from "vitest-mock-extended";
 
-import { UserNotFoundError } from "@errors";
+import { GetUserService } from "./get-user-service.ts";
 
 describe("get user service", () => {
   it("simply returns a user, given the correct id", async () => {

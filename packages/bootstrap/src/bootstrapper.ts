@@ -1,11 +1,12 @@
-import { join } from "path";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type { IBootstrapper } from "./i-bootstrapper.ts";
-import { cwd } from "process";
-import { readFileSync } from "fs";
 import EventEmitter from "events";
+import { readFileSync } from "fs";
+import { join } from "path";
+import { cwd } from "process";
 import z, { ZodError } from "zod";
+
 import { ConfigValue } from "./config-value.ts";
+import type { IBootstrapper } from "./i-bootstrapper.ts";
 import type { ILogger } from "./i-logger.ts";
 
 export const LOG_CONTEXT = { context: "bootstrapper " };

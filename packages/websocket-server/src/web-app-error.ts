@@ -1,5 +1,5 @@
-import StackTracey from "stacktracey";
 import type { IEventBus } from "@ynab-plus/app";
+import StackTracey from "stacktracey";
 
 export class WebAppError extends Error {
   public handle(events: IEventBus) {

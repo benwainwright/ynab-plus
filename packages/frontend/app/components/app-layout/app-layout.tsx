@@ -1,5 +1,5 @@
 import { Footer, Header } from "@components";
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode,Suspense } from "react";
 
 interface AppProps {
   children: ReactNode;

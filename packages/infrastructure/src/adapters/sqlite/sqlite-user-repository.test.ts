@@ -1,8 +1,8 @@
-import { SqliteUserRepository } from "./sqlite-user-repository.ts";
+import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
-import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { SqliteDatabase } from "./sqlite-database.ts";
+import { SqliteUserRepository } from "./sqlite-user-repository.ts";
 
 describe("the user repository", () => {
   it("can update and return a user", async () => {

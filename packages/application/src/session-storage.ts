@@ -1,10 +1,9 @@
-import type { ILogger } from "@ynab-plus/bootstrap";
 import type {
   IObjectStorage,
   ISessionIdRequester,
   ISingleItemStore,
-  IUUIDGenerator,
-} from "./ports/index.ts";
+} from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 

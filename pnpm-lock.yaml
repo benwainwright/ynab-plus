@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@eslint/js':
+        specifier: ^9.39.1
+        version: 9.39.1
       '@standard-schema/spec':
         specifier: ^1.0.0
         version: 1.0.0
@@ -23,9 +26,6 @@ importers:
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
-      stacktracey:
-        specifier: ^2.1.8
-        version: 2.1.8
       tsyringe:
         specifier: ^4.10.0
         version: 4.10.0
@@ -63,6 +63,9 @@ importers:
       eslint-plugin-import:
         specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))
+      eslint-plugin-simple-import-sort:
+        specifier: ^12.1.1
+        version: 12.1.1(eslint@9.39.1(jiti@2.6.1))
       get-port:
         specifier: ^7.1.0
         version: 7.1.0
@@ -96,6 +99,9 @@ importers:
       '@ynab-plus/test-helpers':
         specifier: workspace:*
         version: link:../test-helpers
+      stacktracey:
+        specifier: ^2.1.8
+        version: 2.1.8
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -114,6 +120,73 @@ importers:
         version: link:../domain
 
   packages/domain: {}
+
+  packages/frontend:
+    dependencies:
+      '@react-router/node':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
+      '@react-router/serve':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
+      '@ynab-plus/app':
+        specifier: workspace:*
+        version: link:../application
+      '@ynab-plus/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@ynab-plus/test-helpers':
+        specifier: workspace:*
+        version: link:../test-helpers
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
+      isbot:
+        specifier: ^5.1.31
+        version: 5.1.32
+      react:
+        specifier: '19.2'
+        version: 19.2.0
+      react-dom:
+        specifier: '19.2'
+        version: 19.2.0(react@19.2.0)
+      react-router:
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
+      winston:
+        specifier: ^3.18.3
+        version: 3.18.3
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3
+    devDependencies:
+      '@react-router/dev':
+        specifier: 7.9.6-pre.0
+        version: 7.9.6-pre.0(@react-router/serve@7.9.6-pre.0(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3))(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.6-pre.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
+      '@types/node':
+        specifier: ^22
+        version: 22.19.1
+      '@types/react':
+        specifier: ^19.1.13
+        version: 19.2.4
+      '@types/react-dom':
+        specifier: ^19.1.9
+        version: 19.2.3(@types/react@19.2.4)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+      vite:
+        specifier: 7.2.2
+        version: 7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)
+      vite-node:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)
+      vite-tsconfig-paths:
+        specifier: 5.1.4
+        version: 5.1.4(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
 
   packages/infrastructure:
     dependencies:
@@ -239,15 +312,6 @@ importers:
       '@ynab-plus/bootstrap':
         specifier: workspace:*
         version: link:../bootstrap
-      '@ynab-plus/domain':
-        specifier: workspace:*
-        version: link:../domain
-      '@ynab-plus/infrastructure':
-        specifier: workspace:*
-        version: link:../infrastructure
-      '@ynab-plus/test-helpers':
-        specifier: workspace:*
-        version: link:../test-helpers
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
@@ -1497,6 +1561,11 @@ packages:
     peerDependenciesMeta:
       '@typescript-eslint/parser':
         optional: true
+
+  eslint-plugin-simple-import-sort@12.1.1:
+    resolution: {integrity: sha512-6nuzu4xwQtE3332Uz0to+TxDQYRLTKRESSc2hefVT48Zc8JthmN23Gx9lnYhu0FtkRSL1oxny3kJ2aveVhmOVA==}
+    peerDependencies:
+      eslint: '>=5.0.0'
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -4295,6 +4364,10 @@ snapshots:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
+
+  eslint-plugin-simple-import-sort@12.1.1(eslint@9.39.1(jiti@2.6.1)):
+    dependencies:
+      eslint: 9.39.1(jiti@2.6.1)
 
   eslint-scope@8.4.0:
     dependencies:

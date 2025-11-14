@@ -1,7 +1,7 @@
-import { Form, useNavigate } from "react-router";
 import { command, useEvents } from "@data";
+import { Form, useNavigate } from "react-router";
+
 import type { Route } from "./+types/register.ts";
-import { needsPermissions } from "@middleware";
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const data = await request.formData();

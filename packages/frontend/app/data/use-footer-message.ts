@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useEvents } from "./use-events.ts";
 
 interface FooterMessage {

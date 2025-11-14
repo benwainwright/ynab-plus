@@ -1,13 +1,11 @@
-import { vi } from "vitest";
-import { mock } from "vitest-mock-extended";
-
 import type {
   ICommandMessage,
   IEventBus,
   ISingleItemStore,
 } from "@ynab-plus/app";
-
 import type { Commands, User } from "@ynab-plus/domain";
+import { vi } from "vitest";
+import { mock } from "vitest-mock-extended";
 
 export const createMockServiceContext = <TCommandKey extends keyof Commands>(
   key: TCommandKey,

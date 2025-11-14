@@ -1,7 +1,6 @@
-import z from "zod";
-
 import type { ServiceBusFactory } from "@ynab-plus/app";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
+import z from "zod";
 
 import { AppServer } from "./app-server.ts";
 

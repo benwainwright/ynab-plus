@@ -1,12 +1,13 @@
+import { AppError } from "@errors";
 import type {
   IHandleContext,
   IOauthCheckerFactory,
   IOauthTokenRepository,
 } from "@ports";
-import { AbstractApplicationService } from "./abstract-application-service.ts";
-import { AppError } from "@errors";
-import type { Permission } from "@ynab-plus/domain";
 import type { ILogger } from "@ynab-plus/bootstrap";
+import type { Permission } from "@ynab-plus/domain";
+
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(

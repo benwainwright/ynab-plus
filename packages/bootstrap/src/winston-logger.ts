@@ -1,4 +1,5 @@
 import winston from "winston";
+
 import type { ILogger } from "./i-logger.ts";
 
 export const getWinstonLogger = (): ILogger => {

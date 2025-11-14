@@ -1,9 +1,11 @@
+import { randomUUID } from "node:crypto";
+import { EventEmitter } from "node:events";
+
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+
 import { EventBus } from "./event-bus.ts";
-import { EventEmitter } from "node:events";
 import type { IUUIDGenerator } from "./ports/i-uuid-generator.ts";
-import { randomUUID } from "node:crypto";
 
 const mockUuidGenerator = mock<IUUIDGenerator>({
   getUUID: () => randomUUID(),

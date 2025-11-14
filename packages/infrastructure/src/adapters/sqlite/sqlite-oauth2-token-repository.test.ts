@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { OauthToken } from "@ynab-plus/domain";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
+import { OauthToken } from "@ynab-plus/domain";
+import { describe, expect, it } from "vitest";
+
 import { SqliteDatabase } from "./sqlite-database.ts";
 import { SqliteOauth2TokenRepsoitory } from "./sqlite-oauth2-token-repository.ts";
 

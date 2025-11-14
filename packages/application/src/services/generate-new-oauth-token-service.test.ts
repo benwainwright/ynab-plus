@@ -1,9 +1,10 @@
-import { OauthToken, User } from "@ynab-plus/domain";
-import { createMockServiceContext } from "@test-helpers";
-import { describe, expect, it, vi } from "vitest";
-import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 import type { IOauthNewTokenRequester, IOauthTokenRepository } from "@ports";
+import { createMockServiceContext } from "@test-helpers";
+import { OauthToken, User } from "@ynab-plus/domain";
+import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+
+import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 
 describe("generate new oauth token service", () => {
   it("gets a new token from the requester and saves it in the repository", async () => {

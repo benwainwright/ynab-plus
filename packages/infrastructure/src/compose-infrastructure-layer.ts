@@ -1,17 +1,17 @@
+import EventEmitter from "node:events";
+
+import type { IInfrastructurePorts } from "@ynab-plus/app";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import z from "zod";
 
-import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
-import type { IInfrastructurePorts } from "@ynab-plus/app";
-
-import { SqliteUserRepository } from "./adapters/sqlite/sqlite-user-repository.ts";
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
+import { NodeEventBus } from "./adapters/node-event-bus.ts";
+import { NodePasswordHashValidator } from "./adapters/node-password-hash-validator.ts";
+import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
+import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
 import { SqliteDatabase } from "./adapters/sqlite/sqlite-database.ts";
 import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite/sqlite-oauth2-token-repository.ts";
-import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
-import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
-import { NodePasswordHashValidator } from "./adapters/node-password-hash-validator.ts";
-import EventEmitter from "node:events";
-import { NodeEventBus } from "./adapters/node-event-bus.ts";
+import { SqliteUserRepository } from "./adapters/sqlite/sqlite-user-repository.ts";
 
 export const LOG_CONTEXT = { context: "compose-infra-layer" };
 

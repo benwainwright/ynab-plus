@@ -1,9 +1,9 @@
-import type { ConfigValue } from "@ynab-plus/bootstrap";
 import type {
   IOauthNewTokenRequester,
   IOauthRedirectUrlGenerator,
   IOAuthTokenRefresher,
 } from "@ynab-plus/app";
+import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
 
 export class YnabOauth2Client

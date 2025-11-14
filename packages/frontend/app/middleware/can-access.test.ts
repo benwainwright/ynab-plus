@@ -1,4 +1,5 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect,it } from "vitest";
+
 import { canAccess } from "./can-access.ts";
 describe("can access", () => {
   it("should return true for public routes", () => {

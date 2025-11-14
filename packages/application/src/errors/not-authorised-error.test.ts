@@ -1,6 +1,7 @@
-import { NotAuthorisedError } from "./not-authorised-error.ts";
-import { mock } from "vitest-mock-extended";
 import type { IEventBus } from "@ynab-plus/app";
+import { mock } from "vitest-mock-extended";
+
+import { NotAuthorisedError } from "./not-authorised-error.ts";
 
 describe("not authorised error", () => {
   it("stores details about the auth failure", () => {

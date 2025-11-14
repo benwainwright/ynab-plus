@@ -1,6 +1,7 @@
 import type { IOauthTokenRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
+
 import type { SqliteDatabase } from "./sqlite-database.ts";
 
 export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {

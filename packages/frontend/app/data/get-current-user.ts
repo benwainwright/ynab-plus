@@ -1,7 +1,7 @@
-import { use } from "react";
 import type { User } from "@ynab-plus/domain";
-import { getOpenSocket } from "./get-open-socket.ts";
+
 import { CommandClient } from "./command-client.ts";
+import { getOpenSocket } from "./get-open-socket.ts";
 
 let currentUser: Promise<User | undefined> | undefined;
 

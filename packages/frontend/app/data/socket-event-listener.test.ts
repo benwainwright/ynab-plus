@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
-import { createSocketHarness, waitFor } from "@ynab-plus/test-helpers";
-import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IEventPacket } from "@ynab-plus/app";
+import { createSocketHarness, waitFor } from "@ynab-plus/test-helpers";
+import { describe, expect, it, vi } from "vitest";
+
+import { SocketEventListener } from "./socket-event-listener.ts";
 
 describe("socket-event-bus", () => {
   describe("onAll", () => {

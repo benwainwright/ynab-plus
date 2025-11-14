@@ -1,13 +1,14 @@
-import { describe, expect, it, vi } from "vitest";
-import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
 import type {
+  IOauthRedirectUrlGenerator,
   IOAuthTokenRefresher,
   IOauthTokenRepository,
-  IOauthRedirectUrlGenerator,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, User } from "@ynab-plus/domain";
+import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+
+import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
 
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {

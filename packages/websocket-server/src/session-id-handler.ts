@@ -1,9 +1,8 @@
-import type { ISessionIdRequester } from "@ynab-plus/app";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import { v7 } from "uuid";
 import cookie from "cookie";
 import { IncomingMessage } from "http";
-import WebSocket, { WebSocketServer } from "ws";
+import { v7 } from "uuid";
+
 import { WebAppError } from "./web-app-error.ts";
 
 export const SESSION_ID_COOKIE_KEY = `ynab-plus-session-id`;

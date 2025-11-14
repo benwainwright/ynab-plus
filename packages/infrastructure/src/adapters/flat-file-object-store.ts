@@ -1,6 +1,7 @@
-import type { IObjectStorage } from "@ynab-plus/app";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
+
+import type { IObjectStorage } from "@ynab-plus/app";
 import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
 
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
@@ -25,8 +26,14 @@ export class FlatFileObjectStore implements IObjectStorage {
 
       const raw = await readFile(path, "utf8");
       return JSON.parse(raw);
-    } catch (err: any) {
-      if (err.code === "ENOENT") return undefined;
+    } catch (err) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "code" in err &&
+        err.code === "ENOENT"
+      )
+        return undefined;
       throw err;
     }
   }

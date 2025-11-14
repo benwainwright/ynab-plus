@@ -1,7 +1,7 @@
-import { use, useEffect, useState } from "react";
-import { SocketEventListener } from "./socket-event-listener.ts";
 import type { IListener } from "@ynab-plus/app";
-import { getOpenSocket } from "./get-open-socket.ts";
+import { useEffect, useState } from "react";
+
+import { SocketEventListener } from "./socket-event-listener.ts";
 import { useSocket } from "./use-socket.ts";
 
 export const useEvents =

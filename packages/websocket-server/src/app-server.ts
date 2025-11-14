@@ -1,9 +1,9 @@
-import { ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import type { ServiceBusFactory } from "@ynab-plus/app";
+import { ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
+import { WebSocketServer } from "ws";
 
 import { SessionIdHandler } from "./session-id-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
-import { WebSocketServer } from "ws";
 
 export const LOG_CONTEXT = {
   context: "app-server",

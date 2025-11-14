@@ -3,9 +3,10 @@ import type {
   IOauthTokenRepository,
   NewTokenRequesterFactory,
 } from "@ports";
-import { AbstractApplicationService } from "./abstract-application-service.ts";
-import type { Permission } from "@ynab-plus/domain";
 import type { ILogger } from "@ynab-plus/bootstrap";
+import type { Permission } from "@ynab-plus/domain";
+
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class GenerateNewOauthTokenService extends AbstractApplicationService<"GenerateNewOauthTokenCommand"> {
   public override readonly commandName = "GenerateNewOauthTokenCommand";

@@ -1,14 +1,15 @@
-import { describe, expect, it } from "vitest";
-import { AbstractApplicationService } from "./abstract-application-service.ts";
-import { mock } from "vitest-mock-extended";
 import { NotAuthorisedError } from "@errors";
-import type { Permission, User } from "@ynab-plus/domain";
 import type {
   ICommandMessage,
   IEventBus,
   IHandleContext,
   ISingleItemStore,
 } from "@ports";
+import type { Permission, User } from "@ynab-plus/domain";
+import { describe, expect, it } from "vitest";
+import { mock } from "vitest-mock-extended";
+
+import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 describe("application service", () => {
   describe("canHandle", () => {

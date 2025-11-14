@@ -1,6 +1,3 @@
-import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
-
 import type {
   IEventBus,
   IOauthCheckerFactory,
@@ -12,6 +9,7 @@ import type {
   IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
+import type { User } from "@ynab-plus/domain";
 
 export interface IInfrastructurePorts {
   messaging: {

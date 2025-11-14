@@ -1,6 +1,6 @@
-import { v7 } from "uuid";
 import type { ICommandMessage } from "@ynab-plus/app";
 import type { Commands } from "@ynab-plus/domain";
+import { v7 } from "uuid";
 
 import { SocketEventListener } from "./socket-event-listener.ts";
 

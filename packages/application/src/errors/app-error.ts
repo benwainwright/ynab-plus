@@ -1,5 +1,5 @@
+import type { IEventBus } from "@ports";
 import StackTracey from "stacktracey";
-import type { IEventBus } from "../ports/index.ts";
 
 export class AppError extends Error {
   public handle(events: IEventBus) {

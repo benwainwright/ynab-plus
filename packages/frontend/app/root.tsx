@@ -1,3 +1,5 @@
+import "./app.css";
+
 import {
   isRouteErrorResponse,
   Links,
@@ -8,8 +10,6 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root.ts";
-import "./app.css";
-import { Header } from "@components";
 import { AppLayout } from "./components/app-layout/app-layout.tsx";
 
 export const links: Route.LinksFunction = () => [

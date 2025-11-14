@@ -1,17 +1,19 @@
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import importPlugin from "eslint-plugin-import";
 import boundaries from "eslint-plugin-boundaries";
+import importPlugin from "eslint-plugin-import";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ["node_modules/**"],
+    ignores: ["node_modules/**", "**/.*", "**/dist", "**/coverage"],
   },
   {
     plugins: {
       import: importPlugin,
+      "simple-import-sort": simpleImportSort,
       boundaries,
     },
     settings: {
@@ -24,6 +26,8 @@ export default tseslint.config(
       ],
     },
     rules: {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
       "boundaries/element-types": [
         "error",
         {

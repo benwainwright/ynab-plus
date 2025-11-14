@@ -11,7 +11,8 @@
   "dependencies": {
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
-    "@ynab-plus/test-helpers": "workspace:*"
+    "@ynab-plus/test-helpers": "workspace:*",
+    "stacktracey": "^2.1.8"
   },
   "module": "src/index.ts",
   "scripts": {
