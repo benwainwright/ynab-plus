@@ -7,6 +7,8 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
 import z from "zod";
 
+const tokenCache = new Map<string, OauthToken>();
+
 export class YnabOauth2Client
   implements
     IOauthRedirectUrlGenerator,
@@ -21,6 +23,11 @@ export class YnabOauth2Client
     private providerName: string,
   ) {}
   public async refreshToken(token: OauthToken): Promise<OauthToken> {
+    const cacheKey = `${token.token}-${token.refreshToken}`;
+    const cachedToken = tokenCache.get(cacheKey);
+    if (cachedToken) {
+      return cachedToken;
+    }
     const formData = new FormData();
     formData.set("client_id", await this.clientId.value);
     formData.set("client_secret", await this.clientSecret.value);
@@ -39,13 +46,20 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    return new OauthToken({
+    const newToken = new OauthToken({
       provider: this.providerName,
       token: json.access_token,
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId: token.userId,
     });
+
+    tokenCache.set(cacheKey, newToken);
+    setTimeout(() => {
+      tokenCache.delete(cacheKey);
+    }, 10_000);
+
+    return newToken;
   }
 
   private parseTokenResponse = (data: unknown) => {
@@ -60,6 +74,11 @@ export class YnabOauth2Client
   };
 
   public async newToken(userId: string, code: string): Promise<OauthToken> {
+    const cacheKey = `${userId}-${code}`;
+    const cachedToken = tokenCache.get(cacheKey);
+    if (cachedToken) {
+      return cachedToken;
+    }
     const formData = new FormData();
     formData.set("client_id", await this.clientId.value);
     formData.set("client_secret", await this.clientSecret.value);
@@ -82,13 +101,20 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    return new OauthToken({
+    const newToken = new OauthToken({
       provider: this.providerName,
       token: json.access_token,
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId,
     });
+
+    tokenCache.set(cacheKey, newToken);
+    setTimeout(() => {
+      tokenCache.delete(cacheKey);
+    }, 10_000);
+
+    return newToken;
   }
 
   public async generateRedirectUrl(): Promise<string> {

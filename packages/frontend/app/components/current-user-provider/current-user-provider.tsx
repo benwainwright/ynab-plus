@@ -5,10 +5,12 @@ import { createContext, type ReactNode } from "react";
 interface CurrentUserContextProps {
   currentUser: User | undefined;
   reloadUser: () => void;
+  initialLoadComplete: boolean;
 }
 
 export const CurrentUserContext = createContext<CurrentUserContextProps>({
   currentUser: undefined,
+  initialLoadComplete: true,
   reloadUser: () => {},
 });
 
@@ -17,9 +19,11 @@ interface CurrentUserProviderProps {
 }
 
 export const CurrentUserProvider = ({ children }: CurrentUserProviderProps) => {
-  const { currentUser, reloadUser } = useCurrentUser();
+  const { currentUser, reloadUser, initialLoadComplete } = useCurrentUser();
   return (
-    <CurrentUserContext value={{ currentUser, reloadUser }}>
+    <CurrentUserContext
+      value={{ currentUser, reloadUser, initialLoadComplete }}
+    >
       {children}
     </CurrentUserContext>
   );

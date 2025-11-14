@@ -24,13 +24,9 @@ export const useOauth2IntegrationStatus = (config: { provider: string }) => {
   const [status, setStatus] = useState<Oauth2IntegrationStatus>({
     status: "loading",
   });
-  const hasRunRef = useRef(false);
 
   useEffect(() => {
     void (async () => {
-      if (hasRunRef.current) {
-        return;
-      }
       const queryString = new URLSearchParams(window.location.search);
       const code = queryString.get("code");
       if (code) {
@@ -46,7 +42,6 @@ export const useOauth2IntegrationStatus = (config: { provider: string }) => {
           }),
         );
       }
-      hasRunRef.current = true;
     })();
   }, []);
 

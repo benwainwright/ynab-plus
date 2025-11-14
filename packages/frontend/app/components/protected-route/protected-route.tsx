@@ -1,5 +1,5 @@
 import { CurrentUserContext } from "@components";
-import { type ReactNode,useContext } from "react";
+import { type ReactNode, useContext } from "react";
 import { Navigate } from "react-router";
 
 import { canAccess } from "../../middleware/can-access.ts";
@@ -14,14 +14,19 @@ export const ProtectedRoute = ({
   children,
   routeName,
 }: ProtectedRouteProps) => {
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, initialLoadComplete } = useContext(CurrentUserContext);
+  const loading = <div aria-busy></div>;
   if (
     !canAccess({
       user: currentUser,
       routeTags: routesList[routeName].permissionsRequired,
     })
   ) {
-    return <Navigate to={routesList[routeName].authFailRedirect} />;
+    return initialLoadComplete ? (
+      <Navigate to={routesList[routeName].authFailRedirect} />
+    ) : (
+      loading
+    );
   }
-  return <>{children}</>;
+  return initialLoadComplete ? <>{children}</> : loading;
 };

@@ -55,7 +55,6 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
         redirectUrl: await oauthClient.generateRedirectUrl(),
       };
     }
-
     this.logger.debug(`A token was found in the repository`, LOG_CONTEXT);
 
     if (token.expiry < new Date()) {

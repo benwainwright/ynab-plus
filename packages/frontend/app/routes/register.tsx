@@ -21,6 +21,7 @@ export const Register = () => {
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
+    console.log({ currentUser });
     void (async () => {
       if (currentUser) {
         await navigate("/");
