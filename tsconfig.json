@@ -1,6 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
-  "files": [],
+  "files": [
+    "./vitest.config.ts",
+    "./lint-staged.config.js",
+    "./eslint.config.mjs"
+  ],
+  "compilerOptions": {
+    "outDir": "dist"
+  },
   "references": [
     {
       "path": "./packages/application"

@@ -63,6 +63,7 @@ describe("application service", () => {
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
+        // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle(
           context: IHandleContext<"Logout">,
         ): Promise<undefined> {
@@ -91,6 +92,7 @@ describe("application service", () => {
 
         public override readonly requiredPermissions: Permission[] = ["admin"];
 
+        // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle(
           _context: IHandleContext<"Logout">,
         ): Promise<undefined> {
@@ -104,6 +106,7 @@ describe("application service", () => {
 
       const eventBus = mock<IEventBus>();
       const currentUserCache = mock<ISingleItemStore<User>>({
+        // eslint-disable-next-line @typescript-eslint/require-await
         get: async () =>
           mock<User>({
             id: "test",

@@ -5,9 +5,9 @@ import { useNavigate } from "react-router";
 export const Logout = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    (async () => {
+    void (async () => {
       await command("Logout", undefined);
-      navigate("/login");
+      await navigate("/login");
     })();
   });
 

@@ -7,10 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "build": "bun build --target bun src/run.ts --outdir dist --sourcemap",
-    "test": "vitest run",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
+    "test": "pnpm run --filter '*' test",
     "type-check": "tsc --build",
     "type-check:watch": "tsc --build --watch",
     "prepare": "husky",
@@ -43,6 +42,7 @@
     "@types/stack-trace": "^0.0.33",
     "react-dom": "^19.2.0",
     "reflect-metadata": "^0.2.2",
+    "stacktracey": "^2.1.8",
     "tsyringe": "^4.10.0",
     "uuid": "^13.0.0",
     "winston": "^3.18.3",

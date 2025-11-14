@@ -6,7 +6,7 @@ export class ServiceNotFoundError extends AppError {
       parsedMessage &&
       typeof parsedMessage === "object" &&
       "key" in parsedMessage
-        ? `Handler for ${parsedMessage.key} not found`
+        ? `Handler for ${String(parsedMessage.key)} not found`
         : `Handler not found`;
 
     super(message);

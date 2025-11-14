@@ -1,11 +1,12 @@
 import { command } from "@data";
+import { getFormDataStringValue } from "@utils";
 import { Link } from "react-router";
 
 export const Login = () => {
   const onSubmit = async (data: FormData) => {
     await command("LoginCommand", {
-      username: data.get("username")?.toString() ?? "",
-      password: data.get("password")?.toString() ?? "",
+      username: getFormDataStringValue(data, "username"),
+      password: getFormDataStringValue(data, "password"),
     });
   };
   return (

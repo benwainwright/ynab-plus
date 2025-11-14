@@ -1,5 +1,5 @@
 import { NotAuthorisedError } from "@errors";
-import type { ICommandMessage, IHandleContext,ISingleItemStore } from "@ports";
+import type { ICommandMessage, IHandleContext, ISingleItemStore } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Commands, Permission, User } from "@ynab-plus/domain";
 
@@ -11,9 +11,7 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   public abstract readonly commandName: TKey;
   public abstract readonly requiredPermissions: Permission[];
 
-  public canHandle(
-    command: ICommandMessage<keyof Commands>,
-  ): command is ICommandMessage<TKey> {
+  public canHandle(command: ICommandMessage): command is ICommandMessage<TKey> {
     const result = command.key === this.commandName;
 
     this.logger.silly(
@@ -29,7 +27,7 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   ): Promise<Permission[]> {
     const data = await session.get();
 
-    if (!data || !data.permissions) {
+    if (!data) {
       return ["public"];
     }
 

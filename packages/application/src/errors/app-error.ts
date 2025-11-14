@@ -1,17 +1,10 @@
 import type { IEventBus } from "@ports";
-import StackTracey from "stacktracey";
+import { AbstractError } from "@ynab-plus/bootstrap";
 
-export class AppError extends Error {
+export class AppError extends AbstractError {
   public handle(events: IEventBus) {
-    const stack = new StackTracey(this);
-
-    const parsedStack = stack.items.map((item) => ({
-      calee: item.callee,
-      file: `${item.fileRelative}:${item.line}:${item.column}`,
-    }));
-
     events.emit("ApplicationError", {
-      stack: parsedStack,
+      stack: this.parsedStack,
       message: this.message,
     });
   }

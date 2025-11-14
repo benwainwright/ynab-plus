@@ -2,6 +2,14 @@ import type { IOauthTokenRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
 
+interface RawOauthToken {
+  expiry: string;
+  token: string;
+  refreshToken: string;
+  provider: string;
+  userId: string;
+}
+
 import type { SqliteDatabase } from "./sqlite-database.ts";
 
 export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
@@ -11,7 +19,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   ) {}
 
   public async create() {
-    this.database.runQuery(
+    await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (
           userId TEXT,
           provider TEXT,
@@ -27,9 +35,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     userId: string,
     provider: string,
   ): Promise<OauthToken | undefined> {
-    const result = await this.database.getFromDb<
-      OauthToken & { expiry: string }
-    >(
+    const result = await this.database.getFromDb<RawOauthToken | undefined>(
       `SELECT userId, provider, token, refreshToken, expiry
         FROM ${await this.tableName.value} WHERE userId = ? AND provider = ?`,
       [userId, provider],
@@ -44,7 +50,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   }
 
   public async save(token: OauthToken): Promise<OauthToken> {
-    const data = await this.database.getFromDb<OauthToken & { expiry: string }>(
+    const data = await this.database.getFromDb<RawOauthToken>(
       `INSERT INTO ${await this.tableName.value} (userId, provider, token, refreshToken, expiry)
           VALUES (?, ?, ?, ?, ?)
           ON CONFLICT(userId, provider) DO UPDATE SET

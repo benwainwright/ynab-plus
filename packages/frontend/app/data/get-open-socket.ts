@@ -7,7 +7,7 @@ export const getOpenSocket = async () => {
     const socket = new WebSocket(SOCKET_URL);
 
     const socketPromise = new Promise<WebSocket>((accept, reject) => {
-      socket.addEventListener("open", () => accept(socket));
+      socket.addEventListener("open", () => { accept(socket); });
       socket.addEventListener("error", reject);
     });
 

@@ -16,6 +16,7 @@ export const composeWebApp = async ({
   serviceBusFactory,
   configurator,
   logger,
+  // eslint-disable-next-line @typescript-eslint/require-await
 }: WebAppDependencies) => {
   logger.info(`Composing web application`, LOG_CONTEXT);
   const server = new AppServer(
@@ -27,7 +28,7 @@ export const composeWebApp = async ({
 
   configurator.addInitStep(async () => {
     logger.info(`Starting websocket server`, LOG_CONTEXT);
-    server.start();
+    await server.start();
     logger.info(`Websocket server started`, LOG_CONTEXT);
   });
 };

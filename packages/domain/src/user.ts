@@ -1,6 +1,7 @@
+import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
 
-export class User {
+export class User implements IUser {
   public readonly id: string;
   public readonly passwordHash: string;
   public readonly email: string;

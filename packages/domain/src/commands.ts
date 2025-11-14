@@ -25,6 +25,7 @@ export interface Commands {
   };
   ListTransactionsCommand: {
     request: undefined;
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     response: void;
   };
   ListUsersCommand: {

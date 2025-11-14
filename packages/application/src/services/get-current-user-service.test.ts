@@ -23,9 +23,9 @@ describe("get user command handler", () => {
     const repo = mock<IRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
-          return mockUser;
+          return Promise.resolve(mockUser);
         }
-        return undefined;
+        return Promise.resolve(undefined);
       }),
     });
 
@@ -65,9 +65,9 @@ describe("get user command handler", () => {
     const repo = mock<IRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
-          return mockUser;
+          return Promise.resolve(mockUser);
         }
-        return undefined;
+        return Promise.resolve(undefined);
       }),
     });
 
@@ -105,9 +105,9 @@ describe("get user command handler", () => {
     const repo = mock<IRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
-          return mockUser;
+          return Promise.resolve(mockUser);
         }
-        return undefined;
+        return Promise.resolve(undefined);
       }),
     });
 
@@ -135,6 +135,7 @@ describe("get user command handler", () => {
 
     await handler.doHandle(context);
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(currentUserCache.set).toHaveBeenCalledWith({
       id: "ben",
       permissions: ["user"],

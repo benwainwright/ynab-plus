@@ -18,7 +18,8 @@
     "@ynab-plus/bootstrap": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
     "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.4.1"
+    "better-sqlite3": "^12.4.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/node": "^22.19.1"

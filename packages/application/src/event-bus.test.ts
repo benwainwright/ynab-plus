@@ -23,14 +23,16 @@ describe("event bus", () => {
       };
 
       const result = new Promise((accept) =>
-        bus.on("AppInitialised", (data) => accept(data)),
+        bus.on("AppInitialised", (data) => {
+          accept(data);
+        }),
       );
       bus.emit("AppInitialised", data);
 
       expect(await result).toEqual(data);
     });
 
-    it("does not listen to events with different keys", async () => {
+    it("does not listen to events with different keys", () => {
       const emitter = new EventEmitter();
       const bus = new EventBus(emitter, "foo", mockUuidGenerator);
 
@@ -180,7 +182,9 @@ describe("event bus", () => {
       };
 
       const result = new Promise((accept) =>
-        child.on("AppInitialised", (data) => accept(data)),
+        child.on("AppInitialised", (data) => {
+          accept(data);
+        }),
       );
 
       child.emit("AppInitialised", data);
@@ -200,7 +204,9 @@ describe("event bus", () => {
       };
 
       const result = new Promise((accept) =>
-        child.on("AppInitialised", (data) => accept(data)),
+        child.on("AppInitialised", (data) => {
+          accept(data);
+        }),
       );
 
       bus.emit("AppInitialised", data);

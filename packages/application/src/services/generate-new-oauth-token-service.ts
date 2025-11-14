@@ -39,7 +39,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     const token = await requester.newToken(currentUser.id, code);
 
-    this.tokenRepository.save(token);
+    await this.tokenRepository.save(token);
 
     return {
       status: "connected",

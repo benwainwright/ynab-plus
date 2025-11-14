@@ -1,8 +1,7 @@
-import type { IEventBus, IServiceBus } from "@ynab-plus/app";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import type { ICommandMessage, IEventBus, IServiceBus } from "@ynab-plus/app";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { WebSocket } from "ws";
-
-import { WebAppError } from "./web-app-error.ts";
+import z from "zod";
 
 export const LOG_CONTEXT = {
   context: "websocket-server-socket-client",
@@ -24,19 +23,16 @@ export class ServerWebsocketClient {
     });
   }
 
-  private parseMessage(message: WebSocket.RawData) {
-    if (message instanceof Buffer) {
-      return JSON.parse(message.toString("utf-8"));
-    }
+  private parseMessage(message: unknown) {
+    const content =
+      message instanceof Buffer ? message.toString("utf-8") : message;
 
-    if (typeof message === "object") {
-      return message;
-    }
-    if (typeof message === "string") {
-      return JSON.parse(message);
-    }
+    const commandMessage = z.object({
+      id: z.string(),
+      key: z.string(),
+    });
 
-    throw new WebAppError(`Message had unexpected type`);
+    return commandMessage.parse(content) as ICommandMessage;
   }
 
   public async onMessage(message: WebSocket.RawData) {
@@ -57,11 +53,7 @@ export class ServerWebsocketClient {
         data: response,
       });
     } catch (error) {
-      if (
-        error instanceof Error &&
-        "handle" in error &&
-        typeof error.handle === "function"
-      ) {
+      if (error instanceof AbstractError) {
         error.handle(this.eventBus);
         return;
       }

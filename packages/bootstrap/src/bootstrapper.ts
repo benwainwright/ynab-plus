@@ -25,10 +25,14 @@ export class Bootstrapper implements IBootstrapper {
       context: "bootstrapper",
     });
     const configFilePath = join(cwd(), config.configFile);
-    this._config = JSON.parse(readFileSync(configFilePath, "utf-8"));
+
+    this._config = JSON.parse(readFileSync(configFilePath, "utf-8")) as Record<
+      string,
+      unknown
+    >;
   }
 
-  public async addInitStep(callback: () => Promise<void>) {
+  public addInitStep(callback: () => Promise<void>) {
     this.bootstrappingSteps.push(callback);
   }
 
@@ -64,7 +68,11 @@ export class Bootstrapper implements IBootstrapper {
 
     const valuePromise = new Promise<
       StandardSchemaV1.InferOutput<TConfigValue>
-    >((accept) => this.emitter.on(RESOLVE_CONFIG, () => accept(value)));
+    >((accept) =>
+      this.emitter.on(RESOLVE_CONFIG, () => {
+        accept(value);
+      }),
+    );
 
     return new ConfigValue(valuePromise);
   }

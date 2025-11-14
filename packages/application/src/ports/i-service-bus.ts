@@ -1,9 +1,7 @@
-import type { Commands } from "@ynab-plus/domain";
-
-import type { ICommandMessage } from "./i-command-message.ts";
+import type { Commands, ICommandMessage } from "@ynab-plus/domain";
 
 export interface IServiceBus {
   handleCommand<TKey extends keyof Commands>(
-    command: ICommandMessage<keyof Commands>,
+    command: ICommandMessage,
   ): Promise<Commands[TKey]["response"]>;
 }

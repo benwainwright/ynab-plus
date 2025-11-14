@@ -16,6 +16,6 @@
       "path": "../bootstrap"
     }
   ],
-  "include": ["backend/**/*.ts"],
-  "exclude": ["backend/**/*.test.ts"]
+  "include": ["src/**/*.ts", "./start.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

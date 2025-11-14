@@ -2,6 +2,7 @@ import EventEmitter from "node:events";
 
 import type { IInfrastructurePorts } from "@ynab-plus/app";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
+import type { IUser } from "@ynab-plus/domain";
 import z from "zod";
 
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
@@ -18,6 +19,7 @@ export const LOG_CONTEXT = { context: "compose-infra-layer" };
 export const composeInfrastructureLayer = async (
   bootstrapper: IBootstrapper,
   logger: ILogger,
+  // eslint-disable-next-line @typescript-eslint/require-await
 ): Promise<IInfrastructurePorts> => {
   logger.info(`Composing infrastructure layer`, LOG_CONTEXT);
   const database = new SqliteDatabase(
@@ -44,7 +46,7 @@ export const composeInfrastructureLayer = async (
 
   const passwordHasher = new NodePasswordHashValidator();
 
-  const sessionStorage = new FlatFileObjectStore(
+  const sessionStorage = new FlatFileObjectStore<IUser>(
     bootstrapper.configValue("sessionPath", z.string()),
     logger,
   );

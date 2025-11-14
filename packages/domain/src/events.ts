@@ -20,7 +20,7 @@ export interface Events {
   ApplicationError: {
     stack: {
       file: string;
-      calee: string;
+      callee: string;
     }[];
     message: string;
   };

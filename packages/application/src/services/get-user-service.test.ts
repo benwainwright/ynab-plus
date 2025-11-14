@@ -23,10 +23,10 @@ describe("get user service", () => {
     const mockUserRepo = mock<IRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
-          return user;
+          return Promise.resolve(user);
         }
 
-        return undefined;
+        return Promise.resolve(undefined);
       }),
     });
 

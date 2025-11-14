@@ -34,7 +34,7 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
         JSON.stringify(user.permissions) !==
           JSON.stringify(sessionData.permissions)
       ) {
-        currentUserCache.set({
+        await currentUserCache.set({
           ...sessionData,
           permissions: user.permissions,
         });

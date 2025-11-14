@@ -1,3 +1,4 @@
+export { AbstractError } from "./abstract-error.ts";
 export { Bootstrapper } from "./bootstrapper.ts";
 export { ConfigValue } from "./config-value.ts";
 export type { IBootstrapper } from "./i-bootstrapper.ts";

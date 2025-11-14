@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
+
 export interface ILogger {
   error<TData extends { context: string }>(message: string, data: TData): void;
 

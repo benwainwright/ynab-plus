@@ -67,6 +67,6 @@ export class NodeEventBus implements IEventBus {
 
   public emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]) {
     this.listener.emit(this.namespace, { key, data });
-    this.children.forEach((child) => child.emit(key, data));
+    this.children.forEach((child) => { child.emit(key, data); });
   }
 }

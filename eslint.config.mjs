@@ -1,14 +1,22 @@
 import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import boundaries from "eslint-plugin-boundaries";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
   {
-    ignores: ["node_modules/**", "**/.*", "**/dist", "**/coverage"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+  },
+  {
+    ignores: ["**/node_modules/**", "**/.*", "**/dist", "**/coverage"],
   },
   {
     plugins: {

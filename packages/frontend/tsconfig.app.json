@@ -14,6 +14,7 @@
     "outDir": "dist",
     "paths": {
       "@routes": ["./app/routes.ts"],
+      "@utils": ["./app/utils/index.ts"],
       "@middleware": ["./app/middleware/index.ts"],
       "@data": ["./app/data/index.ts"],
       "@errors": ["./app/errors/index.ts"],

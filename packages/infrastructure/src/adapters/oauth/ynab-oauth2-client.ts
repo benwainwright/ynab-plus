@@ -5,6 +5,7 @@ import type {
 } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
+import z from "zod";
 
 export class YnabOauth2Client
   implements
@@ -33,10 +34,10 @@ export class YnabOauth2Client
     });
 
     if (!response.ok) {
-      throw new Error(`Status code ${response.status} was returned`);
+      throw new Error(`Status code ${String(response.status)} was returned`);
     }
 
-    const json = await response.json();
+    const json = this.parseTokenResponse(await response.json());
 
     return new OauthToken({
       provider: this.providerName,
@@ -46,6 +47,17 @@ export class YnabOauth2Client
       userId: token.userId,
     });
   }
+
+  private parseTokenResponse = (data: unknown) => {
+    const responseSchema = z.object({
+      access_token: z.string(),
+      token: z.string(),
+      refresh_token: z.string(),
+      expires_in: z.number(),
+    });
+
+    return responseSchema.parse(data);
+  };
 
   public async newToken(userId: string, code: string): Promise<OauthToken> {
     const formData = new FormData();
@@ -66,10 +78,10 @@ export class YnabOauth2Client
     });
 
     if (!response.ok) {
-      throw new Error(`Status code ${response.status} was returned`);
+      throw new Error(`Status code ${String(response.status)} was returned`);
     }
 
-    const json = await response.json();
+    const json = this.parseTokenResponse(await response.json());
 
     return new OauthToken({
       provider: this.providerName,

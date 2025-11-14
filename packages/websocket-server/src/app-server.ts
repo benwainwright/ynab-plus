@@ -27,9 +27,10 @@ export class AppServer {
       host: await this.host.value,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     wss.on("listening", async () => {
       this.logger.info(
-        `Websocket server listening on host ${await this.host.value}:${await this.port.value}`,
+        `Websocket server listening on host ${await this.host.value}:${String(await this.port.value)}`,
         LOG_CONTEXT,
       );
     });
@@ -46,11 +47,13 @@ export class AppServer {
       this.logger.info(`Websocket closed`, { ...LOG_CONTEXT });
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     wss.on("connection", async (ws, request) => {
       this.logger.debug("Websocket connection established", LOG_CONTEXT);
 
       const { serviceBus, eventBus } = await this.serviceBusFactory({
         sessionIdRequester: {
+          // eslint-disable-next-line @typescript-eslint/require-await
           getSessionId: async () => {
             return this.sessionIdHandler.getSessionId(request);
           },
@@ -63,6 +66,7 @@ export class AppServer {
         this.logger,
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ws.on("message", client.onMessage.bind(client));
 
       client.onConnect(ws);

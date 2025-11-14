@@ -1,4 +1,4 @@
-export type { ICommandMessage } from "./i-command-message.ts";
+export type { ICommandMessage } from "../../../domain/src/i-command-message.ts";
 export type { IEventBus } from "./i-event-bus.ts";
 export {
   type IEventListener,

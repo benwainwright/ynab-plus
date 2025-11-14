@@ -1,13 +1,14 @@
 import type { Events } from "@ynab-plus/domain";
 
-export type IEventPacket<TKey extends keyof Events> = TKey extends keyof Events
-  ? {
-      key: TKey;
-      data: Events[TKey];
-    }
-  : never;
+export type IEventPacket<TKey extends keyof Events = keyof Events> =
+  TKey extends keyof Events
+    ? {
+        key: TKey;
+        data: Events[TKey];
+      }
+    : never;
 
-export type IListener = (arg: IEventPacket<keyof Events>) => void;
+export type IListener = (arg: IEventPacket) => void;
 
 export interface IEventListener {
   off(identifier: string): void;

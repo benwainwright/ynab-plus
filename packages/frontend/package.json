@@ -4,9 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "backend:dev": "vite-node start.ts",
-    "frontend:dev": "react-router dev",
-    "dev": "bun run backend:dev & bun run frontend:dev",
+    "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
@@ -33,6 +31,7 @@
     "typescript": "^5.9.2",
     "vite": "7.2.2",
     "vite-node": "^5.0.0",
-    "vite-tsconfig-paths": "5.1.4"
+    "vite-tsconfig-paths": "5.1.4",
+    "vitest-mock-extended": "^3.1.0"
   }
 }

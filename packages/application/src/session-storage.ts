@@ -7,16 +7,14 @@ import type { ILogger } from "@ynab-plus/bootstrap";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 
-export class SessionStorage<T extends object | undefined>
-  implements ISingleItemStore<T>
-{
+export class SessionStorage<T extends object> implements ISingleItemStore<T> {
   public constructor(
-    private storage: IObjectStorage,
+    private storage: IObjectStorage<T>,
     private sessionIdRequester: ISessionIdRequester,
     private logger: ILogger,
   ) {}
 
-  public async get(): Promise<T> {
+  public async get(): Promise<T | undefined> {
     const sessionId = await this.sessionIdRequester.getSessionId();
     const sessionData = (await this.storage.get(
       `${sessionId}-session-key`,
@@ -35,6 +33,6 @@ export class SessionStorage<T extends object | undefined>
       `Saving session data: ${JSON.stringify(thing)}`,
       LOG_CONTEXT,
     );
-    return await this.storage.set(`${sessionId}-session-key`, thing ?? {});
+    await this.storage.set(`${sessionId}-session-key`, thing);
   }
 }

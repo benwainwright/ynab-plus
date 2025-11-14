@@ -6,7 +6,9 @@ import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
 
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
 
-export class FlatFileObjectStore implements IObjectStorage {
+export class FlatFileObjectStore<TObject extends object>
+  implements IObjectStorage<TObject>
+{
   public constructor(
     private folder: ConfigValue<string>,
     private logger: ILogger,
@@ -17,7 +19,7 @@ export class FlatFileObjectStore implements IObjectStorage {
     return join(base, key);
   }
 
-  public async get(key: string): Promise<object | undefined> {
+  public async get(key: string): Promise<TObject | undefined> {
     const path = await this.resolvePath(key);
 
     try {
@@ -25,7 +27,7 @@ export class FlatFileObjectStore implements IObjectStorage {
       if (!fileStat.isFile()) return undefined;
 
       const raw = await readFile(path, "utf8");
-      return JSON.parse(raw);
+      return JSON.parse(raw) as TObject;
     } catch (err) {
       if (
         err &&
@@ -38,7 +40,7 @@ export class FlatFileObjectStore implements IObjectStorage {
     }
   }
 
-  public async set(key: string, thing: object): Promise<void> {
+  public async set(key: string, thing: TObject): Promise<void> {
     const path = await this.resolvePath(key);
     const dir = path.substring(0, path.lastIndexOf("/"));
 

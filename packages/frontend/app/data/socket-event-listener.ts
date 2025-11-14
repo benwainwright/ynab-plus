@@ -19,10 +19,11 @@ export class SocketEventListener implements IEventListener {
 
     const listener = (packet: MessageEvent) => {
       if (packet.type === "message" && typeof packet.data === "string") {
-        const parsed = JSON.parse(packet.data);
+        const parsed = JSON.parse(packet.data) as IEventPacket;
         callback(parsed);
       }
     };
+
     this.listenerMap.set(listenerId, listener);
     this.socket.addEventListener("message", listener);
     return listenerId;
@@ -32,7 +33,7 @@ export class SocketEventListener implements IEventListener {
     key: TKey,
     callback: (data: IEventPacket<TKey>["data"]) => void,
   ): string {
-    const handler = (packet: IEventPacket<keyof Events>) => {
+    const handler = (packet: IEventPacket) => {
       if (packet.key === key) {
         callback(packet.data);
       }

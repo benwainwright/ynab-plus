@@ -1,8 +1,15 @@
 import type { IRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { User } from "@ynab-plus/domain";
+import { type Permission, User } from "@ynab-plus/domain";
 
 import type { SqliteDatabase } from "./sqlite-database.ts";
+
+interface RawUser {
+  id: string;
+  passwordHash: string;
+  email: string;
+  permissions: string;
+}
 
 export class SqliteUserRepository implements IRepository<User> {
   public constructor(
@@ -11,9 +18,7 @@ export class SqliteUserRepository implements IRepository<User> {
   ) {}
 
   async get(id: string): Promise<User | undefined> {
-    const result = await this.database.getFromDb<
-      User & { permissions: string }
-    >(
+    const result = await this.database.getFromDb<RawUser | undefined>(
       `SELECT id, email, passwordHash, permissions
         FROM ${await this.tableName.value}
         where id = ?`,
@@ -23,15 +28,13 @@ export class SqliteUserRepository implements IRepository<User> {
     return result
       ? new User({
           ...result,
-          permissions: JSON.parse(result.permissions),
+          permissions: JSON.parse(result.permissions) as Permission[],
         })
       : undefined;
   }
 
   async getMany(start?: number, limit?: number): Promise<User[]> {
-    const result = await this.database.getAllFromDatabase<
-      (User & { permissions: string })[]
-    >(
+    const result = await this.database.getAllFromDatabase<RawUser[]>(
       `SELECT id, email, passwordHash, permissions
         FROM ${await this.tableName.value}
         LIMIT ? OFFSET ?`,
@@ -42,13 +45,13 @@ export class SqliteUserRepository implements IRepository<User> {
       (result) =>
         new User({
           ...result,
-          permissions: JSON.parse(result.permissions),
+          permissions: JSON.parse(result.permissions) as Permission[],
         }),
     );
   }
 
   public async create() {
-    this.database.runQuery(
+    await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (
           id TEXT PRIMARY KEY,
           email TEXT NOT NULL UNIQUE,
@@ -60,7 +63,7 @@ export class SqliteUserRepository implements IRepository<User> {
   }
 
   public async save(thing: User): Promise<User> {
-    const data = await this.database.getFromDb<User & { permissions: string }>(
+    const data = await this.database.getFromDb<RawUser>(
       `INSERT INTO ${await this.tableName.value} (id, email, passwordHash, permissions)
         VALUES (?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -77,7 +80,7 @@ export class SqliteUserRepository implements IRepository<User> {
     );
     return new User({
       ...data,
-      permissions: JSON.parse(data.permissions),
+      permissions: JSON.parse(data.permissions) as Permission[],
     });
   }
 }

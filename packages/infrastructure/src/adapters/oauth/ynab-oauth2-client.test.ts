@@ -62,7 +62,7 @@ describe("ynab auth client", () => {
     });
   });
 
-  describe("newToken", async () => {
+  describe("newToken", () => {
     it("requests the code from the ynab API", async () => {
       const startDate = new Date(1762930654);
       vi.useFakeTimers();
@@ -85,7 +85,8 @@ describe("ynab auth client", () => {
         "ynab",
       );
 
-      fetchMock.mockImplementation(async (_input, init) => {
+      fetchMock.mockImplementation((_input, init) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         formData = init?.body as FormData;
         return new Response(JSON.stringify(first_token_response), {
           status: 200,
@@ -115,7 +116,7 @@ describe("ynab auth client", () => {
     });
   });
 
-  describe("refreshToken", async () => {
+  describe("refreshToken", () => {
     it("requests the token via the ynab API", async () => {
       const startDate = new Date(1762930754);
       vi.useFakeTimers();
@@ -146,7 +147,8 @@ describe("ynab auth client", () => {
         provider: "monzo",
       });
 
-      fetchMock.mockImplementation(async (_input, init) => {
+      fetchMock.mockImplementation((_input, init) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         formData = init?.body as FormData;
         return new Response(JSON.stringify(refreshedToken), {
           status: 200,
