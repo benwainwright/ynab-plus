@@ -10,7 +10,7 @@ interface CurrentUserContextProps {
 
 export const CurrentUserContext = createContext<CurrentUserContextProps>({
   currentUser: undefined,
-  initialLoadComplete: true,
+  initialLoadComplete: false,
   reloadUser: () => {},
 });
 
