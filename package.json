@@ -7,6 +7,9 @@
     "packages/*"
   ],
   "scripts": {
+    "dev:websocket": "pnpm run --filter '*websocket-server' dev",
+    "dev:frontend": "pnpm run --filter '*frontend' dev",
+    "dev": "pnpm run dev:websocket & pnpm run dev:frontend",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
     "test": "pnpm run --filter '*' test",
