@@ -42,7 +42,6 @@ export class Bootstrapper implements IBootstrapper {
       z.object(this.fullSchema).parse(this._config);
     } catch (error) {
       if (error instanceof ZodError) {
-        console.log(z.prettifyError(error));
         return;
       }
     }

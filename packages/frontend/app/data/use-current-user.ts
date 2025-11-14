@@ -12,6 +12,7 @@ export const useCurrentUser = () => {
       if (dirty) {
         const user = await getCurrentUser();
         setCurrentUser(user);
+        setDirty(false);
       }
     })();
   }, [dirty]);

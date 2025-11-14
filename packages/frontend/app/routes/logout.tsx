@@ -8,7 +8,6 @@ export const Logout = () => {
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
-    console.log({ currentUser });
     void (async () => {
       if (currentUser) {
         await command("Logout", undefined);
