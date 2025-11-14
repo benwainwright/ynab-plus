@@ -10,6 +10,8 @@ import { SqliteOauth2TokenRepsoitory } from "./adapters/sqlite/sqlite-oauth2-tok
 import { oauthClientFactory } from "./adapters/oauth/oauth-client-factory.ts";
 import { NodeUUIDGenerator } from "./adapters/node-uuid-generator.ts";
 import { NodePasswordHashValidator } from "./adapters/node-password-hash-validator.ts";
+import EventEmitter from "node:events";
+import { NodeEventBus } from "./adapters/node-event-bus.ts";
 
 export const LOG_CONTEXT = { context: "compose-infra-layer" };
 
@@ -48,10 +50,15 @@ export const composeInfrastructureLayer = async (
   );
 
   const uuidGenerator = new NodeUUIDGenerator();
+  const events = new EventEmitter();
+  const eventBus = new NodeEventBus(events, `ynab-plus`, uuidGenerator);
 
   const oauthClients = oauthClientFactory(bootstrapper);
 
   return {
+    messaging: {
+      eventBus,
+    },
     misc: {
       uuidGenerator,
     },

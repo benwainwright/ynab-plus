@@ -15,19 +15,17 @@ import {
 
 import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
 
-import { EventBus } from "./event-bus.ts";
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
 import { SessionStorage } from "./session-storage.ts";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import { child } from "winston";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 
 export const composeApplicationLayer = (
   {
+    messaging: { eventBus },
     data: { userRepository, sessionStorage },
-    misc: { uuidGenerator },
     auth: { passwordHasher, passwordVerifier },
     oauth: {
       oauthTokenRepository,
@@ -59,15 +57,12 @@ export const composeApplicationLayer = (
     ),
   ];
 
-  const events = new EventEmitter();
-
   const requestFactory: ServiceBusFactory = async ({
     sessionIdRequester,
   }: {
     sessionIdRequester: ISessionIdRequester;
   }) => {
     logger.silly(`Starting request factory`, LOG_CONTEXT);
-    const eventBus = new EventBus(events, `ynab-plus`, uuidGenerator);
     const currentUserCache = new SessionStorage<User | undefined>(
       sessionStorage,
       sessionIdRequester,
