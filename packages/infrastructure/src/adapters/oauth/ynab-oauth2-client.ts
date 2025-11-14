@@ -51,7 +51,7 @@ export class YnabOauth2Client
   private parseTokenResponse = (data: unknown) => {
     const responseSchema = z.object({
       access_token: z.string(),
-      token: z.string(),
+      token_type: z.string(),
       refresh_token: z.string(),
       expires_in: z.number(),
     });
@@ -64,10 +64,7 @@ export class YnabOauth2Client
     formData.set("client_id", await this.clientId.value);
     formData.set("client_secret", await this.clientSecret.value);
 
-    formData.set(
-      "redirect_uri",
-      encodeURIComponent(await this.redirectUri.value),
-    );
+    formData.set("redirect_uri", await this.redirectUri.value);
 
     formData.set("grant_type", "authorization_code");
     formData.set("code", code);
@@ -78,7 +75,9 @@ export class YnabOauth2Client
     });
 
     if (!response.ok) {
-      throw new Error(`Status code ${String(response.status)} was returned`);
+      throw new Error(
+        `Status code ${String(response.status)} was returned with body ${await response.text()}`,
+      );
     }
 
     const json = this.parseTokenResponse(await response.json());

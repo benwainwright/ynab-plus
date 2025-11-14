@@ -9,8 +9,8 @@ import {
   LogoutService,
   RegisterUserService,
 } from "@services";
-import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
+import { User } from "@ynab-plus/domain";
 
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
@@ -30,8 +30,21 @@ export const composeApplicationLayer = (
     },
   }: IInfrastructurePorts,
   logger: ILogger,
+  bootstrapper: IBootstrapper,
 ) => {
   logger.info(`Composing application layer`, LOG_CONTEXT);
+
+  bootstrapper.addInitStep(async () => {
+    logger.debug(`Creating initial admin user`, LOG_CONTEXT);
+    const bootstrapAdmin = new User({
+      id: "admin",
+      email: "no-reply@something.com",
+      passwordHash: await passwordHasher.hash(`password`),
+      permissions: ["user", "admin"],
+    });
+    await userRepository.save(bootstrapAdmin);
+  });
+
   const services = [
     new GetCurrentUserService(userRepository, logger),
     new GetUserService(userRepository, logger),

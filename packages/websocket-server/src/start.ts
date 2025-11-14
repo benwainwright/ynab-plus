@@ -17,7 +17,11 @@ const bootstrapper = new Bootstrapper({
 
 const dataLayer = await composeDataLayer(bootstrapper, logger);
 
-const applicationLayer = composeApplicationLayer(dataLayer, logger);
+const applicationLayer = composeApplicationLayer(
+  dataLayer,
+  logger,
+  bootstrapper,
+);
 
 await composeWebApp({
   ...applicationLayer,

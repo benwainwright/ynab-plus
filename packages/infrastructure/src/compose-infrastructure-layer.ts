@@ -2,7 +2,7 @@ import EventEmitter from "node:events";
 
 import type { IInfrastructurePorts } from "@ynab-plus/app";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
-import type { IUser } from "@ynab-plus/domain";
+import { type IUser,User } from "@ynab-plus/domain";
 import z from "zod";
 
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
@@ -26,10 +26,13 @@ export const composeInfrastructureLayer = async (
     bootstrapper.configValue(`sqliteFilename`, z.string()),
   );
 
+  const passwordHasher = new NodePasswordHashValidator();
+
   const userRepository = new SqliteUserRepository(
     bootstrapper.configValue("userTableName", z.string()),
     database,
   );
+
   bootstrapper.addInitStep(async () => {
     logger.debug(`Creating user repository if it doesn't exist`, LOG_CONTEXT);
     await userRepository.create();
@@ -44,8 +47,6 @@ export const composeInfrastructureLayer = async (
     await oauthTokenRepository.create();
   });
 
-  const passwordHasher = new NodePasswordHashValidator();
-
   const sessionStorage = new FlatFileObjectStore<IUser>(
     bootstrapper.configValue("sessionPath", z.string()),
     logger,
@@ -55,7 +56,11 @@ export const composeInfrastructureLayer = async (
   const events = new EventEmitter();
   const eventBus = new NodeEventBus(events, `ynab-plus`, uuidGenerator);
 
-  const oauthClients = oauthClientFactory(bootstrapper);
+  const oauthClients = oauthClientFactory(
+    bootstrapper.configValue(`ynabClientId`, z.string()),
+    bootstrapper.configValue(`ynabClientSecret`, z.string()),
+    bootstrapper.configValue(`ynabRedirectUri`, z.string()),
+  );
 
   return {
     messaging: {

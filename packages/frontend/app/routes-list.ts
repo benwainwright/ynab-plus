@@ -19,14 +19,19 @@ export const routesList = {
     permissionsRequired: ["public"],
     authFailRedirect: "/",
   },
+  register: {
+    component: "routes/register.tsx",
+    permissionsRequired: ["public"],
+    authFailRedirect: "/",
+  },
+  integrations: {
+    component: "routes/integrations.tsx",
+    permissionsRequired: ["admin", "user"],
+    authFailRedirect: "/login",
+  },
   logout: {
     component: "routes/logout.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/",
-  },
-  register: {
-    component: "routes/register.tsx",
-    permissionsRequired: ["public"],
-    authFailRedirect: "/login",
   },
 } as const satisfies Record<string, RouteSpec>;

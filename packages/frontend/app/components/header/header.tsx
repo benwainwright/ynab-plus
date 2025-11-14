@@ -1,10 +1,9 @@
-import type { User } from "@ynab-plus/domain";
-import { CurrentUserContext, CurrentUserProvider } from "@components";
+import { CurrentUserContext } from "@components";
+import { useContext } from "react";
 import { Link } from "react-router";
 
 import { canAccess } from "../../middleware/can-access.ts";
 import { routesList, type RouteSpec } from "../../routes-list.ts";
-import { useContext } from "react";
 
 interface HeaderProps {
   title: string;

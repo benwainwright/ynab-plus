@@ -9,7 +9,7 @@ import { ConfigValue } from "./config-value.ts";
 import type { IBootstrapper } from "./i-bootstrapper.ts";
 import type { ILogger } from "./i-logger.ts";
 
-export const LOG_CONTEXT = { context: "bootstrapper " };
+export const LOG_CONTEXT = { context: "bootstrapper" };
 
 const RESOLVE_CONFIG = "resolve-config";
 
@@ -42,6 +42,7 @@ export class Bootstrapper implements IBootstrapper {
       z.object(this.fullSchema).parse(this._config);
     } catch (error) {
       if (error instanceof ZodError) {
+        this.config.logger.error(z.prettifyError(error), LOG_CONTEXT);
         return;
       }
     }

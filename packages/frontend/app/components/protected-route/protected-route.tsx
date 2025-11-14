@@ -1,8 +1,9 @@
-import { useContext, type ReactNode } from "react";
-import { routesList } from "../../routes-list.ts";
-import { canAccess } from "../../middleware/can-access.ts";
-import { Navigate } from "react-router";
 import { CurrentUserContext } from "@components";
+import { type ReactNode,useContext } from "react";
+import { Navigate } from "react-router";
+
+import { canAccess } from "../../middleware/can-access.ts";
+import { routesList } from "../../routes-list.ts";
 
 interface ProtectedRouteProps {
   routeName: keyof typeof routesList;

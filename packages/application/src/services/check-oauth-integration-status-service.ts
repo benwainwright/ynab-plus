@@ -7,6 +7,10 @@ import type {
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Permission } from "@ynab-plus/domain";
 
+export const LOG_CONTEXT = {
+  context: "check-oauth-integration-status-service",
+};
+
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
@@ -30,6 +34,8 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
   > {
     const currentUser = await currentUserCache.get();
 
+    this.logger.debug(`Checking oauth-integration status`, LOG_CONTEXT);
+
     const {
       data: { provider },
     } = command;
@@ -43,13 +49,17 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     const oauthClient = this.oauthClientFactory(provider);
 
     if (!token) {
+      this.logger.debug(`A token was not found in the repository`, LOG_CONTEXT);
       return {
         status: "not_connected",
         redirectUrl: await oauthClient.generateRedirectUrl(),
       };
     }
 
+    this.logger.debug(`A token was found in the repository`, LOG_CONTEXT);
+
     if (token.expiry < new Date()) {
+      this.logger.debug(`The token is out of date. Refreshing!`, LOG_CONTEXT);
       const newToken = await oauthClient.refreshToken(token);
       await this.tokenRepository.save(newToken);
     }

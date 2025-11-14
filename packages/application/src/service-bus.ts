@@ -17,7 +17,7 @@ export class ServiceBus implements IServiceBus {
   public constructor(
     private services: AbstractApplicationService<keyof Commands>[],
     private eventBus: IEventBus,
-    private currentUserCache: ISingleItemStore<User | undefined>,
+    private currentUserCache: ISingleItemStore<User>,
     private logger: ILogger,
   ) {
     this.services.forEach((service) => {
@@ -26,7 +26,7 @@ export class ServiceBus implements IServiceBus {
   }
 
   public async handleCommand<TKey extends keyof Commands>(
-    command: ICommandMessage<keyof Commands>,
+    command: ICommandMessage,
   ): Promise<Commands[TKey]["response"]> {
     this.logger.debug(`Command receieved, locating service`, {
       ...LOG_CONTEXT,
