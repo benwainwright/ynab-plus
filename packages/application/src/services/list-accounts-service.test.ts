@@ -8,7 +8,7 @@ import { ListAccountsService } from "./list-accounts-service.ts";
 
 describe("list accounts service", () => {
   it("returns a list of all the accounts, passing through the offset and limit", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],

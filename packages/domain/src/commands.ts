@@ -1,4 +1,5 @@
 import type { Account } from "./account.ts";
+import type { Permission } from "./permissions.ts";
 import type { User } from "./user.ts";
 
 export interface Commands {
@@ -50,6 +51,15 @@ export interface Commands {
       password: string;
     };
     response: { success: true; id: string } | { success: false };
+  };
+  UpdateUserCommand: {
+    request: {
+      username: string;
+      email: string;
+      password: string;
+      permissions: Permission[];
+    };
+    response: { success: true } | { success: false; reason: string };
   };
   RegisterCommand: {
     request: {

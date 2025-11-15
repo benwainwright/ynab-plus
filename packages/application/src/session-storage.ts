@@ -5,17 +5,18 @@ import type {
   ISingleItemStore,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
+import type { User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 
-export class SessionStorage<T extends object> implements ISingleItemStore<T> {
+export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
-    private storage: IObjectStorage<T>,
+    private storage: IObjectStorage<User>,
     private sessionIdRequester: ISessionIdRequester,
     private logger: ILogger,
   ) {}
 
-  public async require(): Promise<T> {
+  public async require(): Promise<User> {
     const item = await this.get();
 
     if (!item) {
@@ -27,12 +28,12 @@ export class SessionStorage<T extends object> implements ISingleItemStore<T> {
     return item;
   }
 
-  public async get(): Promise<T | undefined> {
+  public async get(): Promise<User | undefined> {
     const sessionId = await this.sessionIdRequester.getSessionId();
     const key = `${sessionId}-session-key`;
 
     this.logger.silly(`Received session key: ${key}`, LOG_CONTEXT);
-    const sessionData = (await this.storage.get(key)) as T;
+    const sessionData = await this.storage.get(key);
     this.logger.silly(
       `Received session data: ${JSON.stringify(sessionData)}`,
       LOG_CONTEXT,
@@ -40,7 +41,7 @@ export class SessionStorage<T extends object> implements ISingleItemStore<T> {
     return sessionData;
   }
 
-  async set(thing: T | undefined): Promise<void> {
+  async set(thing: User | undefined): Promise<void> {
     const sessionId = await this.sessionIdRequester.getSessionId();
 
     this.logger.silly(

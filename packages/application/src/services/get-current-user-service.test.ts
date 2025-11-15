@@ -13,7 +13,7 @@ import { GetCurrentUserService } from "./get-current-user-service.ts";
 
 describe("get user command handler", () => {
   it("gets a user from the repository and returns it", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -39,12 +39,14 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue({
-        id: "ben",
-        permissions: ["admin"],
-        email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-      }),
+      get: vi.fn().mockResolvedValue(
+        new User({
+          id: "ben",
+          permissions: ["admin"],
+          email: "bwainwright28@gmail.com",
+          passwordHash: "foo",
+        }),
+      ),
     });
 
     const context = { command, eventBus, currentUserCache };
@@ -132,13 +134,14 @@ describe("get user command handler", () => {
 
     await handler.doHandle(context);
 
-     
-    expect(currentUserCache.set).toHaveBeenCalledWith({
-      id: "ben",
-      permissions: ["user"],
-      email: "bwainwright28@gmail.com",
-      passwordHash: "foo",
-    });
+    expect(currentUserCache.set).toHaveBeenCalledWith(
+      new User({
+        id: "ben",
+        permissions: ["user"],
+        email: "bwainwright28@gmail.com",
+        passwordHash: "foo",
+      }),
+    );
   });
 
   it("throws an error if the logged in user does not exist in the database", async () => {
@@ -157,7 +160,7 @@ describe("get user command handler", () => {
 
     const currentUserCache = mock<ISingleItemStore<User>>({
       get: vi.fn().mockResolvedValue(
-        mock<User>({
+        new User({
           id: "ben",
           permissions: ["admin"],
           email: "bwainwright28@gmail.com",

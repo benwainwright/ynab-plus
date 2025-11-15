@@ -7,3 +7,5 @@ export { useEvent } from "./use-event.ts";
 export { useEvents } from "./use-events.ts";
 export { useFooterMessage } from "./use-footer-message.ts";
 export { useOauth2IntegrationStatus } from "./use-oauth2-integration-status.ts";
+export { useUser } from "./use-user.ts";
+export { useUsers } from "./use-users.ts";

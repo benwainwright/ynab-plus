@@ -2,6 +2,7 @@ import type { Account } from "./account.ts";
 import type { Commands } from "./commands.ts";
 import type { ICommandResponse } from "./i-command-response.ts";
 import type { Permission } from "./permissions.ts";
+import type { User } from "./user.ts";
 
 export interface Events {
   AppInitialised: { url: string; port: number };
@@ -17,6 +18,8 @@ export interface Events {
   };
   AccountsSynced: Account[];
   RegisterSuccess: undefined;
+  UserUpdateFail: { reason: string };
+  UserUpdated: User;
   RegisterFail: { reason: string };
   NotAuthorisedError: {
     userId: string | undefined;

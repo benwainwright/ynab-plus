@@ -81,7 +81,7 @@ export const composeApplicationLayer = (
     sessionIdRequester: ISessionIdRequester;
   }) => {
     logger.silly(`Starting request factory`, LOG_CONTEXT);
-    const currentUserCache = new SessionStorage<User>(
+    const currentUserCache = new SessionStorage(
       sessionStorage,
       sessionIdRequester,
       logger,

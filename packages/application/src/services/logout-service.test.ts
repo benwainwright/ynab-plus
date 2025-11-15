@@ -1,12 +1,12 @@
 import { createMockServiceContext } from "@test-helpers";
-import type { User } from "@ynab-plus/domain";
+import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 
 import { LogoutService } from "./logout-service.ts";
 
 describe("logout service", () => {
   it("deletes the current user from the session cache", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],

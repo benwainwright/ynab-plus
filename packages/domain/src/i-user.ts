@@ -1,7 +1,7 @@
 import type { Permission } from "./permissions.ts";
 
 export interface IUser {
-  id: string;
+  readonly id: string;
   passwordHash: string;
   email: string;
   permissions: Permission[];

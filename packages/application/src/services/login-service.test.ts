@@ -1,13 +1,13 @@
 import { type IPasswordVerifier, type IRepository } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import type { User } from "@ynab-plus/domain";
+import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
 import { LoginService } from "./login-service.ts";
 describe("login service", () => {
   it("gets the user from the repo, verifies the password and stores in the session", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo-hash",
       permissions: ["admin"],
@@ -48,7 +48,7 @@ describe("login service", () => {
   });
 
   it("rejects the login if the passwords don't match", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo-hash",
       permissions: ["admin"],

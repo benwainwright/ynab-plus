@@ -1,4 +1,5 @@
-import { describe, expect,it } from "vitest";
+import { User } from "@ynab-plus/domain";
+import { describe, expect, it } from "vitest";
 
 import { canAccess } from "./can-access.ts";
 describe("can access", () => {
@@ -13,12 +14,12 @@ describe("can access", () => {
 
   it("should return true if the user has permissions that match", () => {
     const result = canAccess({
-      user: {
+      user: new User({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
         permissions: ["admin"],
-      },
+      }),
       routeTags: ["admin"],
     });
 
@@ -27,12 +28,12 @@ describe("can access", () => {
 
   it("should return false if the user has no matching permissions", () => {
     const result = canAccess({
-      user: {
+      user: new User({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
         permissions: ["user"],
-      },
+      }),
       routeTags: ["admin"],
     });
 
@@ -41,12 +42,12 @@ describe("can access", () => {
 
   it("should return false if the user has at leaast one matching permission", () => {
     const result = canAccess({
-      user: {
+      user: new User({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
         permissions: ["user", "admin"],
-      },
+      }),
       routeTags: ["admin"],
     });
 

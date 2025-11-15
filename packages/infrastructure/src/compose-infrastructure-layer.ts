@@ -2,7 +2,7 @@ import EventEmitter from "node:events";
 
 import type { IInfrastructurePorts } from "@ynab-plus/app";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
-import { type IUser } from "@ynab-plus/domain";
+import { User } from "@ynab-plus/domain";
 import z from "zod";
 
 import { FlatFileObjectStore } from "./adapters/flat-file-object-store.ts";
@@ -62,7 +62,7 @@ export const composeInfrastructureLayer = async (
     await oauthTokenRepository.create();
   });
 
-  const sessionStorage = new FlatFileObjectStore<IUser>(
+  const sessionStorage = new FlatFileObjectStore<User>(
     bootstrapper.configValue("sessionPath", z.string()),
     logger,
   );

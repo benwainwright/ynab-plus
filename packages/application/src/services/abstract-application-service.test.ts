@@ -5,7 +5,7 @@ import type {
   IHandleContext,
   ISingleItemStore,
 } from "@ports";
-import type { Permission, User } from "@ynab-plus/domain";
+import { type Permission, User } from "@ynab-plus/domain";
 import { describe, expect, it } from "vitest";
 import { mock } from "vitest-mock-extended";
 
@@ -111,7 +111,7 @@ describe("application service", () => {
       const currentUserCache = mock<ISingleItemStore<User>>({
         // eslint-disable-next-line @typescript-eslint/require-await
         get: async () =>
-          mock<User>({
+          new User({
             id: "test",
             permissions: ["admin"],
             email: "a@b.c",
@@ -150,7 +150,7 @@ describe("application service", () => {
       const currentUserCache = mock<ISingleItemStore<User>>({
         // eslint-disable-next-line @typescript-eslint/require-await
         get: async () =>
-          mock<User>({
+          new User({
             id: "test",
             permissions: ["user"],
             email: "a@b.c",

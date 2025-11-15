@@ -8,7 +8,7 @@ import { ListUsersService } from "./list-users-service.ts";
 
 describe("list users service", () => {
   it("returns a list of all the users, passing through the offset and limit", async () => {
-    const mockUser = mock<User>({
+    const mockUser = new User({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -16,13 +16,13 @@ describe("list users service", () => {
     });
 
     const mockUserList = [
-      mock<User>({
+      new User({
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],
         email: "email",
       }),
-      mock<User>({
+      new User({
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],

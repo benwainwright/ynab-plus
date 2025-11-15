@@ -1,7 +1,7 @@
 import { AppError } from "@errors";
 import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
+import { User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
@@ -34,10 +34,9 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
         JSON.stringify(user.permissions) !==
           JSON.stringify(sessionData.permissions)
       ) {
-        await currentUserCache.set({
-          ...sessionData,
-          permissions: user.permissions,
-        });
+        sessionData.permissions = user.permissions;
+
+        await currentUserCache.set(sessionData);
       }
 
       if (!user) {

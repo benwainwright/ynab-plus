@@ -3,9 +3,9 @@ import type { Permission } from "./permissions.ts";
 
 export class User implements IUser {
   public readonly id: string;
-  public readonly passwordHash: string;
-  public readonly email: string;
-  public readonly permissions: Permission[];
+  private _passwordHash: string;
+  private _email: string;
+  private _permissions: Permission[];
 
   public constructor(config: {
     id: string;
@@ -14,8 +14,32 @@ export class User implements IUser {
     permissions: Permission[];
   }) {
     this.id = config.id;
-    this.passwordHash = config.passwordHash;
-    this.email = config.email;
-    this.permissions = config.permissions;
+    this._passwordHash = config.passwordHash;
+    this._email = config.email;
+    this._permissions = config.permissions;
+  }
+
+  public get passwordHash() {
+    return this._passwordHash;
+  }
+
+  public get email() {
+    return this._email;
+  }
+
+  public get permissions() {
+    return this._permissions;
+  }
+
+  public set permissions(permissions: Permission[]) {
+    this._permissions = permissions;
+  }
+
+  public set passwordHash(hash: string) {
+    this._passwordHash = hash;
+  }
+
+  public set email(email: string) {
+    this._email = email;
   }
 }

@@ -1,4 +1,4 @@
-import { ProtectedRoute } from "@components";
+import { Loader, ProtectedRoute } from "@components";
 import { useAccounts } from "@data";
 
 export const Transactions = () => {
@@ -6,26 +6,26 @@ export const Transactions = () => {
   return (
     <ProtectedRoute routeName="accounts">
       <h2>Accounts</h2>
-      {isPending ? (
-        <div aria-busy></div>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {accounts.map((account) => (
+      <Loader isPending={isPending} data={accounts}>
+        {(data) => (
+          <table>
+            <thead>
               <tr>
-                <td>{account.name}</td>
-                <td>{account.type}</td>
+                <th>Name</th>
+                <th>Type</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {data.map((account) => (
+                <tr key={`${account.id}-account-row`}>
+                  <td>{account.name}</td>
+                  <td>{account.type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Loader>
     </ProtectedRoute>
   );
 };
