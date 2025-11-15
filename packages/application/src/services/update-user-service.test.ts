@@ -7,6 +7,44 @@ import { when } from "vitest-when";
 
 import { UpdateUserService } from "./update-user-service.ts";
 describe("update users service", () => {
+  it("leaves the password alone if password is an empty string", async () => {
+    const loggedInUser = new User({
+      id: "admin",
+      passwordHash: "otherHash",
+      email: "other@email.com",
+      permissions: ["admin"],
+    });
+
+    const context = createMockServiceContext(
+      "UpdateUserCommand",
+      {
+        username: "ben",
+        password: "",
+        email: "a@b.c",
+        permissions: ["admin"],
+      },
+      loggedInUser,
+    );
+
+    const hasher = mock<IPasswordHasher>();
+
+    const mockRepo = mock<IRepository<User>>();
+
+    const existingUser = new User({
+      id: "ben",
+      passwordHash: "otherHash",
+      email: "other@email.com",
+      permissions: ["user"],
+    });
+
+    when(mockRepo.get).calledWith("ben").thenResolve(existingUser);
+
+    const service = new UpdateUserService(mockRepo, hasher, mock());
+
+    await service.doHandle(context);
+
+    expect(hasher.hash).not.toBeCalled();
+  });
   it("should update the existing user", async () => {
     const loggedInUser = new User({
       id: "admin",

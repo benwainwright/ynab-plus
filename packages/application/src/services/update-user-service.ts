@@ -35,7 +35,10 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
         return { success: false, reason } as const;
       }
 
-      const hash = await this.passwordHasher.hash(password);
+      const hash =
+        password === ""
+          ? userToUpdate.passwordHash
+          : await this.passwordHasher.hash(password);
 
       userToUpdate.passwordHash = hash;
       userToUpdate.email = email;

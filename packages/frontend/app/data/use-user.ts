@@ -35,10 +35,11 @@ export const useUser = (username?: string) => {
   }, [username]);
 
   const saveUser = useCallback(async () => {
+    console.log({ user });
     if (user) {
       await command("UpdateUserCommand", user);
     }
-  }, [username]);
+  }, [username, user]);
 
   useEvent("UserUpdated", (updatedUser) => {
     setUser(mapUser(updatedUser));

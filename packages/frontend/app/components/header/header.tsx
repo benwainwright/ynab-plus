@@ -25,8 +25,10 @@ export const Header = ({ title }: HeaderProps) => {
         </ul>
         <ul>
           {Object.entries(list)
-            .filter(([, value]) =>
-              canAccess({ user, routeTags: value.permissionsRequired }),
+            .filter(
+              ([, value]) =>
+                canAccess({ user, routeTags: value.permissionsRequired }) &&
+                !value.hideFromMenu,
             )
             .map(([key, value]) => (
               <li>

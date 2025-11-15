@@ -13,7 +13,9 @@ const routes = [
   layout(
     "routes/app-layout.tsx",
     Object.entries(list).map(([key, value]) =>
-      value.isIndex ? index(value.component) : route(key, value.component),
+      value.isIndex
+        ? index(value.component)
+        : route(value.path ? value.path : key, value.component),
     ),
   ),
 ];

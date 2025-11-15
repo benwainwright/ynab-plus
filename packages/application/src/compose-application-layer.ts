@@ -16,6 +16,7 @@ import { User } from "@ynab-plus/domain";
 
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
+import { UpdateUserService } from "./services/update-user-service.ts";
 import { SessionStorage } from "./session-storage.ts";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
@@ -54,6 +55,7 @@ export const composeApplicationLayer = (
     new LoginService(userRepository, passwordVerifier, logger),
     new LogoutService(logger),
     new RegisterUserService(userRepository, passwordHasher, logger),
+    new UpdateUserService(userRepository, passwordHasher, logger),
 
     new CheckOauthIntegrationStatusService(
       oauthTokenRepository,

@@ -2,6 +2,7 @@ import type { Permission } from "@ynab-plus/domain";
 
 export interface RouteSpec {
   isIndex?: boolean;
+  path?: string;
   hideFromMenu?: boolean;
   component: string;
   permissionsRequired: Permission[];
@@ -43,7 +44,9 @@ export const routesList = {
   editUser: {
     component: "routes/edit-user.tsx",
     permissionsRequired: ["admin"],
+    path: "users/:userId/edit",
     authFailRedirect: "/",
+    hideFromMenu: true,
   },
   logout: {
     component: "routes/logout.tsx",

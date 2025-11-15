@@ -39,6 +39,13 @@ export const useFooterMessage = () => {
         });
         break;
 
+      case "UserUpdated":
+        setMessage({
+          type: "info",
+          message: "User was updated",
+        });
+        break;
+
       case "RegisterSuccess":
         setMessage({
           type: "info",

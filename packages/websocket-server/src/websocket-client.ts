@@ -18,7 +18,6 @@ export class ServerWebsocketClient {
     this.logger.debug(`Socket connected`, LOG_CONTEXT);
     this.eventBus.emit("SocketOpened", undefined);
     this.eventBus.onAll((packet) => {
-      console.log(packet);
       this.logger.debug(`Event recieved`, { ...LOG_CONTEXT, packet });
       socket.send(JSON.stringify(packet));
     });
