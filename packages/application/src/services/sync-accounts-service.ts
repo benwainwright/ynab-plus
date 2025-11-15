@@ -48,6 +48,10 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     }
 
     if (Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
+      this.logger.debug(
+        `Token was used recently or force wasn't passed. Skipping sync`,
+        LOG_CONTEXT,
+      );
       return { synced: false };
     }
 
