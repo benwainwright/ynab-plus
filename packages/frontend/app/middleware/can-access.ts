@@ -1,10 +1,10 @@
-import type { User } from "@ynab-plus/domain";
+import type { IUser } from "@ynab-plus/domain";
 
 export const canAccess = ({
   user,
   routeTags,
 }: {
-  user: User | undefined;
+  user: IUser | undefined;
   routeTags: string[];
 }) => {
   if (!user && routeTags.includes("public")) {

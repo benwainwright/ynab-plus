@@ -1,8 +1,8 @@
 import { getCurrentUser } from "@data";
-import type { User } from "@ynab-plus/domain";
+import type { IUser } from "@ynab-plus/domain";
 import { createContext, RouterContextProvider } from "react-router";
 
-export const CurrentUserContext = createContext<User | undefined>();
+export const CurrentUserContext = createContext<IUser | undefined>();
 
 export const currentUser = async ({
   context,

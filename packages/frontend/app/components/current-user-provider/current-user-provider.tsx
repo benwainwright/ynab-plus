@@ -1,9 +1,9 @@
 import { useCurrentUser } from "@data";
-import type { User } from "@ynab-plus/domain";
+import type { IUser } from "@ynab-plus/domain";
 import { createContext, type ReactNode } from "react";
 
 interface CurrentUserContextProps {
-  currentUser: User | undefined;
+  currentUser: IUser | undefined;
   reloadUser: () => void;
   initialLoadComplete: boolean;
 }

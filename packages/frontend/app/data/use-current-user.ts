@@ -1,10 +1,10 @@
-import type { User } from "@ynab-plus/domain";
+import type { IUser } from "@ynab-plus/domain";
 import { useEffect, useState } from "react";
 
 import { getCurrentUser } from "./get-current-user.ts";
 
 export const useCurrentUser = () => {
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<IUser>();
   const [dirty, setDirty] = useState(true);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 

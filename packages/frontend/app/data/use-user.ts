@@ -1,4 +1,4 @@
-import type { Permission, User } from "@ynab-plus/domain";
+import type { IUser, Permission } from "@ynab-plus/domain";
 import { useCallback, useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
@@ -16,7 +16,7 @@ export const useUser = (username?: string) => {
 
   const [user, setUser] = useState<ILocalUser | undefined>();
 
-  const mapUser = (user: User): ILocalUser => ({
+  const mapUser = (user: IUser): ILocalUser => ({
     username: user.id,
     permissions: user.permissions,
     password: "",

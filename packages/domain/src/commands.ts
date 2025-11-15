@@ -1,6 +1,6 @@
-import type { Account } from "./account.ts";
+import type { IAccount } from "./i-account.ts";
+import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
-import type { User } from "./user.ts";
 
 export interface Commands {
   SyncAccountsCommand: {
@@ -36,14 +36,14 @@ export interface Commands {
   };
   ListAccountsCommand: {
     request: undefined;
-    response: Account[];
+    response: IAccount[];
   };
   ListUsersCommand: {
     request: {
       offset: number;
       limit: number;
     };
-    response: User[];
+    response: IUser[];
   };
   LoginCommand: {
     request: {
@@ -77,13 +77,13 @@ export interface Commands {
   };
   GetCurrentUserCommand: {
     request: undefined;
-    response: User | undefined;
+    response: IUser | undefined;
   };
   GetUserCommand: {
     request: {
       username: string;
     };
-    response: User | undefined;
+    response: IUser | undefined;
   };
   HelloWorldCommand: {
     request: {
