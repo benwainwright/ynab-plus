@@ -10,11 +10,7 @@ export default defineConfig({
   plugins: [
     reactRouter(),
     tsconfigPaths({
-      projects: [
-        "./tsconfig.json",
-        "../application/tsconfig.json",
-        "../infrastructure/tsconfig.json",
-      ],
+      projects: ["./tsconfig.json", "../application/tsconfig.json"],
     }),
   ],
 });

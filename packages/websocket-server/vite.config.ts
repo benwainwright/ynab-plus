@@ -7,7 +7,9 @@ export default defineConfig({
       projects: [
         "./tsconfig.json",
         "../application/tsconfig.json",
-        "../infrastructure/tsconfig.json",
+        "../integration-adapters/tsconfig.json",
+        "../node-adapters/tsconfig.json",
+        "../sqlite-adapters/tsconfig.json",
       ],
     }),
   ],
