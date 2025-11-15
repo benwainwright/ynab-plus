@@ -2,6 +2,8 @@ import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
 import {
   CheckOauthIntegrationStatusService,
   GenerateNewOauthTokenService,
+  SyncAccountsService,
+  ListAccountsService,
   GetCurrentUserService,
   GetUserService,
   ListUsersService,
@@ -14,7 +16,6 @@ import { User } from "@ynab-plus/domain";
 
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
-import { DownloadAccountsService } from "./services/download-accounts-service.ts";
 import { SessionStorage } from "./session-storage.ts";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
@@ -65,12 +66,13 @@ export const composeApplicationLayer = (
       newTokenRequesterFactory,
       logger,
     ),
-    new DownloadAccountsService(
+    new SyncAccountsService(
       oauthTokenRepository,
       accountsFetcher,
       accountsRepo,
       logger,
     ),
+    new ListAccountsService(accountsRepo, logger),
   ];
 
   const requestFactory: ServiceBusFactory = async ({

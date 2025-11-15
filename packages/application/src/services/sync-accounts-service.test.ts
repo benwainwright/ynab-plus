@@ -9,7 +9,7 @@ import { Account, OauthToken, User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
-import { DownloadAccountsService } from "./download-accounts-service.ts";
+import { SyncAccountsService } from "./sync-accounts-service.ts";
 
 describe("download-accounts service", () => {
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token", async () => {
@@ -59,7 +59,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    const service = new DownloadAccountsService(
+    const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
@@ -67,7 +67,7 @@ describe("download-accounts service", () => {
     );
 
     const context = createMockServiceContext(
-      "DownloadAccountsCommand",
+      "SyncAccountsCommand",
       undefined,
       user,
     );
@@ -93,7 +93,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    const service = new DownloadAccountsService(
+    const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
@@ -101,7 +101,7 @@ describe("download-accounts service", () => {
     );
 
     const context = createMockServiceContext(
-      "DownloadAccountsCommand",
+      "SyncAccountsCommand",
       undefined,
       user,
     );

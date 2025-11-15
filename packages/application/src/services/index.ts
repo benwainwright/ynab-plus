@@ -7,3 +7,5 @@ export { ListUsersService } from "./list-users-service.ts";
 export { LoginService } from "./login-service.ts";
 export { LogoutService } from "./logout-service.ts";
 export { RegisterUserService } from "./register-user-service.ts";
+export { SyncAccountsService } from "./sync-accounts-service.ts";
+export { ListAccountsService } from "./list-accounts-service.ts";

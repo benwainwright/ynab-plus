@@ -1,7 +1,8 @@
+import type { Account } from "./account.ts";
 import type { User } from "./user.ts";
 
 export interface Commands {
-  DownloadAccountsCommand: {
+  SyncAccountsCommand: {
     request: undefined;
     response: undefined;
   };
@@ -31,6 +32,10 @@ export interface Commands {
     request: undefined;
     // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     response: void;
+  };
+  ListAccountsCommand: {
+    request: undefined;
+    response: Account[];
   };
   ListUsersCommand: {
     request: {

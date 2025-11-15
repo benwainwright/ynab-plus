@@ -29,10 +29,10 @@ export const routesList = {
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/login",
   },
-  transactions: {
-    component: "routes/transactions.tsx",
+  accounts: {
+    component: "routes/accounts.tsx",
     permissionsRequired: ["admin", "user"],
-    authFailRedirect: "/login",
+    authFailRedirect: "/",
   },
   logout: {
     component: "routes/logout.tsx",

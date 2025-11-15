@@ -11,7 +11,7 @@ import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 const LOG_CONTEXT = { context: "download-accounts-service" };
 
-export class DownloadAccountsService extends AbstractApplicationService<"DownloadAccountsCommand"> {
+export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private accountsFetcher: IAccountsFetcher,
@@ -21,7 +21,7 @@ export class DownloadAccountsService extends AbstractApplicationService<"Downloa
     super(logger);
   }
 
-  public override readonly commandName = "DownloadAccountsCommand";
+  public override readonly commandName = "SyncAccountsCommand";
 
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "admin",
@@ -30,7 +30,7 @@ export class DownloadAccountsService extends AbstractApplicationService<"Downloa
 
   protected override async handle({
     currentUserCache,
-  }: IHandleContext<"DownloadAccountsCommand">): Promise<undefined> {
+  }: IHandleContext<"SyncAccountsCommand">): Promise<undefined> {
     this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
     const user = await currentUserCache.require();

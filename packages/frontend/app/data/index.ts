@@ -5,4 +5,4 @@ export { useCurrentUser } from "./use-current-user.ts";
 export { useEvents } from "./use-events.ts";
 export { useFooterMessage } from "./use-footer-message.ts";
 export { useOauth2IntegrationStatus } from "./use-oauth2-integration-status.ts";
-export { useTransactions } from "./use-transactions.ts";
+export { useAccounts } from "./use-accounts.ts";
