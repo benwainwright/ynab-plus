@@ -6,7 +6,7 @@ import { AbstractApplicationService } from "./abstract-application-service.ts";
 
 export class ListUsersService extends AbstractApplicationService<"ListUsersCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "user",
+    "admin",
   ];
 
   public constructor(

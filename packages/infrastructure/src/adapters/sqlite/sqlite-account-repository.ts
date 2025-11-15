@@ -20,7 +20,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     private database: SqliteDatabase,
   ) {}
 
-  async get(id: string): Promise<Account | undefined> {
+  async getAccounts(id: string): Promise<Account | undefined> {
     const result = await this.database.getFromDb<RawAccount | undefined>(
       `SELECT id, userId, name, type, closed, note, deleted
         FROM ${await this.tableName.value}
@@ -71,7 +71,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     );
   }
 
-  public async save(thing: Account): Promise<Account> {
+  public async saveAccount(thing: Account): Promise<Account> {
     const data = await this.database.getFromDb<RawAccount>(
       `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -100,14 +100,14 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     });
   }
 
-  public async saveMany(accounts: Account[]): Promise<Account[]> {
+  public async saveAccounts(accounts: Account[]): Promise<Account[]> {
     await this.database.runQuery("BEGIN;", []);
 
     const returnVal: Account[] = [];
 
     try {
       for (const account of accounts) {
-        returnVal.push(await this.save(account));
+        returnVal.push(await this.saveAccount(account));
       }
 
       await this.database.runQuery("COMMIT;", []);

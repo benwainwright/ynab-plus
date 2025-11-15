@@ -1,17 +1,17 @@
 import type { IHandleContext } from "../ports/index.ts";
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
-export class LogoutService extends AbstractApplicationService<"Logout"> {
+export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "user",
     "admin",
   ];
-  public override readonly commandName = "Logout";
+  public override readonly commandName = "LogoutCommand";
 
   public override async handle({
     currentUserCache,
     eventBus,
-  }: IHandleContext<"Logout">): Promise<undefined> {
+  }: IHandleContext<"LogoutCommand">): Promise<undefined> {
     await currentUserCache.set(undefined);
     eventBus.emit("LogoutSuccess", undefined);
   }

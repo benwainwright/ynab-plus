@@ -33,11 +33,7 @@ export class DownloadAccountsService extends AbstractApplicationService<"Downloa
   }: IHandleContext<"DownloadAccountsCommand">): Promise<undefined> {
     this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
-    const user = await currentUserCache.get();
-
-    if (!user) {
-      throw new Error(`No current user`);
-    }
+    const user = await currentUserCache.require();
 
     this.logger.debug(`Getting token from repo`, LOG_CONTEXT);
     const token = await this.tokenRepository.get(user.id, "ynab");
@@ -50,6 +46,6 @@ export class DownloadAccountsService extends AbstractApplicationService<"Downloa
     const accounts = await this.accountsFetcher.getAccounts(token);
 
     this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
-    await this.accountsRepo.saveMany(accounts);
+    await this.accountsRepo.saveAccounts(accounts);
   }
 }

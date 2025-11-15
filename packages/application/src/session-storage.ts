@@ -1,3 +1,4 @@
+import { AppError } from "@errors";
 import type {
   IObjectStorage,
   ISessionIdRequester,
@@ -13,6 +14,18 @@ export class SessionStorage<T extends object> implements ISingleItemStore<T> {
     private sessionIdRequester: ISessionIdRequester,
     private logger: ILogger,
   ) {}
+
+  public async require(): Promise<T> {
+    const item = await this.get();
+
+    if (!item) {
+      throw new AppError(
+        `Session data required but was not found. This method should not be called when the user is logged out`,
+      );
+    }
+
+    return item;
+  }
 
   public async get(): Promise<T | undefined> {
     const sessionId = await this.sessionIdRequester.getSessionId();

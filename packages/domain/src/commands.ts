@@ -52,9 +52,11 @@ export interface Commands {
       email: string;
       password: string;
     };
-    response: { success: boolean; id: string };
+    response:
+      | { success: true; id: string }
+      | { success: false; reason: string };
   };
-  Logout: {
+  LogoutCommand: {
     request: undefined;
     response: undefined;
   };
@@ -62,7 +64,7 @@ export interface Commands {
     request: undefined;
     response: User | undefined;
   };
-  GetUser: {
+  GetUserCommand: {
     request: {
       username: string;
     };

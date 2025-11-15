@@ -9,19 +9,21 @@
     }
   },
   "dependencies": {
-    "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
+    "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/test-helpers": "workspace:*",
     "stacktracey": "^2.1.8"
   },
   "module": "src/index.ts",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest --coverage"
   },
   "private": true,
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "vitest-mock-extended": "^3.1.0"
+    "@vitest/coverage-v8": "4.0.8",
+    "vitest-mock-extended": "^3.1.0",
+    "vitest-when": "^0.10.0"
   },
   "peerDependencies": {
     "typescript": "^5"

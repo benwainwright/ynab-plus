@@ -34,7 +34,7 @@ describe("not authorised error", () => {
 
       error.handle(events);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+       
       expect(events.emit).toHaveBeenCalledWith("NotAuthorisedError", {
         handler: "HelloWorldCommand",
         userId: "user",

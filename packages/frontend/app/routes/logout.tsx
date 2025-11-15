@@ -1,4 +1,4 @@
-import { CurrentUserContext,ProtectedRoute } from "@components";
+import { CurrentUserContext, ProtectedRoute } from "@components";
 import { command, useEvents } from "@data";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -10,7 +10,7 @@ export const Logout = () => {
   useEffect(() => {
     void (async () => {
       if (currentUser) {
-        await command("Logout", undefined);
+        await command("LogoutCommand", undefined);
       } else {
         await navigate("/login");
       }

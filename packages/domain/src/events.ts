@@ -15,6 +15,7 @@ export interface Events {
     body: string;
   };
   RegisterSuccess: undefined;
+  RegisterFail: { reason: string };
   NotAuthorisedError: {
     userId: string | undefined;
     handler: string;

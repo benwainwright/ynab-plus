@@ -53,6 +53,7 @@ export default defineConfig(
   {
     files: ["**/*.test.ts", "**/*.spec.ts", "**/*.test.tsx", "**/*.spec.tsx"],
     rules: {
+      "@typescript-eslint/unbound-method": "off",
       "@typescript-eslint/no-explicit-any": "off",
     },
   },

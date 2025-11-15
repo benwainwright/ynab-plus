@@ -1,4 +1,3 @@
-import { AppError } from "@errors";
 import type {
   IHandleContext,
   IOauthCheckerFactory,
@@ -32,17 +31,13 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
   }: IHandleContext<"CheckOauthIntegrationStatusCommand">): Promise<
     { status: "connected" } | { status: "not_connected"; redirectUrl: string }
   > {
-    const currentUser = await currentUserCache.get();
+    const currentUser = await currentUserCache.require();
 
     this.logger.debug(`Checking oauth-integration status`, LOG_CONTEXT);
 
     const {
       data: { provider },
     } = command;
-
-    if (!currentUser) {
-      throw new AppError(`There was no current user - this is probably a bug!`);
-    }
 
     const token = await this.tokenRepository.get(currentUser.id, provider);
 

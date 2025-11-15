@@ -1,5 +1,5 @@
 import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "./abstract-application-service.ts";
@@ -37,11 +37,19 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
     });
 
     this.logger.verbose(`Attempting to save user in repository`, LOG_CONTEXT);
-    await this.users.save(user);
-    this.logger.verbose(`Save successful!`, LOG_CONTEXT);
+    try {
+      await this.users.save(user);
+      this.logger.verbose(`Save successful!`, LOG_CONTEXT);
 
-    await currentUserCache.set(user);
-    eventBus.emit("RegisterSuccess", undefined);
-    return { success: true, id: username };
+      await currentUserCache.set(user);
+      eventBus.emit("RegisterSuccess", undefined);
+      return { success: true, id: username };
+    } catch (error) {
+      if (error instanceof AbstractError) {
+        eventBus.emit("RegisterFail", { reason: error.message });
+        return { success: false, reason: error.message };
+      }
+      throw error;
+    }
   }
 }

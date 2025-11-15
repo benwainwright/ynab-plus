@@ -39,7 +39,7 @@ describe("the account repository", () => {
       deleted: false,
     });
 
-    await repo.saveMany([accountOne, accountTwo]);
+    await repo.saveAccounts([accountOne, accountTwo]);
 
     const accounts = await repo.getUserAccounts("ben");
 
@@ -79,10 +79,10 @@ describe("the account repository", () => {
       deleted: false,
     });
 
-    await repo.save(accountOne);
-    await repo.save(accountTwo);
+    await repo.saveAccount(accountOne);
+    await repo.saveAccount(accountTwo);
 
-    const token = await repo.get("two");
+    const token = await repo.getAccounts("two");
 
     expect(token).toEqual(accountTwo);
   });
@@ -130,9 +130,9 @@ describe("the account repository", () => {
       deleted: false,
     });
 
-    await repo.save(accountOne);
-    await repo.save(accountTwo);
-    await repo.save(accountThree);
+    await repo.saveAccount(accountOne);
+    await repo.saveAccount(accountTwo);
+    await repo.saveAccount(accountThree);
 
     const accounts = await repo.getUserAccounts("ben");
 

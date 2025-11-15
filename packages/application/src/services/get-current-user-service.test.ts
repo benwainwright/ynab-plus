@@ -132,7 +132,7 @@ describe("get user command handler", () => {
 
     await handler.doHandle(context);
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+     
     expect(currentUserCache.set).toHaveBeenCalledWith({
       id: "ben",
       permissions: ["user"],

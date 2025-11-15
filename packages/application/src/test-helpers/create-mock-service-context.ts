@@ -26,6 +26,7 @@ export const createMockServiceContext = <TCommandKey extends keyof Commands>(
 
   const currentUserCache = mock<ISingleItemStore<User>>({
     get: vi.fn().mockResolvedValue(currentUser),
+    require: vi.fn().mockResolvedValue(currentUser),
   });
 
   return { command, eventBus, currentUserCache };

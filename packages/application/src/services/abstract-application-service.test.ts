@@ -14,13 +14,13 @@ import { AbstractApplicationService } from "./abstract-application-service.ts";
 describe("application service", () => {
   describe("canHandle", () => {
     it("returns false if the keys don't match", () => {
-      class TestHandler extends AbstractApplicationService<"Logout"> {
-        public override readonly commandName = "Logout";
+      class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
+        public override readonly commandName = "LogoutCommand";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         protected override async handle(
-          _context: IHandleContext<"Logout">,
+          _context: IHandleContext<"LogoutCommand">,
         ): Promise<undefined> {}
       }
 
@@ -35,20 +35,20 @@ describe("application service", () => {
     });
 
     it("returns true if the keys match", () => {
-      class TestHandler extends AbstractApplicationService<"Logout"> {
-        public override readonly commandName = "Logout";
+      class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
+        public override readonly commandName = "LogoutCommand";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         protected override async handle(
-          _context: IHandleContext<"Logout">,
+          _context: IHandleContext<"LogoutCommand">,
         ): Promise<undefined> {}
       }
 
       const handler = new TestHandler(mock());
 
-      const command = mock<ICommandMessage<"Logout">>({
-        key: "Logout",
+      const command = mock<ICommandMessage<"LogoutCommand">>({
+        key: "LogoutCommand",
       });
 
       const result = handler.canHandle(command);
@@ -57,15 +57,15 @@ describe("application service", () => {
   });
   describe("doHandle", () => {
     it("executes the handle method when doHandle is called", async () => {
-      let passed: IHandleContext<"Logout"> | undefined;
-      class TestHandler extends AbstractApplicationService<"Logout"> {
-        public override readonly commandName = "Logout";
+      let passed: IHandleContext<"LogoutCommand"> | undefined;
+      class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
+        public override readonly commandName = "LogoutCommand";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle(
-          context: IHandleContext<"Logout">,
+          context: IHandleContext<"LogoutCommand">,
         ): Promise<undefined> {
           passed = context;
         }
@@ -73,8 +73,8 @@ describe("application service", () => {
 
       const handler = new TestHandler(mock());
 
-      const command = mock<ICommandMessage<"Logout">>({
-        key: "Logout",
+      const command = mock<ICommandMessage<"LogoutCommand">>({
+        key: "LogoutCommand",
       });
 
       const eventBus = mock<IEventBus>();
@@ -85,23 +85,65 @@ describe("application service", () => {
       expect(passed).toEqual(context);
     });
 
-    it("throws an error and doesn't execute handle if the user doesn't have the right permissions", async () => {
+    it("Will still allow a handle if user only has one of the required permissions", async () => {
       let handled = false;
-      class TestHandler extends AbstractApplicationService<"Logout"> {
-        public override readonly commandName = "Logout";
+      class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
+        public override readonly commandName = "LogoutCommand";
 
-        public override readonly requiredPermissions: Permission[] = ["admin"];
+        public override readonly requiredPermissions: Permission[] = [
+          "user",
+          "admin",
+        ];
 
         // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle(
-          _context: IHandleContext<"Logout">,
+          _context: IHandleContext<"LogoutCommand">,
         ): Promise<undefined> {
           handled = true;
         }
       }
 
-      const command = mock<ICommandMessage<"Logout">>({
-        key: "Logout",
+      const command = mock<ICommandMessage<"LogoutCommand">>({
+        key: "LogoutCommand",
+      });
+
+      const eventBus = mock<IEventBus>();
+      const currentUserCache = mock<ISingleItemStore<User>>({
+        // eslint-disable-next-line @typescript-eslint/require-await
+        get: async () =>
+          mock<User>({
+            id: "test",
+            permissions: ["admin"],
+            email: "a@b.c",
+            passwordHash: "foo",
+          }),
+      });
+
+      const handler = new TestHandler(mock());
+
+      const context = { command, eventBus, currentUserCache };
+
+      await handler.doHandle(context);
+      expect(handled).toBe(true);
+    });
+
+    it("throws an error and doesn't execute handle if the user doesn't have the right permissions", async () => {
+      let handled = false;
+      class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
+        public override readonly commandName = "LogoutCommand";
+
+        public override readonly requiredPermissions: Permission[] = ["admin"];
+
+        // eslint-disable-next-line @typescript-eslint/require-await
+        protected override async handle(
+          _context: IHandleContext<"LogoutCommand">,
+        ): Promise<undefined> {
+          handled = true;
+        }
+      }
+
+      const command = mock<ICommandMessage<"LogoutCommand">>({
+        key: "LogoutCommand",
       });
 
       const eventBus = mock<IEventBus>();

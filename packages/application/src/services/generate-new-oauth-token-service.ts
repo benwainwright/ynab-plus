@@ -38,11 +38,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     const requester = this.newTokenRequesterFactory(provider);
 
-    const currentUser = await currentUserCache.get();
-
-    if (!currentUser) {
-      throw new Error(`No current user`);
-    }
+    const currentUser = await currentUserCache.require();
 
     this.logger.silly(`Exchanging token`, LOG_CONTEXT);
 
