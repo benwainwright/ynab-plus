@@ -2,6 +2,7 @@ export { composeApplicationLayer } from "./compose-application-layer.ts";
 export { type IInfrastructurePorts } from "./i-data-ports.ts";
 export {
   type ICommandMessage,
+  type IAccountRepository,
   type IEventBus,
   type IEventListener,
   type IEventPacket,

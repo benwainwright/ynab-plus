@@ -1,4 +1,6 @@
 export type { Commands } from "./commands.ts";
+export type { IAccount } from "./i-account.ts";
+export { Account } from "./account.ts";
 export type { Events } from "./events.ts";
 export { type ICommandMessage } from "./i-command-message.ts";
 export type { IUser } from "./i-user.ts";

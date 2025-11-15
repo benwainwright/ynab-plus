@@ -100,9 +100,7 @@ describe("ynab auth client", () => {
 
       expect(formData?.get("client_id")).toEqual(clientId);
       expect(formData?.get("client_secret")).toEqual(clientSecret);
-      expect(formData?.get("redirect_uri")).toEqual(
-        "https%3A%2F%2Fwww.google.com",
-      );
+      expect(formData?.get("redirect_uri")).toEqual("https://www.google.com");
       expect(formData?.get("grant_type")).toEqual("authorization_code");
       expect(formData?.get("code")).toEqual("1-2-3");
 
