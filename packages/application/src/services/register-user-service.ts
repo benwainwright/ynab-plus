@@ -43,11 +43,11 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
 
       await currentUserCache.set(user);
       eventBus.emit("RegisterSuccess", undefined);
-      return { success: true, id: username };
+      return { success: true, id: username } as const;
     } catch (error) {
       if (error instanceof AbstractError) {
         eventBus.emit("RegisterFail", { reason: error.message });
-        return { success: false, reason: error.message };
+        return { success: false, reason: error.message } as const;
       }
       throw error;
     }

@@ -1,5 +1,5 @@
 import { AppError } from "@errors";
-import { IPasswordHasher, IRepository } from "@ports";
+import type { IPasswordHasher, IRepository } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
