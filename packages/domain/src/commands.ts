@@ -1,6 +1,10 @@
 import type { User } from "./user.ts";
 
 export interface Commands {
+  DownloadAccountsCommand: {
+    request: undefined;
+    response: undefined;
+  };
   GenerateNewOauthTokenCommand: {
     request: {
       provider: string;

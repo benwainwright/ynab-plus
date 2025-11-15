@@ -64,7 +64,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
           name TEXT NOT NULL,
           type TEXT NOT NULL,
           closed TEXT NOT NULL,
-          note TEXT NOT NULL,
+          note TEXT,
           deleted TEXT NOT NULL
       );`,
       [],
@@ -98,5 +98,24 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       closed: data.closed === "closed",
       deleted: data.deleted === "deleted",
     });
+  }
+
+  public async saveMany(accounts: Account[]): Promise<Account[]> {
+    await this.database.runQuery("BEGIN;", []);
+
+    const returnVal: Account[] = [];
+
+    try {
+      for (const account of accounts) {
+        returnVal.push(await this.save(account));
+      }
+
+      await this.database.runQuery("COMMIT;", []);
+
+      return returnVal;
+    } catch (err) {
+      await this.database.runQuery("ROLLBACK;", []);
+      throw err;
+    }
   }
 }

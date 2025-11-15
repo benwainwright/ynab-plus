@@ -6,6 +6,46 @@ import { Sqlite3AccountRepository } from "./sqlite-account-repository.ts";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 describe("the account repository", () => {
+  it("can save multiple users", async () => {
+    const database = new SqliteDatabase({
+      value: Promise.resolve(":memory:"),
+    });
+
+    const tableName: ConfigValue<string> = {
+      value: Promise.resolve("tokens"),
+    };
+
+    const repo = new Sqlite3AccountRepository(tableName, database);
+
+    await repo.create();
+
+    const accountOne = new Account({
+      id: "one",
+      userId: "ben",
+      name: "hello",
+      type: "checking",
+      closed: false,
+      note: "a note",
+      deleted: false,
+    });
+
+    const accountTwo = new Account({
+      id: "two",
+      userId: "ben",
+      name: "hello",
+      type: "checking",
+      closed: false,
+      note: "a note",
+      deleted: false,
+    });
+
+    await repo.saveMany([accountOne, accountTwo]);
+
+    const accounts = await repo.getUserAccounts("ben");
+
+    expect(accounts[0]).toEqual(accountOne);
+    expect(accounts[1]).toEqual(accountTwo);
+  });
   it("can update and return an account", async () => {
     const database = new SqliteDatabase({
       value: Promise.resolve(":memory:"),

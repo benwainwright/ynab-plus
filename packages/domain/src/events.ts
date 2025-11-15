@@ -10,6 +10,10 @@ export interface Events {
   LogoutSuccess: undefined;
   LoginSuccess: undefined;
   LoginFail: undefined;
+  HttpError: {
+    statusCode: number;
+    body: string;
+  };
   RegisterSuccess: undefined;
   NotAuthorisedError: {
     userId: string | undefined;

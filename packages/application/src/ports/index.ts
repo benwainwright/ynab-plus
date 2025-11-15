@@ -1,5 +1,6 @@
 export type { ICommandMessage } from "../../../domain/src/i-command-message.ts";
 export type { IAccountRepository } from "./i-account-repository.ts";
+export type { IAccountsFetcher } from "./i-accounts-fetcher.ts";
 export type { IEventBus } from "./i-event-bus.ts";
 export {
   type IEventListener,

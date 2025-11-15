@@ -1,4 +1,6 @@
 import type {
+  IAccountRepository,
+  IAccountsFetcher,
   IEventBus,
   IOauthCheckerFactory,
   IOauthTokenRepository,
@@ -23,6 +25,8 @@ export interface IInfrastructurePorts {
     passwordVerifier: IPasswordVerifier;
   };
   data: {
+    accountsRepo: IAccountRepository;
+    accountsFetcher: IAccountsFetcher;
     sessionStorage: IObjectStorage<IUser>;
     userRepository: IRepository<User>;
   };

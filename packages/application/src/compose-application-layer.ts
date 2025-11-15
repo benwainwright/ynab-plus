@@ -14,6 +14,7 @@ import { User } from "@ynab-plus/domain";
 
 import type { IInfrastructurePorts } from "./i-data-ports.ts";
 import { ServiceBus } from "./service-bus.ts";
+import { DownloadAccountsService } from "./services/download-accounts-service.ts";
 import { SessionStorage } from "./session-storage.ts";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
@@ -21,7 +22,7 @@ const LOG_CONTEXT = { context: "compose-application-layer" };
 export const composeApplicationLayer = (
   {
     messaging: { eventBus },
-    data: { userRepository, sessionStorage },
+    data: { userRepository, sessionStorage, accountsFetcher, accountsRepo },
     auth: { passwordHasher, passwordVerifier },
     oauth: {
       oauthTokenRepository,
@@ -62,6 +63,12 @@ export const composeApplicationLayer = (
     new GenerateNewOauthTokenService(
       oauthTokenRepository,
       newTokenRequesterFactory,
+      logger,
+    ),
+    new DownloadAccountsService(
+      oauthTokenRepository,
+      accountsFetcher,
+      accountsRepo,
       logger,
     ),
   ];
