@@ -4,6 +4,6 @@ export interface IAccount {
   name: string;
   type: string;
   closed: boolean;
-  note: string;
+  note: string | undefined;
   deleted: boolean;
 }

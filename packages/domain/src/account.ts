@@ -6,7 +6,7 @@ export class Account implements IAccount {
   public readonly name: string;
   public readonly type: string;
   public readonly closed: boolean;
-  public readonly note: string;
+  public readonly note: string | undefined;
   public readonly deleted: boolean;
 
   public constructor(config: IAccount) {
