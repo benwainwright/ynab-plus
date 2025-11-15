@@ -52,6 +52,9 @@ export class YnabOauth2Client
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId: token.userId,
+      refreshed: new Date(),
+      lastUse: new Date(),
+      created: token.created,
     });
 
     tokenCache.set(cacheKey, newToken);
@@ -107,6 +110,9 @@ export class YnabOauth2Client
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId,
+      refreshed: undefined,
+      lastUse: new Date(),
+      created: new Date(),
     });
 
     tokenCache.set(cacheKey, newToken);

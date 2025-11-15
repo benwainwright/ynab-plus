@@ -2,14 +2,14 @@ import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
 import {
   CheckOauthIntegrationStatusService,
   GenerateNewOauthTokenService,
-  SyncAccountsService,
-  ListAccountsService,
   GetCurrentUserService,
   GetUserService,
+  ListAccountsService,
   ListUsersService,
   LoginService,
   LogoutService,
   RegisterUserService,
+  SyncAccountsService,
 } from "@services";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";

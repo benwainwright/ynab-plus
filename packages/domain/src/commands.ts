@@ -3,8 +3,8 @@ import type { User } from "./user.ts";
 
 export interface Commands {
   SyncAccountsCommand: {
-    request: undefined;
-    response: undefined;
+    request: { force: boolean };
+    response: { synced: boolean };
   };
   GenerateNewOauthTokenCommand: {
     request: {

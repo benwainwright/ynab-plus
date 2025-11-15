@@ -1,7 +1,7 @@
+import { Account } from "@ynab-plus/domain";
 import { useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
-import { Account } from "@ynab-plus/domain";
 
 export const useAccounts = () => {
   const [isPending, startTransition] = useTransition();
@@ -9,7 +9,7 @@ export const useAccounts = () => {
 
   useEffect(() => {
     void (async () => {
-      await command("SyncAccountsCommand", undefined);
+      await command("SyncAccountsCommand", { force: false });
     })();
 
     startTransition(async () => {

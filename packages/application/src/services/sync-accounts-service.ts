@@ -9,6 +9,8 @@ import type { ILogger } from "@ynab-plus/bootstrap";
 
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
+const COOLOFF_WINDOW = 60 * 1000 * 5;
+
 const LOG_CONTEXT = { context: "download-accounts-service" };
 
 export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
@@ -29,8 +31,11 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
   ];
 
   protected override async handle({
+    command: {
+      data: { force },
+    },
     currentUserCache,
-  }: IHandleContext<"SyncAccountsCommand">): Promise<undefined> {
+  }: IHandleContext<"SyncAccountsCommand">) {
     this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
     const user = await currentUserCache.require();
@@ -42,10 +47,17 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
       throw new AppError(`No token found for ynab`);
     }
 
+    if (Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
+      return { synced: false };
+    }
+
     this.logger.debug(`Fetching accounts`, LOG_CONTEXT);
     const accounts = await this.accountsFetcher.getAccounts(token);
 
     this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
     await this.accountsRepo.saveAccounts(accounts);
+    await this.tokenRepository.save(token);
+
+    return { synced: true };
   }
 }

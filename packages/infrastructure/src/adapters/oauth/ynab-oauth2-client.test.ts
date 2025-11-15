@@ -110,6 +110,9 @@ describe("ynab auth client", () => {
       expect(newToken.provider).toEqual("ynab");
       expect(newToken.token).toEqual(first_token_response.access_token);
       expect(newToken.refreshToken).toEqual(first_token_response.refresh_token);
+      expect(newToken.created.getTime()).toEqual(startDate.getTime());
+      expect(newToken.lastUse.getTime()).toEqual(startDate.getTime());
+      expect(newToken.refreshed).toBeUndefined();
       vi.useRealTimers();
     });
   });
@@ -137,12 +140,17 @@ describe("ynab auth client", () => {
         "ynab",
       );
 
+      const now = new Date();
+
       const token = new OauthToken({
         token: "foo",
         expiry: startDate,
         refreshToken: "foo-refresh",
         userId: "ben",
         provider: "monzo",
+        created: now,
+        refreshed: undefined,
+        lastUse: new Date(),
       });
 
       fetchMock.mockImplementation((_input, init) => {
@@ -169,6 +177,9 @@ describe("ynab auth client", () => {
       expect(newToken.provider).toEqual("ynab");
       expect(newToken.token).toEqual(refreshedToken.access_token);
       expect(newToken.refreshToken).toEqual(refreshedToken.refresh_token);
+      expect(newToken.created).toEqual(token.created);
+      expect(newToken.lastUse.getTime()).toEqual(startDate.getTime());
+      expect(newToken.refreshed?.getTime()).toEqual(startDate.getTime());
       vi.useRealTimers();
     });
   });

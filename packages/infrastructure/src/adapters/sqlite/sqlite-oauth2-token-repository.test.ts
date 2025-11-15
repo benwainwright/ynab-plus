@@ -25,6 +25,9 @@ describe("the user repository", () => {
       token: "foo",
       userId: "ben",
       refreshToken: "bar",
+      lastUse: new Date("2025-12-10T20:39:37.823Z"),
+      refreshed: new Date("2025-07-10T20:39:37.823Z"),
+      created: new Date("2025-05-10T20:39:37.823Z"),
     });
 
     const tokenTwo = new OauthToken({
@@ -33,6 +36,9 @@ describe("the user repository", () => {
       expiry: new Date("2025-11-11T20:39:37.823Z"),
       token: "foo-bar",
       refreshToken: "bap",
+      lastUse: new Date("2025-12-10T20:39:37.823Z"),
+      refreshed: new Date("2025-10-10T20:39:37.823Z"),
+      created: new Date("2025-11-10T20:39:37.823Z"),
     });
 
     await repo.save(tokenTwo);

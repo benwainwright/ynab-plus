@@ -63,6 +63,9 @@ describe("check oauth-integration-status-service", () => {
         refreshToken: "foo-refresh",
         provider: "ynab",
         expiry: new Date("2021-01-01T00:00:00.000Z"),
+        created: new Date(),
+        refreshed: undefined,
+        lastUse: new Date(),
       });
 
       const save = vi.fn();
@@ -124,6 +127,9 @@ describe("check oauth-integration-status-service", () => {
         provider: "ynab",
         userId: "ben",
         expiry: new Date("2019-01-01T00:00:00.000Z"),
+        created: new Date(),
+        refreshed: undefined,
+        lastUse: new Date(),
       });
 
       const mockSecondToken = new OauthToken({
@@ -132,6 +138,9 @@ describe("check oauth-integration-status-service", () => {
         userId: "ben",
         provider: "ynab",
         expiry: new Date("2021-01-01T00:00:00.000Z"),
+        created: new Date(),
+        refreshed: undefined,
+        lastUse: new Date(),
       });
 
       const save = vi.fn();

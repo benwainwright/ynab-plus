@@ -3,9 +3,9 @@ export { CheckOauthIntegrationStatusService } from "./check-oauth-integration-st
 export { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 export { GetCurrentUserService } from "./get-current-user-service.ts";
 export { GetUserService } from "./get-user-service.ts";
+export { ListAccountsService } from "./list-accounts-service.ts";
 export { ListUsersService } from "./list-users-service.ts";
 export { LoginService } from "./login-service.ts";
 export { LogoutService } from "./logout-service.ts";
 export { RegisterUserService } from "./register-user-service.ts";
 export { SyncAccountsService } from "./sync-accounts-service.ts";
-export { ListAccountsService } from "./list-accounts-service.ts";

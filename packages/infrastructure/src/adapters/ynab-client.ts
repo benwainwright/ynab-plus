@@ -23,6 +23,8 @@ export class YnabClient {
   }) {
     const url = `${this.baseUrl}/v1${path}`;
 
+    token.lastUse = new Date();
+
     const headers = {
       Authorization: `Bearer ${token.token}`,
       accept: "application/json",
