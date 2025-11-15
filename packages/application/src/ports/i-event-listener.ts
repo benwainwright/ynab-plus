@@ -1,22 +1,27 @@
 import type { Events } from "@ynab-plus/domain";
 
-export type IEventPacket<TKey extends keyof Events> = TKey extends keyof Events
+export type IEventPacket<
+  TEvents = Events,
+  TKey extends keyof TEvents = keyof TEvents,
+> = TKey extends keyof Events
   ? {
       key: TKey;
       data: Events[TKey];
     }
   : never;
 
-export type IListener = (arg: IEventPacket<keyof Events>) => void;
+export type IListener<TEvents = Events> = (
+  arg: IEventPacket<TEvents, keyof TEvents>,
+) => void;
 
-export interface IEventListener {
+export interface IEventListener<TEvents> {
   off(identifier: string): void;
 
-  onAll(callback: IListener): string;
+  onAll(callback: IListener<TEvents>): string;
 
-  on<TKey extends keyof Events>(
+  on<TKey extends keyof TEvents>(
     key: TKey,
-    callback: (data: IEventPacket<TKey>["data"]) => void,
+    callback: (data: IEventPacket<TEvents, TKey>["data"]) => void,
   ): string;
 
   [Symbol.dispose](): void;

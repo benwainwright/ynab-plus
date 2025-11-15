@@ -1,8 +1,12 @@
-import type { Permission } from "./permissions.ts";
+import z from "zod";
 
-export interface IUser {
-  readonly id: string;
-  readonly passwordHash: string;
-  readonly email: string;
-  readonly permissions: Permission[];
-}
+import { permissionSchema } from "./permissions.ts";
+
+export const userSchema = z.object({
+  id: z.string().readonly(),
+  passwordHash: z.string().readonly(),
+  email: z.string().readonly(),
+  permissions: z.array(permissionSchema),
+});
+
+export type IUser = z.output<typeof userSchema>;

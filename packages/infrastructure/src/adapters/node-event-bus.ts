@@ -54,7 +54,7 @@ export class NodeEventBus implements IEventBus {
 
   public on<TKey extends keyof Events>(
     key: TKey,
-    callback: (data: IEventPacket<TKey>["data"]) => void,
+    callback: (data: IEventPacket<Events, TKey>["data"]) => void,
   ): string {
     const handler: IListener = (packet) => {
       if (packet.key === key) {
@@ -67,6 +67,8 @@ export class NodeEventBus implements IEventBus {
 
   public emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]) {
     this.listener.emit(this.namespace, { key, data });
-    this.children.forEach((child) => { child.emit(key, data); });
+    this.children.forEach((child) => {
+      child.emit(key, data);
+    });
   }
 }

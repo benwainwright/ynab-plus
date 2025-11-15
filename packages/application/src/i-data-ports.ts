@@ -11,7 +11,7 @@ import type {
   IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
-import type { User } from "@ynab-plus/domain";
+import type { IUser, User } from "@ynab-plus/domain";
 
 export interface IInfrastructurePorts {
   messaging: {
@@ -27,7 +27,7 @@ export interface IInfrastructurePorts {
   data: {
     accountsRepo: IAccountRepository;
     accountsFetcher: IAccountsFetcher;
-    sessionStorage: IObjectStorage<User>;
+    sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
     userRepository: IRepository<User>;
   };
   oauth: {

@@ -5,13 +5,13 @@ import type {
   ISingleItemStore,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
+import { type IUser,User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 
 export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
-    private storage: IObjectStorage<User>,
+    private storage: IObjectStorage<IUser & { $type: "user" }>,
     private sessionIdRequester: ISessionIdRequester,
     private logger: ILogger,
   ) {}
@@ -38,7 +38,8 @@ export class SessionStorage implements ISingleItemStore<User> {
       `Received session data: ${JSON.stringify(sessionData)}`,
       LOG_CONTEXT,
     );
-    return sessionData;
+
+    return sessionData ? User.fromObject(sessionData) : undefined;
   }
 
   async set(thing: User | undefined): Promise<void> {
@@ -48,6 +49,7 @@ export class SessionStorage implements ISingleItemStore<User> {
       `Saving session data: ${JSON.stringify(thing)}`,
       LOG_CONTEXT,
     );
-    await this.storage.set(`${sessionId}-session-key`, thing);
+
+    await this.storage.set(`${sessionId}-session-key`, thing?.toObject());
   }
 }

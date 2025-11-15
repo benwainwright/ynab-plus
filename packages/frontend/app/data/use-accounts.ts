@@ -1,4 +1,4 @@
-import { Account } from "@ynab-plus/domain";
+import { type IAccount } from "@ynab-plus/domain";
 import { useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
@@ -6,7 +6,7 @@ import { useEvent } from "./use-event.ts";
 
 export const useAccounts = () => {
   const [isPending, startTransition] = useTransition();
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   useEffect(() => {
     void (async () => {

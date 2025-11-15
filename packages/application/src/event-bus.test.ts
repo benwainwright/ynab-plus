@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { EventEmitter } from "node:events";
 
+import { type ISerialisable, type IUser, User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 
@@ -12,6 +13,69 @@ const mockUuidGenerator = mock<IUUIDGenerator>({
 });
 
 describe("event bus", () => {
+  it("serialises emitted events so they can be safely transmitted", () => {
+    const emitter = new EventEmitter();
+
+    type TestEvents = {
+      foo: {
+        bar: {
+          bap: string;
+          bip: number;
+          foo: ISerialisable<IUser, "user">;
+        };
+        bing: {
+          baz: boolean;
+        };
+      };
+    };
+
+    const bus = new EventBus<TestEvents>(emitter, "foo", mockUuidGenerator);
+
+    const listener = vi.fn();
+
+    bus.onAll(listener);
+
+    const rawShape = {
+      bar: {
+        bap: "foo",
+        bip: 2,
+        foo: new User({
+          id: "passwordHash",
+          email: "a@b.c",
+          passwordHash: "foo",
+          permissions: [],
+        }),
+      },
+      bing: {
+        baz: true,
+      },
+    } as const;
+
+    bus.emit("foo", rawShape);
+
+    const expectedShape = {
+      bar: {
+        bap: "foo",
+        bip: 2,
+        foo: {
+          $type: "user",
+          id: "passwordHash",
+          email: "a@b.c",
+          passwordHash: "foo",
+          permissions: [],
+        },
+      },
+      bing: {
+        baz: true,
+      },
+    } as const;
+
+    expect(listener).toHaveBeenCalledWith({
+      key: "foo",
+      data: expectedShape,
+    });
+  });
+
   describe("on", () => {
     it("correctly subscribes to an event that can be listened to", async () => {
       const emitter = new EventEmitter();

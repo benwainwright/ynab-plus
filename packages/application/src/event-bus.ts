@@ -6,19 +6,19 @@ import type {
   IListener,
   IUUIDGenerator,
 } from "@ports";
-import { type Events } from "@ynab-plus/domain";
+import { type Events, serialiseObject } from "@ynab-plus/domain";
 
-export class EventBus implements IEventBus {
-  private listenerMap = new Map<string, IListener>();
-  private children: IEventBus[] = [];
+export class EventBus<TEvents = Events> implements IEventBus<TEvents> {
+  private listenerMap = new Map<string, IListener<TEvents>>();
+  private children: IEventBus<TEvents>[] = [];
   public constructor(
     private listener: EventEmitter,
     private namespace: string,
     private uuidGenerator: IUUIDGenerator,
   ) {}
 
-  public child(namespace: string): IEventBus {
-    const child = new EventBus(
+  public child(namespace: string): IEventBus<TEvents> {
+    const child = new EventBus<TEvents>(
       this.listener,
       `${this.namespace}-${namespace}`,
       this.uuidGenerator,
@@ -28,7 +28,7 @@ export class EventBus implements IEventBus {
     return child;
   }
 
-  public onAll(listener: IListener) {
+  public onAll(listener: IListener<TEvents>) {
     const listenerId = this.uuidGenerator.getUUID();
     this.listener.on(this.namespace, listener);
     this.listenerMap.set(listenerId, listener);
@@ -52,11 +52,11 @@ export class EventBus implements IEventBus {
     this.removeAll();
   }
 
-  public on<TKey extends keyof Events>(
+  public on<TKey extends keyof TEvents>(
     key: TKey,
-    callback: (data: IEventPacket<TKey>["data"]) => void,
+    callback: (data: IEventPacket<TEvents, TKey>["data"]) => void,
   ): string {
-    const handler: IListener = (packet) => {
+    const handler: IListener<TEvents> = (packet) => {
       if (packet.key === key) {
         callback(packet.data);
       }
@@ -65,8 +65,10 @@ export class EventBus implements IEventBus {
     return this.onAll(handler);
   }
 
-  public emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]) {
-    this.listener.emit(this.namespace, { key, data });
-    this.children.forEach((child) => { child.emit(key, data); });
+  public emit<TKey extends keyof TEvents>(key: TKey, data: TEvents[TKey]) {
+    this.listener.emit(this.namespace, { key, data: serialiseObject(data) });
+    this.children.forEach((child) => {
+      child.emit(key, data);
+    });
   }
 }

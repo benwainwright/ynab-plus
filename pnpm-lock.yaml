@@ -128,7 +128,11 @@ importers:
         specifier: workspace:*
         version: link:../domain
 
-  packages/domain: {}
+  packages/domain:
+    dependencies:
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
 
   packages/frontend:
     dependencies:
