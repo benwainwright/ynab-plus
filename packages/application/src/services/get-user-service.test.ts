@@ -32,8 +32,8 @@ describe("get user service", () => {
 
     const service = new GetUserService(mockUserRepo, mock());
 
-    const command = mock<ICommandMessage<"GetUser">>({
-      key: "GetUser",
+    const command = mock<ICommandMessage<"GetUserCommand">>({
+      key: "GetUserCommand",
       id: "foo",
       data: {
         username: "ben",
@@ -55,8 +55,8 @@ describe("get user service", () => {
 
     const service = new GetUserService(mockUserRepo, mock());
 
-    const command = mock<ICommandMessage<"GetUser">>({
-      key: "GetUser",
+    const command = mock<ICommandMessage<"GetUserCommand">>({
+      key: "GetUserCommand",
       id: "foo",
       data: {
         username: "ben",

@@ -5,7 +5,7 @@ import type { User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
-export class GetUserCommandService extends AbstractApplicationService<"GetUserCommand"> {
+export class GetUserService extends AbstractApplicationService<"GetUserCommand"> {
   public override readonly commandName = "GetUserCommand";
 
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
