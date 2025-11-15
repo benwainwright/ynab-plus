@@ -19,6 +19,7 @@
     "@ynab-plus/domain": "workspace:*",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.4.1",
+    "vitest-mock-extended": "^3.1.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

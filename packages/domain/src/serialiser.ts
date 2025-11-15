@@ -12,6 +12,9 @@ export const serialiseObject = <TEvents>(data: TEvents[keyof TEvents]) => {
 
 const serialiseObjectHelper = (data: unknown): unknown => {
   if (data && typeof data === "object") {
+    if (Array.isArray(data)) {
+      return data.map((item) => serialiseObjectHelper(item));
+    }
     if ("$type" in data) {
       const { $type } = data;
       if (isSerialisableTypeKey($type)) {
@@ -38,6 +41,9 @@ export const deSerialiseObject = <TEvents>(data: TEvents[keyof TEvents]) => {
 
 const deSerialiseObjectHelper = (data: unknown): unknown => {
   if (data && typeof data === "object") {
+    if (Array.isArray(data)) {
+      return data.map((item) => serialiseObjectHelper(item));
+    }
     if ("$type" in data) {
       const { $type } = data;
       if (isSerialisableTypeKey($type)) {
