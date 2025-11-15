@@ -72,7 +72,12 @@ export class YnabClient {
       .parse(result);
 
     return parsed.data.accounts.map(
-      (account) => new Account({ ...account, userId: token.userId }),
+      (account) =>
+        new Account({
+          ...account,
+          userId: token.userId,
+          note: account.note ?? undefined,
+        }),
     );
   }
 }
