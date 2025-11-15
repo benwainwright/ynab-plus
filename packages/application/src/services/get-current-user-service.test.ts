@@ -81,10 +81,7 @@ describe("get user command handler", () => {
     const eventBus = mock<IEventBus>();
 
     const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue({
-        userId: undefined,
-        permissions: undefined,
-      }),
+      get: vi.fn().mockResolvedValue(undefined),
     });
 
     const context = { command, eventBus, currentUserCache };
