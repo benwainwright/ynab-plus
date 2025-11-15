@@ -53,7 +53,7 @@ export class YnabOauth2Client
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId: token.userId,
       refreshed: new Date(),
-      lastUse: new Date(),
+      lastUse: token.lastUse,
       created: token.created,
     });
 
@@ -111,7 +111,7 @@ export class YnabOauth2Client
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId,
       refreshed: undefined,
-      lastUse: new Date(),
+      lastUse: undefined,
       created: new Date(),
     });
 

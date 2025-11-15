@@ -4,7 +4,7 @@ export interface IOauthToken {
   refreshToken: string;
   provider: string;
   userId: string;
-  lastUse: Date;
+  lastUse: Date | undefined;
   refreshed: Date | undefined;
   created: Date;
 }

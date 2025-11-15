@@ -222,6 +222,83 @@ describe("download-accounts service", () => {
     expect(mockTokenRepo.save).toHaveBeenCalledWith(token);
   });
 
+  it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token if its not been used and force is off", async () => {
+    vi.setSystemTime(new Date("2025-11-15T12:08:50.571Z"));
+
+    const user = new User({
+      id: "ben",
+      email: "a@b.c",
+      passwordHash: "foo",
+      permissions: ["admin"],
+    });
+
+    const token = new OauthToken({
+      expiry: new Date(),
+      created: new Date(),
+      refreshed: new Date(),
+      lastUse: undefined,
+      token: "token",
+      refreshToken: "refresh",
+      provider: "ynab",
+      userId: "ben",
+    });
+
+    const mockTokenRepo = mock<IOauthTokenRepository>();
+
+    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+
+    const mockFetcher = mock<IAccountsFetcher>();
+
+    const accounts = [
+      new Account({
+        id: "foo-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: "hello",
+        deleted: false,
+      }),
+      new Account({
+        id: "bar-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+    ];
+
+    when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
+
+    const mockAccountsRepo = mock<IAccountRepository>();
+
+    const service = new SyncAccountsService(
+      mockTokenRepo,
+      mockFetcher,
+      mockAccountsRepo,
+      mock(),
+    );
+
+    const context = createMockServiceContext(
+      "SyncAccountsCommand",
+      { force: false },
+      user,
+    );
+
+    await service.doHandle(context);
+
+    const result = await service.doHandle(context);
+
+    const { eventBus } = context;
+
+    expect(mockAccountsRepo.saveAccounts).toHaveBeenCalledWith(accounts);
+    expect(result.synced).toEqual(true);
+    expect(mockTokenRepo.save).toHaveBeenCalledWith(token);
+    expect(eventBus.emit).toHaveBeenCalledWith("AccountsSynced", accounts);
+  });
+
   it("throws an error if there is no token", async () => {
     const user = new User({
       id: "ben",

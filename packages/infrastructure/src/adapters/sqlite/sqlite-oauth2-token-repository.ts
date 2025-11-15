@@ -8,8 +8,8 @@ interface RawOauthToken {
   provider: string;
   userId: string;
   expiry: string;
-  lastUse: string;
-  refreshed: string;
+  lastUse?: string;
+  refreshed?: string;
   created: string;
 }
 
@@ -29,7 +29,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
           token TEXT NOT NULL,
           refreshToken TEXT NOT NULL,
           expiry TEXT NOT NULL,
-          lastUse TEXT NOT NULL,
+          lastUse TEXT,
           refreshed TEXT,
           created TEXT NOT NULL,
           PRIMARY KEY (userId, provider)
@@ -51,8 +51,8 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
       ? new OauthToken({
           ...result,
           expiry: new Date(result.expiry),
-          lastUse: new Date(result.lastUse),
-          refreshed: new Date(result.refreshed),
+          lastUse: result.lastUse ? new Date(result.lastUse) : undefined,
+          refreshed: result.refreshed ? new Date(result.refreshed) : undefined,
           created: new Date(result.created),
         })
       : undefined;
@@ -66,6 +66,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
             token = excluded.token,
             refreshToken = excluded.refreshToken,
             expiry = excluded.expiry,
+            lastUse = excluded.lastUse,
             refreshed = excluded.refreshed,
             created = excluded.created
 
@@ -76,7 +77,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
         token.token,
         token.refreshToken,
         token.expiry.toISOString(),
-        token.lastUse.toISOString(),
+        token.lastUse?.toISOString() ?? null,
         token.refreshed?.toISOString() ?? null,
         token.created.toISOString(),
       ],
@@ -85,8 +86,8 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     return new OauthToken({
       ...data,
       expiry: new Date(data.expiry),
-      lastUse: new Date(data.lastUse),
-      refreshed: new Date(data.refreshed),
+      lastUse: data.lastUse ? new Date(data.lastUse) : undefined,
+      refreshed: data.refreshed ? new Date(data.refreshed) : undefined,
       created: new Date(data.created),
     });
   }

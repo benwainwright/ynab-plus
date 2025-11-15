@@ -31,6 +31,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
   ];
 
   protected override async handle({
+    eventBus,
     command: {
       data: { force },
     },
@@ -47,7 +48,11 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
       throw new AppError(`No token found for ynab`);
     }
 
-    if (Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
+    if (
+      token.lastUse &&
+      Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW &&
+      !force
+    ) {
       this.logger.debug(
         `Token was used recently or force wasn't passed. Skipping sync`,
         LOG_CONTEXT,
@@ -61,6 +66,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
     await this.accountsRepo.saveAccounts(accounts);
     await this.tokenRepository.save(token);
+    eventBus.emit("AccountsSynced", accounts);
 
     return { synced: true };
   }

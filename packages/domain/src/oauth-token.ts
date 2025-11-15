@@ -8,7 +8,7 @@ export class OauthToken implements IOauthToken {
   public readonly userId: string;
   public readonly refreshed: Date | undefined;
   public readonly created: Date;
-  public lastUse: Date;
+  public lastUse: Date | undefined;
 
   public constructor(config: IOauthToken) {
     this.expiry = config.expiry;

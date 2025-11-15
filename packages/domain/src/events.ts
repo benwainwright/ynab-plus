@@ -1,3 +1,4 @@
+import type { Account } from "./account.ts";
 import type { Commands } from "./commands.ts";
 import type { ICommandResponse } from "./i-command-response.ts";
 import type { Permission } from "./permissions.ts";
@@ -14,6 +15,7 @@ export interface Events {
     statusCode: number;
     body: string;
   };
+  AccountsSynced: Account[];
   RegisterSuccess: undefined;
   RegisterFail: { reason: string };
   NotAuthorisedError: {

@@ -1,5 +1,5 @@
 import { CurrentUserContext, ProtectedRoute } from "@components";
-import { command, useEvents } from "@data";
+import { command, useEvent } from "@data";
 import { getFormDataStringValue } from "@utils";
 import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
@@ -16,10 +16,8 @@ export const Login = () => {
     })();
   }, [currentUser]);
 
-  useEvents((event) => {
-    if (event.key === "LoginSuccess") {
-      reloadUser();
-    }
+  useEvent("LoginSuccess", () => {
+    reloadUser();
   });
 
   const onSubmit = async (data: FormData) => {

@@ -1,5 +1,5 @@
 import { CurrentUserContext, ProtectedRoute } from "@components";
-import { command, useEvents } from "@data";
+import { command, useEvent } from "@data";
 import { getFormDataStringValue } from "@utils";
 import { useContext, useEffect } from "react";
 import { Form, useNavigate } from "react-router";
@@ -28,10 +28,8 @@ export const Register = () => {
     })();
   }, [currentUser]);
 
-  useEvents((event) => {
-    if (event.key === "RegisterSuccess") {
-      reloadUser();
-    }
+  useEvent("RegisterSuccess", () => {
+    reloadUser();
   });
 
   return (

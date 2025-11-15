@@ -2,6 +2,7 @@ import { Account } from "@ynab-plus/domain";
 import { useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
+import { useEvent } from "./use-event.ts";
 
 export const useAccounts = () => {
   const [isPending, startTransition] = useTransition();
@@ -16,6 +17,10 @@ export const useAccounts = () => {
       setAccounts(await command("ListAccountsCommand", undefined));
     });
   }, []);
+
+  useEvent("AccountsSynced", (data) => {
+    setAccounts(data);
+  });
 
   return { isPending, accounts };
 };

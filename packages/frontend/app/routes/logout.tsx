@@ -1,5 +1,5 @@
 import { CurrentUserContext, ProtectedRoute } from "@components";
-import { command, useEvents } from "@data";
+import { command, useEvent } from "@data";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 
@@ -17,10 +17,8 @@ export const Logout = () => {
     })();
   }, [currentUser]);
 
-  useEvents((event) => {
-    if (event.key === "LogoutSuccess") {
-      reloadUser();
-    }
+  useEvent("LogoutSuccess", () => {
+    reloadUser();
   });
 
   return (
