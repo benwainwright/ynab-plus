@@ -14,6 +14,9 @@ export interface Commands {
     };
     response: {
       status: "connected";
+      expiry: Date;
+      refreshed: Date | undefined;
+      created: Date;
     };
   };
   CheckOauthIntegrationStatusCommand: {
@@ -23,6 +26,9 @@ export interface Commands {
     response:
       | {
           status: "connected";
+          expiry: Date;
+          refreshed: Date | undefined;
+          created: Date;
         }
       | {
           status: "not_connected";

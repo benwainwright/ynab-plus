@@ -4,6 +4,9 @@ import { command } from "./command.ts";
 
 type Oauth2IntegrationStatusConnected = {
   status: "connected";
+  expiry: Date;
+  refreshed: Date | undefined;
+  created: Date;
 };
 
 type Oauth2IntegrationStatusNeedsRedirect = {
@@ -15,7 +18,7 @@ type Oauth2IntegrationStatusLoading = {
   status: "loading";
 };
 
-type Oauth2IntegrationStatus =
+export type Oauth2IntegrationStatus =
   | Oauth2IntegrationStatusConnected
   | Oauth2IntegrationStatusLoading
   | Oauth2IntegrationStatusNeedsRedirect;

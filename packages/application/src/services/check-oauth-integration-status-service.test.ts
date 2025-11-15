@@ -111,6 +111,11 @@ describe("check oauth-integration-status-service", () => {
       const response = await service.doHandle(context);
 
       expect(response.status).toEqual("connected");
+      if (response.status === "connected") {
+        expect(response.created).toEqual(mockToken.created);
+        expect(response.refreshed).toEqual(mockToken.refreshed);
+        expect(response.expiry).toEqual(mockToken.expiry);
+      }
       expect(save).not.toHaveBeenCalled();
     } finally {
       vi.useRealTimers();

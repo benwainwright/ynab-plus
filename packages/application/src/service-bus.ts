@@ -44,10 +44,20 @@ export class ServiceBus implements IServiceBus {
       service: service.commandName,
     });
 
-    return await service.doHandle({
+    const response = await service.doHandle({
       command,
       eventBus: this.eventBus,
       currentUserCache: this.currentUserCache,
     });
+
+    this.logger.debug(
+      `Service ${service.commandName} returned response, ${JSON.stringify(response)}`,
+      {
+        ...LOG_CONTEXT,
+        service: service.commandName,
+      },
+    );
+
+    return response;
   }
 }

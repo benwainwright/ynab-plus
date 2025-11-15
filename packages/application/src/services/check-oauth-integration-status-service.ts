@@ -29,7 +29,13 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     currentUserCache,
     command,
   }: IHandleContext<"CheckOauthIntegrationStatusCommand">): Promise<
-    { status: "connected" } | { status: "not_connected"; redirectUrl: string }
+    | {
+        status: "connected";
+        expiry: Date;
+        refreshed: Date | undefined;
+        created: Date;
+      }
+    | { status: "not_connected"; redirectUrl: string }
   > {
     const currentUser = await currentUserCache.require();
 
@@ -60,6 +66,9 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
     return {
       status: "connected",
+      refreshed: token.refreshed,
+      expiry: token.expiry,
+      created: token.created,
     };
   }
 }

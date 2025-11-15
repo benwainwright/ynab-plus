@@ -59,6 +59,9 @@ describe("generate new oauth token service", () => {
     const result = await service.doHandle(context);
 
     expect(result.status).toEqual("connected");
+    expect(result.created).toEqual(mockToken.created);
+    expect(result.expiry).toEqual(mockToken.expiry);
+    expect(result.refreshed).toEqual(mockToken.refreshed);
     expect(save).toHaveBeenCalledWith(mockToken);
   });
 });

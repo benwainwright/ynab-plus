@@ -30,6 +30,9 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     },
   }: IHandleContext<"GenerateNewOauthTokenCommand">): Promise<{
     status: "connected";
+    expiry: Date;
+    refreshed: Date | undefined;
+    created: Date;
   }> {
     this.logger.silly(
       `Generating new oauth token for provider ${provider} with code ${code}`,
@@ -50,6 +53,9 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     return {
       status: "connected",
+      refreshed: token.refreshed,
+      expiry: token.expiry,
+      created: token.created,
     };
   }
 }

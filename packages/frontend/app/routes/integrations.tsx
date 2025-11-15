@@ -9,15 +9,13 @@ export const Integrations = () => {
           <tr>
             <th>Name</th>
             <th>Status</th>
+            <th>Created</th>
+            <th>Refreshed</th>
+            <th>Expiry</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>YNAB</td>
-            <td>
-              <IntegrationStatus provider="ynab" />
-            </td>
-          </tr>
+          <IntegrationStatus provider="ynab" />
         </tbody>
       </table>
     </ProtectedRoute>
