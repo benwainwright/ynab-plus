@@ -1,8 +1,8 @@
 import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { Account, OauthToken } from "@ynab-plus/domain";
+import { Account } from "@ynab-plus/domain";
 import { describe, expect, it } from "vitest";
-import { Sqlite3AccountRepository } from "./sqlite-account-repository.ts";
 
+import { Sqlite3AccountRepository } from "./sqlite-account-repository.ts";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 describe("the account repository", () => {

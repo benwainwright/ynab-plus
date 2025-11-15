@@ -1,4 +1,5 @@
 export type { ICommandMessage } from "../../../domain/src/i-command-message.ts";
+export type { IAccountRepository } from "./i-account-repository.ts";
 export type { IEventBus } from "./i-event-bus.ts";
 export {
   type IEventListener,
@@ -21,4 +22,3 @@ export type { ISingleItemStore } from "./i-single-item-store.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export type { NewTokenRequesterFactory } from "./new-token-requester-factory.ts";
 export type { ServiceBusFactory } from "./service-bus-factory.ts";
-export type { IAccountRepository } from "./i-account-repository.ts";
