@@ -16,6 +16,15 @@
       "path": "./packages/bootstrap"
     },
     {
+      "path": "./packages/sqlite-adapters"
+    },
+    {
+      "path": "./packages/integration-adapters"
+    },
+    {
+      "path": "./packages/node-adapters"
+    },
+    {
       "path": "./packages/domain"
     },
     {
@@ -23,9 +32,6 @@
     },
     {
       "path": "./packages/frontend"
-    },
-    {
-      "path": "./packages/infrastructure"
     },
     {
       "path": "./packages/test-helpers"

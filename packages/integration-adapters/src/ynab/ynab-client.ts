@@ -1,8 +1,7 @@
+import { HttpError } from "@errors";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { Account, type OauthToken } from "@ynab-plus/domain";
 import z from "zod";
-
-import { HttpError } from "../http-error.ts";
 
 const LOG_CONTEXT = { context: "ynab-client" };
 

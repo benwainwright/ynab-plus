@@ -29,9 +29,9 @@ export interface IInfrastructurePorts {
     accountsFetcher: IAccountsFetcher;
     sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
     userRepository: IRepository<User>;
+    oauthTokenRepository: IOauthTokenRepository;
   };
   oauth: {
-    oauthTokenRepository: IOauthTokenRepository;
     newTokenRequesterFactory: NewTokenRequesterFactory;
     oauthCheckerFactory: IOauthCheckerFactory;
   };

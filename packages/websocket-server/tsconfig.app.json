@@ -14,6 +14,15 @@
     },
     {
       "path": "../bootstrap"
+    },
+    {
+      "path": "../integration-adapters"
+    },
+    {
+      "path": "../sqlite-adapters"
+    },
+    {
+      "path": "../node-adapters"
     }
   ],
   "include": ["src/**/*.ts", "./start.ts"],

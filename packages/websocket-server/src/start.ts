@@ -1,6 +1,8 @@
 import { composeApplicationLayer } from "@ynab-plus/app";
 import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
-import { composeDataLayer } from "@ynab-plus/infrastructure";
+import { compose as composeIntegrationAdapters } from "@ynab-plus/integration-adapters";
+import { compose as composeNodeAdapters } from "@ynab-plus/node-adapters";
+import { compose as composeSqliteAdapters } from "@ynab-plus/sqlite-adapters";
 
 import { composeWebApp } from "./compose.ts";
 
@@ -15,10 +17,41 @@ const bootstrapper = new Bootstrapper({
   logger,
 });
 
-const dataLayer = await composeDataLayer(bootstrapper, logger);
+const { eventBus, sessionStorage, uuidGenerator, hashValidator } =
+  composeNodeAdapters(bootstrapper, logger);
+
+const { oauthTokenRepository, userRepository, accountsRepository } =
+  composeSqliteAdapters(bootstrapper, logger);
+
+const { ynabClient, oauthClientFactory } = composeIntegrationAdapters(
+  bootstrapper,
+  logger,
+);
 
 const applicationLayer = composeApplicationLayer(
-  dataLayer,
+  {
+    misc: {
+      uuidGenerator,
+    },
+    messaging: {
+      eventBus,
+    },
+    auth: {
+      passwordHasher: hashValidator,
+      passwordVerifier: hashValidator,
+    },
+    oauth: {
+      oauthCheckerFactory: oauthClientFactory,
+      newTokenRequesterFactory: oauthClientFactory,
+    },
+    data: {
+      accountsFetcher: ynabClient,
+      sessionStorage,
+      userRepository,
+      accountsRepo: accountsRepository,
+      oauthTokenRepository,
+    },
+  },
   logger,
   bootstrapper,
 );

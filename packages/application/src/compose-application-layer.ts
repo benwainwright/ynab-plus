@@ -24,13 +24,15 @@ const LOG_CONTEXT = { context: "compose-application-layer" };
 export const composeApplicationLayer = (
   {
     messaging: { eventBus },
-    data: { userRepository, sessionStorage, accountsFetcher, accountsRepo },
-    auth: { passwordHasher, passwordVerifier },
-    oauth: {
+    data: {
+      userRepository,
+      sessionStorage,
+      accountsFetcher,
+      accountsRepo,
       oauthTokenRepository,
-      oauthCheckerFactory,
-      newTokenRequesterFactory,
     },
+    auth: { passwordHasher, passwordVerifier },
+    oauth: { oauthCheckerFactory, newTokenRequesterFactory },
   }: IInfrastructurePorts,
   logger: ILogger,
   bootstrapper: IBootstrapper,

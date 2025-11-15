@@ -1,0 +1,16 @@
+{
+  "name": "@ynab-plus/bun-adapters",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@ynab-plus/app": "workspace:*",
+    "zod": "4.1.12"
+  }
+}

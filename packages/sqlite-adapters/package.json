@@ -1,5 +1,5 @@
 {
-  "name": "@ynab-plus/infrastructure",
+  "name": "@ynab-plus/sqlite-adapters",
   "type": "module",
   "version": "1.0.0",
   "exports": {
@@ -12,17 +12,15 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/better-sqlite3": "^7.6.13",
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
-    "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.4.1",
-    "vitest-mock-extended": "^3.1.0",
-    "zod": "^4.1.12"
+    "better-sqlite3": "12.4.1",
+    "zod": "4.1.12"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1"
+    "@types/better-sqlite3": "7.6.13",
+    "vitest-mock-extended": "3.1.0",
+    "@types/node": "22.19.1"
   }
 }
