@@ -1,28 +1,25 @@
 import { getServices } from "@services";
-import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
 import { getRequestFactory, type IInfrastructurePorts } from "@core";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 
-export const composeApplicationLayer = (
-  {
-    misc: { taskScheduler },
-    messaging: { eventBus },
-    data: {
-      userRepository,
-      sessionStorage,
-      accountsFetcher,
-      accountsRepository,
-      oauthTokenRepository,
-    },
-    auth: { passwordHasher, passwordVerifier },
-    oauth: { oauthCheckerFactory, newTokenRequesterFactory },
-  }: IInfrastructurePorts,
-  logger: ILogger,
-  bootstrapper: IBootstrapper,
-) => {
+export const composeApplicationLayer = ({
+  taskScheduler,
+  eventBus,
+  userRepository,
+  sessionStorage,
+  accountsFetcher,
+  accountsRepository,
+  oauthTokenRepository,
+  passwordHasher,
+  passwordVerifier,
+  oauthCheckerFactory,
+  newTokenRequesterFactory,
+  logger,
+  bootstrapper,
+}: IInfrastructurePorts) => {
   logger.info(`Composing application layer`, LOG_CONTEXT);
 
   bootstrapper.addInitStep(async () => {

@@ -39,34 +39,22 @@ export const buildApplication = ({
     logger,
   );
 
-  const applicationLayer = composeApplicationLayer(
-    {
-      misc: {
-        taskScheduler: tasksRepository,
-        uuidGenerator,
-      },
-      messaging: {
-        eventBus,
-      },
-      auth: {
-        passwordHasher: hashValidator,
-        passwordVerifier: hashValidator,
-      },
-      oauth: {
-        oauthCheckerFactory: oauthClientFactory,
-        newTokenRequesterFactory: oauthClientFactory,
-      },
-      data: {
-        accountsFetcher: ynabClient,
-        sessionStorage,
-        userRepository,
-        accountsRepo: accountsRepository,
-        oauthTokenRepository,
-      },
-    },
+  const applicationLayer = composeApplicationLayer({
+    taskScheduler: tasksRepository,
+    uuidGenerator,
+    eventBus,
+    passwordHasher: hashValidator,
+    passwordVerifier: hashValidator,
+    oauthCheckerFactory: oauthClientFactory,
+    newTokenRequesterFactory: oauthClientFactory,
+    accountsFetcher: ynabClient,
+    sessionStorage,
+    userRepository,
+    accountsRepository,
+    oauthTokenRepository,
     logger,
     bootstrapper,
-  );
+  });
 
   return {
     ...applicationLayer,

@@ -12,29 +12,22 @@ import type {
   IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import type { IUser, User } from "@ynab-plus/domain";
 
 export interface IInfrastructurePorts {
-  messaging: {
-    eventBus: IEventBus;
-  };
-  misc: {
-    taskScheduler: ITaskScheduler;
-    uuidGenerator: IUUIDGenerator;
-  };
-  auth: {
-    passwordHasher: IPasswordHasher;
-    passwordVerifier: IPasswordVerifier;
-  };
-  data: {
-    accountsRepository: IAccountRepository;
-    accountsFetcher: IAccountsFetcher;
-    sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
-    userRepository: IRepository<User>;
-    oauthTokenRepository: IOauthTokenRepository;
-  };
-  oauth: {
-    newTokenRequesterFactory: NewTokenRequesterFactory;
-    oauthCheckerFactory: IOauthCheckerFactory;
-  };
+  logger: ILogger;
+  bootstrapper: IBootstrapper;
+  eventBus: IEventBus;
+  taskScheduler: ITaskScheduler;
+  uuidGenerator: IUUIDGenerator;
+  passwordHasher: IPasswordHasher;
+  passwordVerifier: IPasswordVerifier;
+  accountsRepository: IAccountRepository;
+  accountsFetcher: IAccountsFetcher;
+  sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
+  userRepository: IRepository<User>;
+  oauthTokenRepository: IOauthTokenRepository;
+  newTokenRequesterFactory: NewTokenRequesterFactory;
+  oauthCheckerFactory: IOauthCheckerFactory;
 }
