@@ -22,7 +22,7 @@ export const NavBar = () => {
               key={`nav-bar-${key}`}
               component={Link}
               to={value.isIndex ? "" : key}
-              label={key}
+              label={`${key.charAt(0).toLocaleUpperCase()}${key.slice(1)}`}
               leftSection={value.sidebarIcon ? value.sidebarIcon : undefined}
             />
           ))}
