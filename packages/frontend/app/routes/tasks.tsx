@@ -15,7 +15,7 @@ export const Tasks = () => {
                 <Table.Th>User</Table.Th>
                 <Table.Th>Name</Table.Th>
                 <Table.Th>Command</Table.Th>
-                <Table.Th>Frequencey</Table.Th>
+                <Table.Th>Frequency</Table.Th>
                 <Table.Th>Data</Table.Th>
               </Table.Tr>
             </Table.Thead>

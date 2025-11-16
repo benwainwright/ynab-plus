@@ -8,7 +8,7 @@ export const LOG_CONTEXT = { context: "service-bus" };
 
 export class ServiceBus implements IServiceBus {
   public constructor(
-    private services: AbstractApplicationService<keyof Commands>[],
+    private services: AbstractApplicationService[],
     private eventBus: IEventBus,
     private currentUserCache: ISingleItemStore<User>,
     private logger: ILogger,
