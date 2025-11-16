@@ -5,7 +5,7 @@ export interface ITaskScheduler {
   updateTask(task: RegularTask): Promise<void>;
   deleteTask(task: RegularTask): Promise<void>;
   getTask(id: string): Promise<RegularTask | undefined>;
-  getTasks(offset: number, limit: number): Promise<RegularTask[]>;
+  getTasks(offset: number, limit?: number): Promise<RegularTask[]>;
   getUserTasks(
     userId: string,
     offset: number,

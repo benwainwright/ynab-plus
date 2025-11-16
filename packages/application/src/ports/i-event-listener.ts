@@ -21,7 +21,9 @@ export interface IEventListener<TEvents> {
 
   on<TKey extends keyof TEvents>(
     key: TKey,
-    callback: (data: IEventPacket<TEvents, TKey>["data"]) => void,
+    callback: (
+      data: IEventPacket<TEvents, TKey>["data"],
+    ) => void | Promise<void>,
   ): string;
 
   [Symbol.dispose](): void;

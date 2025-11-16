@@ -1,13 +1,8 @@
 import { ServiceNotFoundError } from "@errors";
-import type {
-  ICommandMessage,
-  IEventBus,
-  IServiceBus,
-  ISingleItemStore,
-} from "@ports";
+import type { IEventBus, IServiceBus, ISingleItemStore } from "@ports";
 import type { AbstractApplicationService } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { Commands, User } from "@ynab-plus/domain";
+import type { Command, Commands, User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "service-bus" };
 
@@ -24,7 +19,7 @@ export class ServiceBus implements IServiceBus {
   }
 
   public async handleCommand<TKey extends keyof Commands>(
-    command: ICommandMessage,
+    command: Command,
   ): Promise<Commands[TKey]["response"]> {
     this.logger.debug(`Command receieved, locating service`, {
       ...LOG_CONTEXT,

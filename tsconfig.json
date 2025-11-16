@@ -28,7 +28,7 @@
       "path": "./packages/domain"
     },
     {
-      "path": "./packages/websocket-server"
+      "path": "./packages/server"
     },
     {
       "path": "./packages/frontend"

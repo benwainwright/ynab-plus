@@ -28,4 +28,8 @@ export const regularTaskSchema = z.object({
   command: schedulableTasksSchema,
 });
 
-export type IRegularTask = z.output<typeof regularTaskSchema>;
+export type IRegularTask<TTaskKey extends SchedulableTask> = z.output<
+  typeof regularTaskSchema
+> & {
+  command: TTaskKey;
+};

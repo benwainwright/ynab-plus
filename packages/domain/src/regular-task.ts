@@ -1,3 +1,5 @@
+import { Command } from "./command.ts";
+import type { Commands } from "./commands.ts";
 import {
   regularTaskSchema,
   type IRegularTask,
@@ -6,8 +8,10 @@ import {
 
 import type { ISerialisable } from "./i-serialisable.ts";
 
-export class RegularTask
-  implements IRegularTask, ISerialisable<IRegularTask, "regularTask">
+export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
+  implements
+    IRegularTask<TTaskKey>,
+    ISerialisable<IRegularTask<TTaskKey>, "regularTask">
 {
   public readonly id: string;
   public readonly onBehalfOf: string;
@@ -21,9 +25,9 @@ export class RegularTask
   public readonly weekDay: string;
   public readonly name: string;
   public readonly description: string;
-  public readonly command: SchedulableTask;
+  public readonly command: TTaskKey;
 
-  public constructor(config: IRegularTask) {
+  public constructor(config: IRegularTask<TTaskKey>) {
     this.id = config.id;
     this.created = config.created;
     this.lastExecution = config.lastExecution;
@@ -39,8 +43,21 @@ export class RegularTask
     this.command = config.command;
   }
 
-  public toObject(): Omit<IRegularTask, "toObject"> & { $type: "regularTask" } {
+  public toObject(): Omit<IRegularTask<TTaskKey>, "toObject"> & {
+    $type: "regularTask";
+  } {
     return this;
+  }
+
+  public getCronString() {
+    return `${this.minute} ${this.hour} ${this.day} ${this.month} ${this.weekDay}`;
+  }
+
+  public getCommand() {
+    return new Command(
+      this.command,
+      JSON.parse(this.data ?? "{}") as Commands[TTaskKey]["request"],
+    );
   }
 
   public static fromObject(thing: unknown) {

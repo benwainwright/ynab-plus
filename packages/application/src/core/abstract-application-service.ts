@@ -1,7 +1,7 @@
 import { NotAuthorisedError } from "@errors";
-import type { ICommandMessage, IHandleContext, ISingleItemStore } from "@ports";
+import type { IHandleContext, ISingleItemStore } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { Commands, Permission, User } from "@ynab-plus/domain";
+import type { Command, Commands, Permission, User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "abstract-application-service" };
 
@@ -11,7 +11,7 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands> {
   public abstract readonly commandName: TKey;
   public abstract readonly requiredPermissions: Permission[];
 
-  public canHandle(command: ICommandMessage): command is ICommandMessage<TKey> {
+  public canHandle(command: Command): command is Command<TKey> {
     const result = command.key === this.commandName;
 
     this.logger.silly(

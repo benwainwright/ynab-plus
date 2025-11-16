@@ -3,16 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite-node src/start.ts"
+    "dev": "vite-node src/start-websocker-server.ts"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
-    "@ynab-plus/sqlite-adapters": "workspace:*",
-    "@ynab-plus/node-adapters": "workspace:*",
-    "@ynab-plus/integration-adapters": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
+    "@ynab-plus/domain": "workspace:*",
+    "@ynab-plus/integration-adapters": "workspace:*",
+    "@ynab-plus/node-adapters": "workspace:*",
+    "@ynab-plus/sqlite-adapters": "workspace:*",
     "cookie": "^1.0.2",
     "isbot": "^5.1.31",
+    "node-cron": "^4.2.1",
     "uuid": "^13.0.0",
     "winston": "^3.18.3",
     "ws": "^8.18.3",

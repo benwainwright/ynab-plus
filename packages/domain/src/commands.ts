@@ -1,15 +1,21 @@
 import type { IAccount } from "./i-account.ts";
-import type { IRegularTask } from "./i-regular-tasks.ts";
 import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
+import type { RegularTask } from "./regular-task.ts";
 
 export interface Commands {
   ListScheduledTasksCommand: {
     request: {
       offset: number;
-      limit: number;
+      limit: number | undefined;
     };
-    response: IRegularTask[];
+    response: RegularTask[];
+  };
+  DeleteScheduledTaskCommand: {
+    request: {
+      id: string;
+    };
+    response: undefined;
   };
   SyncAccountsCommand: {
     request: { force: boolean };

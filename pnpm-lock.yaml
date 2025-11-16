@@ -296,6 +296,64 @@ importers:
         specifier: 3.1.0
         version: 3.1.0(typescript@5.9.3)(vitest@4.0.8(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6)))
 
+  packages/server:
+    dependencies:
+      '@ynab-plus/app':
+        specifier: workspace:*
+        version: link:../application
+      '@ynab-plus/bootstrap':
+        specifier: workspace:*
+        version: link:../bootstrap
+      '@ynab-plus/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@ynab-plus/integration-adapters':
+        specifier: workspace:*
+        version: link:../integration-adapters
+      '@ynab-plus/node-adapters':
+        specifier: workspace:*
+        version: link:../node-adapters
+      '@ynab-plus/sqlite-adapters':
+        specifier: workspace:*
+        version: link:../sqlite-adapters
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
+      isbot:
+        specifier: ^5.1.31
+        version: 5.1.32
+      node-cron:
+        specifier: ^4.2.1
+        version: 4.2.1
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
+      winston:
+        specifier: ^3.18.3
+        version: 3.18.3
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.19.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+      vite:
+        specifier: 7.2.2
+        version: 7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))
+      vite-node:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))
+      vite-tsconfig-paths:
+        specifier: 5.1.4
+        version: 5.1.4(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6)))
+
   packages/sqlite-adapters:
     dependencies:
       '@ynab-plus/app':
@@ -332,58 +390,6 @@ importers:
       vitest-mock-extended:
         specifier: ^3.1.0
         version: 3.1.0(typescript@5.9.3)(vitest@4.0.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6)))
-
-  packages/websocket-server:
-    dependencies:
-      '@ynab-plus/app':
-        specifier: workspace:*
-        version: link:../application
-      '@ynab-plus/bootstrap':
-        specifier: workspace:*
-        version: link:../bootstrap
-      '@ynab-plus/integration-adapters':
-        specifier: workspace:*
-        version: link:../integration-adapters
-      '@ynab-plus/node-adapters':
-        specifier: workspace:*
-        version: link:../node-adapters
-      '@ynab-plus/sqlite-adapters':
-        specifier: workspace:*
-        version: link:../sqlite-adapters
-      cookie:
-        specifier: ^1.0.2
-        version: 1.0.2
-      isbot:
-        specifier: ^5.1.31
-        version: 5.1.32
-      uuid:
-        specifier: ^13.0.0
-        version: 13.0.0
-      winston:
-        specifier: ^3.18.3
-        version: 3.18.3
-      ws:
-        specifier: ^8.18.3
-        version: 8.18.3
-      zod:
-        specifier: ^4.1.12
-        version: 4.1.12
-    devDependencies:
-      '@types/node':
-        specifier: ^22
-        version: 22.19.1
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.3
-      vite:
-        specifier: 7.2.2
-        version: 7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))
-      vite-node:
-        specifier: ^5.0.0
-        version: 5.0.0(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))
-      vite-tsconfig-paths:
-        specifier: 5.1.4
-        version: 5.1.4(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6)))
 
 packages:
 
@@ -2411,6 +2417,10 @@ packages:
   node-addon-api@8.5.0:
     resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
     engines: {node: ^18 || ^20 || >= 21}
+
+  node-cron@4.2.1:
+    resolution: {integrity: sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==}
+    engines: {node: '>=6.0.0'}
 
   node-gyp-build@4.8.4:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
@@ -5547,6 +5557,8 @@ snapshots:
       semver: 7.7.3
 
   node-addon-api@8.5.0: {}
+
+  node-cron@4.2.1: {}
 
   node-gyp-build@4.8.4: {}
 

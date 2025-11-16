@@ -6,7 +6,10 @@
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "paths": {}
+    "paths": {
+      "@core": ["./src/core/index.ts"],
+      "@websocket-server": ["./src/websocker-server/index.ts"]
+    }
   },
   "references": [
     {
