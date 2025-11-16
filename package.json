@@ -12,7 +12,7 @@
     "dev": "pnpm run dev:websocket & pnpm run dev:frontend",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
-    "test": "pnpm run --filter '*' test",
+    "test": "vitest",
     "type-check": "tsc --build",
     "type-check:watch": "tsc --build --watch",
     "prepare": "husky",
