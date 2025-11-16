@@ -1,4 +1,4 @@
-import { CurrentUserContext, ProtectedRoute } from "@components";
+import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -22,9 +22,9 @@ export const Logout = () => {
   });
 
   return (
-    <ProtectedRoute routeName="logout">
+    <Page routeName="logout">
       <p>Logging out...</p>
-    </ProtectedRoute>
+    </Page>
   );
 };
 

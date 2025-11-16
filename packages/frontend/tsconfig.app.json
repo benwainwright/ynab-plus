@@ -16,6 +16,7 @@
       "@routes": ["./app/routes.ts"],
       "@utils": ["./app/utils/index.ts"],
       "@middleware": ["./app/middleware/index.ts"],
+      "@config": ["./app/config/index.ts"],
       "@data": ["./app/data/index.ts"],
       "@errors": ["./app/errors/index.ts"],
       "@components": ["./app/components/index.ts"]

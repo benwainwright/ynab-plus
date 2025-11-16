@@ -1,12 +1,24 @@
 import type { Permission } from "@ynab-plus/domain";
+import { type ReactElement } from "react";
+import {
+  IconLogout,
+  IconLogin,
+  IconCurrencyPound,
+  IconUser,
+  IconHome,
+  IconPlug,
+  IconUsers,
+} from "@tabler/icons-react";
 
 export interface RouteSpec {
   isIndex?: boolean;
   path?: string;
+  header?: string;
   hideFromMenu?: boolean;
   component: string;
   permissionsRequired: Permission[];
   authFailRedirect: string;
+  sidebarIcon?: ReactElement;
 }
 
 export const routesList = {
@@ -15,31 +27,37 @@ export const routesList = {
     isIndex: true,
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/login",
+    sidebarIcon: <IconHome size={16} stroke={1.5} />,
   },
   login: {
     component: "routes/login.tsx",
     permissionsRequired: ["public"],
     authFailRedirect: "/",
+    sidebarIcon: <IconLogin size={16} stroke={1.5} />,
   },
   register: {
     component: "routes/register.tsx",
     permissionsRequired: ["public"],
     authFailRedirect: "/",
+    sidebarIcon: <IconUser size={16} stroke={1.5} />,
   },
   integrations: {
     component: "routes/integrations.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/login",
+    sidebarIcon: <IconPlug size={16} stroke={1.5} />,
   },
   accounts: {
     component: "routes/accounts.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/",
+    sidebarIcon: <IconCurrencyPound size={16} stroke={1.5} />,
   },
   users: {
     component: "routes/users.tsx",
     permissionsRequired: ["admin"],
     authFailRedirect: "/",
+    sidebarIcon: <IconUsers size={16} stroke={1.5} />,
   },
   editUser: {
     component: "routes/edit-user.tsx",
@@ -52,5 +70,6 @@ export const routesList = {
     component: "routes/logout.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/",
+    sidebarIcon: <IconLogout size={16} stroke={1.5} />,
   },
 } as const satisfies Record<string, RouteSpec>;

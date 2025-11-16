@@ -1,4 +1,5 @@
-import "./app.css";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 import {
   isRouteErrorResponse,
@@ -8,31 +9,32 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from "@mantine/core";
 
 import type { Route } from "./+types/root.ts";
+import { Notifications } from "@mantine/notifications";
 
-export const links: Route.LinksFunction = () => [
-  {
-    rel: "stylesheet",
-    href: "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css",
-  },
-];
+export const links: Route.LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" {...mantineHtmlProps}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ColorSchemeScript />
         <Meta />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-        />
         <Links />
       </head>
       <body>
-        {children}
+        <MantineProvider>
+          <Notifications />
+          {children}
+        </MantineProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

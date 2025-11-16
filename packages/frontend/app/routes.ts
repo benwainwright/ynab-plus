@@ -5,7 +5,7 @@ import {
   type RouteConfig,
 } from "@react-router/dev/routes";
 
-import { routesList, type RouteSpec } from "./routes-list.ts";
+import { routesList, type RouteSpec } from "./config/routes-list.tsx";
 
 const list: Record<string, RouteSpec> = routesList;
 

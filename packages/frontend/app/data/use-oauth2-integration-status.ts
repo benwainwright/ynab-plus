@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 
 import { command } from "./command.ts";
 
-type Oauth2IntegrationStatusConnected = {
+export type Oauth2IntegrationStatusConnected = {
   status: "connected";
   expiry: Date;
   refreshed: Date | undefined;
   created: Date;
 };
 
-type Oauth2IntegrationStatusNeedsRedirect = {
+export type Oauth2IntegrationStatusNeedsRedirect = {
   status: "not_connected";
   redirectUrl: string;
 };
 
-type Oauth2IntegrationStatusLoading = {
+export type Oauth2IntegrationStatusLoading = {
   status: "loading";
 };
 
@@ -37,6 +37,7 @@ export const useOauth2IntegrationStatus = (config: { provider: string }) => {
           provider: config.provider,
           code,
         });
+
         setStatus(result);
       } else {
         setStatus(

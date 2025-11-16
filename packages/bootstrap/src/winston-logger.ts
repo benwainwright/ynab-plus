@@ -14,6 +14,10 @@ export const getWinstonLogger = (): ILogger => {
 
   if (process.env["NODE_ENV"] !== "production") {
     const logFormat = winston.format.printf(function (info) {
+      if (info.level === "error") {
+        return `${info.level}: ${String(info.message)} [${String(info["context"])}]`;
+      }
+
       return `${info.level}: ${String(info.message)} [${String(info["context"])}]`;
     });
 

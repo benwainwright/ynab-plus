@@ -1,32 +1,32 @@
-import { Loader, ProtectedRoute } from "@components";
+import { Loader, Page } from "@components";
 import { useAccounts } from "@data";
+import { Table } from "@mantine/core";
 
 export const Transactions = () => {
   const { isPending, accounts } = useAccounts();
   return (
-    <ProtectedRoute routeName="accounts">
-      <h2>Accounts</h2>
+    <Page routeName="accounts">
       <Loader isPending={isPending} data={accounts}>
         {(data) => (
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Type</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
               {data.map((account) => (
-                <tr key={`${account.id}-account-row`}>
-                  <td>{account.name}</td>
-                  <td>{account.type}</td>
-                </tr>
+                <Table.Tr key={`${account.id}-account-row`}>
+                  <Table.Td>{account.name}</Table.Td>
+                  <Table.Td>{account.type}</Table.Td>
+                </Table.Tr>
               ))}
-            </tbody>
-          </table>
+            </Table.Tbody>
+          </Table>
         )}
       </Loader>
-    </ProtectedRoute>
+    </Page>
   );
 };
 

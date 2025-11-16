@@ -1,6 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": ["./vite.config.ts", "./react-router.config.ts"],
+  "files": [
+    "./vite.config.ts",
+    "./react-router.config.ts",
+    "./postcss.config.cjs"
+  ],
   "include": [],
   "compilerOptions": {
     "outDir": ".temp"

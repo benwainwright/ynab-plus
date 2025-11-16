@@ -1,12 +1,25 @@
-import { CurrentUserContext, ProtectedRoute } from "@components";
+import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import { getFormDataStringValue } from "@utils";
+import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+
+interface FormValues {
+  username: string;
+  password: string;
+}
 
 export const Login = () => {
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
   const navigate = useNavigate();
+
+  const form = useForm({
+    initialValues: {
+      username: "",
+      password: "",
+    } satisfies FormValues,
+  });
 
   useEffect(() => {
     void (async () => {
@@ -16,28 +29,39 @@ export const Login = () => {
     })();
   }, [currentUser]);
 
+  const onSubmit = async (values: FormValues) => {
+    await command("LoginCommand", {
+      username: values.username,
+      password: values.password,
+    });
+  };
+
   useEvent("LoginSuccess", () => {
     reloadUser();
   });
 
-  const onSubmit = async (data: FormData) => {
-    await command("LoginCommand", {
-      username: getFormDataStringValue(data, "username"),
-      password: getFormDataStringValue(data, "password"),
-    });
-  };
   return (
-    <ProtectedRoute routeName="login">
-      <form action={onSubmit}>
-        <h2>Login</h2>
-        <input name="username" type="text" placeholder="Username" />
-        <input name="password" type="password" placeholder="Password" />
-        <input type="submit" value="Log in" />
-        <p>
-          Or you can <Link to="/register">register</Link> an account
-        </p>
+    <Page routeName="login">
+      <form method="post" onSubmit={form.onSubmit(onSubmit)}>
+        <TextInput
+          label="Username"
+          placeholder=""
+          key={form.key("username")}
+          {...form.getInputProps("username")}
+        />
+
+        <PasswordInput
+          label="Password"
+          placeholder=""
+          key={form.key("password")}
+          {...form.getInputProps("password")}
+        />
+
+        <Group justify="flex-end" mt="md">
+          <Button type="submit">Login</Button>
+        </Group>
       </form>
-    </ProtectedRoute>
+    </Page>
   );
 };
 

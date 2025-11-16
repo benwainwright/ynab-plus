@@ -36,7 +36,10 @@ export class AppServer {
     });
 
     wss.on("error", (error) => {
-      this.logger.error(`Websocket server error`, { ...LOG_CONTEXT, error });
+      this.logger.error(`Websocket server error ${error}`, {
+        ...LOG_CONTEXT,
+        error,
+      });
     });
 
     wss.on("headers", (headers, request) => {

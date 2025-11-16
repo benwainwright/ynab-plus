@@ -1,67 +1,49 @@
 import { useOauth2IntegrationStatus } from "@data";
-import { DateTime } from "luxon";
-
-const dateFormat = {
-  weekday: "short",
-  month: "short",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-} as const;
+import { Card, Group, LoadingOverlay, Title } from "@mantine/core";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
+import { RedirectButton } from "./redirect-button.tsx";
+import { ConnectedIntegrationStatusBody } from "./connected-integration-status-body.tsx";
 
 interface IntegrationStatusProps {
+  title: string;
   provider: string;
 }
 
-export const IntegrationStatus = ({ provider }: IntegrationStatusProps) => {
+export const IntegrationStatus = ({
+  provider,
+  title,
+}: IntegrationStatusProps) => {
   const { status } = useOauth2IntegrationStatus({
     provider,
   });
 
-  if (status.status === "connected") {
-    return (
-      <tr>
-        <td>YNAB</td>
-        <td>Connected!</td>
-        <td>
-          {DateTime.fromJSDate(new Date(status.created)).toLocaleString(
-            dateFormat,
+  const titleColor = status.status === "connected" ? "green" : "black";
+
+  return (
+    <Card withBorder radius="md" padding="md" maw="30rem" shadow="sm">
+      <LoadingOverlay
+        visible={status.status === "loading"}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+      <Card.Section withBorder inheritPadding py="xs">
+        <Group justify="space-between">
+          <Title style={{ color: titleColor }} order={3}>
+            {title}
+          </Title>
+          {status.status === "connected" ? (
+            <IconCircleCheckFilled size={30} color={titleColor} />
+          ) : (
+            <RedirectButton status={status} />
           )}
-        </td>
-        <td>
-          {status.refreshed
-            ? DateTime.fromJSDate(new Date(status.refreshed)).toLocaleString(
-                dateFormat,
-              )
-            : "N/A"}
-        </td>
-        <td>
-          {DateTime.fromJSDate(new Date(status.expiry)).toLocaleString(
-            dateFormat,
-          )}
-        </td>
-      </tr>
-    );
-  }
+        </Group>
+      </Card.Section>
 
-  if (status.status === "loading") {
-    return (
-      <tr>
-        <td colSpan={5}>Loading</td>
-      </tr>
-    );
-  }
-
-  if (status.redirectUrl) {
-    return (
-      <tr>
-        <td>YNAB</td>
-        <td colSpan={4}>
-          <a href={status.redirectUrl}>connect</a>
-        </td>
-      </tr>
-    );
-  }
-
-  return <>Checking</>;
+      {status.status === "connected" && (
+        <Card.Section py="xs" ml="xs" mt="x">
+          <ConnectedIntegrationStatusBody status={status} />
+        </Card.Section>
+      )}
+    </Card>
+  );
 };

@@ -5,7 +5,6 @@ import { command } from "./command.ts";
 import { useEvent } from "./use-event.ts";
 
 interface ILocalUser {
-  username: string;
   email: string;
   password: string;
   permissions: Permission[];
@@ -17,7 +16,6 @@ export const useUser = (username?: string) => {
   const [user, setUser] = useState<ILocalUser | undefined>();
 
   const mapUser = (user: IUser): ILocalUser => ({
-    username: user.id,
     permissions: user.permissions,
     password: "",
     email: user.email,
@@ -35,9 +33,8 @@ export const useUser = (username?: string) => {
   }, [username]);
 
   const saveUser = useCallback(async () => {
-    console.log({ user });
-    if (user) {
-      await command("UpdateUserCommand", user);
+    if (user && username) {
+      await command("UpdateUserCommand", { ...user, username });
     }
   }, [username, user]);
 

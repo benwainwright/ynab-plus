@@ -1,66 +1,58 @@
-import { useState } from "react";
-
+import { showNotification } from "./show-notification.tsx";
 import { useEvents } from "./use-events.ts";
 
-interface FooterMessage {
-  type: "error" | "info";
-  message: string;
-}
-
-export const useFooterMessage = () => {
-  const [message, setMessage] = useState<FooterMessage | undefined>();
+export const useNotifications = () => {
   useEvents((event) => {
+    console.log(event);
     switch (event.key) {
       case "ApplicationError":
-        setMessage({
+        showNotification({
           type: "error",
           message: event.data.message,
         });
         break;
 
       case "LoginSuccess":
-        setMessage({
-          type: "info",
+        showNotification({
+          type: "success",
           message: "Login Successful",
         });
         break;
 
       case "LoginFail":
-        setMessage({
+        showNotification({
           type: "error",
           message: "Login Failed",
         });
         break;
 
       case "LogoutSuccess":
-        setMessage({
-          type: "info",
+        showNotification({
+          type: "success",
           message: "Logout Successful",
         });
         break;
 
       case "UserUpdated":
-        setMessage({
+        showNotification({
           type: "info",
           message: "User was updated",
         });
         break;
 
       case "RegisterSuccess":
-        setMessage({
-          type: "info",
+        showNotification({
+          type: "success",
           message: "Registration Successful",
         });
         break;
 
       case "NotAuthorisedError":
-        setMessage({
+        showNotification({
           type: "error",
           message: `Could not execute handler ${event.data.handler}. User '${String(event.data.userId)}' permissions: ${event.data.userPermissions.join(", ")}, required: ${event.data.requiredPermissions.join(", ")}`,
         });
         break;
     }
   });
-
-  return message;
 };

@@ -1,11 +1,13 @@
-import { ProtectedRoute } from "@components";
+import { Page } from "@components";
+import { Typography } from "@mantine/core";
 
 const Home = () => {
   return (
-    <ProtectedRoute routeName="home">
-      <h2>Dashboard</h2>
-      <p>You are now logged in</p>
-    </ProtectedRoute>
+    <Page routeName="home">
+      <Typography>
+        <p>You are now logged in</p>
+      </Typography>
+    </Page>
   );
 };
 

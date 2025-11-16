@@ -59,6 +59,10 @@ export class ServerWebsocketClient {
       });
     } catch (error) {
       if (error instanceof AbstractError) {
+        this.logger.error(
+          `${error.message}, ${String(error.stack)}`,
+          LOG_CONTEXT,
+        );
         error.handle(this.eventBus);
         return;
       }

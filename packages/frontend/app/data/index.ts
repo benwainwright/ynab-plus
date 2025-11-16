@@ -5,7 +5,13 @@ export { useAccounts } from "./use-accounts.ts";
 export { useCurrentUser } from "./use-current-user.ts";
 export { useEvent } from "./use-event.ts";
 export { useEvents } from "./use-events.ts";
-export { useFooterMessage } from "./use-footer-message.ts";
-export { useOauth2IntegrationStatus } from "./use-oauth2-integration-status.ts";
+export { useNotifications } from "./use-notifications.ts";
+export {
+  useOauth2IntegrationStatus,
+  type Oauth2IntegrationStatus,
+  type Oauth2IntegrationStatusConnected,
+  type Oauth2IntegrationStatusLoading,
+  type Oauth2IntegrationStatusNeedsRedirect,
+} from "./use-oauth2-integration-status.ts";
 export { useUser } from "./use-user.ts";
 export { useUsers } from "./use-users.ts";

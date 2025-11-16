@@ -1,24 +1,44 @@
-import { CurrentUserContext, ProtectedRoute } from "@components";
+import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import { getFormDataStringValue } from "@utils";
 import { useContext, useEffect } from "react";
-import { Form, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-import type { Route } from "./+types/register.ts";
+import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
-  const data = await request.formData();
-
-  await command("RegisterCommand", {
-    username: getFormDataStringValue(data, "username"),
-    email: getFormDataStringValue(data, "email"),
-    password: getFormDataStringValue(data, "password"),
-  });
+interface FormValues {
+  username: string;
+  email: string;
+  password: string;
+  validatePassword: string;
 }
 
 export const Register = () => {
   const navigate = useNavigate();
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
+
+  const form = useForm({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      validatePassword: "",
+    } satisfies FormValues,
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      validatePassword: (value, values) =>
+        value !== values.password ? "Passwords did not match" : null,
+    },
+  });
+
+  const onSubmit = async (values: FormValues) => {
+    await command("RegisterCommand", {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    });
+  };
 
   useEffect(() => {
     void (async () => {
@@ -33,16 +53,42 @@ export const Register = () => {
   });
 
   return (
-    <ProtectedRoute routeName="register">
-      <Form method="post">
-        <h2>Register</h2>
-        <input name="username" type="text" placeholder="Username" />
-        <input name="email" type="email" placeholder="Email" />
-        <input name="password" type="password" placeholder="Password" />
-        <input name="verify" type="password" placeholder="Verify Password" />
-        <input type="submit" value="Submit" />
-      </Form>
-    </ProtectedRoute>
+    <Page routeName="register">
+      <form method="post" onSubmit={form.onSubmit(onSubmit)}>
+        <TextInput
+          label="Username"
+          placeholder=""
+          key={form.key("username")}
+          {...form.getInputProps("username")}
+        />
+
+        <TextInput
+          label="Email"
+          type="email"
+          placeholder=""
+          key={form.key("email")}
+          {...form.getInputProps("email")}
+        />
+
+        <PasswordInput
+          label="Password"
+          placeholder=""
+          key={form.key("password")}
+          {...form.getInputProps("password")}
+        />
+
+        <PasswordInput
+          label="Verify Password"
+          placeholder=""
+          key={form.key("validatePassword")}
+          {...form.getInputProps("validatePassword")}
+        />
+
+        <Group justify="flex-end" mt="md">
+          <Button type="submit">Submit</Button>
+        </Group>
+      </form>
+    </Page>
   );
 };
 

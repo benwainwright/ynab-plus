@@ -1,24 +1,13 @@
-import { IntegrationStatus, ProtectedRoute } from "@components";
+import { IntegrationStatus, Page } from "@components";
+import { Stack } from "@mantine/core";
 
 export const Integrations = () => {
   return (
-    <ProtectedRoute routeName="integrations">
-      <h2>Integrations</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th>Refreshed</th>
-            <th>Expiry</th>
-          </tr>
-        </thead>
-        <tbody>
-          <IntegrationStatus provider="ynab" />
-        </tbody>
-      </table>
-    </ProtectedRoute>
+    <Page routeName="integrations">
+      <Stack>
+        <IntegrationStatus provider="ynab" title="YNAB" />
+      </Stack>
+    </Page>
   );
 };
 
