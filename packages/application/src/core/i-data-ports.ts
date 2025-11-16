@@ -27,7 +27,7 @@ export interface IInfrastructurePorts {
     passwordVerifier: IPasswordVerifier;
   };
   data: {
-    accountsRepo: IAccountRepository;
+    accountsRepository: IAccountRepository;
     accountsFetcher: IAccountsFetcher;
     sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
     userRepository: IRepository<User>;

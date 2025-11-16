@@ -5,7 +5,9 @@ import type { Command, Commands, Permission, User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "abstract-application-service" };
 
-export abstract class AbstractApplicationService<TKey extends keyof Commands> {
+export abstract class AbstractApplicationService<
+  TKey extends keyof Commands = keyof Commands,
+> {
   public constructor(protected logger: ILogger) {}
 
   public abstract readonly commandName: TKey;

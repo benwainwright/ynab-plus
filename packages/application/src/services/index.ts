@@ -1,13 +1,1 @@
-export { CheckOauthIntegrationStatusService } from "./oauth/check-oauth-integration-status-service.ts";
-export { DisconnectOauthIntegrationService } from "./oauth/disconnect-oauth-integration-service.ts";
-export { GenerateNewOauthTokenService } from "./oauth/generate-new-oauth-token-service.ts";
-export { UpdateUserService } from "./users/update-user-service.ts";
-export { GetCurrentUserService } from "./users/get-current-user-service.ts";
-export { ListUsersService } from "./users/list-users-service.ts";
-export { GetUserService } from "./users/get-user-service.ts";
-export { RegisterUserService } from "./users/register-user-service.ts";
-export { ListAccountsService } from "./accounts/list-accounts-service.ts";
-export { SyncAccountsService } from "./accounts/sync-accounts-service.ts";
-export { LoginService } from "./auth/login-service.ts";
-export { LogoutService } from "./auth/logout-service.ts";
-export { ListScheduledTasksService } from "./tasks/list-scheduled-tasks-service.ts";
+export { getServices } from "./get-services.ts";

@@ -1,23 +1,8 @@
-import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
-import {
-  CheckOauthIntegrationStatusService,
-  DisconnectOauthIntegrationService,
-  GenerateNewOauthTokenService,
-  GetCurrentUserService,
-  GetUserService,
-  ListAccountsService,
-  ListScheduledTasksService,
-  ListUsersService,
-  LoginService,
-  LogoutService,
-  RegisterUserService,
-  SyncAccountsService,
-  UpdateUserService,
-} from "@services";
+import { getServices } from "@services";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
-import { type IInfrastructurePorts, ServiceBus, SessionStorage } from "@core";
+import { getRequestFactory, type IInfrastructurePorts } from "@core";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 
@@ -29,7 +14,7 @@ export const composeApplicationLayer = (
       userRepository,
       sessionStorage,
       accountsFetcher,
-      accountsRepo,
+      accountsRepository,
       oauthTokenRepository,
     },
     auth: { passwordHasher, passwordVerifier },
@@ -42,73 +27,36 @@ export const composeApplicationLayer = (
 
   bootstrapper.addInitStep(async () => {
     logger.debug(`Creating initial admin user`, LOG_CONTEXT);
+
     const bootstrapAdmin = new User({
       id: "admin",
       email: "no-reply@something.com",
       passwordHash: await passwordHasher.hash(`password`),
       permissions: ["user", "admin"],
     });
+
     await userRepository.save(bootstrapAdmin);
   });
 
-  const services = [
-    new GetCurrentUserService(userRepository, logger),
-    new GetUserService(userRepository, logger),
-    new ListUsersService(userRepository, logger),
-    new LoginService(userRepository, passwordVerifier, logger),
-    new LogoutService(logger),
-    new RegisterUserService(userRepository, passwordHasher, logger),
-    new UpdateUserService(userRepository, passwordHasher, logger),
-    new DisconnectOauthIntegrationService(
-      oauthTokenRepository,
-      taskScheduler,
-      logger,
-    ),
-    new CheckOauthIntegrationStatusService(
-      oauthTokenRepository,
-      oauthCheckerFactory,
-      logger,
-    ),
+  const services = getServices({
+    userRepository,
+    oauthCheckerFactory,
+    oauthTokenRepository,
+    taskScheduler,
+    passwordHasher,
+    passwordVerifier,
+    newTokenRequesterFactory,
+    accountsRepository,
+    accountsFetcher,
+    logger,
+  });
 
-    new GenerateNewOauthTokenService(
-      oauthTokenRepository,
-      newTokenRequesterFactory,
-      taskScheduler,
-      logger,
-    ),
+  const serviceBusFactory = getRequestFactory({
+    eventBus,
+    sessionStorage,
+    services,
+    logger,
+  });
 
-    new SyncAccountsService(
-      oauthTokenRepository,
-      accountsFetcher,
-      accountsRepo,
-      logger,
-    ),
-    new ListAccountsService(accountsRepo, logger),
-    new ListScheduledTasksService(taskScheduler, logger),
-  ];
-
-  const requestFactory: ServiceBusFactory = async ({
-    sessionIdRequester,
-  }: {
-    sessionIdRequester: ISessionIdRequester;
-  }) => {
-    logger.silly(`Starting request factory`, LOG_CONTEXT);
-
-    const currentUserCache = new SessionStorage(
-      sessionStorage,
-      sessionIdRequester,
-      logger,
-    );
-
-    const sessionId = await sessionIdRequester.getSessionId();
-    logger.silly(`Child bus created with session id ${sessionId}`, LOG_CONTEXT);
-
-    const childBus = eventBus.child(await sessionIdRequester.getSessionId());
-    return {
-      serviceBus: new ServiceBus(services, childBus, currentUserCache, logger),
-      eventBus: childBus,
-    };
-  };
-
-  return { serviceBusFactory: requestFactory };
+  return { serviceBusFactory };
 };
