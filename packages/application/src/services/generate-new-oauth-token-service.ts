@@ -61,7 +61,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
       id: this.uuidGenerator.getUUID(),
       minute: "0",
       onBehalfOf: "ben",
-      command: "SyncAccountsCommand",
+      command: "CheckOauthIntegrationStatusCommand",
       data: JSON.stringify({ provider }),
       hour: "*",
       day: "*",

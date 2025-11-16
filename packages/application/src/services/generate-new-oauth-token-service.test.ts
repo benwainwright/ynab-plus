@@ -48,7 +48,7 @@ describe("generate new oauth token service", () => {
         id: "foo-uuid",
         minute: "0",
         onBehalfOf: "ben",
-        command: "SyncAccountsCommand",
+        command: "CheckOauthIntegrationStatusCommand",
         data: '{"provider":"ynab"}',
         hour: "*",
         day: "*",

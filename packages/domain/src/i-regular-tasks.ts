@@ -1,9 +1,10 @@
 import z from "zod";
 import type { Commands } from "./commands.ts";
 
-const schedulableTasks = ["SyncAccountsCommand"] as const satisfies Readonly<
-  (keyof Commands)[]
->;
+const schedulableTasks = [
+  "SyncAccountsCommand",
+  "CheckOauthIntegrationStatusCommand",
+] as const satisfies Readonly<(keyof Commands)[]>;
 
 export const schedulableTasksSchema = z.union(
   schedulableTasks.map((task) => z.literal(task)),

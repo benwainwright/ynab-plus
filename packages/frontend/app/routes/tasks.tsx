@@ -13,7 +13,8 @@ export const Tasks = () => {
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>User</Table.Th>
-                <Table.Th>Task</Table.Th>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Command</Table.Th>
                 <Table.Th>Frequencey</Table.Th>
                 <Table.Th>Data</Table.Th>
               </Table.Tr>
@@ -27,7 +28,9 @@ export const Tasks = () => {
                   <Table.Tr key={`${task.id}-user-row`}>
                     <Table.Td>{task.onBehalfOf}</Table.Td>
                     <Table.Td>{task.name}</Table.Td>
+                    <Table.Td>{task.command}</Table.Td>
                     <Table.Td>{cron}</Table.Td>
+                    <Table.Td>{task.data}</Table.Td>
                   </Table.Tr>
                 );
               })}
