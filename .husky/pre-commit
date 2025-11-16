@@ -1,3 +1,3 @@
-bunx lint-staged
-bun run test
-bun type-check
+pnpx lint-staged
+pnpm run test
+pnpm type-check

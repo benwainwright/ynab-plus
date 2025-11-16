@@ -13,7 +13,7 @@
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
     "test": "vitest",
-    "type-check": "tsc --build",
+    "type-check": "pnpm run --filter '*frontend' typegen && tsc --build",
     "type-check:watch": "tsc --build --watch",
     "prepare": "husky",
     "format": "prettier --write ."
