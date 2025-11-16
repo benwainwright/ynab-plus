@@ -35,7 +35,7 @@ export const useNotifications = () => {
 
       case "UserUpdated":
         showNotification({
-          type: "info",
+          type: "success",
           message: "User was updated",
         });
         break;

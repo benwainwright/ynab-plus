@@ -32,15 +32,18 @@ export const useUser = (username?: string) => {
     }
   }, [username]);
 
-  const saveUser = useCallback(async () => {
-    if (user && username) {
-      await command("UpdateUserCommand", { ...user, username });
-    }
-  }, [username, user]);
+  const saveUser = useCallback(
+    async (updatedUser: ILocalUser) => {
+      if (username) {
+        await command("UpdateUserCommand", { ...updatedUser, username });
+      }
+    },
+    [username],
+  );
 
   useEvent("UserUpdated", (updatedUser) => {
     setUser(mapUser(updatedUser));
   });
 
-  return { isPending, user, setUser, saveUser };
+  return { isPending, user, saveUser };
 };

@@ -2,22 +2,33 @@ import { Page } from "@components";
 import { useUser } from "@data";
 import { useParams } from "react-router";
 import { useForm } from "@mantine/form";
-import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import {
+  Button,
+  Chip,
+  Fieldset,
+  Group,
+  PasswordInput,
+  TextInput,
+} from "@mantine/core";
+import { useEffect } from "react";
+import { permissions, type Permission } from "@ynab-plus/domain";
 
 interface FormValues {
   email: string;
   password: string;
+  permissions: Permission[];
   validatePassword: string;
 }
 
 export const EditUser = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { user, setUser, saveUser } = useUser(userId);
+  const { user, saveUser, isPending } = useUser(userId);
 
   const form = useForm({
     initialValues: {
       email: user?.email ?? "",
       password: "",
+      permissions: [] as Permission[],
       validatePassword: "",
     } satisfies FormValues,
 
@@ -28,13 +39,21 @@ export const EditUser = () => {
     },
   });
 
+  useEffect(() => {
+    if (!isPending && user) {
+      form.setValues({
+        email: user.email,
+        permissions: user.permissions,
+      });
+    }
+  }, [isPending]);
+
   const onSubmit = async (values: FormValues) => {
-    setUser({
+    await saveUser({
       email: values.email,
       password: values.password,
-      permissions: [],
+      permissions: values.permissions,
     });
-    await saveUser();
   };
 
   return (
@@ -70,6 +89,43 @@ export const EditUser = () => {
           {...form.getInputProps("validatePassword")}
         />
 
+        <Fieldset mt="md" legend="Permissions" pt="md">
+          <Group>
+            {permissions.map((permission) => (
+              <Chip
+                checked={form.values.permissions.includes(permission)}
+                onChange={(checked) => {
+                  form.setValues((previous) => {
+                    if (
+                      checked &&
+                      !previous.permissions?.includes(permission)
+                    ) {
+                      return {
+                        ...previous,
+                        permissions: [
+                          ...(previous.permissions ?? []),
+                          permission,
+                        ],
+                      };
+                    } else if (!checked) {
+                      return {
+                        ...previous,
+                        permissions:
+                          previous.permissions?.filter(
+                            (thePermission) => thePermission !== permission,
+                          ) ?? [],
+                      };
+                    }
+
+                    return previous;
+                  });
+                }}
+              >
+                {permission}
+              </Chip>
+            ))}
+          </Group>
+        </Fieldset>
         <Group justify="flex-end" mt="md">
           <Button type="submit">Update</Button>
         </Group>
