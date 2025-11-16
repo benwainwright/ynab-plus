@@ -24,8 +24,6 @@ export class ListAccountsService extends AbstractApplicationService<"ListAccount
   }: IHandleContext<"ListAccountsCommand">): Promise<Account[]> {
     const user = await currentUserCache.require();
 
-    const accounts = await this.accounts.getUserAccounts(user.id);
-    console.log(accounts);
-    return accounts;
+    return await this.accounts.getUserAccounts(user.id);
   }
 }

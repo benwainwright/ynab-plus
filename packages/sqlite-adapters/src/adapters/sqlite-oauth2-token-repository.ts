@@ -21,6 +21,14 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     private database: SqliteDatabase,
   ) {}
 
+  public async delete(userId: string, provider: string): Promise<void> {
+    await this.database.runQuery(
+      `DELETE FROM ${await this.tableName.value}
+       WHERE userId = ? AND provider = ?`,
+      [userId, provider],
+    );
+  }
+
   public async create() {
     await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (

@@ -41,7 +41,7 @@ export const IntegrationStatus = ({
 
       {status.status === "connected" && (
         <Card.Section py="xs" ml="xs" mt="x">
-          <ConnectedIntegrationStatusBody status={status} />
+          <ConnectedIntegrationStatusBody status={status} provider={provider} />
         </Card.Section>
       )}
     </Card>

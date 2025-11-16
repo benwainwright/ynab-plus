@@ -3,7 +3,6 @@ import { useEvents } from "./use-events.ts";
 
 export const useNotifications = () => {
   useEvents((event) => {
-    console.log(event);
     switch (event.key) {
       case "ApplicationError":
         showNotification({
@@ -23,6 +22,13 @@ export const useNotifications = () => {
         showNotification({
           type: "error",
           message: "Login Failed",
+        });
+        break;
+
+      case "OauthIntegrationDisconnected":
+        showNotification({
+          type: "info",
+          message: "Integration Disconnected",
         });
         break;
 

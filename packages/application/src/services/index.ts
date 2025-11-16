@@ -1,5 +1,6 @@
 export { AbstractApplicationService } from "./abstract-application-service.ts";
 export { CheckOauthIntegrationStatusService } from "./check-oauth-integration-status-service.ts";
+export { DisconnectOauthIntegrationService } from "./disconnect-oauth-integration-service.ts";
 export { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 export { GetCurrentUserService } from "./get-current-user-service.ts";
 export { GetUserService } from "./get-user-service.ts";

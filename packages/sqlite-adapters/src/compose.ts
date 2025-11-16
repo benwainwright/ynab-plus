@@ -42,5 +42,10 @@ export const compose = (bootstrapper: IBootstrapper, logger: ILogger) => {
     database,
   );
 
+  bootstrapper.addInitStep(async () => {
+    logger.debug(`Creating tokens repository if it doesn't exist`, LOG_CONTEXT);
+    await oauthTokenRepository.create();
+  });
+
   return { oauthTokenRepository, accountsRepository, userRepository };
 };

@@ -1,6 +1,7 @@
 import type { ISessionIdRequester, ServiceBusFactory } from "@ports";
 import {
   CheckOauthIntegrationStatusService,
+  DisconnectOauthIntegrationService,
   GenerateNewOauthTokenService,
   GetCurrentUserService,
   GetUserService,
@@ -58,7 +59,7 @@ export const composeApplicationLayer = (
     new LogoutService(logger),
     new RegisterUserService(userRepository, passwordHasher, logger),
     new UpdateUserService(userRepository, passwordHasher, logger),
-
+    new DisconnectOauthIntegrationService(oauthTokenRepository, logger),
     new CheckOauthIntegrationStatusService(
       oauthTokenRepository,
       oauthCheckerFactory,

@@ -25,6 +25,7 @@ describe("generate new oauth token service", () => {
     const mockTokenRepo: IOauthTokenRepository = {
       get: vi.fn(),
       save,
+      delete: vi.fn(),
     };
 
     const mockToken = new OauthToken({

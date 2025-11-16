@@ -8,6 +8,7 @@ export interface Events {
   AppInitialised: { url: string; port: number };
   AppClosing: undefined;
   CommandResponse: ICommandResponse<keyof Commands>;
+  OauthIntegrationDisconnected: { provider: string };
   SocketOpened: undefined;
   LogoutSuccess: undefined;
   LoginSuccess: undefined;

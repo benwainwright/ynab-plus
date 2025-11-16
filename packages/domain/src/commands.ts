@@ -7,6 +7,10 @@ export interface Commands {
     request: { force: boolean };
     response: { synced: boolean };
   };
+  DisconnectOauthIntegrationCommand: {
+    request: { provider: string };
+    response: undefined;
+  };
   GenerateNewOauthTokenCommand: {
     request: {
       provider: string;

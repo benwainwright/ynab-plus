@@ -15,6 +15,7 @@ describe("check oauth-integration-status-service", () => {
     const mockTokenRepo: IOauthTokenRepository = {
       get: vi.fn().mockResolvedValue(undefined),
       save: vi.fn(),
+      delete: vi.fn(),
     };
 
     const redirectUrl = "foo";
@@ -71,6 +72,7 @@ describe("check oauth-integration-status-service", () => {
       const save = vi.fn();
 
       const mockTokenRepo: IOauthTokenRepository = {
+        delete: vi.fn(),
         get: vi.fn((userId: string, provider: string) => {
           if (userId === "ben" && provider === "ynab") {
             return Promise.resolve(mockToken);
@@ -151,6 +153,7 @@ describe("check oauth-integration-status-service", () => {
       const save = vi.fn();
 
       const mockTokenRepo: IOauthTokenRepository = {
+        delete: vi.fn(),
         get: vi.fn((userId: string, provider: string) => {
           if (userId === "ben" && provider === "ynab") {
             return Promise.resolve(mockFirstToken);
