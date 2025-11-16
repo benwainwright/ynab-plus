@@ -1,9 +1,16 @@
 import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import {
+  Button,
+  Group,
+  PasswordInput,
+  TextInput,
+  Text,
+  Anchor,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 interface FormValues {
   username: string;
@@ -57,9 +64,16 @@ export const Login = () => {
           {...form.getInputProps("password")}
         />
 
-        <Group justify="flex-end" mt="md">
+        <Group mt="md" mb="md">
           <Button type="submit">Login</Button>
         </Group>
+        <Text>
+          Or you can{" "}
+          <Anchor to="/register" component={Link}>
+            register
+          </Anchor>{" "}
+          a new account...
+        </Text>
       </form>
     </Page>
   );

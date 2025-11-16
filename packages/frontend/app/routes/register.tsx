@@ -84,7 +84,7 @@ export const Register = () => {
           {...form.getInputProps("validatePassword")}
         />
 
-        <Group justify="flex-end" mt="md">
+        <Group mt="md">
           <Button type="submit">Submit</Button>
         </Group>
       </form>
