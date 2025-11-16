@@ -18,8 +18,8 @@ export class ServiceBus implements IServiceBus {
     });
   }
 
-  public async handleCommand<TKey extends keyof Commands>(
-    command: Command,
+  public async execute<TKey extends keyof Commands = keyof Commands>(
+    command: Command<TKey>,
   ): Promise<Commands[TKey]["response"]> {
     this.logger.debug(`Command receieved, locating service`, {
       ...LOG_CONTEXT,

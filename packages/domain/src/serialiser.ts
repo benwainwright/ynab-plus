@@ -39,7 +39,7 @@ const serialiseObjectHelper = (data: unknown): unknown => {
   return data;
 };
 
-export const deSerialiseObject = <TEvents>(data: TEvents[keyof TEvents]) => {
+export const deSerialiseObject = (data: unknown) => {
   return deSerialiseObjectHelper(data);
 };
 

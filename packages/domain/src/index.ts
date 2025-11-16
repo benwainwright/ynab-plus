@@ -10,7 +10,7 @@ export { OauthToken } from "./oauth-token.ts";
 export type { Permission } from "./permissions.ts";
 export { permissions } from "./permissions.ts";
 export { serialisableTypes } from "./serialisable-types.ts";
-export { serialiseObject } from "./serialiser.ts";
+export { serialiseObject, deSerialiseObject } from "./serialiser.ts";
 export { User } from "./user.ts";
 export {
   schedulableTasksSchema,

@@ -1,5 +1,5 @@
 import type { IEventListener, IEventPacket, IListener } from "@ynab-plus/app";
-import type { Events } from "@ynab-plus/domain";
+import { type Events, deSerialiseObject } from "@ynab-plus/domain";
 import { v7 } from "uuid";
 
 export class SocketEventListener implements IEventListener<Events> {
@@ -19,7 +19,9 @@ export class SocketEventListener implements IEventListener<Events> {
 
     const listener = (packet: MessageEvent<Events>) => {
       if (packet.type === "message" && typeof packet.data === "string") {
-        const parsed = JSON.parse(packet.data) as IEventPacket;
+        const parsed = deSerialiseObject(
+          JSON.parse(packet.data),
+        ) as IEventPacket;
         callback(parsed);
       }
     };

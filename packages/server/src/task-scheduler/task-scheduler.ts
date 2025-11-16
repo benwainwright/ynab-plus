@@ -27,8 +27,7 @@ export class TaskScheduler {
       limit: undefined,
     });
 
-    const tasks =
-      await this.serviceBus.handleCommand<"ListScheduledTasksCommand">(command);
+    const tasks = await this.serviceBus.execute(command);
 
     this._taskMap = new Map<string, cron.ScheduledTask>(
       tasks.map((task) => [task.id, this.makeCronTask(task, this.serviceBus)]),
@@ -65,7 +64,7 @@ export class TaskScheduler {
   private makeCronTask(task: RegularTask, serviceBus: IServiceBus) {
     return cron.createTask(task.getCronString(), async () => {
       const command = task.getCommand();
-      await serviceBus.handleCommand(command);
+      await serviceBus.execute(command);
     });
   }
 }

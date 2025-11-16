@@ -52,7 +52,8 @@ export class ServerWebsocketClient {
       });
 
       const command = new Command(parsed.key, parsed.data);
-      const response = await this.serviceBus.handleCommand(command);
+
+      const response = await this.serviceBus.execute(command);
 
       this.eventBus.emit("CommandResponse", {
         id: parsed.id,

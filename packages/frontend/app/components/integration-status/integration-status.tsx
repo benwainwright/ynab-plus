@@ -17,8 +17,6 @@ export const IntegrationStatus = ({
     provider,
   });
 
-  const titleColor = status.status === "connected" ? "green" : "black";
-
   return (
     <Card withBorder radius="md" padding="md" maw="30rem" shadow="sm">
       <LoadingOverlay
@@ -28,11 +26,9 @@ export const IntegrationStatus = ({
       />
       <Card.Section withBorder inheritPadding py="xs">
         <Group justify="space-between">
-          <Title style={{ color: titleColor }} order={3}>
-            {title}
-          </Title>
+          <Title order={3}>{title}</Title>
           {status.status === "connected" ? (
-            <IconCircleCheckFilled size={30} color={titleColor} />
+            <IconCircleCheckFilled size={30} color={"green"} />
           ) : (
             <RedirectButton status={status} />
           )}
