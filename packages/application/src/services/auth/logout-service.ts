@@ -1,5 +1,5 @@
-import type { IHandleContext } from "../ports/index.ts";
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import type { IHandleContext } from "@ports";
+import { AbstractApplicationService } from "@core";
 
 export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [

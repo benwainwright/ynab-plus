@@ -5,7 +5,7 @@ import type {
   ISingleItemStore,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import { type IUser,User } from "@ynab-plus/domain";
+import { type IUser, User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 

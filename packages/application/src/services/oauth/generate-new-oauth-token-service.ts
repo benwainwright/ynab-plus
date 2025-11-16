@@ -2,13 +2,13 @@ import type {
   IHandleContext,
   IOauthTokenRepository,
   ITaskScheduler,
-  IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { RegularTask, type Permission } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
+import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
 
 const LOG_CONTEXT = { context: "geenrate-new-oauth-token-service" };
 
@@ -20,7 +20,6 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private newTokenRequesterFactory: NewTokenRequesterFactory,
-    private uuidGenerator: IUUIDGenerator,
     private taskScheduler: ITaskScheduler,
     logger: ILogger,
   ) {
@@ -58,7 +57,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     const refreshTask = new RegularTask({
       name: "Refresh ynab Oauth token",
       description: "",
-      id: this.uuidGenerator.getUUID(),
+      id: getTokenRefreshTaskKey(currentUser.id, provider),
       minute: "0",
       onBehalfOf: "ben",
       command: "CheckOauthIntegrationStatusCommand",

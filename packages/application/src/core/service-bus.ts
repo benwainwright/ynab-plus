@@ -5,13 +5,11 @@ import type {
   IServiceBus,
   ISingleItemStore,
 } from "@ports";
-import type { AbstractApplicationService } from "@services";
+import type { AbstractApplicationService } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Commands, User } from "@ynab-plus/domain";
 
-import { LOG_CONTEXT } from "./services/abstract-application-service.ts";
-
-export const LOGGER_CONTEXT = { context: "service-bus" };
+export const LOG_CONTEXT = { context: "service-bus" };
 
 export class ServiceBus implements IServiceBus {
   public constructor(

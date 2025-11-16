@@ -2,7 +2,6 @@ import {
   type ITaskScheduler,
   type IOauthNewTokenRequester,
   type IOauthTokenRepository,
-  type IUUIDGenerator,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, RegularTask, User } from "@ynab-plus/domain";
@@ -36,16 +35,12 @@ describe("generate new oauth token service", () => {
         delete: vi.fn(),
       };
 
-      const uuidGenerator = mock<IUUIDGenerator>({
-        getUUID: vi.fn().mockReturnValue("foo-uuid"),
-      });
-
       const mockTaskScheduler = mock<ITaskScheduler>();
 
       const task = new RegularTask({
         name: "Refresh ynab Oauth token",
         description: "",
-        id: "foo-uuid",
+        id: "ben-ynab-token-refresh-task",
         minute: "0",
         onBehalfOf: "ben",
         command: "CheckOauthIntegrationStatusCommand",
@@ -84,7 +79,6 @@ describe("generate new oauth token service", () => {
       const service = new GenerateNewOauthTokenService(
         mockTokenRepo,
         factory,
-        uuidGenerator,
         mockTaskScheduler,
         mock(),
       );

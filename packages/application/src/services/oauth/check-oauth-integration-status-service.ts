@@ -10,7 +10,7 @@ export const LOG_CONTEXT = {
   context: "check-oauth-integration-status-service",
 };
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
 
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(

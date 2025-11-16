@@ -1,5 +1,5 @@
 export { composeApplicationLayer } from "./compose-application-layer.ts";
-export { type IInfrastructurePorts } from "./i-data-ports.ts";
+export { type IInfrastructurePorts } from "@core";
 export {
   type IAccountRepository,
   type ICommandMessage,

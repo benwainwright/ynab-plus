@@ -12,20 +12,18 @@ import {
   LogoutService,
   RegisterUserService,
   SyncAccountsService,
+  UpdateUserService,
 } from "@services";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
-import type { IInfrastructurePorts } from "./i-data-ports.ts";
-import { ServiceBus } from "./service-bus.ts";
-import { UpdateUserService } from "./services/update-user-service.ts";
-import { SessionStorage } from "./session-storage.ts";
+import { type IInfrastructurePorts, ServiceBus, SessionStorage } from "@core";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 
 export const composeApplicationLayer = (
   {
-    misc: { taskScheduler, uuidGenerator },
+    misc: { taskScheduler },
     messaging: { eventBus },
     data: {
       userRepository,
@@ -61,7 +59,11 @@ export const composeApplicationLayer = (
     new LogoutService(logger),
     new RegisterUserService(userRepository, passwordHasher, logger),
     new UpdateUserService(userRepository, passwordHasher, logger),
-    new DisconnectOauthIntegrationService(oauthTokenRepository, logger),
+    new DisconnectOauthIntegrationService(
+      oauthTokenRepository,
+      taskScheduler,
+      logger,
+    ),
     new CheckOauthIntegrationStatusService(
       oauthTokenRepository,
       oauthCheckerFactory,
@@ -71,7 +73,6 @@ export const composeApplicationLayer = (
     new GenerateNewOauthTokenService(
       oauthTokenRepository,
       newTokenRequesterFactory,
-      uuidGenerator,
       taskScheduler,
       logger,
     ),

@@ -2,7 +2,7 @@ import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 

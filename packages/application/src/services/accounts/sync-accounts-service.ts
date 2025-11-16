@@ -7,7 +7,7 @@ import type {
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 

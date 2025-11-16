@@ -3,7 +3,7 @@ import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
 
 export class GetCurrentUserService extends AbstractApplicationService<"GetCurrentUserCommand"> {
   public override readonly commandName = "GetCurrentUserCommand";

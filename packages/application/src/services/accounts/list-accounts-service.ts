@@ -2,7 +2,7 @@ import type { IAccountRepository, IHandleContext } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Account } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "./abstract-application-service.ts";
+import { AbstractApplicationService } from "@core";
 
 export class ListAccountsService extends AbstractApplicationService<"ListAccountsCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
