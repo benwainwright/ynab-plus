@@ -11,3 +11,8 @@ export { permissions } from "./permissions.ts";
 export { serialisableTypes } from "./serialisable-types.ts";
 export { serialiseObject } from "./serialiser.ts";
 export { User } from "./user.ts";
+export {
+  schedulableTasksSchema,
+  type IRegularTask,
+} from "./i-regular-tasks.ts";
+export { RegularTask } from "./regular-task.ts";

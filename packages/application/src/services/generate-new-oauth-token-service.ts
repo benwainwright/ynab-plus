@@ -1,10 +1,12 @@
 import type {
   IHandleContext,
   IOauthTokenRepository,
+  ITaskScheduler,
+  IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { Permission } from "@ynab-plus/domain";
+import { RegularTask, type Permission } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "./abstract-application-service.ts";
 
@@ -18,6 +20,8 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private newTokenRequesterFactory: NewTokenRequesterFactory,
+    private uuidGenerator: IUUIDGenerator,
+    private taskScheduler: ITaskScheduler,
     logger: ILogger,
   ) {
     super(logger);
@@ -50,6 +54,24 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     this.logger.silly(`Token exchanged`, LOG_CONTEXT);
 
     await this.tokenRepository.save(token);
+
+    const refreshTask = new RegularTask({
+      name: "Refresh ynab Oauth token",
+      description: "",
+      id: this.uuidGenerator.getUUID(),
+      minute: "0",
+      onBehalfOf: "ben",
+      command: "SyncAccountsCommand",
+      data: JSON.stringify({ provider }),
+      hour: "*",
+      day: "*",
+      month: "*",
+      weekDay: "*",
+      created: new Date(),
+      lastExecution: undefined,
+    });
+
+    await this.taskScheduler.scheduleTask(refreshTask);
 
     return {
       status: "connected",

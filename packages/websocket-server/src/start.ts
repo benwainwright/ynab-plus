@@ -20,8 +20,12 @@ const bootstrapper = new Bootstrapper({
 const { eventBus, sessionStorage, uuidGenerator, hashValidator } =
   composeNodeAdapters(bootstrapper, logger);
 
-const { oauthTokenRepository, userRepository, accountsRepository } =
-  composeSqliteAdapters(bootstrapper, logger);
+const {
+  tasksRepository,
+  oauthTokenRepository,
+  userRepository,
+  accountsRepository,
+} = composeSqliteAdapters(bootstrapper, logger);
 
 const { ynabClient, oauthClientFactory } = composeIntegrationAdapters(
   bootstrapper,
@@ -31,6 +35,7 @@ const { ynabClient, oauthClientFactory } = composeIntegrationAdapters(
 const applicationLayer = composeApplicationLayer(
   {
     misc: {
+      taskScheduler: tasksRepository,
       uuidGenerator,
     },
     messaging: {

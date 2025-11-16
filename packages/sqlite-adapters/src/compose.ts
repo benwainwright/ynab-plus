@@ -1,6 +1,7 @@
 import {
   Sqlite3AccountRepository,
   SqliteDatabase,
+  SqliteRegularTaskRepository,
   SqliteOauth2TokenRepsoitory,
   SqliteUserRepository,
 } from "@adapters";
@@ -47,5 +48,20 @@ export const compose = (bootstrapper: IBootstrapper, logger: ILogger) => {
     await oauthTokenRepository.create();
   });
 
-  return { oauthTokenRepository, accountsRepository, userRepository };
+  const taskRepo = new SqliteRegularTaskRepository(
+    bootstrapper.configValue(`tasksTableName`, z.string()),
+    database,
+  );
+
+  bootstrapper.addInitStep(async () => {
+    logger.debug(`Creating tasks repository if it doesn't exist`, LOG_CONTEXT);
+    await taskRepo.create();
+  });
+
+  return {
+    oauthTokenRepository,
+    accountsRepository,
+    userRepository,
+    tasksRepository: taskRepo,
+  };
 };

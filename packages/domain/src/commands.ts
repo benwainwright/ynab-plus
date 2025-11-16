@@ -1,8 +1,16 @@
 import type { IAccount } from "./i-account.ts";
+import type { IRegularTask } from "./i-regular-tasks.ts";
 import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
 
 export interface Commands {
+  ListScheduledTasksCommand: {
+    request: {
+      offset: number;
+      limit: number;
+    };
+    response: IRegularTask[];
+  };
   SyncAccountsCommand: {
     request: { force: boolean };
     response: { synced: boolean };

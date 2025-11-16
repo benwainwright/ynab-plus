@@ -8,6 +8,7 @@ import type {
   IPasswordHasher,
   IPasswordVerifier,
   IRepository,
+  ITaskScheduler,
   IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
@@ -18,6 +19,7 @@ export interface IInfrastructurePorts {
     eventBus: IEventBus;
   };
   misc: {
+    taskScheduler: ITaskScheduler;
     uuidGenerator: IUUIDGenerator;
   };
   auth: {

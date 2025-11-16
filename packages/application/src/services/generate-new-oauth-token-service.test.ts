@@ -1,68 +1,104 @@
-import type { IOauthNewTokenRequester, IOauthTokenRepository } from "@ports";
+import {
+  type ITaskScheduler,
+  type IOauthNewTokenRequester,
+  type IOauthTokenRepository,
+  type IUUIDGenerator,
+} from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import { OauthToken, User } from "@ynab-plus/domain";
+import { OauthToken, RegularTask, User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 
 import { GenerateNewOauthTokenService } from "./generate-new-oauth-token-service.ts";
 
 describe("generate new oauth token service", () => {
-  it("gets a new token from the requester and saves it in the repository", async () => {
-    const context = createMockServiceContext(
-      "GenerateNewOauthTokenCommand",
-      { provider: "foo", code: "1-2-3" },
+  it("gets a new token from the requester and saves it in the repository, then schedules a refresh once an hour", async () => {
+    try {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
+      const context = createMockServiceContext(
+        "GenerateNewOauthTokenCommand",
+        { provider: "ynab", code: "1-2-3" },
 
-      new User({
-        id: "ben",
-        email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-        permissions: ["admin"],
-      }),
-    );
+        new User({
+          id: "ben",
+          email: "bwainwright28@gmail.com",
+          passwordHash: "foo",
+          permissions: ["admin"],
+        }),
+      );
 
-    const save = vi.fn();
+      const save = vi.fn();
 
-    const mockTokenRepo: IOauthTokenRepository = {
-      get: vi.fn(),
-      save,
-      delete: vi.fn(),
-    };
+      const mockTokenRepo: IOauthTokenRepository = {
+        get: vi.fn(),
+        save,
+        delete: vi.fn(),
+      };
 
-    const mockToken = new OauthToken({
-      token: "foo",
-      userId: "ben",
-      refreshToken: "foo-refresh",
-      provider: "ynab",
-      expiry: new Date("2021-01-01T00:00:00.000Z"),
-      created: new Date(),
-      refreshed: undefined,
-      lastUse: new Date(),
-    });
+      const uuidGenerator = mock<IUUIDGenerator>({
+        getUUID: vi.fn().mockReturnValue("foo-uuid"),
+      });
 
-    const requester: IOauthNewTokenRequester = {
-      newToken: (userId: string, code: string) => {
-        if (code === "1-2-3" && userId === "ben") {
-          return Promise.resolve(mockToken);
-        }
+      const mockTaskScheduler = mock<ITaskScheduler>();
 
-        throw new Error("Wrong code");
-      },
-    };
+      const task = new RegularTask({
+        name: "Refresh ynab Oauth token",
+        description: "",
+        id: "foo-uuid",
+        minute: "0",
+        onBehalfOf: "ben",
+        command: "SyncAccountsCommand",
+        data: '{"provider":"ynab"}',
+        hour: "*",
+        day: "*",
+        month: "*",
+        weekDay: "*",
+        created: new Date("2020-01-01T00:00:00.000Z"),
+        lastExecution: undefined,
+      });
 
-    const factory = vi.fn().mockReturnValue(requester);
+      const mockToken = new OauthToken({
+        token: "foo",
+        userId: "ben",
+        refreshToken: "foo-refresh",
+        provider: "ynab",
+        expiry: new Date("2021-01-01T00:00:00.000Z"),
+        created: new Date(),
+        refreshed: undefined,
+        lastUse: new Date(),
+      });
 
-    const service = new GenerateNewOauthTokenService(
-      mockTokenRepo,
-      factory,
-      mock(),
-    );
+      const requester: IOauthNewTokenRequester = {
+        newToken: (userId: string, code: string) => {
+          if (code === "1-2-3" && userId === "ben") {
+            return Promise.resolve(mockToken);
+          }
 
-    const result = await service.doHandle(context);
+          throw new Error("Wrong code");
+        },
+      };
 
-    expect(result.status).toEqual("connected");
-    expect(result.created).toEqual(mockToken.created);
-    expect(result.expiry).toEqual(mockToken.expiry);
-    expect(result.refreshed).toEqual(mockToken.refreshed);
-    expect(save).toHaveBeenCalledWith(mockToken);
+      const factory = vi.fn().mockReturnValue(requester);
+
+      const service = new GenerateNewOauthTokenService(
+        mockTokenRepo,
+        factory,
+        uuidGenerator,
+        mockTaskScheduler,
+        mock(),
+      );
+
+      const result = await service.doHandle(context);
+
+      expect(result.status).toEqual("connected");
+      expect(result.created).toEqual(mockToken.created);
+      expect(result.expiry).toEqual(mockToken.expiry);
+      expect(result.refreshed).toEqual(mockToken.refreshed);
+      expect(save).toHaveBeenCalledWith(mockToken);
+      expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledWith(task);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

@@ -45,6 +45,7 @@ export const EditUser = () => {
         email: user.email,
         permissions: user.permissions,
       });
+      form.resetDirty();
     }
   }, [isPending]);
 
@@ -127,7 +128,9 @@ export const EditUser = () => {
           </Group>
         </Fieldset>
         <Group justify="flex-end" mt="md">
-          <Button type="submit">Update</Button>
+          <Button type="submit" disabled={!form.isDirty()}>
+            Update
+          </Button>
         </Group>
       </form>
     </Page>

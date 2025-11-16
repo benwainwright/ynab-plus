@@ -21,4 +21,5 @@ export {
   type ISingleItemStore,
   type IUUIDGenerator,
   type ServiceBusFactory,
+  type ITaskScheduler,
 } from "@ports";

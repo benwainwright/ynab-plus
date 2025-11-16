@@ -8,6 +8,7 @@ import {
   IconHome,
   IconPlug,
   IconUsers,
+  IconEngine,
 } from "@tabler/icons-react";
 
 export interface RouteSpec {
@@ -58,6 +59,12 @@ export const routesList = {
     permissionsRequired: ["admin"],
     authFailRedirect: "/",
     sidebarIcon: <IconUsers size={16} stroke={1.5} />,
+  },
+  tasks: {
+    component: "routes/tasks.tsx",
+    permissionsRequired: ["admin"],
+    authFailRedirect: "/",
+    sidebarIcon: <IconEngine size={16} stroke={1.5} />,
   },
   editUser: {
     component: "routes/edit-user.tsx",

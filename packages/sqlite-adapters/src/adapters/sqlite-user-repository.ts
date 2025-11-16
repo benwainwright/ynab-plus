@@ -1,5 +1,6 @@
 import type { IRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
+
 import { type Permission, User } from "@ynab-plus/domain";
 
 import type { SqliteDatabase } from "./sqlite-database.ts";

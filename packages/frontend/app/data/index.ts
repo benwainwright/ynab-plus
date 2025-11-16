@@ -15,3 +15,4 @@ export {
 } from "./use-oauth2-integration-status.ts";
 export { useUser } from "./use-user.ts";
 export { useUsers } from "./use-users.ts";
+export { useTasks } from "./use-tasks.ts";

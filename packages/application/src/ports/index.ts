@@ -23,3 +23,5 @@ export type { ISingleItemStore } from "./i-single-item-store.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export type { NewTokenRequesterFactory } from "./new-token-requester-factory.ts";
 export type { ServiceBusFactory } from "./service-bus-factory.ts";
+
+export type { ITaskScheduler } from "./i-task-scheduler.ts";

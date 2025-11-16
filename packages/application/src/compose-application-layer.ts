@@ -6,6 +6,7 @@ import {
   GetCurrentUserService,
   GetUserService,
   ListAccountsService,
+  ListScheduledTasksService,
   ListUsersService,
   LoginService,
   LogoutService,
@@ -24,6 +25,7 @@ const LOG_CONTEXT = { context: "compose-application-layer" };
 
 export const composeApplicationLayer = (
   {
+    misc: { taskScheduler, uuidGenerator },
     messaging: { eventBus },
     data: {
       userRepository,
@@ -69,8 +71,11 @@ export const composeApplicationLayer = (
     new GenerateNewOauthTokenService(
       oauthTokenRepository,
       newTokenRequesterFactory,
+      uuidGenerator,
+      taskScheduler,
       logger,
     ),
+
     new SyncAccountsService(
       oauthTokenRepository,
       accountsFetcher,
@@ -78,6 +83,7 @@ export const composeApplicationLayer = (
       logger,
     ),
     new ListAccountsService(accountsRepo, logger),
+    new ListScheduledTasksService(taskScheduler, logger),
   ];
 
   const requestFactory: ServiceBusFactory = async ({
