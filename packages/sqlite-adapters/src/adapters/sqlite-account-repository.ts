@@ -10,7 +10,7 @@ interface RawAccount {
   name: string;
   type: string;
   closed: string;
-  note: string;
+  note?: string | null;
   deleted: string;
 }
 
@@ -28,13 +28,20 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       [id],
     );
 
-    return result
-      ? new Account({
-          ...result,
-          closed: result.closed === "closed",
-          deleted: result.deleted === "deleted",
-        })
-      : undefined;
+    if (!result) {
+      return undefined;
+    }
+
+    return this.mapRaw(result);
+  }
+
+  private mapRaw(account: RawAccount): Account {
+    return new Account({
+      ...account,
+      closed: account.closed === "closed",
+      deleted: account.deleted === "deleted",
+      note: account.note ?? undefined,
+    });
   }
 
   async getUserAccounts(userId: string): Promise<Account[]> {
@@ -46,14 +53,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       [userId],
     );
 
-    return result.map(
-      (result) =>
-        new Account({
-          ...result,
-          closed: result.closed === "closed",
-          deleted: result.deleted === "deleted",
-        }),
-    );
+    return result.map((account) => this.mapRaw(account));
   }
 
   public async create() {
@@ -93,11 +93,8 @@ export class Sqlite3AccountRepository implements IAccountRepository {
         thing.deleted ? "deleted" : "not_deleted",
       ],
     );
-    return new Account({
-      ...data,
-      closed: data.closed === "closed",
-      deleted: data.deleted === "deleted",
-    });
+
+    return this.mapRaw(data);
   }
 
   public async saveAccounts(accounts: Account[]): Promise<Account[]> {

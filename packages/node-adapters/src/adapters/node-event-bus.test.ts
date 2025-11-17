@@ -1,110 +1,11 @@
 import { EventEmitter } from "node:events";
 
-import {
-  type Events,
-  type ISerialisable,
-  type IUser,
-  User,
-} from "@ynab-plus/domain";
+import { type Events } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 
 import { NodeEventBus } from "./node-event-bus.ts";
 
 describe("event bus", () => {
-  it("serialises emitted events so they can be safely transmitted", () => {
-    const emitter = new EventEmitter();
-
-    type TestEvents = {
-      CommandResponse: Events["CommandResponse"];
-      foo: {
-        bar: {
-          bap: string;
-          bip: number;
-          foo: ISerialisable<IUser, "user">;
-        };
-        bing: {
-          baz: boolean;
-        };
-      };
-    };
-
-    const bus = new NodeEventBus<TestEvents>(emitter, "foo");
-
-    const listener = vi.fn();
-
-    emitter.on("foo", listener);
-
-    const rawShape = {
-      bar: {
-        bap: "foo",
-        bip: 2,
-        foo: new User({
-          id: "passwordHash",
-          email: "a@b.c",
-          passwordHash: "foo",
-          permissions: [],
-        }),
-      },
-      bing: {
-        baz: true,
-      },
-    } as const;
-
-    bus.emit("foo", rawShape);
-
-    const expectedShape = {
-      bar: {
-        bap: "foo",
-        bip: 2,
-        foo: {
-          $type: "user",
-          id: "passwordHash",
-          email: "a@b.c",
-          passwordHash: "foo",
-          permissions: [],
-        },
-      },
-      bing: {
-        baz: true,
-      },
-    } as const;
-
-    expect(listener).toHaveBeenCalledWith({
-      key: "foo",
-      data: expectedShape,
-    });
-
-    const command = {
-      id: "019a88ee-bf36-743e-9d8f-9dc5704fe273",
-      key: "GetCurrentUserCommand",
-      data: new User({
-        id: "admin",
-        passwordHash:
-          "$2b$10$ojVhtqsrISymqm/j9OWtteEo7FvyjwPSxmr.CcOb0SfxEmnWUM6py",
-        email: "no-reply@something.com",
-        permissions: ["user", "admin"],
-      }),
-    } as const;
-
-    bus.emit("CommandResponse", command);
-
-    expect(listener).toHaveBeenCalledWith({
-      key: "CommandResponse",
-      data: {
-        id: "019a88ee-bf36-743e-9d8f-9dc5704fe273",
-        key: "GetCurrentUserCommand",
-        data: {
-          $type: "user",
-          id: "admin",
-          passwordHash:
-            "$2b$10$ojVhtqsrISymqm/j9OWtteEo7FvyjwPSxmr.CcOb0SfxEmnWUM6py",
-          email: "no-reply@something.com",
-          permissions: ["user", "admin"],
-        },
-      },
-    });
-  });
-
   describe("on", () => {
     it("correctly subscribes to an event that can be listened to", async () => {
       const emitter = new EventEmitter();

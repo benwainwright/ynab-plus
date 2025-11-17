@@ -5,7 +5,7 @@ import type {
   ISingleItemStore,
 } from "@ynab-plus/app";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { Command, User } from "@ynab-plus/domain";
+import { Command, User, serialiseObject } from "@ynab-plus/domain";
 import { WebSocket } from "ws";
 import z from "zod";
 
@@ -26,7 +26,9 @@ export class ServerWebsocketClient {
     this.eventBus.emit("SocketOpened", undefined);
     this.eventBus.onAll((packet) => {
       this.logger.debug(`Event recieved`, { ...LOG_CONTEXT, packet });
-      socket.send(JSON.stringify(packet));
+      const toSend = JSON.stringify(serialiseObject(packet));
+      console.log(toSend);
+      socket.send(toSend);
     });
   }
 

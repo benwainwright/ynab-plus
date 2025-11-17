@@ -7,6 +7,7 @@ interface RawTask {
   id: string;
   onBehalfOf: string | undefined;
   lastExecution: string | undefined;
+  data: string | undefined;
   created: string;
   minute: string;
   hour: string;
@@ -16,7 +17,6 @@ interface RawTask {
   name: string;
   description: string;
   command: string;
-  data: string | undefined;
 }
 
 export class SqliteRegularTaskRepository implements ITaskScheduler {
@@ -84,11 +84,9 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     return new RegularTask({
       ...raw,
       created: new Date(raw.created),
-
       lastExecution: raw.lastExecution
         ? new Date(raw.lastExecution)
         : undefined,
-
       command: schedulableTasksSchema.parse(raw.command),
       data: raw.data ?? undefined,
       onBehalfOf: raw.onBehalfOf ?? undefined,
