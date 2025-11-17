@@ -1,7 +1,7 @@
 import type { EventEmitter } from "node:events";
 
 import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
-import { serialiseObject } from "@ynab-plus/domain";
+import { deSerialiseObject, serialiseObject } from "@ynab-plus/domain";
 import { v7 } from "uuid";
 
 export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
@@ -26,8 +26,13 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
 
   public onAll(listener: IListener<TEvent>) {
     const listenerId = v7();
-    this.listener.on(this.namespace, listener);
-    this.listenerMap.set(listenerId, listener);
+
+    const handler: IListener<TEvent> = (packet) => {
+      listener({ ...packet, data: deSerialiseObject(packet.data) });
+    };
+
+    this.listener.on(this.namespace, handler);
+    this.listenerMap.set(listenerId, handler);
     return listenerId;
   }
 

@@ -1,5 +1,4 @@
-import { buildApplication } from "@core";
-import { composeWebApp } from "@websocket-server";
+import { buildApplication, composeWebApp } from "@core";
 import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
 
 const logger = getWinstonLogger();

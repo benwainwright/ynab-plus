@@ -41,6 +41,7 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
 
     if (task) {
       await this.taskScheduler.deleteTask(task);
+      eventBus.emit("ScheduledTaskDeleted", task);
     }
 
     eventBus.emit("OauthIntegrationDisconnected", {

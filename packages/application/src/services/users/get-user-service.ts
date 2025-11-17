@@ -1,17 +1,18 @@
 import { UserNotFoundError } from "@errors";
 import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { IRole, User } from "@ynab-plus/domain";
+import type { IRole, Permission, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 
 export class GetUserService extends AbstractApplicationService<"GetUserCommand"> {
   public override readonly commandName = "GetUserCommand";
 
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
+  public override requiredPermissions: Permission[] = [
     "admin",
     "public",
     "user",
+    "system",
   ];
 
   public constructor(

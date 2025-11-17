@@ -141,12 +141,15 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
 
     return this.mapRaw(result);
   }
-  public async getTasks(offset: number, limit: number): Promise<RegularTask[]> {
+  public async getTasks(
+    offset: number,
+    limit?: number,
+  ): Promise<RegularTask[]> {
     const result = await this.database.getAllFromDatabase<RawTask[]>(
       `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data
         FROM ${await this.tableName.value}
         LIMIT ? OFFSET ?`,
-      [limit, offset],
+      [limit ?? -1, offset],
     );
 
     return result.map((result) => this.mapRaw(result));

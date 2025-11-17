@@ -314,7 +314,7 @@ describe("event bus", () => {
       expect(await result).toEqual(data);
     });
 
-    it("does not emit events emitted by the parent bus", () => {
+    it("does not listen to events emitted by the parent bus", () => {
       const emitter = new EventEmitter();
       const bus = new NodeEventBus<Events>(emitter, "foo");
 

@@ -9,7 +9,7 @@ import type { ILogger } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
 import { ServerError } from "@core";
 
-const LOG_CONTEXT = { context: "start-scheduler" };
+const LOG_CONTEXT = { context: "task-scheduler" };
 
 const TASK_SCHEDULER_CONTEXT_NAME = "Task Scheduler";
 
@@ -36,6 +36,13 @@ export class TaskScheduler {
 
     const tasks = await this.serviceBus.execute(command);
 
+    const taskOrTasks = tasks.length > 1 ? `tasks` : `task`;
+
+    this.logger.info(
+      `Found ${String(tasks.length)} ${taskOrTasks} scheduled tasks`,
+      LOG_CONTEXT,
+    );
+
     this._taskMap = new Map<string, cron.ScheduledTask>(
       await Promise.all(
         tasks.map(
@@ -46,7 +53,7 @@ export class TaskScheduler {
 
     this.eventBus.on("ScheduledTaskDeleted", this.onDelete.bind(this));
     this.eventBus.on("ScheduledTaskCreated", this.onCreate.bind(this));
-    this.eventBus.on("ScheduledTaskDeleted", this.onCreate.bind(this));
+    this.eventBus.on("ScheduledTaskUpdated", this.onUpdate.bind(this));
   }
 
   private get taskMap() {
@@ -59,6 +66,7 @@ export class TaskScheduler {
   public async onDelete(data: Events["ScheduledTaskDeleted"]) {
     const toDelete = this.taskMap.get(data.id);
     if (toDelete) {
+      this.logger.debug(`Deleting scheduled task ${data.id}`, LOG_CONTEXT);
       await toDelete.destroy();
       this.taskMap.delete(data.id);
     }
@@ -67,6 +75,7 @@ export class TaskScheduler {
   public async onUpdate(data: Events["ScheduledTaskUpdated"]) {
     const toUpdate = this.taskMap.get(data.id);
     if (toUpdate) {
+      this.logger.debug(`Updating scheduled task ${data.id}`, LOG_CONTEXT);
       await toUpdate.destroy();
       this.taskMap.set(data.id, await this.makeCronTask(data));
     }
@@ -90,13 +99,21 @@ export class TaskScheduler {
   }
 
   private async makeCronTask(task: RegularTask) {
+    this.logger.debug(
+      `Registering task ${task.id} with node-cron`,
+      LOG_CONTEXT,
+    );
     const owner = await this.getTaskOwner(task);
+
     return cron.createTask(task.getCronString(), async () => {
+      this.logger.debug(`Firing scheduled task ${task.id}`, LOG_CONTEXT);
+
       const context = new SystemContext(
         TASK_SCHEDULER_CONTEXT_NAME,
         ["system"],
         owner,
       );
+
       const command = task.getCommand(context);
       await this.serviceBus.execute(command);
     });

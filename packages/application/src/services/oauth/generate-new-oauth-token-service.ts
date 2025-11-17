@@ -27,6 +27,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   }
 
   protected override async handle<TRole extends IRole>({
+    eventBus,
     command: {
       data: { code, provider },
     },
@@ -56,7 +57,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
       description: "",
       id: getTokenRefreshTaskKey(this.currentUser.id, provider),
       minute: "0",
-      onBehalfOf: "ben",
+      onBehalfOf: this.currentUser.id,
       command: "CheckOauthIntegrationStatusCommand",
       data: JSON.stringify({ provider }),
       hour: "*",
@@ -68,6 +69,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     });
 
     await this.taskScheduler.scheduleTask(refreshTask);
+    eventBus.emit("ScheduledTaskCreated", refreshTask);
 
     return {
       status: "connected",

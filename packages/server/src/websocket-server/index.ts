@@ -1,1 +1,1 @@
-export { composeWebApp } from "./compose.ts";
+export { AppServer } from "./app-server.ts";

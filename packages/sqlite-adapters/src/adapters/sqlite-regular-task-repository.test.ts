@@ -82,6 +82,78 @@ describe("the regular  repository", () => {
     });
   });
 
+  describe("get all tasks", () => {
+    it("gets all the tasks in the database if you dont supply a limit", async () => {
+      const database = new SqliteDatabase({
+        value: Promise.resolve(":memory:"),
+      });
+
+      const tableName: ConfigValue<string> = {
+        value: Promise.resolve("tasks"),
+      };
+
+      const repo = new SqliteRegularTaskRepository(tableName, database);
+
+      await repo.create();
+
+      const task = new RegularTask({
+        id: "foo",
+        onBehalfOf: "ben",
+        created: new Date("2025-12-11T20:39:37.823Z"),
+        lastExecution: undefined,
+        data: "{}",
+        minute: "1",
+        hour: "2",
+        day: "1",
+        month: "*",
+        weekDay: "*",
+        name: "Do my shopping",
+        description: "A task to do my shopping",
+        command: "SyncAccountsCommand",
+      });
+
+      await repo.scheduleTask(task);
+
+      const task2 = new RegularTask({
+        id: "foo-3",
+        data: "{}",
+        onBehalfOf: "ben",
+        created: new Date("2025-12-11T20:39:37.823Z"),
+        lastExecution: undefined,
+        minute: "1",
+        hour: "2",
+        day: "1",
+        month: "*",
+        weekDay: "*",
+        name: "Do my shopping",
+        description: "A task to do my shopping",
+        command: "SyncAccountsCommand",
+      });
+
+      await repo.scheduleTask(task2);
+
+      const johns = new RegularTask({
+        id: "foo-4",
+        data: "{}",
+        onBehalfOf: "john",
+        created: new Date("2025-12-11T20:39:37.823Z"),
+        lastExecution: undefined,
+        minute: "3",
+        hour: "2",
+        day: "1",
+        month: "*",
+        weekDay: "*",
+        name: "Do my shopping",
+        description: "A task to do my shopping",
+        command: "SyncAccountsCommand",
+      });
+      await repo.scheduleTask(johns);
+
+      const allTasks = await repo.getTasks(0);
+      expect(allTasks).toHaveLength(3);
+    });
+  });
+
   describe("get user tasks", () => {
     it("gets all the tasks associated with a user", async () => {
       const database = new SqliteDatabase({

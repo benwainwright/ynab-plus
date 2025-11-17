@@ -2,12 +2,10 @@ import type { IHandleContext, ITaskScheduler } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
 import { AbstractApplicationService } from "@core";
-import type { IRole, RegularTask } from "@ynab-plus/domain";
+import type { IRole, Permission, RegularTask } from "@ynab-plus/domain";
 
 export class ListScheduledTasksService extends AbstractApplicationService<"ListScheduledTasksCommand"> {
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "admin",
-  ];
+  public override requiredPermissions: Permission[] = ["admin", "system"];
 
   public constructor(
     private taskScheduler: ITaskScheduler,

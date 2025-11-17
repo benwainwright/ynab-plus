@@ -60,5 +60,9 @@ describe("disconnect outh integration service", () => {
     });
 
     expect(scheduler.deleteTask).toHaveBeenCalledWith(task);
+    expect(context.eventBus.emit).toHaveBeenCalledWith(
+      "ScheduledTaskDeleted",
+      task,
+    );
   });
 });
