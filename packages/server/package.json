@@ -1,9 +1,9 @@
 {
-  "name": "@ynab-plus/websocket-server",
+  "name": "@ynab-plus/server",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:websocket-server": "vite-node src/start-websocket-server.ts"
+    "dev:websocket-server": "vite-node src/start-server.ts"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
