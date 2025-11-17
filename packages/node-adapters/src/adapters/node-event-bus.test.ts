@@ -264,6 +264,34 @@ describe("event bus", () => {
   });
 
   describe("childbus", () => {
+    it("emits events onto the parent bus", () => {
+      const emitter = new EventEmitter();
+      const bus = new NodeEventBus<Events>(emitter, "foo");
+
+      const child = bus.child("foo-child");
+      const otherChild = bus.child("bar-child");
+
+      const data = {
+        url: "foo",
+        port: 20,
+      };
+
+      const parentListener = vi.fn();
+      bus.on("AppInitialised", parentListener);
+
+      const childListener = vi.fn();
+      child.on("AppInitialised", childListener);
+
+      const otherChildListener = vi.fn();
+      otherChild.on("AppInitialised", otherChildListener);
+
+      child.emit("AppInitialised", data);
+
+      expect(parentListener).toHaveBeenCalledWith(data);
+      expect(childListener).toHaveBeenCalledWith(data);
+      expect(otherChildListener).not.toHaveBeenCalledWith();
+    });
+
     it("receives events that are emitted by it", async () => {
       const emitter = new EventEmitter();
       const bus = new NodeEventBus<Events>(emitter, "foo");
@@ -286,7 +314,7 @@ describe("event bus", () => {
       expect(await result).toEqual(data);
     });
 
-    it("also receives events that are emitted by the parent bus", async () => {
+    it("does not emit events emitted by the parent bus", () => {
       const emitter = new EventEmitter();
       const bus = new NodeEventBus<Events>(emitter, "foo");
 
@@ -297,15 +325,13 @@ describe("event bus", () => {
         port: 20,
       };
 
-      const result = new Promise((accept) =>
-        child.on("AppInitialised", (data) => {
-          accept(data);
-        }),
-      );
+      const listener = vi.fn();
+
+      child.on("AppInitialised", listener);
 
       bus.emit("AppInitialised", data);
 
-      expect(await result).toEqual(data);
+      expect(listener).not.toHaveBeenCalled();
     });
 
     it("does not receive events emitted by other children", () => {

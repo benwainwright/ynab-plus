@@ -10,12 +10,14 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   public constructor(
     private listener: EventEmitter,
     private namespace: string,
+    private parent?: IEventBus<TEvent>,
   ) {}
 
   public child(namespace: string): IEventBus<TEvent> {
     const child = new NodeEventBus<TEvent>(
       this.listener,
       `${this.namespace}-${namespace}`,
+      this,
     );
 
     this.children.push(child);
@@ -61,8 +63,6 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
 
   public emit<TKey extends keyof TEvent>(key: TKey, data: TEvent[TKey]) {
     this.listener.emit(this.namespace, { key, data: serialiseObject(data) });
-    this.children.forEach((child) => {
-      child.emit(key, data);
-    });
+    this.parent?.emit(key, data);
   }
 }
