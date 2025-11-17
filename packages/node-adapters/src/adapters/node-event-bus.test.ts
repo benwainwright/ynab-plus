@@ -32,7 +32,7 @@ describe("event bus", () => {
 
     const listener = vi.fn();
 
-    bus.onAll(listener);
+    emitter.on("foo", listener);
 
     const rawShape = {
       bar: {

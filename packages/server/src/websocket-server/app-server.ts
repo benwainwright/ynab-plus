@@ -73,6 +73,7 @@ export class AppServer {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ws.on("message", client.onMessage.bind(client));
+      ws.on("close", eventBus.removeAll.bind(eventBus));
 
       client.onConnect(ws);
     });

@@ -50,7 +50,7 @@ const deSerialiseObjectHelper = (data: unknown): unknown => {
     }
 
     if (Array.isArray(data)) {
-      return data.map((item) => serialiseObjectHelper(item));
+      return data.map((item) => deSerialiseObjectHelper(item));
     }
 
     if ("$type" in data) {
@@ -63,7 +63,7 @@ const deSerialiseObjectHelper = (data: unknown): unknown => {
       return Object.fromEntries(
         Object.entries(data).map(([key, value]) => [
           key,
-          serialiseObjectHelper(value),
+          deSerialiseObjectHelper(value),
         ]),
       );
     }

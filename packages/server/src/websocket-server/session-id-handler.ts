@@ -21,7 +21,7 @@ export class SessionIdHandler {
       this.sessionIds.set(request, existingId);
     } else {
       const newId = v7();
-      headers.push(`Set-Cookie: ${SESSION_ID_COOKIE_KEY}=${newId}`);
+      headers.push(`Set-Cookie: ${SESSION_ID_COOKIE_KEY}=${newId}; HttpOnly;`);
       this.sessionIds.set(request, newId);
     }
   }
