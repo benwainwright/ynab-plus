@@ -1,7 +1,12 @@
 import { getServices } from "@services";
 import { User } from "@ynab-plus/domain";
 
-import { getRequestFactory, type IInfrastructurePorts } from "@core";
+import {
+  getRequestFactory,
+  ServiceBus,
+  type IInfrastructurePorts,
+} from "@core";
+import type { IApplicationLayer } from "./i-application-layer.ts";
 
 const LOG_CONTEXT = { context: "compose-application-layer" };
 
@@ -19,7 +24,7 @@ export const composeApplicationLayer = ({
   newTokenRequesterFactory,
   logger,
   bootstrapper,
-}: IInfrastructurePorts) => {
+}: IInfrastructurePorts): IApplicationLayer => {
   logger.info(`Composing application layer`, LOG_CONTEXT);
 
   bootstrapper.addInitStep(async () => {
@@ -48,12 +53,25 @@ export const composeApplicationLayer = ({
     logger,
   });
 
-  const serviceBusFactory = getRequestFactory({
-    eventBus,
-    sessionStorage,
-    services,
-    logger,
-  });
+  const withRequestScopedServiceBus = () => {
+    const serviceBusFactory = getRequestFactory({
+      eventBus,
+      sessionStorage,
+      userRepository,
+      passwordHasher,
+      passwordVerifier,
+      services,
+      logger,
+    });
+    return serviceBusFactory;
+  };
 
-  return { serviceBusFactory };
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const withSingletonServiceBus = async () => {
+    const serviceBus = new ServiceBus(services, eventBus, logger);
+
+    return { eventBus, serviceBus };
+  };
+
+  return { withRequestScopedServiceBus, withSingletonServiceBus };
 };

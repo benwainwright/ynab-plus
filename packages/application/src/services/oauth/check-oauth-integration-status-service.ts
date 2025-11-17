@@ -4,15 +4,15 @@ import type {
   IOauthTokenRepository,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { Permission } from "@ynab-plus/domain";
+import type { IRole, Permission } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = {
   context: "check-oauth-integration-status-service",
 };
 
-import { AbstractApplicationService } from "@core";
+import { AbstractApplicationServiceWithUserContext } from "@core";
 
-export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
+export class CheckOauthIntegrationStatusService extends AbstractApplicationServiceWithUserContext<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private oauthClientFactory: IOauthCheckerFactory,
@@ -25,10 +25,9 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
   public override requiredPermissions: Permission[] = ["user", "admin"];
 
-  protected override async handle({
-    currentUserCache,
+  protected override async handle<TRole extends IRole>({
     command,
-  }: IHandleContext<"CheckOauthIntegrationStatusCommand">): Promise<
+  }: IHandleContext<"CheckOauthIntegrationStatusCommand", TRole>): Promise<
     | {
         status: "connected";
         expiry: Date;
@@ -37,15 +36,13 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
       }
     | { status: "not_connected"; redirectUrl: string }
   > {
-    const currentUser = await currentUserCache.require();
-
     this.logger.debug(`Checking oauth-integration status`, LOG_CONTEXT);
 
     const {
       data: { provider },
     } = command;
 
-    const token = await this.tokenRepository.get(currentUser.id, provider);
+    const token = await this.tokenRepository.get(this.currentUser.id, provider);
 
     const oauthClient = this.oauthClientFactory(provider);
 

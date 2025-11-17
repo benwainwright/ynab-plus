@@ -5,7 +5,7 @@ import type { SqliteDatabase } from "./sqlite-database.ts";
 
 interface RawTask {
   id: string;
-  onBehalfOf: string;
+  onBehalfOf: string | undefined;
   lastExecution: string | undefined;
   created: string;
   minute: string;
@@ -64,7 +64,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (
           id TEXT PRIMARY KEY,
-          onBehalfOf TEXT NOT NULL,
+          onBehalfOf TEXT,
           lastExecution TEXT,
           created TEXT NOT NULL,
           minute TEXT NOT NULL,
@@ -84,11 +84,14 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     return new RegularTask({
       ...raw,
       created: new Date(raw.created),
+
       lastExecution: raw.lastExecution
         ? new Date(raw.lastExecution)
         : undefined,
+
       command: schedulableTasksSchema.parse(raw.command),
       data: raw.data ?? undefined,
+      onBehalfOf: raw.onBehalfOf ?? undefined,
     });
   }
 

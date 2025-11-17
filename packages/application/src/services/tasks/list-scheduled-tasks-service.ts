@@ -2,7 +2,7 @@ import type { IHandleContext, ITaskScheduler } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
 import { AbstractApplicationService } from "@core";
-import type { RegularTask } from "@ynab-plus/domain";
+import type { IRole, RegularTask } from "@ynab-plus/domain";
 
 export class ListScheduledTasksService extends AbstractApplicationService<"ListScheduledTasksCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
@@ -18,9 +18,11 @@ export class ListScheduledTasksService extends AbstractApplicationService<"ListS
 
   public override readonly commandName = "ListScheduledTasksCommand";
 
-  public override async handle({
+  public override async handle<TRole extends IRole>({
     command,
-  }: IHandleContext<"ListScheduledTasksCommand">): Promise<RegularTask[]> {
+  }: IHandleContext<"ListScheduledTasksCommand", TRole>): Promise<
+    RegularTask[]
+  > {
     const { offset, limit } = command.data;
 
     return await this.taskScheduler.getTasks(offset, limit);

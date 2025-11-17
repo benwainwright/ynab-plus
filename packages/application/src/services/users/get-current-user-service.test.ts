@@ -1,17 +1,25 @@
 import { AppError } from "@errors";
-import type {
-  ICommandMessage,
-  IEventBus,
-  IRepository,
-  ISingleItemStore,
-} from "@ports";
-import { User } from "@ynab-plus/domain";
+import type { ICurrentUserSetter, IRepository } from "@ports";
+import { SystemContext, User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 
 import { GetCurrentUserService } from "./get-current-user-service.ts";
+import { createMockServiceContext } from "@test-helpers";
 
 describe("get user command handler", () => {
+  it("throws an error if executed in a system context", async () => {
+    const context = createMockServiceContext(
+      "GetCurrentUserCommand",
+      undefined,
+      new SystemContext("test", ["system"]),
+    );
+
+    const service = new GetCurrentUserService(mock(), mock(), mock());
+
+    await expect(service.doHandle(context)).rejects.toThrow(AppError);
+  });
+
   it("gets a user from the repository and returns it", async () => {
     const mockUser = new User({
       id: "ben",
@@ -29,27 +37,18 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo, mock());
+    const context = createMockServiceContext(
+      "GetCurrentUserCommand",
+      undefined,
+      new User({
+        id: "ben",
+        permissions: ["admin"],
+        email: "bwainwright28@gmail.com",
+        passwordHash: "foo",
+      }),
+    );
 
-    const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
-      key: "GetCurrentUserCommand",
-      id: "foo",
-    });
-
-    const eventBus = mock<IEventBus>();
-
-    const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue(
-        new User({
-          id: "ben",
-          permissions: ["admin"],
-          email: "bwainwright28@gmail.com",
-          passwordHash: "foo",
-        }),
-      ),
-    });
-
-    const context = { command, eventBus, currentUserCache };
+    const handler = new GetCurrentUserService(repo, mock(), mock());
 
     const response = await handler.doHandle(context);
 
@@ -73,20 +72,13 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo, mock());
+    const context = createMockServiceContext(
+      "GetCurrentUserCommand",
+      undefined,
+      undefined,
+    );
 
-    const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
-      key: "GetCurrentUserCommand",
-      id: "foo",
-    });
-
-    const eventBus = mock<IEventBus>();
-
-    const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue(undefined),
-    });
-
-    const context = { command, eventBus, currentUserCache };
+    const handler = new GetCurrentUserService(repo, mock(), mock());
 
     const response = await handler.doHandle(context);
 
@@ -110,31 +102,28 @@ describe("get user command handler", () => {
       }),
     });
 
-    const handler = new GetCurrentUserService(repo, mock());
+    const mockCurrentUserSetter = mock<ICurrentUserSetter>();
 
-    const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
-      key: "GetCurrentUserCommand",
-      id: "foo",
-    });
+    const handler = new GetCurrentUserService(
+      repo,
+      mockCurrentUserSetter,
+      mock(),
+    );
 
-    const eventBus = mock<IEventBus>();
-
-    const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue(
-        new User({
-          id: "ben",
-          permissions: ["admin"],
-          email: "bwainwright28@gmail.com",
-          passwordHash: "foo",
-        }),
-      ),
-    });
-
-    const context = { command, eventBus, currentUserCache };
+    const context = createMockServiceContext(
+      "GetCurrentUserCommand",
+      undefined,
+      new User({
+        id: "ben",
+        permissions: ["admin"],
+        email: "bwainwright28@gmail.com",
+        passwordHash: "foo",
+      }),
+    );
 
     await handler.doHandle(context);
 
-    expect(currentUserCache.set).toHaveBeenCalledWith(
+    expect(mockCurrentUserSetter.set).toHaveBeenCalledWith(
       new User({
         id: "ben",
         permissions: ["user"],
@@ -149,27 +138,18 @@ describe("get user command handler", () => {
       get: vi.fn().mockResolvedValue(undefined),
     });
 
-    const handler = new GetCurrentUserService(repo, mock());
+    const handler = new GetCurrentUserService(repo, mock(), mock());
 
-    const command = mock<ICommandMessage<"GetCurrentUserCommand">>({
-      key: "GetCurrentUserCommand",
-      id: "foo",
-    });
-
-    const eventBus = mock<IEventBus>();
-
-    const currentUserCache = mock<ISingleItemStore<User>>({
-      get: vi.fn().mockResolvedValue(
-        new User({
-          id: "ben",
-          permissions: ["admin"],
-          email: "bwainwright28@gmail.com",
-          passwordHash: "foo",
-        }),
-      ),
-    });
-
-    const context = { command, eventBus, currentUserCache };
+    const context = createMockServiceContext(
+      "GetCurrentUserCommand",
+      undefined,
+      new User({
+        id: "ben",
+        permissions: ["admin"],
+        email: "bwainwright28@gmail.com",
+        passwordHash: "foo",
+      }),
+    );
 
     await expect(handler.doHandle(context)).rejects.toThrow(AppError);
   });

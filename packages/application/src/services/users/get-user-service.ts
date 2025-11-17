@@ -1,7 +1,7 @@
 import { UserNotFoundError } from "@errors";
 import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
+import type { IRole, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 
@@ -21,9 +21,9 @@ export class GetUserService extends AbstractApplicationService<"GetUserCommand">
     super(logger);
   }
 
-  protected override async handle({
+  protected override async handle<TRole extends IRole>({
     command,
-  }: IHandleContext<"GetUserCommand">): Promise<User | undefined> {
+  }: IHandleContext<"GetUserCommand", TRole>): Promise<User | undefined> {
     const { username } = command.data;
 
     const user = await this.users.get(username);

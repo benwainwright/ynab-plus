@@ -1,11 +1,24 @@
 import { buildApplication } from "@core";
 import { composeWebApp } from "@websocket-server";
+import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
 
-const application = buildApplication({
-  name: "Websocket Server",
+const logger = getWinstonLogger();
+
+const bootstrapper = new Bootstrapper({
   configFile: "ynab-plus.config.websocket-server.json",
+  logger,
 });
 
-await composeWebApp(application);
+const application = buildApplication({
+  logger,
+  name: "Websocket Server",
+  bootstrapper,
+});
 
-await application.start();
+await composeWebApp({
+  application,
+  bootstrapper,
+  logger,
+});
+
+await bootstrapper.start();

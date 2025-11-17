@@ -5,7 +5,7 @@ import {
   type IOauthTokenRepository,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import { Account, OauthToken, User } from "@ynab-plus/domain";
+import { Account, OauthToken, SystemContext, User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
@@ -20,6 +20,93 @@ afterEach(() => {
 });
 
 describe("download-accounts service", () => {
+  it("throws an error if executed without any kind of user context", () => {});
+
+  it("throws an error if executed in a system context without an onBehalfOf", async () => {
+    const context = createMockServiceContext(
+      "SyncAccountsCommand",
+      { force: true },
+      new SystemContext("test", ["system"]),
+    );
+
+    const service = new SyncAccountsService(mock(), mock(), mock(), mock());
+
+    await expect(service.doHandle(context)).rejects.toThrow(AppError);
+  });
+
+  it("works if execution is delegated by the system to a user", async () => {
+    vi.setSystemTime(new Date("2025-11-15T11:08:50.571Z"));
+
+    const user = new User({
+      id: "ben",
+      email: "a@b.c",
+      passwordHash: "foo",
+      permissions: ["admin"],
+    });
+
+    const lastUse = new Date("2025-11-15T11:07:50.571Z");
+
+    const token = new OauthToken({
+      expiry: new Date(),
+      created: new Date(),
+      refreshed: new Date(),
+      lastUse,
+      token: "token",
+      refreshToken: "refresh",
+      provider: "ynab",
+      userId: "ben",
+    });
+
+    const mockTokenRepo = mock<IOauthTokenRepository>();
+
+    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+
+    const mockFetcher = mock<IAccountsFetcher>();
+
+    const accounts = [
+      new Account({
+        id: "foo-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: "hello",
+        deleted: false,
+      }),
+      new Account({
+        id: "bar-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+    ];
+
+    when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
+
+    const mockAccountsRepo = mock<IAccountRepository>();
+
+    const service = new SyncAccountsService(
+      mockTokenRepo,
+      mockFetcher,
+      mockAccountsRepo,
+      mock(),
+    );
+
+    const context = createMockServiceContext(
+      "SyncAccountsCommand",
+      { force: true },
+      new SystemContext("test", ["admin"], user),
+    );
+
+    const result = await service.doHandle(context);
+
+    expect(mockAccountsRepo.saveAccounts).toHaveBeenCalledWith(accounts);
+    expect(result.synced).toEqual(true);
+  });
+
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token when token was used recently when force is true", async () => {
     vi.setSystemTime(new Date("2025-11-15T11:08:50.571Z"));
 

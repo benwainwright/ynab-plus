@@ -1,15 +1,11 @@
 import { UserNotFoundError } from "@errors";
-import type {
-  ICommandMessage,
-  IEventBus,
-  IRepository,
-  ISingleItemStore,
-} from "@ports";
+import type { IRepository } from "@ports";
 import { User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 
 import { GetUserService } from "./get-user-service.ts";
+import { createMockServiceContext } from "@test-helpers";
 
 describe("get user service", () => {
   it("simply returns a user, given the correct id", async () => {
@@ -32,17 +28,9 @@ describe("get user service", () => {
 
     const service = new GetUserService(mockUserRepo, mock());
 
-    const command = mock<ICommandMessage<"GetUserCommand">>({
-      key: "GetUserCommand",
-      id: "foo",
-      data: {
-        username: "ben",
-      },
+    const context = createMockServiceContext("GetUserCommand", {
+      username: "ben",
     });
-
-    const currentUserCache = mock<ISingleItemStore<User>>();
-    const eventBus = mock<IEventBus>();
-    const context = { command, eventBus, currentUserCache };
 
     const result = await service.doHandle(context);
     expect(result).toEqual(user);
@@ -55,17 +43,9 @@ describe("get user service", () => {
 
     const service = new GetUserService(mockUserRepo, mock());
 
-    const command = mock<ICommandMessage<"GetUserCommand">>({
-      key: "GetUserCommand",
-      id: "foo",
-      data: {
-        username: "ben",
-      },
+    const context = createMockServiceContext("GetUserCommand", {
+      username: "ben",
     });
-
-    const currentUserCache = mock<ISingleItemStore<User>>();
-    const eventBus = mock<IEventBus>();
-    const context = { command, eventBus, currentUserCache };
 
     await expect(service.doHandle(context)).rejects.toThrow(UserNotFoundError);
   });

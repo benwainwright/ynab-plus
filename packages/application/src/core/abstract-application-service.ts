@@ -1,7 +1,13 @@
 import { NotAuthorisedError } from "@errors";
-import type { IHandleContext, ISingleItemStore } from "@ports";
+import type { IHandleContext } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { Command, Commands, Permission, User } from "@ynab-plus/domain";
+import {
+  User,
+  type Command,
+  type Commands,
+  type IRole,
+  type Permission,
+} from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "abstract-application-service" };
 
@@ -13,7 +19,9 @@ export abstract class AbstractApplicationService<
   public abstract readonly commandName: TKey;
   public abstract readonly requiredPermissions: Permission[];
 
-  public canHandle(command: Command): command is Command<TKey> {
+  public canHandle<TRole extends IRole>(
+    command: Command<keyof Commands, TRole>,
+  ): command is Command<TKey, TRole> {
     const result = command.key === this.commandName;
 
     this.logger.silly(
@@ -24,29 +32,19 @@ export abstract class AbstractApplicationService<
     return result;
   }
 
-  private async currentUserPermissions(
-    session: ISingleItemStore<User>,
-  ): Promise<Permission[]> {
-    const data = await session.get();
-
-    if (!data) {
+  private currentRolePermissions(role: IRole | undefined): Permission[] {
+    if (!role) {
       return ["public"];
     }
 
-    return data.permissions;
+    return role.permissions;
   }
 
-  public async doHandle(
-    context: IHandleContext<TKey>,
-  ): Promise<Commands[TKey]["response"]> {
-    const { currentUserCache, command } = context;
-
-    this.logger.debug(`Attempting to handle command`, {
-      ...LOG_CONTEXT,
-      command,
-    });
-
-    const permissions = await this.currentUserPermissions(currentUserCache);
+  private checkIsAuthorised<TRole extends IRole>(
+    context: IHandleContext<TKey, TRole>,
+  ) {
+    const { command } = context;
+    const permissions = this.currentRolePermissions(command.role);
 
     const hasValidPermission = Boolean(
       permissions.find((permission) =>
@@ -54,26 +52,37 @@ export abstract class AbstractApplicationService<
       ),
     );
 
-    if (!hasValidPermission) {
-      this.logger.silly(`Did not have valid permissions`, {
-        ...LOG_CONTEXT,
-      });
-
-      const data = await currentUserCache.get();
-
-      throw new NotAuthorisedError(
-        `Not authorised to execute ${this.commandName}`,
-        this.commandName,
-        data?.id,
-        permissions,
-        this.requiredPermissions,
+    if (hasValidPermission) {
+      this.logger.silly(
+        `Permissions are valid, proceeding to handle`,
+        LOG_CONTEXT,
       );
+      return;
     }
 
-    this.logger.silly(
-      `Permissions are valid, proceeding to handle`,
-      LOG_CONTEXT,
+    this.logger.silly(`Did not have valid permissions`, {
+      ...LOG_CONTEXT,
+    });
+
+    throw new NotAuthorisedError(
+      `Not authorised to execute ${this.commandName}`,
+      this.commandName,
+      command.role,
+      this.requiredPermissions,
     );
+  }
+
+  public async doHandle<TRole extends IRole = User>(
+    context: IHandleContext<TKey, TRole>,
+  ): Promise<Commands[TKey]["response"]> {
+    const { command } = context;
+
+    this.logger.debug(`Attempting to handle command`, {
+      ...LOG_CONTEXT,
+      command,
+    });
+
+    this.checkIsAuthorised(context);
 
     const result = await this.handle(context);
 
@@ -82,7 +91,7 @@ export abstract class AbstractApplicationService<
     return result;
   }
 
-  protected abstract handle(
-    context: IHandleContext<TKey>,
+  protected abstract handle<TRole extends IRole = User>(
+    context: IHandleContext<TKey, TRole>,
   ): Promise<Commands[TKey]["response"]>;
 }

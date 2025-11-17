@@ -1,8 +1,9 @@
 import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { User } from "@ynab-plus/domain";
+import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
+import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 
@@ -15,16 +16,16 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
   public constructor(
     private users: IRepository<User>,
     private passwordHasher: IPasswordHasher,
+    private currentUserSetter: ICurrentUserSetter,
     logger: ILogger,
   ) {
     super(logger);
   }
 
-  public override async handle({
+  public override async handle<TRole extends IRole>({
     command,
-    currentUserCache,
     eventBus,
-  }: IHandleContext<"RegisterCommand">) {
+  }: IHandleContext<"RegisterCommand", TRole>) {
     const { password, username, email } = command.data;
 
     const hash = await this.passwordHasher.hash(password);
@@ -41,7 +42,7 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
       await this.users.save(user);
       this.logger.verbose(`Save successful!`, LOG_CONTEXT);
 
-      await currentUserCache.set(user);
+      await this.currentUserSetter.set(user);
       eventBus.emit("RegisterSuccess", undefined);
       return { success: true, id: username } as const;
     } catch (error) {

@@ -1,6 +1,6 @@
 import type { ICommandMessage, IEventBus, IServiceBus } from "@ynab-plus/app";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { Command } from "@ynab-plus/domain";
+import { Command, User } from "@ynab-plus/domain";
 import { WebSocket } from "ws";
 import z from "zod";
 
@@ -13,6 +13,7 @@ export class ServerWebsocketClient {
     private serviceBus: IServiceBus,
     private eventBus: IEventBus,
     private logger: ILogger,
+    private currentUser: User | undefined,
   ) {}
 
   public onConnect(socket: WebSocket) {
@@ -51,7 +52,7 @@ export class ServerWebsocketClient {
         message: JSON.stringify(parsed),
       });
 
-      const command = new Command(parsed.key, parsed.data);
+      const command = new Command(parsed.key, parsed.data, this.currentUser);
 
       const response = await this.serviceBus.execute(command);
 

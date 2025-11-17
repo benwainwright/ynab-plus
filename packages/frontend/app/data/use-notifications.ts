@@ -56,7 +56,7 @@ export const useNotifications = () => {
       case "NotAuthorisedError":
         showNotification({
           type: "error",
-          message: `Could not execute handler ${event.data.handler}. User '${String(event.data.userId)}' permissions: ${event.data.userPermissions.join(", ")}, required: ${event.data.requiredPermissions.join(", ")}`,
+          message: `Could not execute handler ${event.data.handler}. User '${String(event.data.role?.id)}' permissions: ${String(event.data.role?.permissions.join(", "))}, required: ${event.data.requiredPermissions.join(", ")}`,
         });
         break;
     }

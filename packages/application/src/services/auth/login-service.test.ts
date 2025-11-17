@@ -1,4 +1,8 @@
-import { type IPasswordVerifier, type IRepository } from "@ports";
+import {
+  type ICurrentUserSetter,
+  type IPasswordVerifier,
+  type IRepository,
+} from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -14,6 +18,7 @@ describe("login service", () => {
       email: "email",
     });
 
+    const mockUserSetter = mock<ICurrentUserSetter>();
     const password = "foo";
 
     const userRepo = mock<IRepository<User>>();
@@ -33,11 +38,16 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(userRepo, passwordVerifier, mock());
+    const service = new LoginService(
+      userRepo,
+      passwordVerifier,
+      mockUserSetter,
+      mock(),
+    );
 
     const result = await service.doHandle(context);
 
-    expect(context.currentUserCache.set).toHaveBeenCalledWith(mockUser);
+    expect(mockUserSetter.set).toHaveBeenCalledWith(mockUser);
 
     expect(result.success).toEqual(true);
     if (result.success) {
@@ -61,6 +71,7 @@ describe("login service", () => {
 
     when(userRepo.get).calledWith("ben").thenResolve(mockUser);
 
+    const mockUserSetter = mock<ICurrentUserSetter>();
     const passwordVerifier = mock<IPasswordVerifier>();
 
     when(passwordVerifier.verify)
@@ -74,11 +85,16 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(userRepo, passwordVerifier, mock());
+    const service = new LoginService(
+      userRepo,
+      passwordVerifier,
+      mockUserSetter,
+      mock(),
+    );
 
     const result = await service.doHandle(context);
 
-    expect(context.currentUserCache.set).not.toHaveBeenCalled();
+    expect(mockUserSetter.set).not.toHaveBeenCalled();
 
     expect(result.success).toEqual(false);
 
@@ -94,6 +110,7 @@ describe("login service", () => {
 
     const passwordVerifier = mock<IPasswordVerifier>();
 
+    const mockUserSetter = mock<ICurrentUserSetter>();
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
       password,
@@ -101,11 +118,16 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(userRepo, passwordVerifier, mock());
+    const service = new LoginService(
+      userRepo,
+      passwordVerifier,
+      mockUserSetter,
+      mock(),
+    );
 
     const result = await service.doHandle(context);
 
-    expect(context.currentUserCache.set).not.toHaveBeenCalled();
+    expect(mockUserSetter.set).not.toHaveBeenCalled();
 
     expect(result.success).toEqual(false);
 

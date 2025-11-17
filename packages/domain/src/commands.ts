@@ -2,6 +2,7 @@ import type { IAccount } from "./i-account.ts";
 import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
 import type { RegularTask } from "./regular-task.ts";
+import type { User } from "./user.ts";
 
 export interface Commands {
   ListScheduledTasksCommand: {
@@ -101,13 +102,13 @@ export interface Commands {
   };
   GetCurrentUserCommand: {
     request: undefined;
-    response: IUser | undefined;
+    response: User | undefined;
   };
   GetUserCommand: {
     request: {
       username: string;
     };
-    response: IUser | undefined;
+    response: User | undefined;
   };
   HelloWorldCommand: {
     request: {

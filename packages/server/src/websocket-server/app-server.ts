@@ -1,4 +1,4 @@
-import type { ServiceBusFactory } from "@ynab-plus/app";
+import type { RequestScopedServiceBusFactory } from "@ynab-plus/app";
 import { ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import { WebSocketServer } from "ws";
 
@@ -13,7 +13,7 @@ export class AppServer {
   private sessionIdHandler: SessionIdHandler;
 
   public constructor(
-    private serviceBusFactory: ServiceBusFactory,
+    private serviceBusFactory: RequestScopedServiceBusFactory,
     private port: ConfigValue<number>,
     private host: ConfigValue<string>,
     private logger: ILogger,
@@ -54,19 +54,21 @@ export class AppServer {
     wss.on("connection", async (ws, request) => {
       this.logger.debug("Websocket connection established", LOG_CONTEXT);
 
-      const { serviceBus, eventBus } = await this.serviceBusFactory({
-        sessionIdRequester: {
-          // eslint-disable-next-line @typescript-eslint/require-await
-          getSessionId: async () => {
-            return this.sessionIdHandler.getSessionId(request);
+      const { serviceBus, eventBus, currentUser } =
+        await this.serviceBusFactory({
+          sessionIdRequester: {
+            // eslint-disable-next-line @typescript-eslint/require-await
+            getSessionId: async () => {
+              return this.sessionIdHandler.getSessionId(request);
+            },
           },
-        },
-      });
+        });
 
       const client = new ServerWebsocketClient(
         serviceBus,
         eventBus,
         this.logger,
+        currentUser,
       );
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises

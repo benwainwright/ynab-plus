@@ -7,6 +7,7 @@ import {
 } from "./i-regular-tasks.ts";
 
 import type { ISerialisable } from "./i-serialisable.ts";
+import type { SystemContext } from "./system-context.ts";
 
 export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
   implements
@@ -14,7 +15,7 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
     ISerialisable<IRegularTask<TTaskKey>, "regularTask">
 {
   public readonly id: string;
-  public readonly onBehalfOf: string;
+  public readonly onBehalfOf: string | undefined;
   public readonly data: string | undefined;
   public readonly lastExecution: Date | undefined;
   public readonly created: Date;
@@ -53,10 +54,11 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
     return `${this.minute} ${this.hour} ${this.day} ${this.month} ${this.weekDay}`;
   }
 
-  public getCommand() {
+  public getCommand(role: SystemContext) {
     return new Command(
       this.command,
       JSON.parse(this.data ?? "{}") as Commands[TTaskKey]["request"],
+      role,
     );
   }
 

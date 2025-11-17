@@ -1,5 +1,6 @@
 export { composeApplicationLayer } from "./compose-application-layer.ts";
 export { type IInfrastructurePorts } from "@core";
+export { type IApplicationLayer } from "./i-application-layer.ts";
 export {
   type IAccountRepository,
   type ICommandMessage,
@@ -21,6 +22,7 @@ export {
   type ISessionIdRequester,
   type ISingleItemStore,
   type IUUIDGenerator,
-  type ServiceBusFactory,
+  type RequestScopedServiceBusFactory,
+  type SingletonServiceBusFactory,
   type ITaskScheduler,
 } from "@ports";

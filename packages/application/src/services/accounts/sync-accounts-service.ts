@@ -7,13 +7,14 @@ import type {
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
-import { AbstractApplicationService } from "@core";
+import { AbstractApplicationServiceWithUserContext } from "@core";
+import type { IRole } from "@ynab-plus/domain";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 
 const LOG_CONTEXT = { context: "download-accounts-service" };
 
-export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
+export class SyncAccountsService extends AbstractApplicationServiceWithUserContext<"SyncAccountsCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private accountsFetcher: IAccountsFetcher,
@@ -30,19 +31,16 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     "user",
   ];
 
-  protected override async handle({
+  protected override async handle<TRole extends IRole>({
     eventBus,
     command: {
       data: { force },
     },
-    currentUserCache,
-  }: IHandleContext<"SyncAccountsCommand">) {
+  }: IHandleContext<"SyncAccountsCommand", TRole>) {
     this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
-    const user = await currentUserCache.require();
-
     this.logger.debug(`Getting token from repo`, LOG_CONTEXT);
-    const token = await this.tokenRepository.get(user.id, "ynab");
+    const token = await this.tokenRepository.get(this.currentUser.id, "ynab");
 
     if (!token) {
       throw new AppError(`No token found for ynab`);

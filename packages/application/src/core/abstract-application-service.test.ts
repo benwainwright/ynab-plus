@@ -1,11 +1,6 @@
 import { NotAuthorisedError } from "@errors";
-import type {
-  ICommandMessage,
-  IEventBus,
-  IHandleContext,
-  ISingleItemStore,
-} from "@ports";
-import { type Permission, User } from "@ynab-plus/domain";
+import type { IEventBus, IHandleContext } from "@ports";
+import { Command, type IRole, type Permission, User } from "@ynab-plus/domain";
 import { describe, expect, it } from "vitest";
 import { mock } from "vitest-mock-extended";
 
@@ -19,16 +14,18 @@ describe("application service", () => {
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
-        protected override async handle(
-          _context: IHandleContext<"LogoutCommand">,
+        protected override async handle<TRole extends IRole = User>(
+          _context: IHandleContext<"LogoutCommand", TRole>,
         ): Promise<undefined> {}
       }
 
       const handler = new TestHandler(mock());
 
-      const command = mock<ICommandMessage<"LoginCommand">>({
-        key: "LoginCommand",
-      });
+      const command = new Command(
+        "LoginCommand",
+        { username: "foo", password: "bar" },
+        undefined,
+      );
 
       const result = handler.canHandle(command);
       expect(result).toBe(false);
@@ -40,16 +37,14 @@ describe("application service", () => {
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
-        protected override async handle(
-          _context: IHandleContext<"LogoutCommand">,
+        protected override async handle<TRole extends IRole = User>(
+          _context: IHandleContext<"LogoutCommand", TRole>,
         ): Promise<undefined> {}
       }
 
       const handler = new TestHandler(mock());
 
-      const command = mock<ICommandMessage<"LogoutCommand">>({
-        key: "LogoutCommand",
-      });
+      const command = new Command("LogoutCommand", undefined, undefined);
 
       const result = handler.canHandle(command);
       expect(result).toBe(true);
@@ -57,15 +52,15 @@ describe("application service", () => {
   });
   describe("doHandle", () => {
     it("executes the handle method when doHandle is called", async () => {
-      let passed: IHandleContext<"LogoutCommand"> | undefined;
+      let passed: IHandleContext<"LogoutCommand", IRole> | undefined;
       class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
         public override readonly commandName = "LogoutCommand";
 
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         // eslint-disable-next-line @typescript-eslint/require-await
-        protected override async handle(
-          context: IHandleContext<"LogoutCommand">,
+        protected override async handle<TRole extends IRole = User>(
+          context: IHandleContext<"LogoutCommand", TRole>,
         ): Promise<undefined> {
           passed = context;
         }
@@ -73,13 +68,10 @@ describe("application service", () => {
 
       const handler = new TestHandler(mock());
 
-      const command = mock<ICommandMessage<"LogoutCommand">>({
-        key: "LogoutCommand",
-      });
+      const command = new Command("LogoutCommand", undefined, undefined);
 
       const eventBus = mock<IEventBus>();
-      const currentUserCache = mock<ISingleItemStore<User>>();
-      const context = { command, eventBus, currentUserCache };
+      const context = { command, eventBus };
 
       await handler.doHandle(context);
       expect(passed).toEqual(context);
@@ -96,32 +88,27 @@ describe("application service", () => {
         ];
 
         // eslint-disable-next-line @typescript-eslint/require-await
-        protected override async handle(
-          _context: IHandleContext<"LogoutCommand">,
+        protected override async handle<TRole extends IRole = User>(
+          _context: IHandleContext<"LogoutCommand", TRole>,
         ): Promise<undefined> {
           handled = true;
         }
       }
 
-      const command = mock<ICommandMessage<"LogoutCommand">>({
-        key: "LogoutCommand",
+      const user = new User({
+        id: "test",
+        permissions: ["admin"],
+        email: "a@b.c",
+        passwordHash: "foo",
       });
 
+      const command = new Command("LogoutCommand", undefined, user);
+
       const eventBus = mock<IEventBus>();
-      const currentUserCache = mock<ISingleItemStore<User>>({
-        // eslint-disable-next-line @typescript-eslint/require-await
-        get: async () =>
-          new User({
-            id: "test",
-            permissions: ["admin"],
-            email: "a@b.c",
-            passwordHash: "foo",
-          }),
-      });
 
       const handler = new TestHandler(mock());
 
-      const context = { command, eventBus, currentUserCache };
+      const context = { command, eventBus };
 
       await handler.doHandle(context);
       expect(handled).toBe(true);
@@ -135,32 +122,27 @@ describe("application service", () => {
         public override readonly requiredPermissions: Permission[] = ["admin"];
 
         // eslint-disable-next-line @typescript-eslint/require-await
-        protected override async handle(
-          _context: IHandleContext<"LogoutCommand">,
+        protected override async handle<TRole extends IRole = User>(
+          _context: IHandleContext<"LogoutCommand", TRole>,
         ): Promise<undefined> {
           handled = true;
         }
       }
 
-      const command = mock<ICommandMessage<"LogoutCommand">>({
-        key: "LogoutCommand",
+      const user = new User({
+        id: "test",
+        permissions: ["user"],
+        email: "a@b.c",
+        passwordHash: "foo",
       });
 
+      const command = new Command("LogoutCommand", undefined, user);
+
       const eventBus = mock<IEventBus>();
-      const currentUserCache = mock<ISingleItemStore<User>>({
-        // eslint-disable-next-line @typescript-eslint/require-await
-        get: async () =>
-          new User({
-            id: "test",
-            permissions: ["user"],
-            email: "a@b.c",
-            passwordHash: "foo",
-          }),
-      });
 
       const handler = new TestHandler(mock());
 
-      const context = { command, eventBus, currentUserCache };
+      const context = { command, eventBus };
 
       await expect(handler.doHandle(context)).rejects.toThrow(
         NotAuthorisedError,

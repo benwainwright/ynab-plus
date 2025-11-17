@@ -3,11 +3,12 @@ import type {
   IOauthTokenRepository,
   ITaskScheduler,
 } from "@ports";
-import { AbstractApplicationService } from "@core";
+import { AbstractApplicationServiceWithUserContext } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
+import type { IRole } from "@ynab-plus/domain";
 
-export class DisconnectOauthIntegrationService extends AbstractApplicationService<"DisconnectOauthIntegrationCommand"> {
+export class DisconnectOauthIntegrationService extends AbstractApplicationServiceWithUserContext<"DisconnectOauthIntegrationCommand"> {
   public constructor(
     private tokenRepo: IOauthTokenRepository,
     private taskScheduler: ITaskScheduler,
@@ -23,19 +24,19 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
     "admin",
   ];
 
-  protected override async handle({
-    currentUserCache,
+  protected override async handle<TRole extends IRole>({
     command: {
       data: { provider },
     },
     eventBus,
-  }: IHandleContext<"DisconnectOauthIntegrationCommand">): Promise<undefined> {
-    const user = await currentUserCache.require();
-
-    await this.tokenRepo.delete(user.id, provider);
+  }: IHandleContext<
+    "DisconnectOauthIntegrationCommand",
+    TRole
+  >): Promise<undefined> {
+    await this.tokenRepo.delete(this.currentUser.id, provider);
 
     const task = await this.taskScheduler.getTask(
-      getTokenRefreshTaskKey(user.id, provider),
+      getTokenRefreshTaskKey(this.currentUser.id, provider),
     );
 
     if (task) {

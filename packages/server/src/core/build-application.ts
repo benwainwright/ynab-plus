@@ -1,28 +1,23 @@
 import { composeApplicationLayer } from "@ynab-plus/app";
-import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
+import { type IBootstrapper, type ILogger } from "@ynab-plus/bootstrap";
 import { compose as composeIntegrationAdapters } from "@ynab-plus/integration-adapters";
 import { compose as composeNodeAdapters } from "@ynab-plus/node-adapters";
 import { compose as composeSqliteAdapters } from "@ynab-plus/sqlite-adapters";
 
 interface IApplicationInitialConfig {
   name: string;
-  configFile: string;
+  bootstrapper: IBootstrapper;
+  logger: ILogger;
 }
 
 export const buildApplication = ({
   name,
-  configFile,
+  bootstrapper,
+  logger,
 }: IApplicationInitialConfig) => {
-  const logger = getWinstonLogger();
-
   const LOG_CONTEXT = { context: "start" };
 
   logger.info(`Initialising ${name}`, LOG_CONTEXT);
-
-  const bootstrapper = new Bootstrapper({
-    configFile,
-    logger,
-  });
 
   const { eventBus, sessionStorage, hashValidator } = composeNodeAdapters(
     bootstrapper,
@@ -57,10 +52,5 @@ export const buildApplication = ({
     bootstrapper,
   });
 
-  return {
-    ...applicationLayer,
-    configurator: bootstrapper,
-    logger,
-    start: async () => bootstrapper.start(),
-  };
+  return applicationLayer;
 };

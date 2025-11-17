@@ -1,1 +1,1 @@
-export { TaskScheduler } from "./task-scheduler.ts";
+export { compose } from "./compose.ts";

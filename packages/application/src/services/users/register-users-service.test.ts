@@ -1,5 +1,5 @@
 import { AppError } from "@errors";
-import type { IPasswordHasher, IRepository } from "@ports";
+import type { ICurrentUserSetter, IPasswordHasher, IRepository } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -21,7 +21,14 @@ describe("register users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const service = new RegisterUserService(mockRepo, hasher, mock());
+    const mockUserSetter = mock<ICurrentUserSetter>();
+
+    const service = new RegisterUserService(
+      mockRepo,
+      hasher,
+      mockUserSetter,
+      mock(),
+    );
 
     const result = await service.doHandle(context);
 
@@ -34,13 +41,13 @@ describe("register users service", () => {
 
     expect(mockRepo.save).toHaveBeenCalledWith(newUser);
 
-    const { currentUserCache, eventBus } = context;
+    const { eventBus } = context;
 
     expect(result.success).toEqual(true);
 
     if (result.success) {
       expect(result.id).toEqual("ben");
-      expect(currentUserCache.set).toHaveBeenCalledWith(newUser);
+      expect(mockUserSetter.set).toHaveBeenCalledWith(newUser);
       expect(eventBus.emit).toHaveBeenCalledWith("RegisterSuccess", undefined);
     }
   });
@@ -58,7 +65,14 @@ describe("register users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const service = new RegisterUserService(mockRepo, hasher, mock());
+    const mockUserSetter = mock<ICurrentUserSetter>();
+
+    const service = new RegisterUserService(
+      mockRepo,
+      hasher,
+      mockUserSetter,
+      mock(),
+    );
 
     const error = new AppError(`whoops`);
 
@@ -75,9 +89,9 @@ describe("register users service", () => {
 
     const result = await service.doHandle(context);
 
-    const { eventBus, currentUserCache } = context;
+    const { eventBus } = context;
 
-    expect(currentUserCache.set).not.toHaveBeenCalled();
+    expect(mockUserSetter.set).not.toHaveBeenCalled();
 
     expect(result.success).toEqual(false);
     if (!result.success) {
@@ -101,7 +115,14 @@ describe("register users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const service = new RegisterUserService(mockRepo, hasher, mock());
+    const mockUserSetter = mock<ICurrentUserSetter>();
+
+    const service = new RegisterUserService(
+      mockRepo,
+      hasher,
+      mockUserSetter,
+      mock(),
+    );
 
     when(mockRepo.save)
       .calledWith(

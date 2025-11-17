@@ -5,14 +5,14 @@ import type {
   NewTokenRequesterFactory,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import { RegularTask, type Permission } from "@ynab-plus/domain";
+import { RegularTask, type IRole, type Permission } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "@core";
+import { AbstractApplicationServiceWithUserContext } from "@core";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
 
 const LOG_CONTEXT = { context: "geenrate-new-oauth-token-service" };
 
-export class GenerateNewOauthTokenService extends AbstractApplicationService<"GenerateNewOauthTokenCommand"> {
+export class GenerateNewOauthTokenService extends AbstractApplicationServiceWithUserContext<"GenerateNewOauthTokenCommand"> {
   public override readonly commandName = "GenerateNewOauthTokenCommand";
 
   public override requiredPermissions: Permission[] = ["user", "admin"];
@@ -26,12 +26,11 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     super(logger);
   }
 
-  protected override async handle({
-    currentUserCache,
+  protected override async handle<TRole extends IRole>({
     command: {
       data: { code, provider },
     },
-  }: IHandleContext<"GenerateNewOauthTokenCommand">): Promise<{
+  }: IHandleContext<"GenerateNewOauthTokenCommand", TRole>): Promise<{
     status: "connected";
     expiry: Date;
     refreshed: Date | undefined;
@@ -44,11 +43,9 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     const requester = this.newTokenRequesterFactory(provider);
 
-    const currentUser = await currentUserCache.require();
-
     this.logger.silly(`Exchanging token`, LOG_CONTEXT);
 
-    const token = await requester.newToken(currentUser.id, code);
+    const token = await requester.newToken(this.currentUser.id, code);
 
     this.logger.silly(`Token exchanged`, LOG_CONTEXT);
 
@@ -57,7 +54,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     const refreshTask = new RegularTask({
       name: "Refresh ynab Oauth token",
       description: "",
-      id: getTokenRefreshTaskKey(currentUser.id, provider),
+      id: getTokenRefreshTaskKey(this.currentUser.id, provider),
       minute: "0",
       onBehalfOf: "ben",
       command: "CheckOauthIntegrationStatusCommand",

@@ -3,24 +3,28 @@ import type {
   IEventBus,
   ISingleItemStore,
 } from "@ynab-plus/app";
-import type { Commands, User } from "@ynab-plus/domain";
+import {
+  Command,
+  type Commands,
+  type IRole,
+  type User,
+} from "@ynab-plus/domain";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 
-export const createMockServiceContext = <TCommandKey extends keyof Commands>(
+export const createMockServiceContext = <
+  TCommandKey extends keyof Commands,
+  TRole extends IRole,
+>(
   key: TCommandKey,
   data: ICommandMessage<TCommandKey>["data"],
-  currentUser?: User,
+  currentUser?: TRole,
 ): {
-  command: ICommandMessage<TCommandKey>;
+  command: Command<TCommandKey, TRole>;
   eventBus: IEventBus;
   currentUserCache: ISingleItemStore<User>;
 } => {
-  const command: ICommandMessage<TCommandKey> = {
-    key,
-    id: "foo",
-    data,
-  };
+  const command = new Command(key, data, currentUser);
 
   const eventBus = mock<IEventBus>();
 

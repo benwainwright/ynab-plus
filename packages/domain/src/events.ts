@@ -4,6 +4,8 @@ import type { ICommandResponse } from "./i-command-response.ts";
 import type { IUser } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
 import type { RegularTask } from "./regular-task.ts";
+import type { SystemContext } from "./system-context.ts";
+import type { User } from "./user.ts";
 
 export interface Events {
   AppInitialised: { url: string; port: number };
@@ -27,9 +29,8 @@ export interface Events {
   UserUpdated: IUser;
   RegisterFail: { reason: string };
   NotAuthorisedError: {
-    userId: string | undefined;
+    role: User | SystemContext | undefined;
     handler: string;
-    userPermissions: Permission[];
     requiredPermissions: Permission[];
   };
   ApplicationError: {

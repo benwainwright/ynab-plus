@@ -3,6 +3,7 @@ import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 
 import { LogoutService } from "./logout-service.ts";
+import type { ICurrentUserSetter } from "@ports";
 
 describe("logout service", () => {
   it("deletes the current user from the session cache", async () => {
@@ -12,6 +13,7 @@ describe("logout service", () => {
       permissions: ["admin"],
       email: "email",
     });
+    const mockUserSetter = mock<ICurrentUserSetter>();
 
     const context = createMockServiceContext(
       "LogoutCommand",
@@ -19,10 +21,10 @@ describe("logout service", () => {
       mockUser,
     );
 
-    const service = new LogoutService(mock());
+    const service = new LogoutService(mockUserSetter, mock());
 
     await service.doHandle(context);
 
-    expect(context.currentUserCache.set).toHaveBeenCalledWith(undefined);
+    expect(mockUserSetter.set).toHaveBeenCalledWith(undefined);
   });
 });

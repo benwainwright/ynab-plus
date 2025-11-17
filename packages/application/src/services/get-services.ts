@@ -15,14 +15,10 @@ import { CheckOauthIntegrationStatusService } from "./oauth/check-oauth-integrat
 import { DisconnectOauthIntegrationService } from "./oauth/disconnect-oauth-integration-service.ts";
 import { GenerateNewOauthTokenService } from "./oauth/generate-new-oauth-token-service.ts";
 import { UpdateUserService } from "./users/update-user-service.ts";
-import { GetCurrentUserService } from "./users/get-current-user-service.ts";
 import { ListUsersService } from "./users/list-users-service.ts";
 import { GetUserService } from "./users/get-user-service.ts";
-import { RegisterUserService } from "./users/register-user-service.ts";
 import { ListAccountsService } from "./accounts/list-accounts-service.ts";
 import { SyncAccountsService } from "./accounts/sync-accounts-service.ts";
-import { LoginService } from "./auth/login-service.ts";
-import { LogoutService } from "./auth/logout-service.ts";
 import { ListScheduledTasksService } from "./tasks/list-scheduled-tasks-service.ts";
 
 import type { ILogger } from "@ynab-plus/bootstrap";
@@ -49,18 +45,13 @@ export const getServices = ({
   oauthTokenRepository,
   taskScheduler,
   oauthCheckerFactory,
-  passwordVerifier,
   passwordHasher,
   accountsRepository,
   accountsFetcher,
 }: IServiceDependencies): AbstractApplicationService[] => {
   return [
-    new GetCurrentUserService(userRepository, logger),
     new GetUserService(userRepository, logger),
     new ListUsersService(userRepository, logger),
-    new LoginService(userRepository, passwordVerifier, logger),
-    new LogoutService(logger),
-    new RegisterUserService(userRepository, passwordHasher, logger),
     new UpdateUserService(userRepository, passwordHasher, logger),
     new DisconnectOauthIntegrationService(
       oauthTokenRepository,
@@ -72,14 +63,12 @@ export const getServices = ({
       oauthCheckerFactory,
       logger,
     ),
-
     new GenerateNewOauthTokenService(
       oauthTokenRepository,
       newTokenRequesterFactory,
       taskScheduler,
       logger,
     ),
-
     new SyncAccountsService(
       oauthTokenRepository,
       accountsFetcher,

@@ -1,8 +1,9 @@
+import type { IRole } from "./i-role.ts";
 import type { ISerialisable } from "./i-serialisable.ts";
 import { type IUser, userSchema } from "./i-user.ts";
 import type { Permission } from "./permissions.ts";
 
-export class User implements IUser, ISerialisable<IUser, "user"> {
+export class User implements IUser, ISerialisable<IUser, "user">, IRole {
   public readonly id: string;
   private _passwordHash: string;
   private _email: string;

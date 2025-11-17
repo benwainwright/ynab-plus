@@ -1,6 +1,6 @@
 import type { IHandleContext, IRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
+import type { IRole, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 
@@ -18,9 +18,9 @@ export class ListUsersService extends AbstractApplicationService<"ListUsersComma
 
   public override readonly commandName = "ListUsersCommand";
 
-  public override async handle({
+  public override async handle<TRole extends IRole>({
     command,
-  }: IHandleContext<"ListUsersCommand">): Promise<User[]> {
+  }: IHandleContext<"ListUsersCommand", TRole>): Promise<User[]> {
     const { offset, limit } = command.data;
 
     return await this.users.getMany(offset, limit);

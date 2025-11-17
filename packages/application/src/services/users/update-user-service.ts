@@ -1,6 +1,6 @@
 import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { User } from "@ynab-plus/domain";
+import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 
@@ -20,10 +20,10 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
     super(logger);
   }
 
-  public override async handle({
+  public override async handle<TRole extends IRole>({
     command,
     eventBus,
-  }: IHandleContext<"UpdateUserCommand">) {
+  }: IHandleContext<"UpdateUserCommand", TRole>) {
     const { password, email, permissions, username } = command.data;
 
     try {

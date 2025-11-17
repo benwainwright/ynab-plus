@@ -1,32 +1,32 @@
-import type { ServiceBusFactory } from "@ynab-plus/app";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import z from "zod";
 
 import { AppServer } from "./app-server.ts";
+import type { IApplicationLayer } from "@ynab-plus/app";
 
 interface WebAppDependencies {
-  serviceBusFactory: ServiceBusFactory;
-  configurator: IBootstrapper;
+  application: IApplicationLayer;
+  bootstrapper: IBootstrapper;
   logger: ILogger;
 }
 
 export const LOG_CONTEXT = { context: "web-app" };
 
 export const composeWebApp = async ({
-  serviceBusFactory,
-  configurator,
+  application,
+  bootstrapper,
   logger,
   // eslint-disable-next-line @typescript-eslint/require-await
 }: WebAppDependencies) => {
   logger.info(`Composing web application`, LOG_CONTEXT);
   const server = new AppServer(
-    serviceBusFactory,
-    configurator.configValue("websocketPort", z.number()),
-    configurator.configValue("websocketHost", z.string()),
+    application.withRequestScopedServiceBus(),
+    bootstrapper.configValue("websocketPort", z.number()),
+    bootstrapper.configValue("websocketHost", z.string()),
     logger,
   );
 
-  configurator.addInitStep(async () => {
+  bootstrapper.addInitStep(async () => {
     logger.info(`Starting websocket server`, LOG_CONTEXT);
     await server.start();
     logger.info(`Websocket server started`, LOG_CONTEXT);
