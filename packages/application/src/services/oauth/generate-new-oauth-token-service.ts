@@ -7,12 +7,12 @@ import type {
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { RegularTask, type IRole, type Permission } from "@ynab-plus/domain";
 
-import { AbstractApplicationServiceWithUserContext } from "@core";
+import { AbstractApplicationService } from "@core";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
 
 const LOG_CONTEXT = { context: "geenrate-new-oauth-token-service" };
 
-export class GenerateNewOauthTokenService extends AbstractApplicationServiceWithUserContext<"GenerateNewOauthTokenCommand"> {
+export class GenerateNewOauthTokenService extends AbstractApplicationService<"GenerateNewOauthTokenCommand"> {
   public override readonly commandName = "GenerateNewOauthTokenCommand";
 
   public override requiredPermissions: Permission[] = ["user", "admin"];

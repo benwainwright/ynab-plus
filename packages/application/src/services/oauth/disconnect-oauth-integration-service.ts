@@ -3,12 +3,12 @@ import type {
   IOauthTokenRepository,
   ITaskScheduler,
 } from "@ports";
-import { AbstractApplicationServiceWithUserContext } from "@core";
+import { AbstractApplicationService } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
 import type { IRole } from "@ynab-plus/domain";
 
-export class DisconnectOauthIntegrationService extends AbstractApplicationServiceWithUserContext<"DisconnectOauthIntegrationCommand"> {
+export class DisconnectOauthIntegrationService extends AbstractApplicationService<"DisconnectOauthIntegrationCommand"> {
   public constructor(
     private tokenRepo: IOauthTokenRepository,
     private taskScheduler: ITaskScheduler,

@@ -1,7 +1,8 @@
-import { NotAuthorisedError } from "@errors";
+import { AppError, NotAuthorisedError } from "@errors";
 import type { IHandleContext } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import {
+  SystemContext,
   User,
   type Command,
   type Commands,
@@ -18,6 +19,7 @@ export abstract class AbstractApplicationService<
 
   public abstract readonly commandName: TKey;
   public abstract readonly requiredPermissions: Permission[];
+  private _user: User | undefined;
 
   public canHandle<TRole extends IRole>(
     command: Command<keyof Commands, TRole>,
@@ -40,11 +42,33 @@ export abstract class AbstractApplicationService<
     return role.permissions;
   }
 
+  private getUserFromRole(role: IRole | undefined) {
+    if (role instanceof User) {
+      return role;
+    }
+
+    if (role instanceof SystemContext && role.onBehalfOf) {
+      return role.onBehalfOf;
+    }
+
+    return undefined;
+  }
+
+  protected get currentUser(): User {
+    if (!this._user) {
+      throw new AppError(
+        `Service cannot be executed without a user based context`,
+      );
+    }
+    return this._user;
+  }
+
   private checkIsAuthorised<TRole extends IRole>(
     context: IHandleContext<TKey, TRole>,
   ) {
     const { command } = context;
     const permissions = this.currentRolePermissions(command.role);
+    this._user = this.getUserFromRole(command.role);
 
     const hasValidPermission = Boolean(
       permissions.find((permission) =>

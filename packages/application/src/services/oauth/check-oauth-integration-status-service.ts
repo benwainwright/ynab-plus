@@ -10,9 +10,9 @@ export const LOG_CONTEXT = {
   context: "check-oauth-integration-status-service",
 };
 
-import { AbstractApplicationServiceWithUserContext } from "@core";
+import { AbstractApplicationService } from "@core";
 
-export class CheckOauthIntegrationStatusService extends AbstractApplicationServiceWithUserContext<"CheckOauthIntegrationStatusCommand"> {
+export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private oauthClientFactory: IOauthCheckerFactory,

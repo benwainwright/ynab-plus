@@ -1,3 +1,4 @@
+import { AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import type {
   IAccountRepository,
@@ -7,14 +8,13 @@ import type {
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
-import { AbstractApplicationServiceWithUserContext } from "@core";
 import type { IRole } from "@ynab-plus/domain";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 
 const LOG_CONTEXT = { context: "download-accounts-service" };
 
-export class SyncAccountsService extends AbstractApplicationServiceWithUserContext<"SyncAccountsCommand"> {
+export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
     private tokenRepository: IOauthTokenRepository,
     private accountsFetcher: IAccountsFetcher,

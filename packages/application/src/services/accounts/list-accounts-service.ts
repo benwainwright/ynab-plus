@@ -1,9 +1,9 @@
 import type { IAccountRepository } from "@ports";
-import { AbstractApplicationServiceWithUserContext } from "@core";
+import { AbstractApplicationService } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { type Account, type Permission } from "@ynab-plus/domain";
 
-export class ListAccountsService extends AbstractApplicationServiceWithUserContext<"ListAccountsCommand"> {
+export class ListAccountsService extends AbstractApplicationService<"ListAccountsCommand"> {
   public override requiredPermissions: Permission[] = ["user", "admin"];
 
   public constructor(
