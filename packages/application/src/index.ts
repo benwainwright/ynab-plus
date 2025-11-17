@@ -5,6 +5,7 @@ export {
   type ICommandMessage,
   type IEventBus,
   type IEventListener,
+  type IEventEmitter,
   type IEventPacket,
   type IListener,
   type IOauthCheckerFactory,

@@ -3,7 +3,7 @@ import cookie from "cookie";
 import { IncomingMessage } from "http";
 import { v7 } from "uuid";
 
-import { WebAppError } from "./web-app-error.ts";
+import { ServerError } from "@core";
 
 export const SESSION_ID_COOKIE_KEY = `ynab-plus-session-id`;
 
@@ -47,7 +47,7 @@ export class SessionIdHandler {
       LOG_CONTEXT,
     );
     if (!id) {
-      throw new WebAppError(`No id was found`);
+      throw new ServerError(`No id was found`);
     }
     return id;
   }

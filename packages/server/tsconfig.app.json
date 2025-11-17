@@ -8,7 +8,7 @@
     "types": ["node"],
     "paths": {
       "@core": ["./src/core/index.ts"],
-      "@websocket-server": ["./src/websocker-server/index.ts"]
+      "@websocket-server": ["./src/websocket-server/index.ts"]
     }
   },
   "references": [

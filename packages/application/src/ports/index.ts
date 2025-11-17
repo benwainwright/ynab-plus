@@ -7,6 +7,7 @@ export {
   type IEventPacket,
   type IListener,
 } from "./i-event-listener.ts";
+export type { IEventEmitter } from "./i-event-emitter.ts";
 export type { IHandleContext } from "./i-handle-context.ts";
 export type { IOauthCheckerFactory } from "./i-oauth-checker-factory.ts";
 export type { IOauthNewTokenRequester } from "./i-oauth-new-token-requester.ts";

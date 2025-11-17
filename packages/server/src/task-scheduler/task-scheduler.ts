@@ -2,7 +2,7 @@ import { Command, RegularTask, type Events } from "@ynab-plus/domain";
 import type { IEventBus, IServiceBus } from "@ynab-plus/app";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
-import { WebAppError } from "../websocker-server/web-app-error.ts";
+import { ServerError } from "@core";
 
 const LOG_CONTEXT = { context: "start-scheduler" };
 
@@ -13,11 +13,7 @@ export class TaskScheduler {
     private serviceBus: IServiceBus,
     private logger: ILogger,
     private eventBus: IEventBus,
-  ) {
-    this.eventBus.on("ScheduledTaskDeleted", this.onDelete.bind(this));
-    this.eventBus.on("ScheduledTaskCreated", this.onCreate.bind(this));
-    this.eventBus.on("ScheduledTaskDeleted", this.onCreate.bind(this));
-  }
+  ) {}
 
   public async initialise() {
     this.logger.info(`Getting existing scheduled tasks`, LOG_CONTEXT);
@@ -32,11 +28,14 @@ export class TaskScheduler {
     this._taskMap = new Map<string, cron.ScheduledTask>(
       tasks.map((task) => [task.id, this.makeCronTask(task, this.serviceBus)]),
     );
+    this.eventBus.on("ScheduledTaskDeleted", this.onDelete.bind(this));
+    this.eventBus.on("ScheduledTaskCreated", this.onCreate.bind(this));
+    this.eventBus.on("ScheduledTaskDeleted", this.onCreate.bind(this));
   }
 
   private get taskMap() {
     if (!this._taskMap) {
-      throw new WebAppError(`Please initialise scheduler first`);
+      throw new ServerError(`Please initialise scheduler first`);
     }
     return this._taskMap;
   }

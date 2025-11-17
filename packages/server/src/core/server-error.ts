@@ -5,7 +5,7 @@ interface IEventEmitter {
   emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]): void;
 }
 
-export class WebAppError extends AbstractError {
+export class ServerError extends AbstractError {
   public override handle(events: IEventEmitter) {
     events.emit("ApplicationError", {
       stack: this.parsedStack,

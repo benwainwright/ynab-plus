@@ -24,8 +24,10 @@ export const buildApplication = ({
     logger,
   });
 
-  const { eventBus, sessionStorage, uuidGenerator, hashValidator } =
-    composeNodeAdapters(bootstrapper, logger);
+  const { eventBus, sessionStorage, hashValidator } = composeNodeAdapters(
+    bootstrapper,
+    logger,
+  );
 
   const {
     tasksRepository,
@@ -41,7 +43,6 @@ export const buildApplication = ({
 
   const applicationLayer = composeApplicationLayer({
     taskScheduler: tasksRepository,
-    uuidGenerator,
     eventBus,
     passwordHasher: hashValidator,
     passwordVerifier: hashValidator,

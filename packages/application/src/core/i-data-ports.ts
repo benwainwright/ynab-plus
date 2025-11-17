@@ -9,7 +9,6 @@ import type {
   IPasswordVerifier,
   IRepository,
   ITaskScheduler,
-  IUUIDGenerator,
   NewTokenRequesterFactory,
 } from "@ports";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
@@ -20,7 +19,6 @@ export interface IInfrastructurePorts {
   bootstrapper: IBootstrapper;
   eventBus: IEventBus;
   taskScheduler: ITaskScheduler;
-  uuidGenerator: IUUIDGenerator;
   passwordHasher: IPasswordHasher;
   passwordVerifier: IPasswordVerifier;
   accountsRepository: IAccountRepository;

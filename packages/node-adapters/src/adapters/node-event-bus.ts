@@ -1,12 +1,8 @@
 import type { EventEmitter } from "node:events";
 
-import type {
-  IEventBus,
-  IEventPacket,
-  IListener,
-  IUUIDGenerator,
-} from "@ynab-plus/app";
+import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
 import { serialiseObject } from "@ynab-plus/domain";
+import { v7 } from "uuid";
 
 export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   private listenerMap = new Map<string, IListener<TEvent>>();
@@ -14,14 +10,12 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   public constructor(
     private listener: EventEmitter,
     private namespace: string,
-    private uuidGenerator: IUUIDGenerator,
   ) {}
 
   public child(namespace: string): IEventBus<TEvent> {
     const child = new NodeEventBus<TEvent>(
       this.listener,
       `${this.namespace}-${namespace}`,
-      this.uuidGenerator,
     );
 
     this.children.push(child);
@@ -29,7 +23,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   }
 
   public onAll(listener: IListener<TEvent>) {
-    const listenerId = this.uuidGenerator.getUUID();
+    const listenerId = v7();
     this.listener.on(this.namespace, listener);
     this.listenerMap.set(listenerId, listener);
     return listenerId;

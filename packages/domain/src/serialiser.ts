@@ -6,7 +6,7 @@ const isSerialisableTypeKey = (
   return typeof type === "string" && type in serialisableTypes;
 };
 
-export const serialiseObject = <TEvents>(data: TEvents[keyof TEvents]) => {
+export const serialiseObject = (data: unknown) => {
   return serialiseObjectHelper(data);
 };
 

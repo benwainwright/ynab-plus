@@ -17,6 +17,9 @@
       "path": "./packages/bootstrap"
     },
     {
+      "path": "./packages/socket-adapter"
+    },
+    {
       "path": "./packages/sqlite-adapters"
     },
     {
