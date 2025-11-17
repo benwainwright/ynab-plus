@@ -1,4 +1,9 @@
-import type { ICommandMessage, IEventBus, IServiceBus } from "@ynab-plus/app";
+import type {
+  ICommandMessage,
+  IEventBus,
+  IServiceBus,
+  ISingleItemStore,
+} from "@ynab-plus/app";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { Command, User } from "@ynab-plus/domain";
 import { WebSocket } from "ws";
@@ -13,7 +18,7 @@ export class ServerWebsocketClient {
     private serviceBus: IServiceBus,
     private eventBus: IEventBus,
     private logger: ILogger,
-    private currentUser: User | undefined,
+    private currentUserCache: ISingleItemStore<User & { $type: "user" }>,
   ) {}
 
   public onConnect(socket: WebSocket) {
@@ -52,7 +57,11 @@ export class ServerWebsocketClient {
         message: JSON.stringify(parsed),
       });
 
-      const command = new Command(parsed.key, parsed.data, this.currentUser);
+      const command = new Command(
+        parsed.key,
+        parsed.data,
+        await this.currentUserCache.get(),
+      );
 
       const response = await this.serviceBus.execute(command);
 
@@ -69,9 +78,14 @@ export class ServerWebsocketClient {
         );
         error.handle(this.eventBus);
         return;
+      } else if (error instanceof Error) {
+        this.logger.error(
+          `${error.message}, ${String(error.stack)}`,
+          LOG_CONTEXT,
+        );
+      } else {
+        this.logger.error(String(error), LOG_CONTEXT);
       }
-
-      throw error;
     }
   }
 }

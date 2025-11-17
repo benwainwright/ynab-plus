@@ -62,7 +62,7 @@ export class FlatFileObjectStore<TObject extends object>
     );
 
     if (typeof thing === "undefined") {
-      await rm(path);
+      await rm(path, { force: true });
     } else {
       await writeFile(path, JSON.stringify(thing));
     }

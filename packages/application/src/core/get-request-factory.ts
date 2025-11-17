@@ -61,7 +61,7 @@ export const getRequestFactory = ({
 
     const childBus = eventBus.child(await sessionIdRequester.getSessionId());
     return {
-      currentUser: await currentUserCache.get(),
+      currentUserCache,
       serviceBus: new ServiceBus(
         [...services, ...userSettingServices],
         childBus,

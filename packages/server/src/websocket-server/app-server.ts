@@ -54,7 +54,7 @@ export class AppServer {
     wss.on("connection", async (ws, request) => {
       this.logger.debug("Websocket connection established", LOG_CONTEXT);
 
-      const { serviceBus, eventBus, currentUser } =
+      const { serviceBus, eventBus, currentUserCache } =
         await this.serviceBusFactory({
           sessionIdRequester: {
             // eslint-disable-next-line @typescript-eslint/require-await
@@ -68,7 +68,7 @@ export class AppServer {
         serviceBus,
         eventBus,
         this.logger,
-        currentUser,
+        currentUserCache,
       );
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
