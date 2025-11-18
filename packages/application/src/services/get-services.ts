@@ -20,6 +20,7 @@ import { GetUserService } from "./users/get-user-service.ts";
 import { ListAccountsService } from "./accounts/list-accounts-service.ts";
 import { SyncAccountsService } from "./accounts/sync-accounts-service.ts";
 import { ListScheduledTasksService } from "./tasks/list-scheduled-tasks-service.ts";
+import { UpdateScheduledTaskService } from "./tasks/update-scheduled-task-service.ts";
 
 import type { ILogger } from "@ynab-plus/bootstrap";
 
@@ -77,5 +78,6 @@ export const getServices = ({
     ),
     new ListAccountsService(accountsRepository, logger),
     new ListScheduledTasksService(taskScheduler, logger),
+    new UpdateScheduledTaskService(taskScheduler, logger),
   ];
 };

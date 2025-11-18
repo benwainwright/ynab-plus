@@ -2,6 +2,7 @@ import {
   Command,
   RegularTask,
   SystemContext,
+  User,
   type Events,
 } from "@ynab-plus/domain";
 import type { IEventBus, IServiceBus } from "@ynab-plus/app";
@@ -14,7 +15,9 @@ const LOG_CONTEXT = { context: "task-scheduler" };
 const TASK_SCHEDULER_CONTEXT_NAME = "Task Scheduler";
 
 export class TaskScheduler {
-  private _taskMap: Map<string, cron.ScheduledTask> | undefined;
+  private _taskMap:
+    | Map<string, { cronTask: cron.ScheduledTask; appTask: RegularTask }>
+    | undefined;
 
   public constructor(
     private serviceBus: IServiceBus,
@@ -43,7 +46,10 @@ export class TaskScheduler {
       LOG_CONTEXT,
     );
 
-    this._taskMap = new Map<string, cron.ScheduledTask>(
+    this._taskMap = new Map<
+      string,
+      { cronTask: cron.ScheduledTask; appTask: RegularTask }
+    >(
       await Promise.all(
         tasks.map(
           async (task) => [task.id, await this.makeCronTask(task)] as const,
@@ -67,7 +73,7 @@ export class TaskScheduler {
     const toDelete = this.taskMap.get(data.id);
     if (toDelete) {
       this.logger.debug(`Deleting scheduled task ${data.id}`, LOG_CONTEXT);
-      await toDelete.destroy();
+      await toDelete.cronTask.destroy();
       this.taskMap.delete(data.id);
     }
   }
@@ -76,8 +82,14 @@ export class TaskScheduler {
     const toUpdate = this.taskMap.get(data.id);
     if (toUpdate) {
       this.logger.debug(`Updating scheduled task ${data.id}`, LOG_CONTEXT);
-      await toUpdate.destroy();
-      this.taskMap.set(data.id, await this.makeCronTask(data));
+      if (!data.executionDetailsAreEqual(toUpdate.appTask)) {
+        await toUpdate.cronTask.destroy();
+        this.taskMap.set(data.id, await this.makeCronTask(data));
+      } else {
+        toUpdate.appTask.description = data.description;
+        toUpdate.appTask.name = data.name;
+        toUpdate.appTask.lastExecution = data.lastExecution;
+      }
     }
   }
 
@@ -98,6 +110,29 @@ export class TaskScheduler {
     return await this.serviceBus.execute(getUserCommand);
   }
 
+  private async executeTask(task: RegularTask, owner: User | undefined) {
+    this.logger.debug(`Firing scheduled task ${task.id}`, LOG_CONTEXT);
+
+    const context = new SystemContext(
+      TASK_SCHEDULER_CONTEXT_NAME,
+      ["system"],
+      owner,
+    );
+
+    const command = task.getCommand(context);
+    await this.serviceBus.execute(command);
+
+    task.lastExecution = new Date();
+
+    const updateTaskCommand = new Command(
+      "UpdateScheduledTaskCommand",
+      task,
+      context,
+    );
+
+    await this.serviceBus.execute(updateTaskCommand);
+  }
+
   private async makeCronTask(task: RegularTask) {
     this.logger.debug(
       `Registering task ${task.id} with node-cron`,
@@ -105,17 +140,11 @@ export class TaskScheduler {
     );
     const owner = await this.getTaskOwner(task);
 
-    return cron.createTask(task.getCronString(), async () => {
-      this.logger.debug(`Firing scheduled task ${task.id}`, LOG_CONTEXT);
-
-      const context = new SystemContext(
-        TASK_SCHEDULER_CONTEXT_NAME,
-        ["system"],
-        owner,
-      );
-
-      const command = task.getCommand(context);
-      await this.serviceBus.execute(command);
-    });
+    return {
+      cronTask: cron.createTask(task.getCronString(), async () => {
+        await this.executeTask(task, owner);
+      }),
+      appTask: task,
+    };
   }
 }

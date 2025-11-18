@@ -12,6 +12,10 @@ export interface Commands {
     };
     response: RegularTask[];
   };
+  UpdateScheduledTaskCommand: {
+    request: RegularTask;
+    response: { success: boolean };
+  };
   DeleteScheduledTaskCommand: {
     request: {
       id: string;
