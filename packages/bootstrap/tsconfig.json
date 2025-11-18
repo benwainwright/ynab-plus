@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
+  "files": ["./vitest.config.ts"],
+  "outDir": ".temp",
   "include": [],
   "compilerOptions": {},
   "references": [
