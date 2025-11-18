@@ -20,3 +20,4 @@ export {
   type IRegularTask,
 } from "./i-regular-tasks.ts";
 export { RegularTask } from "./regular-task.ts";
+export { type ISyncDetials, syncDetailsSchema } from "./i-sync-details.ts";
