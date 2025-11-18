@@ -141,7 +141,7 @@ export class TaskScheduler {
     const owner = await this.getTaskOwner(task);
 
     return {
-      cronTask: cron.createTask(task.getCronString(), async () => {
+      cronTask: cron.schedule(task.getCronString(), async () => {
         await this.executeTask(task, owner);
       }),
       appTask: task,
