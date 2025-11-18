@@ -24,6 +24,7 @@ describe("list ScheduledTasks service", () => {
         minute: "1",
         data: "",
         hour: "2",
+        triggerImmediately: true,
         day: "1",
         month: "*",
         weekDay: "*",
@@ -35,6 +36,7 @@ describe("list ScheduledTasks service", () => {
       new RegularTask({
         id: "foo-2",
         onBehalfOf: "ben",
+        triggerImmediately: true,
         created: new Date("2025-12-11T20:39:37.823Z"),
         lastExecution: undefined,
         data: "{}",

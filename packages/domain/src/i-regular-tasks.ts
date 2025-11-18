@@ -23,6 +23,7 @@ export const regularTaskSchema = z.object({
   minute: z.string(),
   data: z.union([z.string(), z.undefined()]),
   hour: z.string(),
+  triggerImmediately: z.boolean(),
   day: z.string(),
   month: z.string(),
   weekDay: z.string(),

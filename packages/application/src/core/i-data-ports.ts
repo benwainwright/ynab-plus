@@ -2,6 +2,7 @@ import type {
   IAccountRepository,
   IAccountsFetcher,
   IEventBus,
+  IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
   IObjectStorage,
@@ -24,7 +25,7 @@ export interface IInfrastructurePorts {
   accountsRepository: IAccountRepository;
   accountsFetcher: IAccountsFetcher;
   sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
-  userRepository: IRepository<User>;
+  userRepository: IRepository<User> & IMultipleRepository<User>;
   oauthTokenRepository: IOauthTokenRepository;
   newTokenRequesterFactory: NewTokenRequesterFactory;
   oauthCheckerFactory: IOauthCheckerFactory;

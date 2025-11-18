@@ -5,6 +5,12 @@ import type { RegularTask } from "./regular-task.ts";
 import type { User } from "./user.ts";
 
 export interface Commands {
+  SyncAccountCommand: {
+    request: {
+      id: string;
+    };
+    response: { success: false; reason: string } | { success: true };
+  };
   ListScheduledTasksCommand: {
     request: {
       offset: number;

@@ -1,8 +1,9 @@
-import type { IHandleContext, IRepository } from "@ports";
+import type { IHandleContext } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
+import type { IMultipleRepository } from "src/ports/i-multiple-repository.ts";
 
 export class ListUsersService extends AbstractApplicationService<"ListUsersCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
@@ -10,7 +11,7 @@ export class ListUsersService extends AbstractApplicationService<"ListUsersComma
   ];
 
   public constructor(
-    private users: IRepository<User>,
+    private users: IMultipleRepository<User>,
     logger: ILogger,
   ) {
     super(logger);

@@ -54,6 +54,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     const refreshTask = new RegularTask({
       name: "Refresh ynab Oauth token",
+      triggerImmediately: true,
       description: "",
       id: getTokenRefreshTaskKey(this.currentUser.id, provider),
       minute: "0",

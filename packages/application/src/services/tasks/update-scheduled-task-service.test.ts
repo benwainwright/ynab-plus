@@ -12,6 +12,7 @@ describe("update scheduled task service", () => {
       onBehalfOf: "ben",
       created: new Date("2025-12-11T20:39:37.823Z"),
       lastExecution: undefined,
+      triggerImmediately: true,
       minute: "2",
       hour: "2",
       data: "{}",
@@ -36,6 +37,7 @@ describe("update scheduled task service", () => {
     const existingTask = new RegularTask({
       id: "foo",
       onBehalfOf: "ben",
+      triggerImmediately: true,
       created: new Date("2025-12-11T20:39:37.823Z"),
       lastExecution: undefined,
       minute: "1",
@@ -61,6 +63,7 @@ describe("update scheduled task service", () => {
 
   it("fails the update if there was no existing task", async () => {
     const task = new RegularTask({
+      triggerImmediately: true,
       id: "foo",
       onBehalfOf: "ben",
       created: new Date("2025-12-11T20:39:37.823Z"),

@@ -14,6 +14,7 @@ interface RawTask {
   day: string;
   month: string;
   weekDay: string;
+  triggerImmediately: string;
   name: string;
   description: string;
   command: string;
@@ -39,9 +40,10 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
             name = ?,
             description = ?,
             command = ?,
-            data = ?
+            data = ?,
+            triggerImmediately = ?
       WHERE id = ?
-      RETURNING id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data`,
+      RETURNING id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately`,
       [
         task.onBehalfOf,
         task.lastExecution?.toISOString() ?? null,
@@ -55,6 +57,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         task.description,
         task.command,
         task.data,
+        String(task.triggerImmediately),
         task.id,
       ],
     );
@@ -75,6 +78,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
           name TEXT NOT NULL,
           description TEXT NOT NULL,
           command TEXT NOT NULL,
+          triggerImmediately TEXT NOT NULL,
           data TEXT
       );`,
     );
@@ -90,14 +94,15 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
       command: schedulableTasksSchema.parse(raw.command),
       data: raw.data ?? undefined,
       onBehalfOf: raw.onBehalfOf ?? undefined,
+      triggerImmediately: raw.triggerImmediately === "true",
     });
   }
 
   public async scheduleTask(task: RegularTask): Promise<RegularTask> {
     const data = await this.database.getFromDb<RawTask>(
-      `INSERT INTO ${await this.tableName.value} (id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        RETURNING id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data`,
+      `INSERT INTO ${await this.tableName.value} (id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately`,
       [
         task.id,
         task.onBehalfOf,
@@ -112,6 +117,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         task.description,
         task.command,
         task.data,
+        String(task.triggerImmediately),
       ],
     );
     return this.mapRaw(data);
@@ -127,7 +133,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
 
   public async getTask(id: string): Promise<RegularTask | undefined> {
     const result = await this.database.getFromDb<RawTask | undefined>(
-      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data
+      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
         WHERE id = ?`,
       [id],
@@ -144,7 +150,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     limit?: number,
   ): Promise<RegularTask[]> {
     const result = await this.database.getAllFromDatabase<RawTask[]>(
-      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data
+      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
         LIMIT ? OFFSET ?`,
       [limit ?? -1, offset],
@@ -159,7 +165,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     limit: number,
   ): Promise<RegularTask[]> {
     const result = await this.database.getAllFromDatabase<RawTask[]>(
-      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data
+      `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
         WHERE onBehalfOf = ?
         LIMIT ? OFFSET ?`,

@@ -21,6 +21,7 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
   public readonly minute: string;
   public readonly hour: string;
   public readonly day: string;
+  public readonly triggerImmediately: boolean;
   public readonly month: string;
   public readonly weekDay: string;
   private _name: string;
@@ -31,6 +32,7 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
   public constructor(config: IRegularTask<TTaskKey>) {
     this.id = config.id;
     this.created = config.created;
+    this.triggerImmediately = config.triggerImmediately;
     this._lastExecution = config.lastExecution;
     this.onBehalfOf = config.onBehalfOf;
     this.data = config.data;
@@ -50,6 +52,7 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
     return {
       $type: "regularTask",
       id: this.id,
+      triggerImmediately: this.triggerImmediately,
       created: this.created,
       lastExecution: this.lastExecution,
       onBehalfOf: this.onBehalfOf,

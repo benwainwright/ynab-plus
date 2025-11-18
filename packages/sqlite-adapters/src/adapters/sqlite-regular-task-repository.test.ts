@@ -62,6 +62,7 @@ describe("the regular  repository", () => {
       const task = new RegularTask({
         id: "foo",
         onBehalfOf: "ben",
+        triggerImmediately: true,
         created: new Date("2025-12-11T20:39:37.823Z"),
         lastExecution: undefined,
         minute: "1",
@@ -97,6 +98,7 @@ describe("the regular  repository", () => {
       await repo.create();
 
       const task = new RegularTask({
+        triggerImmediately: false,
         id: "foo",
         onBehalfOf: "ben",
         created: new Date("2025-12-11T20:39:37.823Z"),
@@ -115,6 +117,7 @@ describe("the regular  repository", () => {
       await repo.scheduleTask(task);
 
       const task2 = new RegularTask({
+        triggerImmediately: true,
         id: "foo-3",
         data: "{}",
         onBehalfOf: "ben",
@@ -133,6 +136,7 @@ describe("the regular  repository", () => {
       await repo.scheduleTask(task2);
 
       const johns = new RegularTask({
+        triggerImmediately: false,
         id: "foo-4",
         data: "{}",
         onBehalfOf: "john",
@@ -169,6 +173,7 @@ describe("the regular  repository", () => {
       await repo.create();
 
       const task = new RegularTask({
+        triggerImmediately: true,
         id: "foo",
         onBehalfOf: "ben",
         created: new Date("2025-12-11T20:39:37.823Z"),
@@ -187,6 +192,7 @@ describe("the regular  repository", () => {
       await repo.scheduleTask(task);
 
       const task2 = new RegularTask({
+        triggerImmediately: true,
         id: "foo-3",
         data: "{}",
         onBehalfOf: "ben",
@@ -205,6 +211,7 @@ describe("the regular  repository", () => {
       await repo.scheduleTask(task2);
 
       const johns = new RegularTask({
+        triggerImmediately: true,
         id: "foo-4",
         data: "{}",
         onBehalfOf: "john",
@@ -241,6 +248,7 @@ describe("the regular  repository", () => {
       await repo.create();
 
       const task = new RegularTask({
+        triggerImmediately: true,
         id: "foo",
         data: "{}",
         onBehalfOf: "ben",
@@ -257,6 +265,7 @@ describe("the regular  repository", () => {
       });
 
       const task2 = new RegularTask({
+        triggerImmediately: true,
         id: "foo-2",
         data: "{}",
         onBehalfOf: "ben",
@@ -304,6 +313,7 @@ describe("the regular  repository", () => {
         await repo.create();
 
         const task = new RegularTask({
+          triggerImmediately: true,
           id: "foo",
           onBehalfOf: "ben",
           created: new Date("2025-12-11T20:39:37.823Z"),
@@ -322,6 +332,7 @@ describe("the regular  repository", () => {
         await repo.scheduleTask(task);
 
         const updated = new RegularTask({
+          triggerImmediately: false,
           id: "foo",
           onBehalfOf: "ben",
           created: new Date("2025-12-11T20:39:37.823Z"),
@@ -361,6 +372,8 @@ describe("the regular  repository", () => {
           await repo.create();
 
           const task = new RegularTask({
+            triggerImmediately: true,
+
             id: "foo",
             onBehalfOf: "ben",
             created: new Date("2025-12-11T20:39:37.823Z"),
@@ -377,6 +390,7 @@ describe("the regular  repository", () => {
           });
 
           const task2 = new RegularTask({
+            triggerImmediately: true,
             id: "foo-2",
             onBehalfOf: "ben",
             created: new Date("2025-12-11T20:39:37.823Z"),

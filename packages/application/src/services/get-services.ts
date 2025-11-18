@@ -2,6 +2,7 @@ import type { AbstractApplicationService } from "@core";
 import type {
   IAccountRepository,
   IAccountsFetcher,
+  IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
   IPasswordHasher,
@@ -28,7 +29,7 @@ import type { User } from "@ynab-plus/domain";
 
 interface IServiceDependencies {
   logger: ILogger;
-  userRepository: IRepository<User>;
+  userRepository: IRepository<User> & IMultipleRepository<User>;
   oauthTokenRepository: IOauthTokenRepository;
   taskScheduler: ITaskScheduler;
   passwordVerifier: IPasswordVerifier;

@@ -28,6 +28,7 @@ describe("disconnect outh integration service", () => {
       description: "",
       id: "ben-ynab-token-refresh-task",
       minute: "0",
+      triggerImmediately: true,
       onBehalfOf: "ben",
       command: "CheckOauthIntegrationStatusCommand",
       data: '{"provider":"ynab"}',

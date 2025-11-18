@@ -43,6 +43,7 @@ describe("generate new oauth token service", () => {
         id: "ben-ynab-token-refresh-task",
         minute: "0",
         onBehalfOf: "ben",
+        triggerImmediately: true,
         command: "CheckOauthIntegrationStatusCommand",
         data: '{"provider":"ynab"}',
         hour: "*",
