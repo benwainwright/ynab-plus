@@ -4,6 +4,7 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { type Permission, User } from "@ynab-plus/domain";
 
 import type { SqliteDatabase } from "./sqlite-database.ts";
+import type { IMultipleRepository } from "../../../application/src/ports/i-multiple-repository.ts";
 
 interface RawUser {
   id: string;
@@ -12,7 +13,9 @@ interface RawUser {
   permissions: string;
 }
 
-export class SqliteUserRepository implements IRepository<User> {
+export class SqliteUserRepository
+  implements IRepository<User>, IMultipleRepository<User>
+{
   public constructor(
     private tableName: ConfigValue<string>,
     private database: SqliteDatabase,

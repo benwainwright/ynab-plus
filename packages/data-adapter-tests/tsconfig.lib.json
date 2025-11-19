@@ -6,9 +6,10 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "paths": {
-      "@adapters": ["./src/adapters/index.ts"]
+      "@ynab": ["./src/ynab/index.ts"],
+      "@errors": ["./src/errors/index.ts"]
     }
   },
   "references": [
@@ -20,9 +21,6 @@
     },
     {
       "path": "../bootstrap"
-    },
-    {
-      "path": "../data-adapter-tests"
     }
   ],
   "include": ["src/**/*.ts"],

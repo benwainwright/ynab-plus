@@ -1,0 +1,32 @@
+import type {
+  IAccountRepository,
+  IAccountsFetcher,
+  IEventBus,
+  IMultipleRepository,
+  IOauthCheckerFactory,
+  IOauthTokenRepository,
+  IObjectStorage,
+  IPasswordHasher,
+  IPasswordVerifier,
+  IRepository,
+  ITaskScheduler,
+  NewTokenRequesterFactory,
+} from "@ports";
+import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
+import type { IUser, User } from "@ynab-plus/domain";
+
+export interface IInfrastructurePorts {
+  logger: ILogger;
+  bootstrapper: IBootstrapper;
+  eventBus: IEventBus;
+  taskScheduler: ITaskScheduler;
+  passwordHasher: IPasswordHasher;
+  passwordVerifier: IPasswordVerifier;
+  accountsRepository: IAccountRepository;
+  accountsFetcher: IAccountsFetcher;
+  sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
+  userRepository: IRepository<User> & IMultipleRepository<User>;
+  oauthTokenRepository: IOauthTokenRepository;
+  newTokenRequesterFactory: NewTokenRequesterFactory;
+  oauthCheckerFactory: IOauthCheckerFactory;
+}

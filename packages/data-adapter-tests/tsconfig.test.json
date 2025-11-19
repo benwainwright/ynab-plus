@@ -7,15 +7,15 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "vitest/globals"],
-    "paths": {}
+    "paths": {
+      "@ynab": ["./src/ynab/index.ts"],
+      "@test-helpers": ["./src/test-helpers/index.ts"]
+    }
   },
   "include": ["src/**/*.test.ts"],
   "references": [
     {
       "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "../data-adapter-tests"
     }
   ]
 }

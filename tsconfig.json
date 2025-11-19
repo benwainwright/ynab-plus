@@ -23,6 +23,9 @@
       "path": "./packages/sqlite-adapters"
     },
     {
+      "path": "./packages/data-adapter-tests"
+    },
+    {
       "path": "./packages/integration-adapters"
     },
     {
