@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "test": "vitest",
     "dev": "react-router dev",
     "reveal": "react-router reveal",
     "start": "react-router-serve ./build/server/index.js",

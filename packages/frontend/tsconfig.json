@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "files": [
+    "./vitest.config.ts",
     "./vite.config.ts",
     "./react-router.config.ts",
     "./postcss.config.cjs"

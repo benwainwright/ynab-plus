@@ -8,6 +8,15 @@ export default defineConfig({
     environment: "node",
     projects: ["packages/*"],
     coverage: {
+      include: ["./**/*.ts", "**/*.tsx"],
+      exclude: [
+        "**/node_modules/**",
+        "**/coverage/**",
+        "**/dist/**",
+        "**/test-helpers/**",
+        ".husky/**",
+        "packages/frontend/**/+types",
+      ],
       provider: "v8",
     },
   },
