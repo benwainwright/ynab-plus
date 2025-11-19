@@ -8,6 +8,9 @@
       "import": "./src/index.ts"
     }
   },
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
     "zod": "^4.1.12"
   }

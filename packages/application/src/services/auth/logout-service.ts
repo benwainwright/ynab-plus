@@ -2,7 +2,7 @@ import type { IHandleContext } from "@ports";
 import { AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
 import type { ILogger } from "@ynab-plus/bootstrap";
-import type { IRole, User } from "@ynab-plus/domain";
+import type { IRole, Permission, User } from "@ynab-plus/domain";
 
 export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public constructor(
@@ -12,10 +12,7 @@ export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
     super(logger);
   }
 
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "user",
-    "admin",
-  ];
+  public override requiredPermissions: Permission[] = ["user", "admin"];
   public override readonly commandName = "LogoutCommand";
 
   public override async handle<TRole extends IRole = User>({
