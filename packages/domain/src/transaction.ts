@@ -9,7 +9,7 @@ export class Transaction
   public readonly date: Date;
   public readonly amount: number;
   public readonly cleared: boolean;
-  public readonly memo: string;
+  public readonly memo: string | undefined;
   public readonly approved: boolean;
 
   public readonly $type = "transaction";

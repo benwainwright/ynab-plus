@@ -8,6 +8,6 @@ export const transactionSchema = z.object({
   date: z.string().transform((date) => new Date(date)),
   amount: z.number(),
   cleared: z.boolean(),
-  memo: z.string(),
+  memo: z.string().optional(),
   approved: z.boolean(),
 });

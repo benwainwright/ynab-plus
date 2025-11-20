@@ -1,9 +1,8 @@
 import type { Transaction } from "@ynab-plus/domain";
 
 export interface ITransactionRepository {
-  getTransaction(id: string): Promise<Transaction>;
-
-  saveTransaction(transaction: Transaction): Promise<void>;
+  getTransaction(id: string): Promise<Transaction | undefined>;
+  saveTransaction(transaction: Transaction): Promise<Transaction>;
 
   getAccountTransactions(
     accountId: string,
@@ -11,8 +10,5 @@ export interface ITransactionRepository {
     offset: number,
   ): Promise<Transaction[]>;
 
-  saveAccountTransactions(
-    accountId: string,
-    transactions: Transaction[],
-  ): Promise<void>;
+  saveTransactions(transactions: Transaction[]): Promise<Transaction[]>;
 }

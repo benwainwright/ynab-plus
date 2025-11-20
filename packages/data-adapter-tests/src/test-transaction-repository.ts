@@ -69,7 +69,7 @@ export const testTransactionRepository = (
         }),
       ];
 
-      await repo.saveAccountTransactions("bar", accountTransactions);
+      await repo.saveTransactions(accountTransactions);
 
       const separateAccountTransaction = new Transaction({
         id: "barp",
@@ -83,7 +83,7 @@ export const testTransactionRepository = (
 
       await repo.saveTransaction(separateAccountTransaction);
 
-      await repo.saveAccountTransactions("bof", [
+      await repo.saveTransactions([
         new Transaction({
           id: "barp",
           accountId: "bof",
