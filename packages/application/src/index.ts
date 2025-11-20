@@ -25,4 +25,5 @@ export {
   type RequestScopedServiceBusFactory,
   type SingletonServiceBusFactory,
   type ITaskScheduler,
+  type ITransactionRepository,
 } from "@ports";

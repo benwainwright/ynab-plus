@@ -29,5 +29,4 @@ export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export type { NewTokenRequesterFactory } from "./new-token-requester-factory.ts";
 export type { RequestScopedServiceBusFactory } from "./request-scoped-service-bus-factory.ts";
 export type { SingletonServiceBusFactory } from "./singleton-service-bus-factory.ts";
-
 export type { ITaskScheduler } from "./i-task-scheduler.ts";

@@ -3,7 +3,7 @@ import type { Transaction } from "@ynab-plus/domain";
 export interface ITransactionRepository {
   getTransaction(id: string): Promise<Transaction>;
 
-  saveTransaction(trnsaction: Transaction): Promise<void>;
+  saveTransaction(transaction: Transaction): Promise<void>;
 
   getAccountTransactions(
     accountId: string,
