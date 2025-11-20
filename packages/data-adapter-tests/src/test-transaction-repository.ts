@@ -72,7 +72,7 @@ export const testTransactionRepository = (
       await repo.saveTransactions(accountTransactions);
 
       const separateAccountTransaction = new Transaction({
-        id: "barp",
+        id: "barp2",
         accountId: "bar",
         amount: 100,
         cleared: false,
@@ -105,7 +105,8 @@ export const testTransactionRepository = (
         }),
       ]);
 
-      const result = await repo.getAccountTransactions("bar", 0, 3);
+      const result = await repo.getAccountTransactions("bar", 30, 0);
+      expect(result).toHaveLength(4);
 
       expect(result).toEqual(
         expect.arrayContaining([
@@ -113,8 +114,6 @@ export const testTransactionRepository = (
           separateAccountTransaction,
         ]),
       );
-
-      expect(result).toHaveLength(4);
     });
   });
 };

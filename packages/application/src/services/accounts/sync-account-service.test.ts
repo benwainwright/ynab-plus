@@ -172,10 +172,7 @@ describe("sync account service", () => {
 
     const result = await service.doHandle(context);
 
-    expect(txRepo.saveAccountTransactions).toHaveBeenCalledWith(
-      "the-id",
-      dummyTransactions,
-    );
+    expect(txRepo.saveTransactions).toHaveBeenCalledWith(dummyTransactions);
 
     expect(syncDetailsRepo.save).toHaveBeenCalledWith(newDetails);
     expect(result.success).toEqual(true);

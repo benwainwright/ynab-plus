@@ -72,7 +72,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
       theSyncDetails,
     );
 
-    await this.transactionRepository.saveAccountTransactions(id, transactions);
+    await this.transactionRepository.saveTransactions(transactions);
     await this.syncDetailsRepo.save(theSyncDetails);
 
     return { success: true } as const;
