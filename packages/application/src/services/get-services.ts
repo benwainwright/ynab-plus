@@ -9,6 +9,8 @@ import type {
   IPasswordVerifier,
   IRepository,
   ITaskScheduler,
+  ITransactionFetcher,
+  ITransactionRepository,
   NewTokenRequesterFactory,
 } from "@ports";
 
@@ -25,7 +27,8 @@ import { UpdateScheduledTaskService } from "./tasks/update-scheduled-task-servic
 
 import type { ILogger } from "@ynab-plus/bootstrap";
 
-import type { User } from "@ynab-plus/domain";
+import type { SyncDetails, User } from "@ynab-plus/domain";
+import { SyncAccountService } from "./accounts/sync-account-service.ts";
 
 interface IServiceDependencies {
   logger: ILogger;
@@ -38,6 +41,9 @@ interface IServiceDependencies {
   accountsRepository: IAccountRepository;
   newTokenRequesterFactory: NewTokenRequesterFactory;
   accountsFetcher: IAccountsFetcher;
+  syncDetailsRepo: IRepository<SyncDetails>;
+  transactionFetcher: ITransactionFetcher;
+  transactionRepository: ITransactionRepository;
 }
 
 export const getServices = ({
@@ -48,8 +54,11 @@ export const getServices = ({
   taskScheduler,
   oauthCheckerFactory,
   passwordHasher,
+  syncDetailsRepo,
   accountsRepository,
   accountsFetcher,
+  transactionFetcher,
+  transactionRepository,
 }: IServiceDependencies): AbstractApplicationService[] => {
   return [
     new GetUserService(userRepository, logger),
@@ -79,6 +88,13 @@ export const getServices = ({
     ),
     new ListAccountsService(accountsRepository, logger),
     new ListScheduledTasksService(taskScheduler, logger),
+    new SyncAccountService(
+      syncDetailsRepo,
+      oauthTokenRepository,
+      transactionFetcher,
+      transactionRepository,
+      logger,
+    ),
     new UpdateScheduledTaskService(taskScheduler, logger),
   ];
 };

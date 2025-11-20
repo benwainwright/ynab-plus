@@ -6,7 +6,7 @@ export class SyncDetails
 {
   public readonly provider: string;
   public readonly id: string;
-  public readonly checkpoint: string | undefined;
+  private _checkpoint: string | undefined;
   public readonly lastSync: Date;
 
   public readonly $type = "syncDetails";
@@ -14,12 +14,26 @@ export class SyncDetails
   public constructor(config: ISyncDetails) {
     this.id = config.id;
     this.provider = config.provider;
-    this.checkpoint = config.checkpoint;
+    this._checkpoint = config.checkpoint;
     this.lastSync = config.lastSync;
   }
 
+  public get checkpoint(): string | undefined {
+    return this._checkpoint;
+  }
+
+  public set checkpoint(checkpoint: string | undefined) {
+    this._checkpoint = checkpoint;
+  }
+
   public toObject(): ISyncDetails & { $type: "syncDetails" } {
-    return this;
+    return {
+      $type: "syncDetails",
+      id: this.id,
+      checkpoint: this.checkpoint,
+      provider: this.provider,
+      lastSync: this.lastSync,
+    };
   }
 
   public static fromObject(thing: unknown) {

@@ -7,7 +7,11 @@ export const transactionSchema = z.object({
   accountId: z.string(),
   date: z.string().transform((date) => new Date(date)),
   amount: z.number(),
-  cleared: z.boolean(),
+  cleared: z.union([
+    z.literal("cleared"),
+    z.literal("uncleared"),
+    z.literal("reconciled"),
+  ]),
   memo: z.string().optional(),
   approved: z.boolean(),
 });

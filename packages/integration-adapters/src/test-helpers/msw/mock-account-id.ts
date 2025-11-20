@@ -1,0 +1,1 @@
+export const MOCK_ACCOUNT_ID = "b5233c1e-a10c-4079-8a58-16a875770010";

@@ -1,6 +1,10 @@
+import { MOCK_ACCOUNT_ID } from "./mock-account-id.ts";
+
+const id = MOCK_ACCOUNT_ID;
+
 export const MOCK_TRANSACTIONS = [
   {
-    id: "b5233c1e-a10c-4079-8a58-16a875770010",
+    id,
     date: "2024-10-27",
     amount: 15850,
     memo: null,
@@ -25,7 +29,7 @@ export const MOCK_TRANSACTIONS = [
     subtransactions: [],
   },
   {
-    id: "eefab1d1-572f-4beb-a738-3d9ae60f2017",
+    id,
     date: "2024-10-28",
     amount: -36000,
     memo: null,
@@ -50,7 +54,7 @@ export const MOCK_TRANSACTIONS = [
     subtransactions: [],
   },
   {
-    id: "02719fdc-4af3-4fb6-b4e0-8927399b8a82",
+    id,
     date: "2024-11-01",
     amount: -2964180,
     memo: null,
@@ -75,7 +79,7 @@ export const MOCK_TRANSACTIONS = [
     subtransactions: [],
   },
   {
-    id: "533928ce-5fa5-4c19-b1d9-2f147e9f1c3a",
+    id,
     date: "2024-11-04",
     amount: -4770,
     memo: null,
@@ -100,7 +104,7 @@ export const MOCK_TRANSACTIONS = [
     subtransactions: [],
   },
   {
-    id: "a318a000-0598-4c25-a63f-ccbe87259d16",
+    id,
     date: "2024-11-19",
     amount: 2862980,
     memo: null,
@@ -125,7 +129,7 @@ export const MOCK_TRANSACTIONS = [
     subtransactions: [],
   },
   {
-    id: "edb83b75-aa9d-4d28-b648-03bebd1d3ee2",
+    id,
     date: "2024-11-21",
     amount: 120000,
     memo: null,

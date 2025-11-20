@@ -16,6 +16,7 @@ export {
   type IOauthTokenRepository,
   type IObjectStorage,
   type IPasswordHasher,
+  type ITransactionFetcher,
   type IPasswordVerifier,
   type IRepository,
   type IServiceBus,
@@ -25,5 +26,6 @@ export {
   type RequestScopedServiceBusFactory,
   type SingletonServiceBusFactory,
   type ITaskScheduler,
+  type IAccountsFetcher,
   type ITransactionRepository,
 } from "@ports";

@@ -1,9 +1,14 @@
 import { mock } from "vitest-mock-extended";
 
 import type { ILogger } from "@ynab-plus/bootstrap";
-import { OauthToken } from "@ynab-plus/domain";
+import { OauthToken, SyncDetails } from "@ynab-plus/domain";
 
-import { MOCK_TOKEN, server } from "@test-helpers";
+import {
+  MOCK_ACCOUNT_ID,
+  MOCK_TOKEN,
+  MOCK_TRANSACTIONS,
+  server,
+} from "@test-helpers";
 
 import { YnabClient } from "./ynab-client.ts";
 
@@ -17,6 +22,70 @@ afterEach(() => {
 
 afterAll(() => {
   server.close();
+});
+
+describe("the getaccountTransactions method", () => {
+  it("updates syncDetails", async () => {
+    const logger = mock<ILogger>();
+
+    const client = new YnabClient(`https://api.ynab.com`, logger);
+
+    const token = new OauthToken({
+      provider: "ynab",
+      expiry: new Date("2025-12-11T20:39:37.823Z"),
+      token: MOCK_TOKEN,
+      userId: "ben",
+      refreshToken: "bar",
+      lastUse: new Date("2025-12-10T20:39:37.823Z"),
+      refreshed: new Date("2025-07-10T20:39:37.823Z"),
+      created: new Date("2025-05-10T20:39:37.823Z"),
+    });
+
+    const syncDetails = new SyncDetails({
+      id: "foo-bar-2",
+      provider: "ynab",
+      checkpoint: "blah",
+      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+    });
+
+    await client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails);
+
+    expect(syncDetails.checkpoint).toEqual(String(123));
+  });
+  it("calls the correct endpoint and parses the response data into a transaction", async () => {
+    const logger = mock<ILogger>();
+
+    const client = new YnabClient(`https://api.ynab.com`, logger);
+
+    const token = new OauthToken({
+      provider: "ynab",
+      expiry: new Date("2025-12-11T20:39:37.823Z"),
+      token: MOCK_TOKEN,
+      userId: "ben",
+      refreshToken: "bar",
+      lastUse: new Date("2025-12-10T20:39:37.823Z"),
+      refreshed: new Date("2025-07-10T20:39:37.823Z"),
+      created: new Date("2025-05-10T20:39:37.823Z"),
+    });
+
+    const syncDetails = new SyncDetails({
+      id: "foo-bar-2",
+      provider: "ynab",
+      checkpoint: "blah",
+      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+    });
+
+    const result = await client.getAccountTransactions(
+      token,
+      MOCK_ACCOUNT_ID,
+      syncDetails,
+    );
+
+    expect(result).toHaveLength(MOCK_TRANSACTIONS.length);
+    expect(result[0]?.id).toEqual(MOCK_TRANSACTIONS[0]?.id);
+    expect(result[1]?.id).toEqual(MOCK_TRANSACTIONS[2]?.id);
+    expect(result[1]?.approved).toEqual(MOCK_TRANSACTIONS[2]?.approved);
+  });
 });
 
 describe("the getaccounts method", () => {
@@ -41,7 +110,7 @@ describe("the getaccounts method", () => {
     expect(response).toHaveLength(1);
 
     expect(response[0]?.closed).toEqual(true);
-    expect(response[0]?.id).toEqual("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+    expect(response[0]?.id).toEqual(MOCK_ACCOUNT_ID);
     expect(response[0]?.type).toEqual("checking");
   });
 });

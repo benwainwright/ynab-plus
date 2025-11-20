@@ -8,7 +8,7 @@ interface RawTransaction {
   accountId: string;
   date: string;
   amount: number;
-  cleared: string;
+  cleared: "cleared" | "uncleared" | "reconciled";
   memo: string | undefined;
   approved: string;
 }
@@ -22,7 +22,6 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   public mapRaw(raw: RawTransaction): Transaction {
     const object = transactionSchema.parse({
       ...raw,
-      cleared: raw.cleared === "true",
       memo: raw.memo ?? undefined,
       approved: raw.approved === "true",
     });
@@ -77,7 +76,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
         transaction.accountId,
         transaction.date.toISOString(),
         transaction.amount,
-        String(transaction.cleared),
+        transaction.cleared,
         transaction.memo ?? null,
         String(transaction.approved),
       ],

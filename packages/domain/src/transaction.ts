@@ -8,7 +8,7 @@ export class Transaction
   public readonly accountId: string;
   public readonly date: Date;
   public readonly amount: number;
-  public readonly cleared: boolean;
+  public readonly cleared: "cleared" | "uncleared" | "reconciled";
   public readonly memo: string | undefined;
   public readonly approved: boolean;
 

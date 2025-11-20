@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { invalidRequestResponse } from "./invalid-request-response.ts";
 import { MOCK_TRANSACTIONS } from "./mock-transactions.ts";
+import { MOCK_ACCOUNT_ID } from "./mock-account-id.ts";
 
 const YNAB_API = `https://api.ynab.com`;
 
@@ -36,7 +37,7 @@ export const handlers = [
         data: {
           accounts: [
             {
-              id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              id: MOCK_ACCOUNT_ID,
               name: "string",
               type: "checking",
               on_budget: true,
@@ -68,7 +69,7 @@ export const handlers = [
               deleted: true,
             },
           ],
-          server_knowledge: 0,
+          server_knowledge: 1231,
         },
       });
     },

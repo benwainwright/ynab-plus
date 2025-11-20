@@ -24,6 +24,9 @@ export const composeApplicationLayer = ({
   newTokenRequesterFactory,
   logger,
   bootstrapper,
+  transactionFetcher,
+  transactionRepository,
+  syncDetailsRepo,
 }: IInfrastructurePorts): IApplicationLayer => {
   logger.info(`Composing application layer`, LOG_CONTEXT);
 
@@ -43,10 +46,13 @@ export const composeApplicationLayer = ({
   const services = getServices({
     userRepository,
     oauthCheckerFactory,
+    syncDetailsRepo,
     oauthTokenRepository,
     taskScheduler,
     passwordHasher,
     passwordVerifier,
+    transactionFetcher,
+    transactionRepository,
     newTokenRequesterFactory,
     accountsRepository,
     accountsFetcher,
