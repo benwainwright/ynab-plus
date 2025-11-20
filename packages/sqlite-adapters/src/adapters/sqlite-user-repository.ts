@@ -21,6 +21,14 @@ export class SqliteUserRepository
     private database: SqliteDatabase,
   ) {}
 
+  public async delete(user: User): Promise<void> {
+    await this.database.runQuery(
+      `DELETE FROM ${await this.tableName.value}
+      WHERE id = ?`,
+      [user.id],
+    );
+  }
+
   async get(id: string): Promise<User | undefined> {
     const result = await this.database.getFromDb<RawUser | undefined>(
       `SELECT id, email, passwordHash, permissions

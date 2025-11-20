@@ -16,6 +16,14 @@ export class SqliteSyncDetailsRepository implements IRepository<ISyncDetails> {
     private database: SqliteDatabase,
   ) {}
 
+  public async delete(syncDetails: SyncDetails): Promise<void> {
+    await this.database.runQuery(
+      `DELETE FROM ${await this.tableName.value}
+      WHERE id = ?`,
+      [syncDetails.id],
+    );
+  }
+
   public async create() {
     await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (

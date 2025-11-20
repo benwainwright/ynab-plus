@@ -20,6 +20,14 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     private database: SqliteDatabase,
   ) {}
 
+  public async deleteAccount(account: Account): Promise<void> {
+    await this.database.runQuery(
+      `DELETE FROM ${await this.tableName.value}
+      WHERE id = ?`,
+      [account.id],
+    );
+  }
+
   async getAccounts(id: string): Promise<Account | undefined> {
     const result = await this.database.getFromDb<RawAccount | undefined>(
       `SELECT id, userId, name, type, closed, note, deleted

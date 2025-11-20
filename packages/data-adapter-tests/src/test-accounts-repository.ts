@@ -6,6 +6,38 @@ export const testAccountsRepository = (
   create: () => Promise<IAccountRepository>,
 ) => {
   describe("the account repository", () => {
+    it("can delete accounts", async () => {
+      const repo = await create();
+
+      const accountOne = new Account({
+        id: "one",
+        userId: "ben",
+        name: "hello",
+        type: "checking",
+        closed: false,
+        note: "a note",
+        deleted: false,
+      });
+
+      const accountTwo = new Account({
+        id: "two",
+        userId: "ben",
+        name: "hello",
+        type: "checking",
+        closed: false,
+        note: "a note",
+        deleted: false,
+      });
+
+      await repo.saveAccounts([accountOne, accountTwo]);
+
+      await repo.deleteAccount(accountOne);
+
+      const result = await repo.getAccounts("one");
+
+      expect(result).toBeUndefined();
+    });
+
     it("can save multiple users", async () => {
       const repo = await create();
 

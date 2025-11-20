@@ -6,6 +6,25 @@ export const testUserRepository = (
   create: () => Promise<IRepository<User> & IMultipleRepository<User>>,
 ) => {
   describe("the user repository", () => {
+    it("can delete a user", async () => {
+      const repo = await create();
+
+      const data = new User({
+        email: "bwainwright28@gmail.com",
+        id: "ben",
+        passwordHash:
+          "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
+        permissions: ["user", "public"],
+      });
+
+      await repo.save(data);
+
+      await repo.delete(data);
+
+      const result = await repo.get("ben");
+
+      expect(result).toEqual(undefined);
+    });
     it("can update and return a user", async () => {
       const repo = await create();
 
