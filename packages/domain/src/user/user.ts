@@ -1,0 +1,65 @@
+import { userSchema, type IUser } from "./i-user.ts";
+import { DomainModel, type Permission, type IRole } from "@core";
+
+export class User extends DomainModel implements IUser, IRole {
+  public readonly id: string;
+  private _passwordHash: string;
+  private _email: string;
+  private _permissions: Permission[];
+
+  private constructor(config: IUser) {
+    super();
+    this.id = config.id;
+    this._passwordHash = config.passwordHash;
+    this._email = config.email;
+    this._permissions = config.permissions;
+  }
+
+  public static create(config: {
+    id: string;
+    passwordHash: string;
+    email: string;
+  }) {
+    const user = new User({ ...config, permissions: ["user"] });
+    user.raiseEvent({ event: "UserCreated", data: user });
+    return user;
+  }
+
+  public delete() {
+    this.raiseEvent({ event: "UserDeleted", data: this });
+  }
+
+  public static reconstitute(data: IUser): User {
+    return new User(userSchema.parse(data));
+  }
+
+  public get passwordHash() {
+    return this._passwordHash;
+  }
+
+  public get email() {
+    return this._email;
+  }
+
+  public get permissions() {
+    return this._permissions;
+  }
+
+  public set permissions(permissions: Permission[]) {
+    const old = User.reconstitute(this);
+    this._permissions = permissions;
+    this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
+  }
+
+  public set passwordHash(hash: string) {
+    const old = User.reconstitute(this);
+    this._passwordHash = hash;
+    this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
+  }
+
+  public set email(email: string) {
+    const old = User.reconstitute(this);
+    this._email = email;
+    this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
+  }
+}

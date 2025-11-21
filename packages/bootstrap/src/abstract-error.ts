@@ -1,4 +1,3 @@
-import type { Events } from "@ynab-plus/domain";
 import StackTracey from "stacktracey";
 
 interface StackLine {
@@ -7,7 +6,7 @@ interface StackLine {
 }
 
 interface IEventEmitter {
-  emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]): void;
+  emit(key: unknown, data: unknown): void;
 }
 
 export abstract class AbstractError extends Error {

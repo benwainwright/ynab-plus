@@ -1,16 +1,16 @@
 import type { IRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { SyncDetails, type ISyncDetails } from "@ynab-plus/domain";
+import { SyncDetails } from "@ynab-plus/domain";
 import type { SqliteDatabase } from "./sqlite-database.ts";
 
 interface RawSyncDetails {
   id: string;
   provider: string;
   checkpoint: string | undefined;
-  lastSync: Date;
+  lastSync: Date | undefined;
 }
 
-export class SqliteSyncDetailsRepository implements IRepository<ISyncDetails> {
+export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   public constructor(
     private tableName: ConfigValue<string>,
     private database: SqliteDatabase,
@@ -30,20 +30,21 @@ export class SqliteSyncDetailsRepository implements IRepository<ISyncDetails> {
           id TEXT PRIMARY KEY,
           provider TEXT NOT NULL,
           checkpoint TEXT,
-          lastSync TEXT NOT NULL
+          lastSync TEXT
       );`,
       [],
     );
   }
 
   private mapRaw(account: RawSyncDetails): SyncDetails {
-    return SyncDetails.fromObject({
+    return SyncDetails.reconstitute({
       ...account,
       checkpoint: account.checkpoint ?? undefined,
+      lastSync: account.lastSync ?? undefined,
     });
   }
 
-  public async get(id: string): Promise<ISyncDetails | undefined> {
+  public async get(id: string): Promise<SyncDetails | undefined> {
     const result = await this.database.getFromDb<RawSyncDetails | undefined>(
       `SELECT id, provider, checkpoint, lastSync
         FROM ${await this.tableName.value}
@@ -71,7 +72,7 @@ export class SqliteSyncDetailsRepository implements IRepository<ISyncDetails> {
         thing.id,
         thing.provider,
         thing.checkpoint,
-        thing.lastSync.toISOString(),
+        thing.lastSync?.toISOString() ?? null,
       ],
     );
 

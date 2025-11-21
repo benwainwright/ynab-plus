@@ -12,7 +12,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@ynab-plus/domain": "workspace:*"
+    "@ynab-plus/domain": "workspace:*",
+    "typeson": "^9.0.4"
   },
   "devDependencies": {
     "vitest-mock-extended": "^3.1.0"

@@ -9,7 +9,11 @@
     "types": ["node"],
     "paths": {}
   },
-  "references": [],
+  "references": [
+    {
+      "path": "../domain"
+    }
+  ],
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"]
 }

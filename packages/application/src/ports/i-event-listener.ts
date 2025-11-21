@@ -1,16 +1,16 @@
-import type { Events } from "@ynab-plus/domain";
+import type { AllEvents } from "@core";
 
 export type IEventPacket<
-  TEvents = Events,
+  TEvents,
   TKey extends keyof TEvents = keyof TEvents,
-> = TKey extends keyof Events
+> = TKey extends keyof AllEvents
   ? {
       key: TKey;
-      data: Events[TKey];
+      data: AllEvents[TKey];
     }
   : never;
 
-export type IListener<TEvents = Events> = (
+export type IListener<TEvents = AllEvents> = (
   arg: IEventPacket<TEvents, keyof TEvents>,
 ) => void;
 

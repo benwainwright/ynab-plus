@@ -85,7 +85,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
   }
 
   private mapRaw(raw: RawTask): RegularTask {
-    return new RegularTask({
+    return RegularTask.reconstitute({
       ...raw,
       created: new Date(raw.created),
       lastExecution: raw.lastExecution

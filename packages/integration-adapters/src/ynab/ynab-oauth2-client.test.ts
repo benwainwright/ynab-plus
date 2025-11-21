@@ -142,7 +142,7 @@ describe("ynab auth client", () => {
 
       const now = new Date();
 
-      const token = new OauthToken({
+      const token = OauthToken.reconstitute({
         token: "foo",
         expiry: startDate,
         refreshToken: "foo-refresh",

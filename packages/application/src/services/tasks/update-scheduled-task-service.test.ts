@@ -1,13 +1,13 @@
 import type { ITaskScheduler } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import { RegularTask, SystemContext } from "@ynab-plus/domain";
+import { SystemContext, RegularTask } from "@ynab-plus/domain";
 import { UpdateScheduledTaskService } from "./update-scheduled-task-service.ts";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
 describe("update scheduled task service", () => {
   it("updates the task with the task scheduler", async () => {
-    const task = new RegularTask({
+    const task = RegularTask.reconstitute({
       id: "foo",
       onBehalfOf: "ben",
       created: new Date("2025-12-11T20:39:37.823Z"),
@@ -34,7 +34,7 @@ describe("update scheduled task service", () => {
 
     const mockRepo = mock<ITaskScheduler>();
 
-    const existingTask = new RegularTask({
+    const existingTask = RegularTask.reconstitute({
       id: "foo",
       onBehalfOf: "ben",
       triggerImmediately: true,
@@ -62,7 +62,7 @@ describe("update scheduled task service", () => {
   });
 
   it("fails the update if there was no existing task", async () => {
-    const task = new RegularTask({
+    const task = RegularTask.reconstitute({
       triggerImmediately: true,
       id: "foo",
       onBehalfOf: "ben",

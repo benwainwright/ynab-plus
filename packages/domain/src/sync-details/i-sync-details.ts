@@ -6,5 +6,8 @@ export const syncDetailsSchema = z.object({
   id: z.string(),
   provider: z.string(),
   checkpoint: z.string().optional(),
-  lastSync: z.string().transform((date) => new Date(date)),
+  lastSync: z
+    .string()
+    .optional()
+    .transform((date) => (typeof date !== "undefined" ? new Date(date) : date)),
 });

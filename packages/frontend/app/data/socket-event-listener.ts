@@ -1,8 +1,13 @@
-import type { IEventListener, IEventPacket, IListener } from "@ynab-plus/app";
-import { type Events, deSerialiseObject } from "@ynab-plus/domain";
+import type {
+  AllEvents,
+  IEventListener,
+  IEventPacket,
+  IListener,
+} from "@ynab-plus/app";
+import { Serialiser } from "@ynab-plus/bootstrap";
 import { v7 } from "uuid";
 
-export class SocketEventListener implements IEventListener<Events> {
+export class SocketEventListener implements IEventListener<AllEvents> {
   private listenerMap = new Map<string, (packet: MessageEvent) => void>();
 
   public constructor(private socket: WebSocket) {}
@@ -17,11 +22,13 @@ export class SocketEventListener implements IEventListener<Events> {
   public onAll(callback: IListener): string {
     const listenerId = v7();
 
-    const listener = (packet: MessageEvent<Events>) => {
+    const listener = (packet: MessageEvent<AllEvents>) => {
       if (packet.type === "message" && typeof packet.data === "string") {
-        const parsed = deSerialiseObject(
-          JSON.parse(packet.data),
-        ) as IEventPacket;
+        const serialiser = new Serialiser();
+
+        const parsed = serialiser.deserialise(
+          packet.data,
+        ) as IEventPacket<AllEvents>;
         callback(parsed);
       }
     };
@@ -31,11 +38,11 @@ export class SocketEventListener implements IEventListener<Events> {
     return listenerId;
   }
 
-  public on<TKey extends keyof Events>(
+  public on<TKey extends keyof AllEvents>(
     key: TKey,
-    callback: (data: IEventPacket<Events, TKey>["data"]) => void,
+    callback: (data: IEventPacket<AllEvents, TKey>["data"]) => void,
   ): string {
-    const handler = (packet: IEventPacket) => {
+    const handler = (packet: IEventPacket<AllEvents>) => {
       if (packet.key === key) {
         callback(packet.data);
       }

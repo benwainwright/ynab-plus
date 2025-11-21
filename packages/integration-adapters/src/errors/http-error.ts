@@ -1,5 +1,6 @@
 import type { IEventBus } from "@ynab-plus/app";
 import { AbstractError } from "@ynab-plus/bootstrap";
+import type { AdapterEvents } from "../adapter-events.ts";
 
 export class HttpError extends AbstractError {
   public constructor(
@@ -10,7 +11,7 @@ export class HttpError extends AbstractError {
     super(message);
   }
 
-  public override handle(events: IEventBus): void {
+  public override handle(events: IEventBus<AdapterEvents>): void {
     events.emit("HttpError", {
       statusCode: this.statusCode,
       body: this.body,

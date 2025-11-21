@@ -3,26 +3,25 @@ import type {
   IEventPacket,
   IEventListener,
   IListener,
+  AllEvents,
 } from "@ynab-plus/app";
-import {
-  type Events,
-  deSerialiseObject,
-  serialiseObject,
-} from "@ynab-plus/domain";
+import { Serialiser } from "@ynab-plus/bootstrap";
+import { type Events } from "@ynab-plus/domain";
 import { v7 } from "uuid";
 
-type Bus = IEventEmitter & IEventListener<Events>;
+type Bus = IEventEmitter<AllEvents> & IEventListener<AllEvents>;
 
 export class SocketEventBus implements Bus {
   private listenerMap = new Map<string, (packet: MessageEvent) => void>();
 
   public constructor(private socket: WebSocket) {}
 
-  emit<TKey extends keyof Events>(key: TKey, data: Events[TKey]): void {
+  emit<TKey extends keyof AllEvents>(key: TKey, data: AllEvents[TKey]): void {
+    const serialiser = new Serialiser();
     this.socket.send(
       JSON.stringify({
         key,
-        data: serialiseObject(data),
+        data: serialiser.serialise(data),
       }),
     );
   }
@@ -39,9 +38,10 @@ export class SocketEventBus implements Bus {
 
     const listener = (packet: MessageEvent<Events>) => {
       if (packet.type === "message" && typeof packet.data === "string") {
-        const parsed = deSerialiseObject(
-          JSON.parse(packet.data),
-        ) as IEventPacket;
+        const serialiser = new Serialiser();
+        const parsed = serialiser.deserialise(
+          packet.data,
+        ) as IEventPacket<AllEvents>;
         callback(parsed);
       }
     };
@@ -51,11 +51,11 @@ export class SocketEventBus implements Bus {
     return listenerId;
   }
 
-  public on<TKey extends keyof Events>(
+  public on<TKey extends keyof AllEvents>(
     key: TKey,
-    callback: (data: IEventPacket<Events, TKey>["data"]) => void,
+    callback: (data: IEventPacket<AllEvents, TKey>["data"]) => void,
   ): string {
-    const handler = (packet: IEventPacket) => {
+    const handler = (packet: IEventPacket<AllEvents>) => {
       if (packet.key === key) {
         callback(packet.data);
       }

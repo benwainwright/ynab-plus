@@ -8,7 +8,7 @@ import type { IMultipleRepository } from "../../ports/i-multiple-repository.ts";
 
 describe("list users service", () => {
   it("returns a list of all the users, passing through the offset and limit", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -16,13 +16,13 @@ describe("list users service", () => {
     });
 
     const mockUserList = [
-      new User({
+      User.reconstitute({
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],
         email: "email",
       }),
-      new User({
+      User.reconstitute({
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],

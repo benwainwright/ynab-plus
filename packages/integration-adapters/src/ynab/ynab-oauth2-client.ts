@@ -46,7 +46,7 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    const newToken = new OauthToken({
+    const newToken = OauthToken.reconstitute({
       provider: this.providerName,
       token: json.access_token,
       refreshToken: json.refresh_token,
@@ -104,7 +104,7 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    const newToken = new OauthToken({
+    const newToken = OauthToken.reconstitute({
       provider: this.providerName,
       token: json.access_token,
       refreshToken: json.refresh_token,

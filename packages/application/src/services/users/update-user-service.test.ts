@@ -8,7 +8,7 @@ import { when } from "vitest-when";
 import { UpdateUserService } from "./update-user-service.ts";
 describe("update users service", () => {
   it("leaves the password alone if password is an empty string", async () => {
-    const loggedInUser = new User({
+    const loggedInUser = User.reconstitute({
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -30,7 +30,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = new User({
+    const existingUser = User.reconstitute({
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -46,7 +46,7 @@ describe("update users service", () => {
     expect(hasher.hash).not.toBeCalled();
   });
   it("should update the existing user", async () => {
-    const loggedInUser = new User({
+    const loggedInUser = User.reconstitute({
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -70,7 +70,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = new User({
+    const existingUser = User.reconstitute({
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -83,7 +83,7 @@ describe("update users service", () => {
 
     const result = await service.doHandle(context);
 
-    const updatedUser = new User({
+    const updatedUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo-hash",
       email: "a@b.c",
@@ -102,7 +102,7 @@ describe("update users service", () => {
   });
 
   it("rejects the update if an error is thrown by the repo", async () => {
-    const loggedInUser = new User({
+    const loggedInUser = User.reconstitute({
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -126,7 +126,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = new User({
+    const existingUser = User.reconstitute({
       id: "ben",
       passwordHash: "other-hash",
       email: "a@b.d",
@@ -139,7 +139,7 @@ describe("update users service", () => {
 
     when(mockRepo.save)
       .calledWith(
-        new User({
+        User.reconstitute({
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",
@@ -164,7 +164,7 @@ describe("update users service", () => {
   });
 
   it("rejects update if there is no existing user", async () => {
-    const loggedInUser = new User({
+    const loggedInUser = User.reconstitute({
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -206,7 +206,7 @@ describe("update users service", () => {
   });
 
   it("rethrows unexpected errors", async () => {
-    const loggedInUser = new User({
+    const loggedInUser = User.reconstitute({
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -229,7 +229,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = new User({
+    const existingUser = User.reconstitute({
       id: "ben",
       passwordHash: "other-hash",
       email: "a@b.d",
@@ -240,7 +240,7 @@ describe("update users service", () => {
 
     when(mockRepo.save)
       .calledWith(
-        new User({
+        User.reconstitute({
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",

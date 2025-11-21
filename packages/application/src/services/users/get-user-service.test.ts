@@ -9,7 +9,7 @@ import { createMockServiceContext } from "@test-helpers";
 
 describe("get user service", () => {
   it("simply returns a user, given the correct id", async () => {
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",

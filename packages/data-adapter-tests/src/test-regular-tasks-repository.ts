@@ -27,7 +27,7 @@ export const testRegularTasksRepository = (
       it("results in a task being persisted", async () => {
         const repo = await create();
 
-        const task = new RegularTask({
+        const task = RegularTask.reconstitute({
           id: "foo",
           onBehalfOf: "ben",
           triggerImmediately: true,
@@ -54,7 +54,7 @@ export const testRegularTasksRepository = (
     describe("get all tasks", () => {
       it("gets all the tasks in the database if you dont supply a limit", async () => {
         const repo = await create();
-        const task = new RegularTask({
+        const task = RegularTask.reconstitute({
           triggerImmediately: false,
           id: "foo",
           onBehalfOf: "ben",
@@ -73,7 +73,7 @@ export const testRegularTasksRepository = (
 
         await repo.scheduleTask(task);
 
-        const task2 = new RegularTask({
+        const task2 = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo-3",
           data: "{}",
@@ -92,7 +92,7 @@ export const testRegularTasksRepository = (
 
         await repo.scheduleTask(task2);
 
-        const johns = new RegularTask({
+        const johns = RegularTask.reconstitute({
           triggerImmediately: false,
           id: "foo-4",
           data: "{}",
@@ -118,7 +118,7 @@ export const testRegularTasksRepository = (
     describe("get user tasks", () => {
       it("gets all the tasks associated with a user", async () => {
         const repo = await create();
-        const task = new RegularTask({
+        const task = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo",
           onBehalfOf: "ben",
@@ -137,7 +137,7 @@ export const testRegularTasksRepository = (
 
         await repo.scheduleTask(task);
 
-        const task2 = new RegularTask({
+        const task2 = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo-3",
           data: "{}",
@@ -156,7 +156,7 @@ export const testRegularTasksRepository = (
 
         await repo.scheduleTask(task2);
 
-        const johns = new RegularTask({
+        const johns = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo-4",
           data: "{}",
@@ -183,7 +183,7 @@ export const testRegularTasksRepository = (
       it("deletes a task", async () => {
         const repo = await create();
 
-        const task = new RegularTask({
+        const task = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo",
           data: "{}",
@@ -200,7 +200,7 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
 
-        const task2 = new RegularTask({
+        const task2 = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo-2",
           data: "{}",
@@ -237,7 +237,7 @@ export const testRegularTasksRepository = (
       describe("update task", () => {
         it("can update an existing task", async () => {
           const repo = await create();
-          const task = new RegularTask({
+          const task = RegularTask.reconstitute({
             triggerImmediately: true,
             id: "foo",
             onBehalfOf: "ben",
@@ -256,7 +256,7 @@ export const testRegularTasksRepository = (
 
           await repo.scheduleTask(task);
 
-          const updated = new RegularTask({
+          const updated = RegularTask.reconstitute({
             triggerImmediately: false,
             id: "foo",
             onBehalfOf: "ben",
@@ -285,7 +285,7 @@ export const testRegularTasksRepository = (
         describe("delete task", () => {
           it("deletes a task", async () => {
             const repo = await create();
-            const task = new RegularTask({
+            const task = RegularTask.reconstitute({
               triggerImmediately: true,
 
               id: "foo",
@@ -303,7 +303,7 @@ export const testRegularTasksRepository = (
               command: "SyncAccountsCommand",
             });
 
-            const task2 = new RegularTask({
+            const task2 = RegularTask.reconstitute({
               triggerImmediately: true,
               id: "foo-2",
               onBehalfOf: "ben",

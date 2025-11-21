@@ -14,7 +14,7 @@ describe("can access", () => {
 
   it("should return true if the user has permissions that match", () => {
     const result = canAccess({
-      user: new User({
+      user: User.reconstitute({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
@@ -28,7 +28,7 @@ describe("can access", () => {
 
   it("should return false if the user has no matching permissions", () => {
     const result = canAccess({
-      user: new User({
+      user: User.reconstitute({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
@@ -42,7 +42,7 @@ describe("can access", () => {
 
   it("should return false if the user has at leaast one matching permission", () => {
     const result = canAccess({
-      user: new User({
+      user: User.reconstitute({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",

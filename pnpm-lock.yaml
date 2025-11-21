@@ -133,6 +133,9 @@ importers:
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      typeson:
+        specifier: ^9.0.4
+        version: 9.0.4
     devDependencies:
       vitest-mock-extended:
         specifier: ^3.1.0
@@ -192,6 +195,9 @@ importers:
       '@ynab-plus/app':
         specifier: workspace:*
         version: link:../application
+      '@ynab-plus/bootstrap':
+        specifier: workspace:*
+        version: link:../bootstrap
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
@@ -305,6 +311,9 @@ importers:
       better-sqlite3:
         specifier: 12.4.1
         version: 12.4.1
+      typeson:
+        specifier: ^9.0.4
+        version: 9.0.4
       zod:
         specifier: 4.1.12
         version: 4.1.12
@@ -348,6 +357,9 @@ importers:
       node-cron:
         specifier: ^4.2.1
         version: 4.2.1
+      typeson:
+        specifier: ^9.0.4
+        version: 9.0.4
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
@@ -3292,6 +3304,10 @@ packages:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  typeson@9.0.4:
+    resolution: {integrity: sha512-umRYLe37m4fTu0AlgFaqu1C+N+i3LqAehCzbvNx9w7alyN1wpPyS6FbBEsvWD2FppS2yJ9gk0FkFBkZ/wJE13Q==}
+    engines: {node: '>=16.0.0'}
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -6697,6 +6713,8 @@ snapshots:
       - supports-color
 
   typescript@5.9.3: {}
+
+  typeson@9.0.4: {}
 
   unbox-primitive@1.1.0:
     dependencies:

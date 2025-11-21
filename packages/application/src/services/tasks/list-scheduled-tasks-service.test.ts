@@ -8,7 +8,7 @@ import { ListScheduledTasksService } from "./list-scheduled-tasks-service.ts";
 
 describe("list ScheduledTasks service", () => {
   it("returns a list of all the ScheduledTasks, passing through the offset and limit", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -16,7 +16,7 @@ describe("list ScheduledTasks service", () => {
     });
 
     const mockTaskList = [
-      new RegularTask({
+      RegularTask.reconstitute({
         id: "foo",
         onBehalfOf: "ben",
         created: new Date("2025-12-11T20:39:37.823Z"),
@@ -33,7 +33,7 @@ describe("list ScheduledTasks service", () => {
         command: "SyncAccountsCommand",
       }),
 
-      new RegularTask({
+      RegularTask.reconstitute({
         id: "foo-2",
         onBehalfOf: "ben",
         triggerImmediately: true,

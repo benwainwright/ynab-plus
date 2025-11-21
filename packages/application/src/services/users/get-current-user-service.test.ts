@@ -21,7 +21,7 @@ describe("get user command handler", () => {
   });
 
   it("gets a user from the repository and returns it", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -40,7 +40,7 @@ describe("get user command handler", () => {
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
       undefined,
-      new User({
+      User.reconstitute({
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
@@ -56,7 +56,7 @@ describe("get user command handler", () => {
   });
 
   it("returns undefined if there is no logged in user", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
@@ -86,7 +86,7 @@ describe("get user command handler", () => {
   });
 
   it("updates session with permissions if they've changed", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
@@ -113,7 +113,7 @@ describe("get user command handler", () => {
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
       undefined,
-      new User({
+      User.reconstitute({
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
@@ -124,7 +124,7 @@ describe("get user command handler", () => {
     await handler.doHandle(context);
 
     expect(mockCurrentUserSetter.set).toHaveBeenCalledWith(
-      new User({
+      User.reconstitute({
         id: "ben",
         permissions: ["user"],
         email: "bwainwright28@gmail.com",
@@ -143,7 +143,7 @@ describe("get user command handler", () => {
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
       undefined,
-      new User({
+      User.reconstitute({
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",

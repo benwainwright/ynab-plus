@@ -1,6 +1,6 @@
 import type { IRole } from "./i-role.ts";
 import type { Permission } from "./permissions.ts";
-import type { User } from "./user.ts";
+import type { User } from "@user";
 
 export class SystemContext implements IRole {
   public constructor(

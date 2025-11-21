@@ -21,7 +21,7 @@ describe("list accounts service", () => {
   });
 
   it("correctly returns users if the system context has a user attached", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
@@ -29,7 +29,7 @@ describe("list accounts service", () => {
     });
 
     const mockUserList = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -38,7 +38,7 @@ describe("list accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -69,7 +69,7 @@ describe("list accounts service", () => {
   });
 
   it("returns a list of all the accounts, passing through the offset and limit", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
@@ -77,7 +77,7 @@ describe("list accounts service", () => {
     });
 
     const mockUserList = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -86,7 +86,7 @@ describe("list accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",

@@ -9,7 +9,8 @@
     }
   },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "type-check": "tsc --build"
   },
   "dependencies": {
     "zod": "^4.1.12"

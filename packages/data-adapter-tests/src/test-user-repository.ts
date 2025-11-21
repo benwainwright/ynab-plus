@@ -9,7 +9,7 @@ export const testUserRepository = (
     it("can delete a user", async () => {
       const repo = await create();
 
-      const data = new User({
+      const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
         id: "ben",
         passwordHash:
@@ -28,7 +28,7 @@ export const testUserRepository = (
     it("can update and return a user", async () => {
       const repo = await create();
 
-      const data = new User({
+      const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
         id: "ben",
         passwordHash:
@@ -47,7 +47,7 @@ export const testUserRepository = (
       it("can return many users", async () => {
         const repo = await create();
 
-        const data = new User({
+        const data = User.reconstitute({
           email: "bwainwright28@gmail.com",
           id: "ben",
           passwordHash:
@@ -55,7 +55,7 @@ export const testUserRepository = (
           permissions: ["public", "user"],
         });
 
-        const data2 = new User({
+        const data2 = User.reconstitute({
           email: "a@b.com",
           id: "ben2",
           passwordHash:
@@ -63,7 +63,7 @@ export const testUserRepository = (
           permissions: ["public", "user"],
         });
 
-        const data3 = new User({
+        const data3 = User.reconstitute({
           email: "a@c.com",
           id: "ben3",
           passwordHash:

@@ -6,7 +6,7 @@ import { User } from "@ynab-plus/domain";
 
 describe("not authorised error", () => {
   it("stores details about the auth failure", () => {
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
@@ -25,7 +25,7 @@ describe("not authorised error", () => {
 
   describe("handle", () => {
     it("stores details about the auth failure", () => {
-      const user = new User({
+      const user = User.reconstitute({
         id: "ben",
         email: "a@b.c",
         passwordHash: "foo",

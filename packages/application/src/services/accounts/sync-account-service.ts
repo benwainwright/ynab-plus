@@ -52,11 +52,9 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
 
     const theSyncDetails =
       syncDetails ??
-      new SyncDetails({
+      SyncDetails.create({
         provider: "ynab",
         id: `ynab-account-sync-${id}`,
-        checkpoint: undefined,
-        lastSync: new Date(),
       });
 
     if (!token) {

@@ -7,7 +7,7 @@ import type { ICurrentUserSetter } from "@ports";
 
 describe("logout service", () => {
   it("deletes the current user from the session cache", async () => {
-    const mockUser = new User({
+    const mockUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],

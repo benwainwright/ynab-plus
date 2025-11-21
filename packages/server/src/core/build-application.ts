@@ -29,6 +29,8 @@ export const buildApplication = ({
     oauthTokenRepository,
     userRepository,
     accountsRepository,
+    syncdetailsRepository,
+    transactionRepository,
   } = composeSqliteAdapters(bootstrapper, logger);
 
   const { ynabClient, oauthClientFactory } = composeIntegrationAdapters(
@@ -37,6 +39,8 @@ export const buildApplication = ({
   );
 
   const applicationLayer = composeApplicationLayer({
+    transactionRepository,
+    syncdetailsRepository,
     taskScheduler: tasksRepository,
     eventBus,
     passwordHasher: hashValidator,
@@ -44,6 +48,7 @@ export const buildApplication = ({
     oauthCheckerFactory: oauthClientFactory,
     newTokenRequesterFactory: oauthClientFactory,
     accountsFetcher: ynabClient,
+    transactionFetcher: ynabClient,
     sessionStorage,
     userRepository,
     accountsRepository,

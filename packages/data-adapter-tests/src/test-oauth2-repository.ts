@@ -8,7 +8,7 @@ export const testOauthRepository = (
     it("can update and return a user", async () => {
       const repo = await create();
 
-      const tokenOne = new OauthToken({
+      const tokenOne = OauthToken.reconstitute({
         provider: "ynab",
         expiry: new Date("2025-12-11T20:39:37.823Z"),
         token: "foo",
@@ -19,7 +19,7 @@ export const testOauthRepository = (
         created: new Date("2025-05-10T20:39:37.823Z"),
       });
 
-      const tokenTwo = new OauthToken({
+      const tokenTwo = OauthToken.reconstitute({
         provider: "monzo",
         userId: "ben",
         expiry: new Date("2025-11-11T20:39:37.823Z"),
@@ -41,7 +41,7 @@ export const testOauthRepository = (
     it("can delete a token", async () => {
       const repo = await create();
 
-      const tokenOne = new OauthToken({
+      const tokenOne = OauthToken.reconstitute({
         provider: "ynab",
         expiry: new Date("2025-12-11T20:39:37.823Z"),
         token: "foo",
@@ -52,7 +52,7 @@ export const testOauthRepository = (
         created: new Date("2025-05-10T20:39:37.823Z"),
       });
 
-      const tokenTwo = new OauthToken({
+      const tokenTwo = OauthToken.reconstitute({
         provider: "monzo",
         userId: "ben",
         expiry: new Date("2025-11-11T20:39:37.823Z"),

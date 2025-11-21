@@ -38,7 +38,7 @@ export class SqliteUserRepository
     );
 
     return result
-      ? new User({
+      ? User.reconstitute({
           ...result,
           permissions: JSON.parse(result.permissions) as Permission[],
         })
@@ -53,12 +53,11 @@ export class SqliteUserRepository
       [limit ?? 30, start ?? 0],
     );
 
-    return result.map(
-      (result) =>
-        new User({
-          ...result,
-          permissions: JSON.parse(result.permissions) as Permission[],
-        }),
+    return result.map((result) =>
+      User.reconstitute({
+        ...result,
+        permissions: JSON.parse(result.permissions) as Permission[],
+      }),
     );
   }
 
@@ -90,7 +89,7 @@ export class SqliteUserRepository
         JSON.stringify(thing.permissions),
       ],
     );
-    return new User({
+    return User.reconstitute({
       ...data,
       permissions: JSON.parse(data.permissions) as Permission[],
     });

@@ -32,7 +32,7 @@ describe("register users service", () => {
 
     const result = await service.doHandle(context);
 
-    const newUser = new User({
+    const newUser = User.reconstitute({
       id: "ben",
       passwordHash: "foo-hash",
       email: "a@b.c",
@@ -78,7 +78,7 @@ describe("register users service", () => {
 
     when(mockRepo.save)
       .calledWith(
-        new User({
+        User.reconstitute({
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",
@@ -126,7 +126,7 @@ describe("register users service", () => {
 
     when(mockRepo.save)
       .calledWith(
-        new User({
+        User.reconstitute({
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",

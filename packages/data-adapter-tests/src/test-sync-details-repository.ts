@@ -8,14 +8,14 @@ export const testSyncDetailsRepository = (
     it("can save and get sync details by id", async () => {
       const repo = await create();
 
-      const newDetails1 = new SyncDetails({
+      const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
         provider: "ynab",
         checkpoint: "blah",
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
-      const newDetails2 = new SyncDetails({
+      const newDetails2 = SyncDetails.reconstitute({
         id: "foo-bar-2",
         provider: "ynab",
         checkpoint: "blah",
@@ -33,14 +33,14 @@ export const testSyncDetailsRepository = (
     it("allows you to delete sync details", async () => {
       const repo = await create();
 
-      const newDetails1 = new SyncDetails({
+      const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
         provider: "ynab",
         checkpoint: "blah",
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
-      const newDetails2 = new SyncDetails({
+      const newDetails2 = SyncDetails.reconstitute({
         id: "foo-bar-2",
         provider: "ynab",
         checkpoint: "blah",

@@ -1,6 +1,6 @@
 import type { Commands } from "./commands.ts";
-import type { IRole } from "./i-role.ts";
-import { User } from "./user.ts";
+import type { IRole } from "@core";
+import type { User } from "@user";
 
 export class Command<
   TKey extends keyof Commands = keyof Commands,

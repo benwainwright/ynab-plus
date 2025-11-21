@@ -5,7 +5,15 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
-    "paths": {}
+    "paths": {
+      "@core": ["./src/core/index.ts"],
+      "@user": ["./src/user/index.ts"],
+      "@regular-task": ["./src/regular-task/index.ts"],
+      "@transaction": ["./src/transaction/index.ts"],
+      "@account": ["./src/account/index.ts"],
+      "@oauth-token": ["./src/oauth-token/index.ts"],
+      "@sync-details": ["./src/sync-details/index.ts"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"]

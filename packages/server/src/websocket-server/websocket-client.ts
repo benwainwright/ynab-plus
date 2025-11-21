@@ -4,8 +4,8 @@ import type {
   IServiceBus,
   ISingleItemStore,
 } from "@ynab-plus/app";
-import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { Command, User, serialiseObject } from "@ynab-plus/domain";
+import { AbstractError, Serialiser, type ILogger } from "@ynab-plus/bootstrap";
+import { Command, User } from "@ynab-plus/domain";
 import { WebSocket } from "ws";
 import z from "zod";
 
@@ -18,16 +18,15 @@ export class ServerWebsocketClient {
     private serviceBus: IServiceBus,
     private eventBus: IEventBus,
     private logger: ILogger,
-    private currentUserCache: ISingleItemStore<User & { $type: "user" }>,
+    private currentUserCache: ISingleItemStore<User>,
   ) {}
 
   public onConnect(socket: WebSocket) {
     this.logger.debug(`Socket connected`, LOG_CONTEXT);
-    this.eventBus.emit("SocketOpened", undefined);
     this.eventBus.onAll((packet) => {
       this.logger.debug(`Event recieved`, { ...LOG_CONTEXT, packet });
-      const toSend = JSON.stringify(serialiseObject(packet));
-      console.log(toSend);
+      const serialiser = new Serialiser();
+      const toSend = JSON.stringify(serialiser.serialise(packet));
       socket.send(toSend);
     });
   }

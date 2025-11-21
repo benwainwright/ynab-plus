@@ -9,7 +9,7 @@ describe("disconnect outh integration service", () => {
   it("removes the token in the tokens database as well as the refresh task", async () => {
     const mockRepo = mock<IOauthTokenRepository>();
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "bwainwright28@gmail.com",
       passwordHash: "foo",
@@ -23,7 +23,7 @@ describe("disconnect outh integration service", () => {
       scheduler,
       mock(),
     );
-    const task = new RegularTask({
+    const task = RegularTask.reconstitute({
       name: "Refresh ynab Oauth token",
       description: "",
       id: "ben-ynab-token-refresh-task",

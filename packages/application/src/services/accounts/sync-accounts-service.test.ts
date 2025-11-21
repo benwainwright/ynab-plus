@@ -20,8 +20,6 @@ afterEach(() => {
 });
 
 describe("download-accounts service", () => {
-  it("throws an error if executed without any kind of user context", () => {});
-
   it("throws an error if executed in a system context without an onBehalfOf", async () => {
     const context = createMockServiceContext(
       "SyncAccountsCommand",
@@ -37,7 +35,7 @@ describe("download-accounts service", () => {
   it("works if execution is delegated by the system to a user", async () => {
     vi.setSystemTime(new Date("2025-11-15T11:08:50.571Z"));
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
@@ -46,7 +44,7 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -64,7 +62,7 @@ describe("download-accounts service", () => {
     const mockFetcher = mock<IAccountsFetcher>();
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -73,7 +71,7 @@ describe("download-accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -107,10 +105,10 @@ describe("download-accounts service", () => {
     expect(result.synced).toEqual(true);
   });
 
-  it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token when token was used recently when force is true", async () => {
+  it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token when token was ", async () => {
     vi.setSystemTime(new Date("2025-11-15T11:08:50.571Z"));
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
@@ -119,7 +117,7 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -137,7 +135,7 @@ describe("download-accounts service", () => {
     const mockFetcher = mock<IAccountsFetcher>();
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -146,7 +144,7 @@ describe("download-accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -183,7 +181,7 @@ describe("download-accounts service", () => {
   it("does no syncing if token is less then 10 minutes old and force is off", async () => {
     vi.setSystemTime(new Date("2025-11-15T11:08:50.571Z"));
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
@@ -192,7 +190,7 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -236,7 +234,7 @@ describe("download-accounts service", () => {
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token so long as the token was used more than 5 minutes ago when force is off", async () => {
     vi.setSystemTime(new Date("2025-11-15T12:08:50.571Z"));
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
@@ -245,7 +243,7 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -263,7 +261,7 @@ describe("download-accounts service", () => {
     const mockFetcher = mock<IAccountsFetcher>();
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -272,7 +270,7 @@ describe("download-accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -312,14 +310,14 @@ describe("download-accounts service", () => {
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token if its not been used and force is off", async () => {
     vi.setSystemTime(new Date("2025-11-15T12:08:50.571Z"));
 
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
       permissions: ["admin"],
     });
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -337,7 +335,7 @@ describe("download-accounts service", () => {
     const mockFetcher = mock<IAccountsFetcher>();
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -346,7 +344,7 @@ describe("download-accounts service", () => {
         note: "hello",
         deleted: false,
       }),
-      new Account({
+      Account.reconstitute({
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -387,7 +385,7 @@ describe("download-accounts service", () => {
   });
 
   it("throws an error if there is no token", async () => {
-    const user = new User({
+    const user = User.reconstitute({
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",

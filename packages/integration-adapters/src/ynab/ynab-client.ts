@@ -143,13 +143,12 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       })
       .parse(result);
 
-    return parsed.data.accounts.map(
-      (account) =>
-        new Account({
-          ...account,
-          userId: token.userId,
-          note: account.note ?? undefined,
-        }),
+    return parsed.data.accounts.map((account) =>
+      Account.reconstitute({
+        ...account,
+        userId: token.userId,
+        note: account.note ?? undefined,
+      }),
     );
   }
 }

@@ -1,11 +1,7 @@
-import type { Account } from "./account.ts";
 import type { Commands } from "./commands.ts";
 import type { ICommandResponse } from "./i-command-response.ts";
-import type { IUser } from "./i-user.ts";
-import type { Permission } from "./permissions.ts";
-import type { RegularTask } from "./regular-task.ts";
-import type { SystemContext } from "./system-context.ts";
-import type { User } from "./user.ts";
+import { type User } from "@user";
+import type { Permission, SystemContext } from "@core";
 
 export interface Events {
   AppInitialised: { url: string; port: number };
@@ -13,20 +9,8 @@ export interface Events {
   CommandResponse: ICommandResponse<keyof Commands>;
   OauthIntegrationDisconnected: { provider: string };
   SocketOpened: undefined;
-  LogoutSuccess: undefined;
-  LoginSuccess: undefined;
-  LoginFail: undefined;
-  HttpError: {
-    statusCode: number;
-    body: string;
-  };
-  AccountsSynced: Account[];
   RegisterSuccess: undefined;
   UserUpdateFail: { reason: string };
-  ScheduledTaskUpdated: RegularTask;
-  ScheduledTaskDeleted: RegularTask;
-  ScheduledTaskCreated: RegularTask;
-  UserUpdated: IUser;
   RegisterFail: { reason: string };
   NotAuthorisedError: {
     role: User | SystemContext | undefined;

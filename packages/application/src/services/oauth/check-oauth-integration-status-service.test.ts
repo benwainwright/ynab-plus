@@ -37,7 +37,7 @@ describe("check oauth-integration-status-service", () => {
       "CheckOauthIntegrationStatusCommand",
       { provider: "foo" },
 
-      new User({
+      User.reconstitute({
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
@@ -58,7 +58,7 @@ describe("check oauth-integration-status-service", () => {
     vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
 
     try {
-      const mockToken = new OauthToken({
+      const mockToken = OauthToken.reconstitute({
         token: "foo",
         userId: "ben",
         refreshToken: "foo-refresh",
@@ -102,7 +102,7 @@ describe("check oauth-integration-status-service", () => {
         "CheckOauthIntegrationStatusCommand",
         { provider: "ynab" },
 
-        new User({
+        User.reconstitute({
           id: "ben",
           email: "bwainwright28@gmail.com",
           passwordHash: "foo",
@@ -128,7 +128,7 @@ describe("check oauth-integration-status-service", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
     try {
-      const mockFirstToken = new OauthToken({
+      const mockFirstToken = OauthToken.reconstitute({
         token: "foo",
         refreshToken: "foo-refresh",
         provider: "ynab",
@@ -139,7 +139,7 @@ describe("check oauth-integration-status-service", () => {
         lastUse: new Date(),
       });
 
-      const mockSecondToken = new OauthToken({
+      const mockSecondToken = OauthToken.reconstitute({
         token: "bar",
         refreshToken: "foo-refresh-2",
         userId: "ben",
@@ -190,7 +190,7 @@ describe("check oauth-integration-status-service", () => {
         "CheckOauthIntegrationStatusCommand",
         { provider: "ynab" },
 
-        new User({
+        User.reconstitute({
           id: "ben",
           email: "bwainwright28@gmail.com",
           passwordHash: "foo",

@@ -15,7 +15,7 @@ import type {
   NewTokenRequesterFactory,
 } from "@ports";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
-import type { IUser, SyncDetails, User } from "@ynab-plus/domain";
+import type { SyncDetails, User } from "@ynab-plus/domain";
 
 export interface IInfrastructurePorts {
   logger: ILogger;
@@ -25,13 +25,13 @@ export interface IInfrastructurePorts {
   passwordHasher: IPasswordHasher;
   passwordVerifier: IPasswordVerifier;
   accountsRepository: IAccountRepository;
-  sessionStorage: IObjectStorage<IUser & { $type: "user" }>;
+  sessionStorage: IObjectStorage;
   userRepository: IRepository<User> & IMultipleRepository<User>;
   oauthTokenRepository: IOauthTokenRepository;
   newTokenRequesterFactory: NewTokenRequesterFactory;
   oauthCheckerFactory: IOauthCheckerFactory;
   accountsFetcher: IAccountsFetcher;
-  syncDetailsRepo: IRepository<SyncDetails>;
+  syncdetailsRepository: IRepository<SyncDetails>;
   transactionFetcher: ITransactionFetcher;
   transactionRepository: ITransactionRepository;
 }

@@ -44,7 +44,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   }
 
   private mapRaw(account: RawAccount): Account {
-    return new Account({
+    return Account.reconstitute({
       ...account,
       closed: account.closed === "closed",
       deleted: account.deleted === "deleted",

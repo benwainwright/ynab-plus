@@ -30,7 +30,7 @@ describe("the getaccountTransactions method", () => {
 
     const client = new YnabClient(`https://api.ynab.com`, logger);
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       provider: "ynab",
       expiry: new Date("2025-12-11T20:39:37.823Z"),
       token: MOCK_TOKEN,
@@ -41,7 +41,7 @@ describe("the getaccountTransactions method", () => {
       created: new Date("2025-05-10T20:39:37.823Z"),
     });
 
-    const syncDetails = new SyncDetails({
+    const syncDetails = SyncDetails.reconstitute({
       id: "foo-bar-2",
       provider: "ynab",
       checkpoint: "blah",
@@ -57,7 +57,7 @@ describe("the getaccountTransactions method", () => {
 
     const client = new YnabClient(`https://api.ynab.com`, logger);
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       provider: "ynab",
       expiry: new Date("2025-12-11T20:39:37.823Z"),
       token: MOCK_TOKEN,
@@ -68,7 +68,7 @@ describe("the getaccountTransactions method", () => {
       created: new Date("2025-05-10T20:39:37.823Z"),
     });
 
-    const syncDetails = new SyncDetails({
+    const syncDetails = SyncDetails.reconstitute({
       id: "foo-bar-2",
       provider: "ynab",
       checkpoint: "blah",
@@ -94,7 +94,7 @@ describe("the getaccounts method", () => {
 
     const client = new YnabClient(`https://api.ynab.com`, logger);
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       provider: "ynab",
       userId: "ben",
       expiry: new Date("2025-11-11T20:39:37.823Z"),

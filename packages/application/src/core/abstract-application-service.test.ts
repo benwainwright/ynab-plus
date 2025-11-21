@@ -95,7 +95,7 @@ describe("application service", () => {
         }
       }
 
-      const user = new User({
+      const user = User.reconstitute({
         id: "test",
         permissions: ["admin"],
         email: "a@b.c",
@@ -129,7 +129,7 @@ describe("application service", () => {
         }
       }
 
-      const user = new User({
+      const user = User.reconstitute({
         id: "test",
         permissions: ["user"],
         email: "a@b.c",

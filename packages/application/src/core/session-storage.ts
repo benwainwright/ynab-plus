@@ -4,14 +4,14 @@ import type {
   ISessionIdRequester,
   ISingleItemStore,
 } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
-import { type IUser, User } from "@ynab-plus/domain";
+import { Serialiser, type ILogger } from "@ynab-plus/bootstrap";
+import { User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 
 export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
-    private storage: IObjectStorage<IUser & { $type: "user" }>,
+    private storage: IObjectStorage,
     private sessionIdRequester: ISessionIdRequester,
     private logger: ILogger,
   ) {}
@@ -39,7 +39,16 @@ export class SessionStorage implements ISingleItemStore<User> {
       LOG_CONTEXT,
     );
 
-    return sessionData ? User.fromObject(sessionData) : undefined;
+    const serialiser = new Serialiser();
+    if (!sessionData) {
+      return undefined;
+    }
+    const data = serialiser.deserialise(sessionData);
+
+    if (data instanceof User) {
+      return data;
+    }
+    throw new AppError(`Something strange was found in session data`);
   }
 
   async set(thing: User | undefined): Promise<void> {
@@ -50,6 +59,11 @@ export class SessionStorage implements ISingleItemStore<User> {
       LOG_CONTEXT,
     );
 
-    await this.storage.set(`${sessionId}-session-key`, thing?.toObject());
+    const serialiser = new Serialiser();
+
+    await this.storage.set(
+      `${sessionId}-session-key`,
+      thing ? serialiser.serialise(thing) : undefined,
+    );
   }
 }

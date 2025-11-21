@@ -1,9 +1,8 @@
-import type { IEventPacket } from "@ynab-plus/app";
-import type { Events } from "@ynab-plus/domain";
+import type { AllEvents, IEventPacket } from "@ynab-plus/app";
 
 import { useEvents } from "./use-events.ts";
 
-export const useEvent = <TKey extends keyof Events>(
+export const useEvent = <TKey extends keyof AllEvents>(
   key: TKey,
   callback: (data: IEventPacket<TKey>["data"]) => Promise<void> | void,
 ) => {

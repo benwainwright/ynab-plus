@@ -18,6 +18,7 @@
     "@ynab-plus/domain": "workspace:*",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "12.4.1",
+    "typeson": "^9.0.4",
     "zod": "4.1.12"
   },
   "devDependencies": {

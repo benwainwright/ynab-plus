@@ -27,7 +27,6 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   }
 
   protected override async handle<TRole extends IRole>({
-    eventBus,
     command: {
       data: { code, provider },
     },
@@ -52,7 +51,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
 
     await this.tokenRepository.save(token);
 
-    const refreshTask = new RegularTask({
+    const refreshTask = RegularTask.create({
       name: "Refresh ynab Oauth token",
       triggerImmediately: true,
       description: "",
@@ -65,12 +64,10 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
       day: "*",
       month: "*",
       weekDay: "*",
-      created: new Date(),
       lastExecution: undefined,
     });
 
     await this.taskScheduler.scheduleTask(refreshTask);
-    eventBus.emit("ScheduledTaskCreated", refreshTask);
 
     return {
       status: "connected",

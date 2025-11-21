@@ -6,7 +6,7 @@ export const accountSchema = z.object({
   name: z.string(),
   type: z.string(),
   closed: z.boolean(),
-  note: z.union([z.string(), z.undefined()]),
+  note: z.string().optional(),
   deleted: z.boolean(),
 });
 

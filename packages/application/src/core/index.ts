@@ -3,3 +3,6 @@ export type { IInfrastructurePorts } from "./i-infrastructure-ports.ts";
 export { ServiceBus } from "./service-bus.ts";
 export { SessionStorage } from "./session-storage.ts";
 export { getRequestFactory } from "./get-request-factory.ts";
+export { type ApplicationEvents } from "./application-events.ts";
+export { type AllEvents } from "./all-events.ts";
+export { emitDomainEventsOnSave } from "./emit-domain-events-on-save.ts";

@@ -1,8 +1,9 @@
 import z from "zod";
-import type { Commands } from "./commands.ts";
+import type { Commands } from "../commands.ts";
 
 const schedulableTasks = [
   "SyncAccountsCommand",
+  "SyncAccountCommand",
   "CheckOauthIntegrationStatusCommand",
 ] as const satisfies Readonly<(keyof Commands)[]>;
 
@@ -34,6 +35,4 @@ export const regularTaskSchema = z.object({
 
 export type IRegularTask<TTaskKey extends SchedulableTask> = z.output<
   typeof regularTaskSchema
-> & {
-  command: TTaskKey;
-};
+> & { command: TTaskKey };

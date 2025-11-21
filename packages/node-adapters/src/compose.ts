@@ -12,7 +12,7 @@ import z from "zod";
 export const compose = (bootstrapper: IBootstrapper, logger: ILogger) => {
   const events = new EventEmitter();
   const eventBus = new NodeEventBus(events, `ynab-plus`);
-  const sessionStorage = new FlatFileObjectStore<User>(
+  const sessionStorage = new FlatFileObjectStore(
     bootstrapper.configValue("sessionPath", z.string()),
     logger,
   );

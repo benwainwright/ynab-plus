@@ -2,7 +2,8 @@ import { SocketEventBus } from "./socket-event-bus.ts";
 
 import { WebSocketServer, type Server, WebSocket as WsWebsocket } from "ws";
 import getPort from "get-port";
-import { Account, deSerialiseObject, serialiseObject } from "@ynab-plus/domain";
+import { Account } from "@ynab-plus/domain";
+import { Serialiser } from "@ynab-plus/bootstrap";
 
 let server: Server | undefined;
 const port = await getPort();
@@ -45,7 +46,7 @@ describe("the socket event bus", () => {
     const bus = new SocketEventBus(socket);
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -55,7 +56,7 @@ describe("the socket event bus", () => {
         deleted: false,
       }),
 
-      new Account({
+      Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -71,9 +72,11 @@ describe("the socket event bus", () => {
     bus.on("AccountsSynced", listener);
     const serverSocket = await serverSocketPromise;
 
+    const serialiser = new Serialiser();
+
     serverSocket.send(
       JSON.stringify(
-        serialiseObject({
+        serialiser.serialise({
           key: "AccountsSynced",
           data: accounts,
         }),
@@ -103,7 +106,7 @@ describe("the socket event bus", () => {
     const bus = new SocketEventBus(socket);
 
     const accounts = [
-      new Account({
+      Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -113,7 +116,7 @@ describe("the socket event bus", () => {
         deleted: false,
       }),
 
-      new Account({
+      Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -126,8 +129,9 @@ describe("the socket event bus", () => {
 
     bus.emit("AccountsSynced", accounts);
 
-    const result = deSerialiseObject(
-      parseSocketMessage(await serverMessagePromise),
+    const serialiser = new Serialiser();
+    const result = serialiser.deserialise(
+      JSON.stringify(parseSocketMessage(await serverMessagePromise)),
     );
 
     expect(result).toEqual({

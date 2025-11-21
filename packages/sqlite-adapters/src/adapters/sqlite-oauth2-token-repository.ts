@@ -56,7 +56,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     );
 
     return result
-      ? new OauthToken({
+      ? OauthToken.reconstitute({
           ...result,
           expiry: new Date(result.expiry),
           lastUse: result.lastUse ? new Date(result.lastUse) : undefined,
@@ -91,7 +91,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
       ],
     );
 
-    return new OauthToken({
+    return OauthToken.reconstitute({
       ...data,
       expiry: new Date(data.expiry),
       lastUse: data.lastUse ? new Date(data.lastUse) : undefined,

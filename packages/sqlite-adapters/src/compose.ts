@@ -7,6 +7,8 @@ import {
 } from "@adapters";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import z from "zod";
+import { SqliteTransactionRepository } from "./adapters/sqlite-transaction-repository.ts";
+import { SqliteSyncDetailsRepository } from "./adapters/sqlite-sync-details-repository.ts";
 
 export const LOG_CONTEXT = { context: "compose-sqlite-adapters" };
 
@@ -58,10 +60,38 @@ export const compose = (bootstrapper: IBootstrapper, logger: ILogger) => {
     await taskRepo.create();
   });
 
+  const transactionRepository = new SqliteTransactionRepository(
+    bootstrapper.configValue(`transactionsTableName`, z.string()),
+    database,
+  );
+
+  bootstrapper.addInitStep(async () => {
+    logger.debug(
+      `Creating transactions repository if it doesn't exist`,
+      LOG_CONTEXT,
+    );
+    await transactionRepository.create();
+  });
+
+  const syncdetailsRepository = new SqliteSyncDetailsRepository(
+    bootstrapper.configValue(`syncdetailsTablename`, z.string()),
+    database,
+  );
+
+  bootstrapper.addInitStep(async () => {
+    logger.debug(
+      `Creating syncDetails repository if it doesn't exist`,
+      LOG_CONTEXT,
+    );
+    await syncdetailsRepository.create();
+  });
+
   return {
     oauthTokenRepository,
     accountsRepository,
+    transactionRepository,
     userRepository,
+    syncdetailsRepository,
     tasksRepository: taskRepo,
   };
 };

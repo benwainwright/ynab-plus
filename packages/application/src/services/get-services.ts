@@ -1,7 +1,8 @@
-import type { AbstractApplicationService } from "@core";
+import { emitDomainEventsOnSave, type AbstractApplicationService } from "@core";
 import type {
   IAccountRepository,
   IAccountsFetcher,
+  IEventBus,
   IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
@@ -41,9 +42,10 @@ interface IServiceDependencies {
   accountsRepository: IAccountRepository;
   newTokenRequesterFactory: NewTokenRequesterFactory;
   accountsFetcher: IAccountsFetcher;
-  syncDetailsRepo: IRepository<SyncDetails>;
+  syncdetailsRepository: IRepository<SyncDetails>;
   transactionFetcher: ITransactionFetcher;
   transactionRepository: ITransactionRepository;
+  eventBus: IEventBus;
 }
 
 export const getServices = ({
@@ -54,47 +56,66 @@ export const getServices = ({
   taskScheduler,
   oauthCheckerFactory,
   passwordHasher,
-  syncDetailsRepo,
+  syncdetailsRepository,
   accountsRepository,
   accountsFetcher,
   transactionFetcher,
   transactionRepository,
+  eventBus,
 }: IServiceDependencies): AbstractApplicationService[] => {
+  const users = emitDomainEventsOnSave(userRepository, eventBus, "save");
+  const tokens = emitDomainEventsOnSave(oauthTokenRepository, eventBus, "save");
+  const transactions = emitDomainEventsOnSave(
+    transactionRepository,
+    eventBus,
+    "saveTransaction",
+    "getTransaction",
+  );
+  const tasks = emitDomainEventsOnSave(
+    taskScheduler,
+    eventBus,
+    "deleteTask",
+    "updateTask",
+    "scheduleTask",
+  );
+
+  const accounts = emitDomainEventsOnSave(
+    accountsRepository,
+    eventBus,
+    "deleteAccount",
+    "saveAccount",
+    "saveAccounts",
+  );
+
+  const syncDetails = emitDomainEventsOnSave(
+    syncdetailsRepository,
+    eventBus,
+    "save",
+    "delete",
+  );
+
   return [
-    new GetUserService(userRepository, logger),
-    new ListUsersService(userRepository, logger),
-    new UpdateUserService(userRepository, passwordHasher, logger),
-    new DisconnectOauthIntegrationService(
-      oauthTokenRepository,
-      taskScheduler,
-      logger,
-    ),
-    new CheckOauthIntegrationStatusService(
-      oauthTokenRepository,
-      oauthCheckerFactory,
-      logger,
-    ),
+    new GetUserService(users, logger),
+    new ListUsersService(users, logger),
+    new UpdateUserService(users, passwordHasher, logger),
+    new DisconnectOauthIntegrationService(tokens, tasks, logger),
+    new CheckOauthIntegrationStatusService(tokens, oauthCheckerFactory, logger),
     new GenerateNewOauthTokenService(
-      oauthTokenRepository,
+      tokens,
       newTokenRequesterFactory,
-      taskScheduler,
+      tasks,
       logger,
     ),
-    new SyncAccountsService(
-      oauthTokenRepository,
-      accountsFetcher,
-      accountsRepository,
-      logger,
-    ),
-    new ListAccountsService(accountsRepository, logger),
-    new ListScheduledTasksService(taskScheduler, logger),
+    new SyncAccountsService(tokens, accountsFetcher, accounts, logger),
+    new ListAccountsService(accounts, logger),
+    new ListScheduledTasksService(tasks, logger),
     new SyncAccountService(
-      syncDetailsRepo,
-      oauthTokenRepository,
+      syncDetails,
+      tokens,
       transactionFetcher,
-      transactionRepository,
+      transactions,
       logger,
     ),
-    new UpdateScheduledTaskService(taskScheduler, logger),
+    new UpdateScheduledTaskService(tasks, logger),
   ];
 };

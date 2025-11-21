@@ -1,19 +1,12 @@
-import { Command } from "./command.ts";
-import type { Commands } from "./commands.ts";
-import {
-  regularTaskSchema,
-  type IRegularTask,
-  type SchedulableTask,
-} from "./i-regular-tasks.ts";
+import { Command } from "../command.ts";
+import type { Commands } from "../commands.ts";
+import { type IRegularTask, type SchedulableTask } from "./i-regular-tasks.ts";
 
-import type { ISerialisable } from "./i-serialisable.ts";
-import type { SystemContext } from "./system-context.ts";
+import { DomainModel, type SystemContext } from "@core";
 
-export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
-  implements
-    IRegularTask<TTaskKey>,
-    ISerialisable<IRegularTask<TTaskKey>, "regularTask">
-{
+export class RegularTask<
+  TTaskKey extends SchedulableTask = SchedulableTask,
+> extends DomainModel {
   public readonly id: string;
   public readonly onBehalfOf: string | undefined;
   public readonly data: string | undefined;
@@ -29,7 +22,8 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
   private _lastExecution: Date | undefined;
   public readonly command: TTaskKey;
 
-  public constructor(config: IRegularTask<TTaskKey>) {
+  private constructor(config: IRegularTask<TTaskKey>) {
+    super();
     this.id = config.id;
     this.created = config.created;
     this.triggerImmediately = config.triggerImmediately;
@@ -46,50 +40,46 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
     this.command = config.command;
   }
 
-  public toObject(): Omit<IRegularTask<TTaskKey>, "toObject"> & {
-    $type: "regularTask";
-  } {
-    return {
-      $type: "regularTask",
-      id: this.id,
-      triggerImmediately: this.triggerImmediately,
-      created: this.created,
-      lastExecution: this.lastExecution,
-      onBehalfOf: this.onBehalfOf,
-      data: this.data,
-      minute: this.minute,
-      hour: this.hour,
-      day: this.day,
-      month: this.month,
-      weekDay: this.weekDay,
-      name: this.name,
-      description: this.description,
-      command: this.command,
-    };
+  public static reconstitute<TTaskKey extends SchedulableTask>(
+    config: IRegularTask<TTaskKey>,
+  ) {
+    return new RegularTask(config);
+  }
+
+  public static create<TTaskKey extends SchedulableTask>(
+    config: Omit<IRegularTask<TTaskKey>, "created">,
+  ) {
+    const theTask = new RegularTask({ ...config, created: new Date() });
+    theTask.raiseEvent({ event: "RegularTaskCreated", data: theTask });
+    return theTask;
+  }
+
+  public updateTask(config: {
+    name?: string;
+    description?: string;
+    lastExecution?: Date;
+  }) {
+    const old = RegularTask.reconstitute(this);
+    this._name = config.name ?? this._name;
+    this._description = config.description ?? this._description;
+    this._lastExecution = config.lastExecution ?? this._lastExecution;
+    this.raiseEvent({ event: "RegularTaskUpdated", data: { old, new: this } });
+  }
+
+  public delete() {
+    this.raiseEvent({ event: "RegularTaskDeleted", data: this });
   }
 
   public get name(): string {
     return this._name;
   }
 
-  public set name(name: string) {
-    this._name = name;
-  }
-
   public get lastExecution(): Date | undefined {
     return this._lastExecution;
   }
 
-  public set lastExecution(lastExecution: Date | undefined) {
-    this._lastExecution = lastExecution;
-  }
-
   public get description(): string {
     return this._description;
-  }
-
-  public set description(description: string) {
-    this._description = description;
   }
 
   public executionDetailsAreEqual(other: RegularTask | undefined) {
@@ -123,11 +113,4 @@ export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask>
       role,
     );
   }
-
-  public static fromObject(thing: unknown) {
-    const data = regularTaskSchema.parse(thing);
-    return new RegularTask(data);
-  }
-
-  public readonly $type = "regularTask";
 }

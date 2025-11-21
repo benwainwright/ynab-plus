@@ -7,9 +7,13 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "vitest/globals"],
     "paths": {
-      "@ports": ["./src/ports/index.ts"],
-      "@errors": ["./src/errors/index.ts"],
-      "@services": ["./src/services/index.ts"]
+      "@core": ["./src/core/index.ts"],
+      "@user": ["./src/user/index.ts"],
+      "@regular-task": ["./src/regular-task/index.ts"],
+      "@transaction": ["./src/transaction/index.ts"],
+      "@account": ["./src/account/index.ts"],
+      "@oauth-token": ["./src/oauth-token/index.ts"],
+      "@sync-details": ["./src/sync-details/index.ts"]
     }
   },
   "include": ["src/**/*.test.ts"],

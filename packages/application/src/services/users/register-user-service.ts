@@ -30,7 +30,7 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
 
     const hash = await this.passwordHasher.hash(password);
 
-    const user = new User({
+    const user = User.reconstitute({
       id: username,
       email,
       passwordHash: hash,

@@ -19,7 +19,7 @@ describe("generate new oauth token service", () => {
         "GenerateNewOauthTokenCommand",
         { provider: "ynab", code: "1-2-3" },
 
-        new User({
+        User.reconstitute({
           id: "ben",
           email: "bwainwright28@gmail.com",
           passwordHash: "foo",
@@ -37,7 +37,7 @@ describe("generate new oauth token service", () => {
 
       const mockTaskScheduler = mock<ITaskScheduler>();
 
-      const task = new RegularTask({
+      const task = RegularTask.reconstitute({
         name: "Refresh ynab Oauth token",
         description: "",
         id: "ben-ynab-token-refresh-task",
@@ -54,7 +54,7 @@ describe("generate new oauth token service", () => {
         lastExecution: undefined,
       });
 
-      const mockToken = new OauthToken({
+      const mockToken = OauthToken.reconstitute({
         token: "foo",
         userId: "ben",
         refreshToken: "foo-refresh",

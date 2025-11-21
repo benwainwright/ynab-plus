@@ -1,8 +1,7 @@
-import type { IAccount } from "./i-account.ts";
-import type { IUser } from "./i-user.ts";
-import type { Permission } from "./permissions.ts";
-import type { RegularTask } from "./regular-task.ts";
-import type { User } from "./user.ts";
+import type { IAccount } from "./account/i-account.ts";
+import type { IUser, User } from "@user";
+import type { Permission } from "@core";
+import type { RegularTask } from "@regular-task";
 
 export interface Commands {
   SyncAccountCommand: {

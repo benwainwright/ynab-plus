@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { permissionSchema } from "./permissions.ts";
+import { permissionSchema } from "@core";
 
 export const userSchema = z.object({
   id: z.string().readonly(),

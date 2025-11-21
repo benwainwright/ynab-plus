@@ -48,8 +48,6 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
 
       await this.users.save(userToUpdate);
       this.logger.verbose(`Save successful!`, LOG_CONTEXT);
-
-      eventBus.emit("UserUpdated", userToUpdate);
       return { success: true } as const;
     } catch (error) {
       if (error instanceof AbstractError) {

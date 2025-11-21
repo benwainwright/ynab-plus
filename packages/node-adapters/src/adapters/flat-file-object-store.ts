@@ -7,9 +7,7 @@ import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
 
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
 
-export class FlatFileObjectStore<TObject extends object>
-  implements IObjectStorage<TObject>
-{
+export class FlatFileObjectStore implements IObjectStorage {
   public constructor(
     private folder: ConfigValue<string>,
     private logger: ILogger,
@@ -20,7 +18,7 @@ export class FlatFileObjectStore<TObject extends object>
     return join(cwd(), base, key);
   }
 
-  public async get(key: string): Promise<TObject | undefined> {
+  public async get(key: string): Promise<string | undefined> {
     const path = await this.resolvePath(key);
     this.logger.silly(`Path resolved at ${path}`, LOG_CONTEXT);
 
@@ -35,8 +33,7 @@ export class FlatFileObjectStore<TObject extends object>
 
       if (!fileStat.isFile()) return undefined;
 
-      const raw = await readFile(path, "utf8");
-      return JSON.parse(raw) as TObject;
+      return await readFile(path, "utf8");
     } catch (err) {
       if (
         err &&
@@ -50,21 +47,18 @@ export class FlatFileObjectStore<TObject extends object>
     }
   }
 
-  public async set(key: string, thing: TObject | undefined): Promise<void> {
+  public async set(key: string, thing: string | undefined): Promise<void> {
     const path = await this.resolvePath(key);
     const dir = path.substring(0, path.lastIndexOf("/"));
 
     await mkdir(dir, { recursive: true });
 
-    this.logger.silly(
-      `Storing ${JSON.stringify(thing)} in ${path}`,
-      LOG_CONTEXT,
-    );
+    this.logger.silly(`Storing ${String(thing)} in ${path}`, LOG_CONTEXT);
 
     if (typeof thing === "undefined") {
       await rm(path, { force: true });
     } else {
-      await writeFile(path, JSON.stringify(thing));
+      await writeFile(path, thing);
     }
   }
 }

@@ -31,7 +31,7 @@ describe("sync account service", () => {
       mock(),
     );
 
-    const user = new User({
+    const user = User.reconstitute({
       email: "bwainwright28@gmail.com",
       id: "ben",
       passwordHash:
@@ -47,7 +47,7 @@ describe("sync account service", () => {
       new SystemContext("scheduler", ["system"], user),
     );
 
-    const newDetails = new SyncDetails({
+    const newDetails = SyncDetails.reconstitute({
       id: "ynab-account-sync-the-id",
       provider: "ynab",
       checkpoint: "blah",
@@ -78,7 +78,7 @@ describe("sync account service", () => {
       mock(),
     );
 
-    const user = new User({
+    const user = User.reconstitute({
       email: "bwainwright28@gmail.com",
       id: "ben",
       passwordHash:
@@ -94,14 +94,14 @@ describe("sync account service", () => {
       new SystemContext("scheduler", ["system"], user),
     );
 
-    const newDetails = new SyncDetails({
+    const newDetails = SyncDetails.reconstitute({
       id: "ynab-account-sync-the-id",
       provider: "ynab",
       checkpoint: "blah",
       lastSync: new Date("2025-12-10T20:39:37.823Z"),
     });
 
-    const token = new OauthToken({
+    const token = OauthToken.reconstitute({
       provider: "ynab",
       expiry: new Date("2025-12-11T20:39:37.823Z"),
       token: "foo",

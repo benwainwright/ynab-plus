@@ -9,7 +9,7 @@ export const testAccountsRepository = (
     it("can delete accounts", async () => {
       const repo = await create();
 
-      const accountOne = new Account({
+      const accountOne = Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -19,7 +19,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountTwo = new Account({
+      const accountTwo = Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -41,7 +41,7 @@ export const testAccountsRepository = (
     it("can save multiple users", async () => {
       const repo = await create();
 
-      const accountOne = new Account({
+      const accountOne = Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -51,7 +51,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountTwo = new Account({
+      const accountTwo = Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -71,7 +71,7 @@ export const testAccountsRepository = (
     it("can update and return an account", async () => {
       const repo = await create();
 
-      const accountOne = new Account({
+      const accountOne = Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -81,7 +81,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountTwo = new Account({
+      const accountTwo = Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -102,7 +102,7 @@ export const testAccountsRepository = (
     it("can return all of the current accounts for a user", async () => {
       const repo = await create();
 
-      const accountOne = new Account({
+      const accountOne = Account.reconstitute({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -112,7 +112,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountTwo = new Account({
+      const accountTwo = Account.reconstitute({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -122,7 +122,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountThree = new Account({
+      const accountThree = Account.reconstitute({
         id: "three",
         userId: "fred",
         name: "hello",

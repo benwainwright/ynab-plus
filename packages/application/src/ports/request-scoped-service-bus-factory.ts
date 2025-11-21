@@ -9,5 +9,5 @@ export type RequestScopedServiceBusFactory = (requestDetails: {
 }) => Promise<{
   serviceBus: IServiceBus;
   eventBus: IEventBus;
-  currentUserCache: ISingleItemStore<User & { $type: "user" }>;
+  currentUserCache: ISingleItemStore<User>;
 }>;

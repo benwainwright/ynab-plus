@@ -1,11 +1,5 @@
-import {
-  Command,
-  RegularTask,
-  SystemContext,
-  User,
-  type Events,
-} from "@ynab-plus/domain";
-import type { IEventBus, IServiceBus } from "@ynab-plus/app";
+import { Command, RegularTask, SystemContext, User } from "@ynab-plus/domain";
+import type { AllEvents, IEventBus, IServiceBus } from "@ynab-plus/app";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
 import { ServerError } from "@core";
@@ -57,9 +51,9 @@ export class TaskScheduler {
       ),
     );
 
-    this.eventBus.on("ScheduledTaskDeleted", this.onDelete.bind(this));
-    this.eventBus.on("ScheduledTaskCreated", this.onCreate.bind(this));
-    this.eventBus.on("ScheduledTaskUpdated", this.onUpdate.bind(this));
+    this.eventBus.on("RegularTaskDeleted", this.onDelete.bind(this));
+    this.eventBus.on("RegularTaskCreated", this.onCreate.bind(this));
+    this.eventBus.on("RegularTaskUpdated", this.onUpdate.bind(this));
   }
 
   private get taskMap() {
@@ -69,7 +63,7 @@ export class TaskScheduler {
     return this._taskMap;
   }
 
-  public async onDelete(data: Events["ScheduledTaskDeleted"]) {
+  public async onDelete(data: AllEvents["RegularTaskDeleted"]) {
     const toDelete = this.taskMap.get(data.id);
     if (toDelete) {
       this.logger.debug(`Deleting scheduled task ${data.id}`, LOG_CONTEXT);
@@ -78,22 +72,23 @@ export class TaskScheduler {
     }
   }
 
-  public async onUpdate(data: Events["ScheduledTaskUpdated"]) {
-    const toUpdate = this.taskMap.get(data.id);
+  public async onUpdate(data: AllEvents["RegularTaskUpdated"]) {
+    const toUpdate = this.taskMap.get(data.old.id);
     if (toUpdate) {
-      this.logger.debug(`Updating scheduled task ${data.id}`, LOG_CONTEXT);
-      if (!data.executionDetailsAreEqual(toUpdate.appTask)) {
+      this.logger.debug(`Updating scheduled task ${data.old.id}`, LOG_CONTEXT);
+      if (!data.old.executionDetailsAreEqual(toUpdate.appTask)) {
         await toUpdate.cronTask.destroy();
-        this.taskMap.set(data.id, await this.makeCronTask(data));
+        this.taskMap.set(data.old.id, await this.makeCronTask(data.new));
       } else {
-        toUpdate.appTask.description = data.description;
-        toUpdate.appTask.name = data.name;
-        toUpdate.appTask.lastExecution = data.lastExecution;
+        this.taskMap.set(data.old.id, {
+          cronTask: toUpdate.cronTask,
+          appTask: data.new,
+        });
       }
     }
   }
 
-  public async onCreate(data: Events["ScheduledTaskCreated"]) {
+  public async onCreate(data: AllEvents["RegularTaskCreated"]) {
     this.taskMap.set(data.id, await this.makeCronTask(data));
   }
 
@@ -122,7 +117,9 @@ export class TaskScheduler {
     const command = task.getCommand(context);
     await this.serviceBus.execute(command);
 
-    task.lastExecution = new Date();
+    task.updateTask({
+      lastExecution: new Date(),
+    });
 
     const updateTaskCommand = new Command(
       "UpdateScheduledTaskCommand",

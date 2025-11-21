@@ -1,4 +1,4 @@
-export interface IObjectStorage<TObject extends object> {
-  get(key: string): Promise<TObject | undefined>;
-  set(key: string, thing: TObject | undefined): Promise<void>;
+export interface IObjectStorage {
+  get(key: string): Promise<string | undefined>;
+  set(key: string, thing: string | undefined): Promise<void>;
 }
