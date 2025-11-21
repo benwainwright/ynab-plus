@@ -1,4 +1,11 @@
-import { User, type IUser } from "@ynab-plus/domain";
+import {
+  Account,
+  SyncDetails,
+  User,
+  type IAccount,
+  type ISyncDetails,
+  type IUser,
+} from "@ynab-plus/domain";
 import { Typeson } from "typeson";
 
 export class Serialiser {
@@ -6,6 +13,29 @@ export class Serialiser {
 
   public constructor() {
     this.registry.register({
+      syncDetails: [
+        (thing) => thing instanceof SyncDetails,
+        (details: SyncDetails): ISyncDetails => ({
+          id: details.id,
+          checkpoint: details.checkpoint,
+          lastSync: details.lastSync,
+          provider: details.provider,
+        }),
+        (raw: ISyncDetails) => SyncDetails.reconstitute(raw),
+      ],
+      account: [
+        (thing) => thing instanceof Account,
+        (account: Account): IAccount => ({
+          id: account.id,
+          userId: account.userId,
+          name: account.name,
+          type: account.type,
+          closed: account.closed,
+          note: account.note,
+          deleted: account.deleted,
+        }),
+        (raw: IAccount) => Account.reconstitute(raw),
+      ],
       user: [
         (thing) => thing instanceof User,
         (user: User): IUser => ({
