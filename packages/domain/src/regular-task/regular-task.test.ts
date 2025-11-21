@@ -1,4 +1,13 @@
 import { RegularTask } from "./regular-task.ts";
+
+beforeAll(() => {
+  vi.useFakeTimers();
+});
+
+afterAll(() => {
+  vi.useRealTimers();
+});
+
 describe("the regular task domain model", () => {
   it("raises an event when created", () => {
     const task = RegularTask.create({

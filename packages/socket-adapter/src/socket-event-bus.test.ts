@@ -75,12 +75,10 @@ describe("the socket event bus", () => {
     const serialiser = new Serialiser();
 
     serverSocket.send(
-      JSON.stringify(
-        serialiser.serialise({
-          key: "AccountsSynced",
-          data: accounts,
-        }),
-      ),
+      serialiser.serialise({
+        key: "AccountsSynced",
+        data: accounts,
+      }),
     );
 
     await vi.waitFor(() => {

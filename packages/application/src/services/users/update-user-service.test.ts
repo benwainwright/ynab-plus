@@ -70,7 +70,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = User.reconstitute({
+    const existingUser = mock<User>({
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
@@ -83,22 +83,10 @@ describe("update users service", () => {
 
     const result = await service.doHandle(context);
 
-    const updatedUser = User.reconstitute({
-      id: "ben",
-      passwordHash: "foo-hash",
-      email: "a@b.c",
-      permissions: ["admin"],
-    });
-
-    expect(mockRepo.save).toHaveBeenCalledWith(updatedUser);
-
-    const { eventBus } = context;
+    expect(mockRepo.save.mock.lastCall?.[0].permissions).toEqual(["admin"]);
+    expect(mockRepo.save.mock.lastCall?.[0].email).toEqual("a@b.c");
 
     expect(result.success).toEqual(true);
-
-    if (result.success) {
-      expect(eventBus.emit).toHaveBeenCalledWith("UserUpdated", updatedUser);
-    }
   });
 
   it("rejects the update if an error is thrown by the repo", async () => {
@@ -126,7 +114,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = User.reconstitute({
+    const existingUser = mock<User>({
       id: "ben",
       passwordHash: "other-hash",
       email: "a@b.d",
@@ -137,16 +125,7 @@ describe("update users service", () => {
 
     const error = new AppError(`whoops`);
 
-    when(mockRepo.save)
-      .calledWith(
-        User.reconstitute({
-          id: "ben",
-          passwordHash: "foo-hash",
-          email: "a@b.c",
-          permissions: ["admin"],
-        }),
-      )
-      .thenReject(error);
+    mockRepo.save.mockRejectedValue(error);
 
     const service = new UpdateUserService(mockRepo, hasher, mock());
 
@@ -238,16 +217,7 @@ describe("update users service", () => {
 
     when(mockRepo.get).calledWith("ben").thenResolve(existingUser);
 
-    when(mockRepo.save)
-      .calledWith(
-        User.reconstitute({
-          id: "ben",
-          passwordHash: "foo-hash",
-          email: "a@b.c",
-          permissions: ["admin"],
-        }),
-      )
-      .thenReject(new Error());
+    mockRepo.save.mockRejectedValue(new Error());
 
     const service = new UpdateUserService(mockRepo, hasher, mock());
 

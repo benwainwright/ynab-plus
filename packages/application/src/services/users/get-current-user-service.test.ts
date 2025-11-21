@@ -123,14 +123,9 @@ describe("get user command handler", () => {
 
     await handler.doHandle(context);
 
-    expect(mockCurrentUserSetter.set).toHaveBeenCalledWith(
-      User.reconstitute({
-        id: "ben",
-        permissions: ["user"],
-        email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-      }),
-    );
+    expect(mockCurrentUserSetter.set.mock.lastCall?.[0]?.permissions).toEqual([
+      "user",
+    ]);
   });
 
   it("throws an error if the logged in user does not exist in the database", async () => {

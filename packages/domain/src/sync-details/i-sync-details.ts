@@ -7,7 +7,7 @@ export const syncDetailsSchema = z.object({
   provider: z.string(),
   checkpoint: z.string().optional(),
   lastSync: z
-    .string()
+    .union([z.date(), z.string()])
     .optional()
     .transform((date) => (typeof date !== "undefined" ? new Date(date) : date)),
 });

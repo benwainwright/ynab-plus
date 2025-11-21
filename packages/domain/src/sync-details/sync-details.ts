@@ -1,5 +1,5 @@
 import { DomainModel } from "@core";
-import { type ISyncDetails } from "./i-sync-details.ts";
+import { syncDetailsSchema, type ISyncDetails } from "./i-sync-details.ts";
 
 export class SyncDetails extends DomainModel implements ISyncDetails {
   public readonly provider: string;
@@ -16,7 +16,7 @@ export class SyncDetails extends DomainModel implements ISyncDetails {
   }
 
   public static reconstitute(config: ISyncDetails) {
-    return new SyncDetails(config);
+    return new SyncDetails(syncDetailsSchema.parse(config));
   }
 
   public static create(config: { id: string; provider: string }) {

@@ -1,6 +1,10 @@
 import { Command } from "../command.ts";
 import type { Commands } from "../commands.ts";
-import { type IRegularTask, type SchedulableTask } from "./i-regular-tasks.ts";
+import {
+  regularTaskSchema,
+  type IRegularTask,
+  type SchedulableTask,
+} from "./i-regular-tasks.ts";
 
 import { DomainModel, type SystemContext } from "@core";
 
@@ -43,7 +47,7 @@ export class RegularTask<
   public static reconstitute<TTaskKey extends SchedulableTask>(
     config: IRegularTask<TTaskKey>,
   ) {
-    return new RegularTask(config);
+    return new RegularTask(regularTaskSchema.parse(config));
   }
 
   public static create<TTaskKey extends SchedulableTask>(

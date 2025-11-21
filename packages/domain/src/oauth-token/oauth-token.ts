@@ -1,5 +1,5 @@
 import { DomainModel } from "@core";
-import { type IOauthToken } from "./i-outh-token.ts";
+import { oAuthTokenSchema, type IOauthToken } from "./i-outh-token.ts";
 
 export class OauthToken extends DomainModel implements IOauthToken {
   public readonly provider: string;
@@ -38,7 +38,7 @@ export class OauthToken extends DomainModel implements IOauthToken {
   }
 
   public static reconstitute(config: IOauthToken) {
-    return new OauthToken(config);
+    return new OauthToken(oAuthTokenSchema.parse(config));
   }
 
   public refresh(newToken: string, newRefreshToken: string, expiry: Date) {

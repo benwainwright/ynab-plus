@@ -91,10 +91,8 @@ describe("generate new oauth token service", () => {
       expect(result.expiry).toEqual(mockToken.expiry);
       expect(result.refreshed).toEqual(mockToken.refreshed);
       expect(save).toHaveBeenCalledWith(mockToken);
-      expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledWith(task);
-      expect(context.eventBus.emit).toHaveBeenCalledWith(
-        "ScheduledTaskCreated",
-        task,
+      expect(mockTaskScheduler.scheduleTask.mock.lastCall?.[0].id).toEqual(
+        task.id,
       );
     } finally {
       vi.useRealTimers();

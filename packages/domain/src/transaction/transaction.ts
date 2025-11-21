@@ -1,5 +1,5 @@
 import { DomainModel } from "@core";
-import { type ITransaction } from "./i-transaction.ts";
+import { transactionSchema, type ITransaction } from "./i-transaction.ts";
 
 export class Transaction extends DomainModel implements ITransaction {
   public readonly id: string;
@@ -32,6 +32,6 @@ export class Transaction extends DomainModel implements ITransaction {
   }
 
   public static reconstitute(config: ITransaction) {
-    return new Transaction(config);
+    return new Transaction(transactionSchema.parse(config));
   }
 }

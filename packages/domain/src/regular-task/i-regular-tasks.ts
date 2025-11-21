@@ -16,9 +16,14 @@ export type SchedulableTask = z.output<typeof schedulableTasksSchema>;
 export const regularTaskSchema = z.object({
   id: z.string(),
   onBehalfOf: z.string().optional(),
-  created: z.string().transform((arg) => new Date(arg)),
+  created: z
+    .union([z.string(), z.date()])
+    .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
+
   lastExecution: z.union([
-    z.string().transform((arg) => new Date(arg)),
+    z
+      .union([z.string(), z.date()])
+      .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
     z.undefined(),
   ]),
   minute: z.string(),

@@ -6,9 +6,21 @@ export const oAuthTokenSchema = z.object({
   refreshToken: z.string(),
   provider: z.string(),
   userId: z.string(),
-  lastUse: z.union([z.date(), z.undefined()]),
-  refreshed: z.union([z.date(), z.undefined()]),
-  created: z.date(),
+  lastUse: z.union([
+    z
+      .union([z.string(), z.date()])
+      .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
+    z.undefined(),
+  ]),
+  refreshed: z.union([
+    z
+      .union([z.string(), z.date()])
+      .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
+    z.undefined(),
+  ]),
+  created: z
+    .union([z.string(), z.date()])
+    .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
 });
 
 export type IOauthToken = z.output<typeof oAuthTokenSchema>;

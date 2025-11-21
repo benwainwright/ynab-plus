@@ -19,9 +19,9 @@ export class SocketEventBus implements Bus {
   emit<TKey extends keyof AllEvents>(key: TKey, data: AllEvents[TKey]): void {
     const serialiser = new Serialiser();
     this.socket.send(
-      JSON.stringify({
+      serialiser.serialise({
         key,
-        data: serialiser.serialise(data),
+        data,
       }),
     );
   }
