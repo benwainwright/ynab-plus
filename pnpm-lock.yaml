@@ -198,12 +198,12 @@ importers:
       '@ynab-plus/app':
         specifier: workspace:*
         version: link:../application
-      '@ynab-plus/bootstrap':
-        specifier: workspace:*
-        version: link:../bootstrap
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      '@ynab-plus/serialiser':
+        specifier: workspace:*
+        version: link:../serialiser
       '@ynab-plus/test-helpers':
         specifier: workspace:*
         version: link:../test-helpers

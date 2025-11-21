@@ -4,7 +4,7 @@ import type {
   IEventPacket,
   IListener,
 } from "@ynab-plus/app";
-import { Serialiser } from "@ynab-plus/bootstrap";
+import { Serialiser } from "@ynab-plus/serialiser";
 import { v7 } from "uuid";
 
 export class SocketEventListener implements IEventListener<AllEvents> {
