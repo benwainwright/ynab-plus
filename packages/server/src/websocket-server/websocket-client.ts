@@ -27,7 +27,7 @@ export class ServerWebsocketClient {
     this.eventBus.onAll((packet) => {
       this.logger.debug(`Event recieved`, { ...LOG_CONTEXT, packet });
       const serialiser = new Serialiser();
-      const toSend = JSON.stringify(serialiser.serialise(packet));
+      const toSend = serialiser.serialise(packet);
       socket.send(toSend);
     });
   }
