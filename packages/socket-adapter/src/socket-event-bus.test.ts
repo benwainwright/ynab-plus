@@ -3,7 +3,7 @@ import { SocketEventBus } from "./socket-event-bus.ts";
 import { WebSocketServer, type Server, WebSocket as WsWebsocket } from "ws";
 import getPort from "get-port";
 import { Account } from "@ynab-plus/domain";
-import { Serialiser } from "@ynab-plus/bootstrap";
+import { Serialiser } from "@ynab-plus/serialiser";
 
 let server: Server | undefined;
 const port = await getPort();

@@ -14,6 +14,7 @@ export default defineConfig({
         "./tsconfig.app.json",
         "./tsconfig.json",
         "../application/tsconfig.json",
+        "../domain/tsconfig.json",
       ],
     }),
   ],

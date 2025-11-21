@@ -8,6 +8,8 @@
   "userTableName": "users",
   "tokenTableName": "tokens",
   "tasksTableName": "tasks",
+  "transactionsTableName": "transactions",
+  "syncdetailsTablename": "syncDetails",
   "accountsTableName": "accounts",
   "ynabClientId": "Vlsh5F-e3VFtkUPAiI4sXaX3AmL74opjS_8Gh5ndzdQ",
   "ynabClientSecret": "rqmlM8oMcQGtFd1AECrgzxPiNZnZ1vL8T3an9YHTAOc",

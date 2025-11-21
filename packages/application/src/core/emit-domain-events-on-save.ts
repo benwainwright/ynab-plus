@@ -19,10 +19,10 @@ export const emitDomainEventsOnSaveHelper = <T extends object>(
 ): T => {
   const handler: ProxyHandler<T> = {
     get: (target, prop) => {
-      if (key in target) {
-        const foo = target[key];
-        if (typeof foo === "function") {
-          return new Proxy(foo, {
+      if (key in target && prop === key) {
+        const theFunction = target[key];
+        if (typeof theFunction === "function") {
+          return new Proxy(theFunction, {
             apply(target, thisArg, argumentsList: unknown[]) {
               const result = target.apply(thisArg, argumentsList) as unknown;
               argumentsList.forEach((item) => {

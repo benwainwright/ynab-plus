@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ynab-plus/bootstrap": "workspace:*",
+    "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/test-helpers": "workspace:*",
     "stacktracey": "^2.1.8"

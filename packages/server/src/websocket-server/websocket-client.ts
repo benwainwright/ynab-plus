@@ -4,8 +4,9 @@ import type {
   IServiceBus,
   ISingleItemStore,
 } from "@ynab-plus/app";
-import { AbstractError, Serialiser, type ILogger } from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { Command, User } from "@ynab-plus/domain";
+import { Serialiser } from "@ynab-plus/serialiser";
 import { WebSocket } from "ws";
 import z from "zod";
 

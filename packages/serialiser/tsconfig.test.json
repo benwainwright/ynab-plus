@@ -3,32 +3,20 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "dist/tsconfig.test.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
     "paths": {
-      "@core": ["./src/core/index.ts"],
       "@ports": ["./src/ports/index.ts"],
       "@errors": ["./src/errors/index.ts"],
       "@services": ["./src/services/index.ts"]
     }
   },
+  "include": ["src/**/*.test.ts"],
   "references": [
     {
-      "path": "../domain"
-    },
-    {
-      "path": "../bootstrap"
-    },
-    {
-      "path": "../serialiser"
-    },
-    {
-      "path": "../test-helpers"
+      "path": "./tsconfig.lib.json"
     }
-  ],
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./src/**/*.test.ts"]
+  ]
 }

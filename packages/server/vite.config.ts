@@ -9,6 +9,7 @@ export default defineConfig({
         "../application/tsconfig.json",
         "../integration-adapters/tsconfig.json",
         "../node-adapters/tsconfig.json",
+        "../domain/tsconfig.json",
         "../sqlite-adapters/tsconfig.json",
       ],
     }),

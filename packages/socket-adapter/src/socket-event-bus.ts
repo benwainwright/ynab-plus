@@ -5,7 +5,7 @@ import type {
   IListener,
   AllEvents,
 } from "@ynab-plus/app";
-import { Serialiser } from "@ynab-plus/bootstrap";
+import { Serialiser } from "@ynab-plus/serialiser";
 import { type Events } from "@ynab-plus/domain";
 import { v7 } from "uuid";
 

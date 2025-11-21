@@ -23,6 +23,9 @@
       "path": "../integration-adapters"
     },
     {
+      "path": "../serialiser"
+    },
+    {
       "path": "../sqlite-adapters"
     },
     {

@@ -4,13 +4,13 @@ import { SyncDetails, type DomainEvents } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 
 describe("repo with event emitting", () => {
-  it("causes domain events to be emitted on the event the method is called with a domain model", async () => {
+  it.only("causes domain events to be emitted on the event the method is called with a domain model", async () => {
     let theDetails: SyncDetails | undefined;
 
     class MockRepo implements IRepository<SyncDetails> {
       // eslint-disable-next-line @typescript-eslint/require-await
       async get(_theID: string): Promise<SyncDetails | undefined> {
-        throw new Error("Method not implemented.");
+        return undefined;
       }
 
       // eslint-disable-next-line @typescript-eslint/require-await
@@ -34,9 +34,11 @@ describe("repo with event emitting", () => {
     const details = SyncDetails.create({ id: "foo", provider: "ynab" });
 
     const result = await repo.save(details);
+    const getResult = await repo.get("foo");
 
     expect(eventBus.emit).toHaveBeenCalledWith("SyncDetailsCreated", details);
     expect(result).toEqual(details);
     expect(details).toEqual(theDetails);
+    expect(getResult).toEqual(undefined);
   });
 });

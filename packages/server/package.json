@@ -8,6 +8,7 @@
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
+    "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/integration-adapters": "workspace:*",
     "@ynab-plus/node-adapters": "workspace:*",

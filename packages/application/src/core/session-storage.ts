@@ -4,8 +4,9 @@ import type {
   ISessionIdRequester,
   ISingleItemStore,
 } from "@ports";
-import { Serialiser, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
+import { Serialiser } from "@ynab-plus/serialiser";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 

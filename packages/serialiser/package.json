@@ -1,0 +1,21 @@
+{
+  "name": "@ynab-plus/serialiser",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@ynab-plus/domain": "workspace:*",
+    "typeson": "^9.0.4"
+  },
+  "devDependencies": {
+    "vitest-mock-extended": "^3.1.0"
+  }
+}

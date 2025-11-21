@@ -7,22 +7,11 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "paths": {
-      "@adapters": ["./src/adapters/index.ts"]
-    }
+    "paths": {}
   },
   "references": [
     {
       "path": "../domain"
-    },
-    {
-      "path": "../application"
-    },
-    {
-      "path": "../serialiser"
-    },
-    {
-      "path": "../bootstrap"
     }
   ],
   "include": ["src/**/*.ts"],
