@@ -174,7 +174,7 @@ describe("ynab auth client", () => {
       expect(newToken.expiry.getTime()).toEqual(
         startDate.getTime() + refreshedToken.expires_in * 1000,
       );
-      expect(newToken.provider).toEqual("ynab");
+      expect(newToken.provider).toEqual("monzo");
       expect(newToken.token).toEqual(refreshedToken.access_token);
       expect(newToken.refreshToken).toEqual(refreshedToken.refresh_token);
       expect(newToken.created).toEqual(token.created);

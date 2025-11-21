@@ -46,23 +46,18 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    const newToken = OauthToken.reconstitute({
-      provider: this.providerName,
-      token: json.access_token,
-      refreshToken: json.refresh_token,
-      expiry: new Date(Date.now() + json.expires_in * 1000),
-      userId: token.userId,
-      refreshed: new Date(),
-      lastUse: token.lastUse,
-      created: token.created,
-    });
+    token.refresh(
+      json.access_token,
+      json.refresh_token,
+      new Date(Date.now() + json.expires_in * 1000),
+    );
 
-    tokenCache.set(cacheKey, newToken);
+    tokenCache.set(cacheKey, token);
     setTimeout(() => {
       tokenCache.delete(cacheKey);
     }, 10_000);
 
-    return newToken;
+    return token;
   }
 
   private parseTokenResponse = (data: unknown) => {
@@ -104,15 +99,12 @@ export class YnabOauth2Client
 
     const json = this.parseTokenResponse(await response.json());
 
-    const newToken = OauthToken.reconstitute({
+    const newToken = OauthToken.create({
       provider: this.providerName,
       token: json.access_token,
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       userId,
-      refreshed: undefined,
-      lastUse: undefined,
-      created: new Date(),
     });
 
     tokenCache.set(cacheKey, newToken);

@@ -40,6 +40,7 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
     );
 
     if (task) {
+      task.delete();
       await this.taskScheduler.deleteTask(task);
     }
 

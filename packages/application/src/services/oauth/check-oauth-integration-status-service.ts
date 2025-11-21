@@ -23,7 +23,11 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
   public override readonly commandName = "CheckOauthIntegrationStatusCommand";
 
-  public override requiredPermissions: Permission[] = ["user", "admin"];
+  public override requiredPermissions: Permission[] = [
+    "user",
+    "admin",
+    "system",
+  ];
 
   protected override async handle<TRole extends IRole>({
     command,
