@@ -6,7 +6,6 @@ import {
   NodePasswordHashValidator,
 } from "@adapters";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
-import type { User } from "@ynab-plus/domain";
 import z from "zod";
 
 export const compose = (bootstrapper: IBootstrapper, logger: ILogger) => {

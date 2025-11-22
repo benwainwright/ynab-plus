@@ -106,7 +106,7 @@ export const getServices = ({
       tasks,
       logger,
     ),
-    new SyncAccountsService(tokens, accountsFetcher, accounts, logger),
+    new SyncAccountsService(tokens, accountsFetcher, accounts, tasks, logger),
     new ListAccountsService(accounts, logger),
     new ListScheduledTasksService(tasks, logger),
     new SyncAccountService(

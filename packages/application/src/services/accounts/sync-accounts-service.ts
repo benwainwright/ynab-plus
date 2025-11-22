@@ -5,10 +5,11 @@ import type {
   IAccountsFetcher,
   IHandleContext,
   IOauthTokenRepository,
+  ITaskScheduler,
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 
-import type { IRole } from "@ynab-plus/domain";
+import { RegularTask, type IRole } from "@ynab-plus/domain";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 
@@ -19,6 +20,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     private tokenRepository: IOauthTokenRepository,
     private accountsFetcher: IAccountsFetcher,
     private accountsRepo: IAccountRepository,
+    private taskScheduler: ITaskScheduler,
     logger: ILogger,
   ) {
     super(logger);
@@ -59,12 +61,48 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     }
 
     this.logger.debug(`Fetching accounts`, LOG_CONTEXT);
-    const accounts = await this.accountsFetcher.getAccounts(token);
+    const storedAccountsPromise = this.accountsRepo.getUserAccounts(
+      this.currentUser.id,
+    );
+    const fetchedAccountsPromise = this.accountsFetcher.getAccounts(token);
+
+    const [storedAccounts, fetchedAccounts] = await Promise.all([
+      storedAccountsPromise,
+      fetchedAccountsPromise,
+    ]);
+
+    await Promise.all(
+      fetchedAccounts.map(async (theFetchedAccount) => {
+        const foundStored = storedAccounts.find(
+          (account) => account.id === theFetchedAccount.id,
+        );
+
+        if (!foundStored) {
+          const downloadTask = RegularTask.create({
+            id: `${this.currentUser.id}-${theFetchedAccount.id}-tx-sync`,
+            onBehalfOf: this.currentUser.id,
+            triggerImmediately: true,
+            lastExecution: undefined,
+            minute: "*/10",
+            hour: "*",
+            data: `{ "id":"${theFetchedAccount.id}" }`,
+            day: "*",
+            month: "*",
+            weekDay: "*",
+            name: "Download transactions",
+            description: "Keeps account transactions in sync",
+            command: "SyncAccountCommand",
+          });
+
+          await this.taskScheduler.scheduleTask(downloadTask);
+        }
+      }),
+    );
 
     this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
-    await this.accountsRepo.saveAccounts(accounts);
+    await this.accountsRepo.saveAccounts(fetchedAccounts);
     await this.tokenRepository.save(token);
-    eventBus.emit("AccountsSynced", accounts);
+    eventBus.emit("AccountsSynced", fetchedAccounts);
 
     return { synced: true };
   }

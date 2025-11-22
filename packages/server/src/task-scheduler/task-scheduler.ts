@@ -144,6 +144,10 @@ export class TaskScheduler {
       appTask: task,
     };
 
+    if (task.triggerImmediately) {
+      await theTask.cronTask.execute();
+    }
+
     return theTask;
   }
 }

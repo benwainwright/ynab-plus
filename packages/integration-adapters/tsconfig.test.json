@@ -9,6 +9,7 @@
     "types": ["node", "vitest/globals"],
     "paths": {
       "@ynab": ["./src/ynab/index.ts"],
+      "@errors": ["./src/errors/index.ts"],
       "@test-helpers": ["./src/test-helpers/index.ts"]
     }
   },

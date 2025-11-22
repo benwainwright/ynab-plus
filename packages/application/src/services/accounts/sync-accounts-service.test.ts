@@ -1,11 +1,19 @@
 import { AppError } from "@errors";
+import { expect } from "vitest";
 import {
+  type ITaskScheduler,
   type IAccountRepository,
   type IAccountsFetcher,
   type IOauthTokenRepository,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import { Account, OauthToken, SystemContext, User } from "@ynab-plus/domain";
+import {
+  Account,
+  OauthToken,
+  RegularTask,
+  SystemContext,
+  User,
+} from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
@@ -27,7 +35,13 @@ describe("download-accounts service", () => {
       new SystemContext("test", ["system"]),
     );
 
-    const service = new SyncAccountsService(mock(), mock(), mock(), mock());
+    const service = new SyncAccountsService(
+      mock(),
+      mock(),
+      mock(),
+      mock(),
+      mock(),
+    );
 
     await expect(service.doHandle(context)).rejects.toThrow(AppError);
   });
@@ -86,10 +100,15 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
+    when(mockAccountsRepo.getUserAccounts)
+      .calledWith("ben")
+      .thenResolve(accounts);
+
     const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 
@@ -103,6 +122,165 @@ describe("download-accounts service", () => {
 
     expect(mockAccountsRepo.saveAccounts).toHaveBeenCalledWith(accounts);
     expect(result.synced).toEqual(true);
+  });
+
+  it("creates a download task for each new account", async () => {
+    const today = new Date("2025-11-22T11:07:50.571Z");
+
+    vi.setSystemTime(today);
+
+    const user = User.reconstitute({
+      id: "ben",
+      email: "a@b.c",
+      passwordHash: "foo",
+      permissions: ["admin"],
+    });
+
+    const lastUse = new Date("2025-11-15T11:07:50.571Z");
+
+    const token = OauthToken.reconstitute({
+      expiry: new Date(),
+      created: new Date(),
+      refreshed: new Date(),
+      lastUse,
+      token: "token",
+      refreshToken: "refresh",
+      provider: "ynab",
+      userId: "ben",
+    });
+
+    const mockTokenRepo = mock<IOauthTokenRepository>();
+
+    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+
+    const mockFetcher = mock<IAccountsFetcher>();
+
+    const fetchedAccounts = [
+      Account.reconstitute({
+        id: "foo-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: "hello",
+        deleted: false,
+      }),
+      Account.reconstitute({
+        id: "bar-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+      Account.reconstitute({
+        id: "baz-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+      Account.reconstitute({
+        id: "bip-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+    ];
+
+    const storedAccounts = [
+      Account.reconstitute({
+        id: "foo-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: "hello",
+        deleted: false,
+      }),
+      Account.reconstitute({
+        id: "bar-account",
+        userId: "ben",
+        name: "current",
+        type: "checking",
+        closed: true,
+        note: undefined,
+        deleted: false,
+      }),
+    ];
+
+    const mockAccountsRepo = mock<IAccountRepository>();
+
+    when(mockFetcher.getAccounts)
+      .calledWith(token)
+      .thenResolve(fetchedAccounts);
+
+    when(mockAccountsRepo.getUserAccounts)
+      .calledWith("ben")
+      .thenResolve(storedAccounts);
+
+    const mockTaskScheduler = mock<ITaskScheduler>();
+
+    const service = new SyncAccountsService(
+      mockTokenRepo,
+      mockFetcher,
+      mockAccountsRepo,
+      mockTaskScheduler,
+      mock(),
+    );
+
+    const context = createMockServiceContext(
+      "SyncAccountsCommand",
+      { force: true },
+      user,
+    );
+
+    await service.doHandle(context);
+
+    expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledTimes(2);
+
+    const taskOne = RegularTask.reconstitute({
+      id: "ben-bip-account-tx-sync",
+      onBehalfOf: "ben",
+      triggerImmediately: true,
+      created: today,
+      lastExecution: undefined,
+      minute: "*/10",
+      hour: "*",
+      data: '{ "id":"bip-account" }',
+      day: "*",
+      month: "*",
+      weekDay: "*",
+      name: "Download transactions",
+      description: "Keeps account transactions in sync",
+      command: "SyncAccountCommand",
+    });
+
+    const taskTwo = RegularTask.reconstitute({
+      id: "ben-baz-account-tx-sync",
+      onBehalfOf: "ben",
+      triggerImmediately: true,
+      created: today,
+      lastExecution: undefined,
+      minute: "*/10",
+      hour: "*",
+      data: '{ "id":"baz-account" }',
+      day: "*",
+      month: "*",
+      weekDay: "*",
+      name: "Download transactions",
+      description: "Keeps account transactions in sync",
+      command: "SyncAccountCommand",
+    });
+
+    expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledWith(taskOne);
+    expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledWith(taskTwo);
   });
 
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token when token was ", async () => {
@@ -159,10 +337,15 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
+    when(mockAccountsRepo.getUserAccounts)
+      .calledWith("ben")
+      .thenResolve(accounts);
+
     const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 
@@ -213,6 +396,7 @@ describe("download-accounts service", () => {
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 
@@ -285,10 +469,15 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
+    when(mockAccountsRepo.getUserAccounts)
+      .calledWith("ben")
+      .thenResolve(accounts);
+
     const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 
@@ -359,10 +548,15 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
+    when(mockAccountsRepo.getUserAccounts)
+      .calledWith("ben")
+      .thenResolve(accounts);
+
     const service = new SyncAccountsService(
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 
@@ -404,6 +598,7 @@ describe("download-accounts service", () => {
       mockTokenRepo,
       mockFetcher,
       mockAccountsRepo,
+      mock(),
       mock(),
     );
 

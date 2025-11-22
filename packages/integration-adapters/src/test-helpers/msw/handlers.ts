@@ -2,8 +2,7 @@ import { http, HttpResponse } from "msw";
 import { invalidRequestResponse } from "./invalid-request-response.ts";
 import { MOCK_TRANSACTIONS } from "./mock-transactions.ts";
 import { MOCK_ACCOUNT_ID } from "./mock-account-id.ts";
-
-const YNAB_API = `https://api.ynab.com`;
+import { YNAB_API } from "./ynab-api.ts";
 
 export const handlers = [
   http.get<{ budget: string; account: string }>(

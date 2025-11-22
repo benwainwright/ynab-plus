@@ -87,16 +87,16 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                 flag_name: z.string().nullable(),
                 account_id: z.string(),
                 account_name: z.string(),
-                payee_id: z.string(),
-                payee_name: z.string(),
+                payee_id: z.union([z.string(), z.null()]),
+                payee_name: z.union([z.string(), z.null()]),
                 category_id: z.string().nullable(),
                 category_name: z.string(),
-                transfer_account_id: z.string(),
-                transfer_transaction_id: z.string(),
+                transfer_account_id: z.union([z.string(), z.null()]),
+                transfer_transaction_id: z.union([z.string(), z.null()]),
                 matched_transaction_id: z.string().nullable(),
-                import_id: z.string(),
-                import_payee_name: z.string(),
-                import_payee_name_original: z.string(),
+                import_id: z.union([z.string(), z.null()]),
+                import_payee_name: z.union([z.string(), z.null()]),
+                import_payee_name_original: z.union([z.string(), z.null()]),
                 debt_transaction_type: z.string().nullable(),
                 deleted: z.boolean(),
               })
@@ -147,7 +147,6 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       Account.reconstitute({
         ...account,
         userId: token.userId,
-        note: account.note ?? undefined,
       }),
     );
   }

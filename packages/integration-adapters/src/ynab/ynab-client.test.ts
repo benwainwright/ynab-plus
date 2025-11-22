@@ -1,4 +1,6 @@
 import { mock } from "vitest-mock-extended";
+import { http, HttpResponse } from "msw";
+import { HttpError } from "@errors";
 
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { OauthToken, SyncDetails } from "@ynab-plus/domain";
@@ -8,6 +10,7 @@ import {
   MOCK_TOKEN,
   MOCK_TRANSACTIONS,
   server,
+  YNAB_API,
 } from "@test-helpers";
 
 import { YnabClient } from "./ynab-client.ts";
@@ -25,6 +28,45 @@ afterAll(() => {
 });
 
 describe("the getaccountTransactions method", () => {
+  it("throws an http error if there is a bad response", async () => {
+    server.use(
+      http.get(
+        `${YNAB_API}/v1/budgets/:budget/accounts/:account/transactions`,
+        () => {
+          return HttpResponse.json(
+            {
+              status: "error",
+            },
+            { status: 500 },
+          );
+        },
+      ),
+    );
+
+    const client = new YnabClient(YNAB_API, mock());
+
+    const token = OauthToken.reconstitute({
+      provider: "ynab",
+      userId: "ben",
+      expiry: new Date("2025-11-11T20:39:37.823Z"),
+      token: MOCK_TOKEN,
+      refreshToken: "bap",
+      lastUse: new Date("2025-12-10T20:39:37.823Z"),
+      refreshed: new Date("2025-10-10T20:39:37.823Z"),
+      created: new Date("2025-11-10T20:39:37.823Z"),
+    });
+
+    const syncDetails = SyncDetails.reconstitute({
+      id: "foo-bar-2",
+      provider: "ynab",
+      checkpoint: "blah",
+      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+    });
+
+    await expect(
+      client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails),
+    ).rejects.toThrow(HttpError);
+  });
   it("updates syncDetails", async () => {
     const logger = mock<ILogger>();
 

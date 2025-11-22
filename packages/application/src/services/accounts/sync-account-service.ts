@@ -14,6 +14,8 @@ import {
 } from "@ynab-plus/domain";
 import type { ITransactionRepository } from "src/ports/i-transaction-repository.ts";
 
+export const LOG_CONTEXT = { context: "sync-account-service" };
+
 export class SyncAccountService extends AbstractApplicationService<"SyncAccountCommand"> {
   public override readonly commandName = "SyncAccountCommand";
 
@@ -36,6 +38,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
   }: IHandleContext<"SyncAccountCommand", TRole>): Promise<
     { success: true } | { success: false; reason: string }
   > {
+    this.logger.silly(`Starting get accounts service`, LOG_CONTEXT);
     const tokenPromise = this.oauthTokenRepository.get(
       this.currentUser.id,
       "ynab",
@@ -64,10 +67,16 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
       } as const;
     }
 
+    this.logger.silly(`Fetching transactions`, LOG_CONTEXT);
+
     const transactions = await this.transactionFetcher.getAccountTransactions(
       token,
       id,
       theSyncDetails,
+    );
+    this.logger.silly(
+      `Fetched ${String(transactions.length)} transactions!`,
+      LOG_CONTEXT,
     );
 
     await this.transactionRepository.saveTransactions(transactions);

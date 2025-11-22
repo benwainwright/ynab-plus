@@ -1,5 +1,5 @@
 import { DomainModel } from "@core";
-import { type IAccount } from "./i-account.ts";
+import { accountSchema, type IAccount } from "./i-account.ts";
 
 export class Account extends DomainModel implements IAccount {
   public readonly id: string;
@@ -26,8 +26,10 @@ export class Account extends DomainModel implements IAccount {
     this.raiseEvent({ event: "AccountDeleted", data: this });
   }
 
-  public static reconstitute(config: IAccount) {
-    return new Account(config);
+  public static reconstitute(
+    config: Omit<IAccount, "note"> & { note?: string | undefined | null },
+  ) {
+    return new Account(accountSchema.parse(config));
   }
 
   public static create(config: IAccount) {
