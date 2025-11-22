@@ -1,6 +1,7 @@
 import { Loader, Page } from "@components";
 import { useAccounts } from "@data";
 import { Table } from "@mantine/core";
+import { Link } from "react-router";
 
 export const Transactions = () => {
   const { isPending, accounts } = useAccounts();
@@ -18,7 +19,9 @@ export const Transactions = () => {
             <Table.Tbody>
               {data.map((account) => (
                 <Table.Tr key={`${account.id}-account-row`}>
-                  <Table.Td>{account.name}</Table.Td>
+                  <Table.Td>
+                    <Link to={`/accounts/${account.id}`}>{account.name}</Link>
+                  </Table.Td>
                   <Table.Td>{account.type}</Table.Td>
                 </Table.Tr>
               ))}

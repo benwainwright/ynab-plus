@@ -54,6 +54,13 @@ export const routesList = {
     authFailRedirect: "/",
     sidebarIcon: <IconCurrencyPound size={16} stroke={1.5} />,
   },
+  transactions: {
+    component: "routes/transactions.tsx",
+    permissionsRequired: ["admin", "user"],
+    path: "accounts/:accountId",
+    authFailRedirect: "/",
+    hideFromMenu: true,
+  },
   users: {
     component: "routes/users.tsx",
     permissionsRequired: ["admin"],

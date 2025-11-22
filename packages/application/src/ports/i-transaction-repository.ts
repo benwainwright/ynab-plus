@@ -4,10 +4,12 @@ export interface ITransactionRepository {
   getTransaction(id: string): Promise<Transaction | undefined>;
   saveTransaction(transaction: Transaction): Promise<Transaction>;
 
+  getAccountTransactionCount(accountId: string): Promise<number>;
+
   getAccountTransactions(
     accountId: string,
-    limit: number,
     offset: number,
+    limit: number,
   ): Promise<Transaction[]>;
 
   saveTransactions(transactions: Transaction[]): Promise<Transaction[]>;

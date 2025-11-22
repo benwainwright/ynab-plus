@@ -2,6 +2,7 @@ import type { IAccount } from "./account/i-account.ts";
 import type { IUser, User } from "@user";
 import type { Permission } from "@core";
 import type { RegularTask } from "@regular-task";
+import type { Transaction } from "@transaction";
 
 export interface Commands {
   SyncAccountCommand: {
@@ -9,6 +10,14 @@ export interface Commands {
       id: string;
     };
     response: { success: false; reason: string } | { success: true };
+  };
+  ListTransactionsCommand: {
+    request: {
+      accountId: string;
+      offset: number;
+      limit: number;
+    };
+    response: { transactions: Transaction[]; count: number };
   };
   ListScheduledTasksCommand: {
     request: {
@@ -62,11 +71,6 @@ export interface Commands {
           status: "not_connected";
           redirectUrl: string;
         };
-  };
-  ListTransactionsCommand: {
-    request: undefined;
-    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-    response: void;
   };
   ListAccountsCommand: {
     request: undefined;

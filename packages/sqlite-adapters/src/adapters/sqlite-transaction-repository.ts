@@ -19,6 +19,17 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     private database: SqliteDatabase,
   ) {}
 
+  public async getAccountTransactionCount(accountId: string): Promise<number> {
+    const result = await this.database.getFromDb<{ count: number } | null>(
+      `SELECT COUNT(*) as count
+         FROM ${await this.tableName.value}
+        WHERE accountId = ?`,
+      [accountId],
+    );
+
+    return result?.count ?? 0;
+  }
+
   public mapRaw(raw: RawTransaction): Transaction {
     const object = transactionSchema.parse({
       ...raw,
@@ -26,7 +37,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
       approved: raw.approved === "true",
     });
 
-    return new Transaction(object);
+    return Transaction.reconstitute(object);
   }
 
   public async create() {
@@ -38,6 +49,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
           amount INTEGER NOT NULL,
           cleared TEXT NOT NULL,
           memo TEXT,
+          payee TEXT NOT NULL,
           approved TEXT NOT NULL
       );`,
       [],
@@ -46,7 +58,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
 
   public async getTransaction(id: string): Promise<Transaction | undefined> {
     const result = await this.database.getFromDb<RawTransaction | undefined>(
-      `SELECT id, accountId, date, amount, cleared, memo, approved
+      `SELECT id, accountId, date, amount, cleared, memo, payee, approved
         FROM ${await this.tableName.value}
         where id = ?`,
       [id],
@@ -61,16 +73,17 @@ export class SqliteTransactionRepository implements ITransactionRepository {
 
   public async saveTransaction(transaction: Transaction): Promise<Transaction> {
     const data = await this.database.getFromDb<RawTransaction>(
-      `INSERT INTO ${await this.tableName.value} (id, accountId, date, amount, cleared, memo, approved)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO ${await this.tableName.value} (id, accountId, date, amount, cleared, memo, payee, approved)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           accountId = excluded.accountId,
           date = excluded.date,
           amount = excluded.amount,
           cleared = excluded.cleared,
           memo = excluded.memo,
+          payee = excluded.payee,
           approved = excluded.approved
-        RETURNING id, accountId, date, amount, cleared, memo, approved`,
+        RETURNING id, accountId, date, amount, cleared, memo, payee, approved`,
       [
         transaction.id,
         transaction.accountId,
@@ -78,6 +91,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
         transaction.amount,
         transaction.cleared,
         transaction.memo ?? null,
+        transaction.payee,
         String(transaction.approved),
       ],
     );
@@ -87,13 +101,14 @@ export class SqliteTransactionRepository implements ITransactionRepository {
 
   public async getAccountTransactions(
     accountId: string,
-    limit: number,
     offset: number,
+    limit: number,
   ): Promise<Transaction[]> {
     const result = await this.database.getAllFromDatabase<RawTransaction[]>(
-      `SELECT id, accountId, date, amount, cleared, memo, approved
+      `SELECT id, accountId, date, amount, cleared, memo, payee, approved
         FROM ${await this.tableName.value}
         WHERE accountId = ?
+        ORDER BY date DESC
         LIMIT ? OFFSET ?`,
       [accountId, limit, offset],
     );

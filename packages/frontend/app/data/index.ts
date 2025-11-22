@@ -16,3 +16,4 @@ export {
 export { useUser } from "./use-user.ts";
 export { useUsers } from "./use-users.ts";
 export { useTasks } from "./use-tasks.ts";
+export { useTransactions } from "./use-transactions.ts";

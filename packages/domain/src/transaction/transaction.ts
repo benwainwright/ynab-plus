@@ -6,14 +6,16 @@ export class Transaction extends DomainModel implements ITransaction {
   public readonly accountId: string;
   public readonly date: Date;
   public readonly amount: number;
+  public readonly payee: string;
   public readonly cleared: "cleared" | "uncleared" | "reconciled";
   public readonly memo: string | undefined;
   public readonly approved: boolean;
 
-  public constructor(config: ITransaction) {
+  private constructor(config: ITransaction) {
     super();
     this.id = config.id;
     this.amount = config.amount;
+    this.payee = config.payee;
     this.accountId = config.accountId;
     this.approved = config.approved;
     this.cleared = config.cleared;

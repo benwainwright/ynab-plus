@@ -119,8 +119,9 @@ describe("sync account service", () => {
     when(tokenRepo.get).calledWith(`ben`, `ynab`).thenResolve(token);
 
     const dummyTransactions = [
-      new Transaction({
+      Transaction.reconstitute({
         id: "tx-001",
+        payee: "foo",
         accountId: "the-id",
         date: new Date("2024-11-10T10:15:00Z"),
         amount: -4500,
@@ -128,8 +129,9 @@ describe("sync account service", () => {
         approved: true,
         memo: "Groceries - Tesco",
       }),
-      new Transaction({
+      Transaction.reconstitute({
         id: "tx-002",
+        payee: "foo",
         accountId: "the-id",
         date: new Date("2024-11-11T09:00:00Z"),
         amount: -1299,
@@ -137,26 +139,29 @@ describe("sync account service", () => {
         approved: true,
         memo: "Coffee and breakfast",
       }),
-      new Transaction({
+      Transaction.reconstitute({
         id: "tx-003",
         accountId: "the-id",
         date: new Date("2024-11-12T20:45:00Z"),
+        payee: "bar",
         amount: 250000,
         cleared: "cleared",
         approved: true,
         memo: "Salary",
       }),
-      new Transaction({
+      Transaction.reconstitute({
         id: "tx-004",
         accountId: "the-id",
+        payee: "none",
         date: new Date("2024-11-13T14:10:00Z"),
         amount: -799,
         cleared: "cleared",
         approved: false,
         memo: "Spotify subscription",
       }),
-      new Transaction({
+      Transaction.reconstitute({
         id: "tx-005",
+        payee: "none",
         accountId: "the-id",
         date: new Date("2024-11-14T18:03:00Z"),
         amount: -3250,

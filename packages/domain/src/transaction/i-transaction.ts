@@ -10,6 +10,7 @@ export const transactionSchema = z.object({
     .union([z.date(), z.string()])
     .transform((date) => (typeof date === "string" ? new Date(date) : date)),
 
+  payee: z.string(),
   amount: z.number(),
   cleared: z.union([
     z.literal("cleared"),

@@ -5,6 +5,7 @@ describe("the account model", () => {
       id: "foo",
       accountId: "bar",
       amount: 1000,
+      payee: "foo",
       cleared: "cleared",
       date: new Date(),
       approved: false,
@@ -21,6 +22,7 @@ describe("the account model", () => {
 
   it("emits a domain event on delete", () => {
     const newTx = Transaction.reconstitute({
+      payee: "foo",
       id: "foo",
       accountId: "bar",
       amount: 1000,

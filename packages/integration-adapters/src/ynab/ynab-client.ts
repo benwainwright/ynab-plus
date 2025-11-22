@@ -100,13 +100,13 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                 debt_transaction_type: z.string().nullable(),
                 deleted: z.boolean(),
               })
-              .transform(
-                (item) =>
-                  new Transaction({
-                    ...item,
-                    accountId: item.account_id,
-                    memo: item.memo ?? undefined,
-                  }),
+              .transform((item) =>
+                Transaction.reconstitute({
+                  ...item,
+                  accountId: item.account_id,
+                  memo: item.memo ?? undefined,
+                  payee: item.payee_name ?? "",
+                }),
               ),
           ),
           server_knowledge: z.number(),

@@ -30,6 +30,7 @@ import type { ILogger } from "@ynab-plus/bootstrap";
 
 import type { SyncDetails, User } from "@ynab-plus/domain";
 import { SyncAccountService } from "./accounts/sync-account-service.ts";
+import { ListTransactionsService } from "./accounts/list-transactions-service.ts";
 
 interface IServiceDependencies {
   logger: ILogger;
@@ -100,6 +101,7 @@ export const getServices = ({
     new UpdateUserService(users, passwordHasher, logger),
     new DisconnectOauthIntegrationService(tokens, tasks, logger),
     new CheckOauthIntegrationStatusService(tokens, oauthCheckerFactory, logger),
+    new ListTransactionsService(transactions, accounts, logger),
     new GenerateNewOauthTokenService(
       tokens,
       newTokenRequesterFactory,
