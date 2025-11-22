@@ -2,7 +2,6 @@ import { Loader, Page } from "@components";
 import { useTransactions } from "@data";
 import { Pagination, Table } from "@mantine/core";
 import { DateTime } from "luxon";
-import { useState } from "react";
 import { useParams } from "react-router";
 
 const dateFormat = {
@@ -15,12 +14,8 @@ const dateFormat = {
 
 export const Transactions = () => {
   const { accountId } = useParams<{ accountId: string }>();
-  const [page, setPage] = useState(0);
-  const { isPending, transactions, count } = useTransactions(
-    page * 30,
-    30,
-    accountId,
-  );
+  const { isPending, transactions, page, setPage, totalPages } =
+    useTransactions(accountId);
   return (
     <Page routeName="transactions">
       <Loader isPending={isPending} data={transactions}>
@@ -57,7 +52,7 @@ export const Transactions = () => {
               mt={"lg"}
               value={page}
               onChange={setPage}
-              total={count ?? 0}
+              total={totalPages}
             />
           </>
         )}

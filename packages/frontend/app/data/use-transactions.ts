@@ -3,11 +3,10 @@ import { useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
 
-export const useTransactions = (
-  offset: number,
-  limit: number,
-  accountId?: string,
-) => {
+const PER_PAGE = 30;
+
+export const useTransactions = (accountId?: string) => {
+  const [page, setPage] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
   const [transactions, setTransactions] = useState<{
     transactions: ITransaction[];
@@ -20,17 +19,19 @@ export const useTransactions = (
         setTransactions(
           await command("ListTransactionsCommand", {
             accountId,
-            offset,
-            limit,
+            offset: page * 30,
+            limit: PER_PAGE,
           }),
         );
       }
     });
-  }, [accountId, offset, limit]);
+  }, [accountId, page]);
 
   return {
     isPending,
     transactions: transactions?.transactions,
-    count: transactions?.count,
+    page,
+    setPage,
+    totalPages: (transactions?.count ?? 0) / PER_PAGE,
   };
 };
