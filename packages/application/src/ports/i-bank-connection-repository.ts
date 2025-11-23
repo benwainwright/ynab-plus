@@ -2,4 +2,6 @@ import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-con
 
 export interface IBankConnectionRepository {
   getConnection(userId: string): Promise<BankConnection | undefined>;
+  saveConnection(connection: BankConnection): Promise<BankConnection>;
+  deleteConnection(connection: BankConnection): Promise<void>;
 }

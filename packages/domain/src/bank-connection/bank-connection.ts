@@ -9,13 +9,13 @@ export class BankConnection extends DomainModel implements IBankConnection {
   public readonly requisitionId: string | undefined;
   private _token: string | undefined;
   private _refreshToken: string | undefined;
-  public _tokenExpiry: Date | undefined;
-  public _refreshTokenExpiry: Date | undefined;
+  private _tokenExpiry: Date | undefined;
+  private _refreshTokenExpiry: Date | undefined;
 
   private constructor(config: IBankConnection) {
     super();
     this.id = config.id;
-    this.userId = config.id;
+    this.userId = config.userId;
     this.bankName = config.bankName;
     this.logo = config.logo;
     this.requisitionId = config.requisitionId;

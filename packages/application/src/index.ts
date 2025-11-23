@@ -30,4 +30,5 @@ export {
   type ITransactionRepository,
   type ISerialiser,
   type IBankConnectionCreator,
+  type IBankConnectionRepository,
 } from "@ports";

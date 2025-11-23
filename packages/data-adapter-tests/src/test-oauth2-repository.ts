@@ -4,8 +4,8 @@ import { OauthToken } from "@ynab-plus/domain";
 export const testOauthRepository = (
   create: () => Promise<IOauthTokenRepository>,
 ) => {
-  describe("the user repository", () => {
-    it("can update and return a user", async () => {
+  describe("the token repository", () => {
+    it("can update and return a token", async () => {
       const repo = await create();
 
       const tokenOne = OauthToken.reconstitute({
