@@ -45,7 +45,7 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
       user &&
       JSON.stringify(user.permissions) !== JSON.stringify(role.permissions)
     ) {
-      role.permissions = user.permissions;
+      role.update({ permissions: user.permissions });
 
       await this.currentUserSetter.set(role);
     }

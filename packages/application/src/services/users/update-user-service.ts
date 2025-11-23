@@ -40,9 +40,11 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
           ? userToUpdate.passwordHash
           : await this.passwordHasher.hash(password);
 
-      userToUpdate.passwordHash = hash;
-      userToUpdate.email = email;
-      userToUpdate.permissions = permissions;
+      userToUpdate.update({
+        hash,
+        email,
+        permissions,
+      });
 
       this.logger.verbose(`Attempting to save user in repository`, LOG_CONTEXT);
 

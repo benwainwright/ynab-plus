@@ -45,21 +45,19 @@ export class User extends DomainModel implements IUser, IRole {
     return this._permissions;
   }
 
-  public set permissions(permissions: Permission[]) {
+  public update({
+    permissions,
+    hash,
+    email,
+  }: {
+    permissions?: Permission[];
+    hash?: string;
+    email?: string;
+  }) {
     const old = User.reconstitute(this);
-    this._permissions = permissions;
-    this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
-  }
-
-  public set passwordHash(hash: string) {
-    const old = User.reconstitute(this);
-    this._passwordHash = hash;
-    this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
-  }
-
-  public set email(email: string) {
-    const old = User.reconstitute(this);
-    this._email = email;
+    this._permissions = permissions ?? this._permissions;
+    this._passwordHash = hash ?? this._passwordHash;
+    this._email = email ?? this._email;
     this.raiseEvent({ event: "UserUpdated", data: { old, new: this } });
   }
 }

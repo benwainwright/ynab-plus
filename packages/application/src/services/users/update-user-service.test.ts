@@ -70,7 +70,7 @@ describe("update users service", () => {
 
     const mockRepo = mock<IRepository<User>>();
 
-    const existingUser = mock<User>({
+    const existingUser = User.reconstitute({
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
