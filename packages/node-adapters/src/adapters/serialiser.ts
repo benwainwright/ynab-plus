@@ -55,6 +55,7 @@ export class Serialiser {
         (transaction: Transaction): ITransaction => ({
           id: transaction.id,
           accountId: transaction.accountId,
+          payee: transaction.payee,
           date: transaction.date,
           amount: transaction.amount,
           cleared: transaction.cleared,

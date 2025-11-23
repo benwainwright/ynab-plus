@@ -3,6 +3,7 @@ import type { RegularTaskEvents } from "@regular-task";
 import type { OauthTokenEvents } from "@oauth-token";
 import type { SyncDetailsEvents } from "@sync-details";
 import type { TransactionEvents } from "@transaction";
+import type { BankConnectionEvents } from "@bank-connection";
 import type { UserEvents } from "@user";
 
 export type DomainEvents = UserEvents &
@@ -10,7 +11,8 @@ export type DomainEvents = UserEvents &
   RegularTaskEvents &
   SyncDetailsEvents &
   TransactionEvents &
-  OauthTokenEvents;
+  OauthTokenEvents &
+  BankConnectionEvents;
 
 export type DomainEvent<TKey extends keyof DomainEvents = keyof DomainEvents> =
   TKey extends keyof DomainEvents

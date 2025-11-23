@@ -6,3 +6,4 @@ export {
   regularTaskSchema,
   schedulableTasksSchema,
 } from "./i-regular-tasks.ts";
+export { type RegularTasksCommands } from "./regular-tasks-commands.ts";

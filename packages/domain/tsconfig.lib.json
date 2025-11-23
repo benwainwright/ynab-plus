@@ -13,6 +13,7 @@
       "@transaction": ["./src/transaction/index.ts"],
       "@account": ["./src/account/index.ts"],
       "@oauth-token": ["./src/oauth-token/index.ts"],
+      "@bank-connection": ["./src/bank-connection/index.ts"],
       "@sync-details": ["./src/sync-details/index.ts"]
     }
   },
