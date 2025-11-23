@@ -1,6 +1,11 @@
-import { Loader, Page } from "@components";
+import { Page, Loader } from "@components";
 import { useTransactions } from "@data";
-import { Pagination, Table } from "@mantine/core";
+import {
+  Loader as MantineLoader,
+  Button,
+  Pagination,
+  Table,
+} from "@mantine/core";
 import { DateTime } from "luxon";
 import { useParams } from "react-router";
 
@@ -12,10 +17,17 @@ const dateFormat = {
 
 export const Transactions = () => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { isPending, transactions, page, setPage, totalPages } =
+  const { isPending, transactions, page, setPage, totalPages, syncing, sync } =
     useTransactions(accountId);
   return (
-    <Page routeName="transactions">
+    <Page
+      routeName="transactions"
+      headerActions={
+        <Button variant="light" size="xs" onClick={() => void sync()}>
+          {syncing ? <MantineLoader color="blue" size={15} /> : "Sync"}
+        </Button>
+      }
+    >
       <Loader isPending={isPending} data={transactions}>
         {(data) => (
           <>

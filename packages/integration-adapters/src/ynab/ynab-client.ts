@@ -21,12 +21,18 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     path,
     token,
     method,
+    syncDetails,
   }: {
     path: string;
     token: OauthToken;
     method: "GET" | "POST";
+    syncDetails: SyncDetails | undefined;
   }) {
-    const url = `${this.baseUrl}/v1${path}`;
+    const knowledgeString = syncDetails
+      ? `?last_knowledge_of_server=${String(syncDetails.checkpoint)}`
+      : ``;
+
+    const url = `${this.baseUrl}/v1${path}${knowledgeString}`;
 
     token.lastUse = new Date();
 
@@ -65,6 +71,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       token,
       method: "GET",
       path,
+      syncDetails,
     });
 
     const parsedResult = z
@@ -119,11 +126,12 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     return parsedResult.data.transactions;
   }
 
-  async getAccounts(token: OauthToken) {
+  async getAccounts(token: OauthToken, syncDetails?: SyncDetails) {
     const result = await this.request({
       method: "GET",
       path: "/budgets/default/accounts",
       token,
+      syncDetails,
     });
 
     const parsed = z

@@ -29,15 +29,22 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     super(logger);
   }
 
-  public override requiredPermissions: Permission[] = ["system"];
+  public override requiredPermissions: Permission[] = [
+    "system",
+    "user",
+    "admin",
+  ];
 
   protected override async handle<TRole extends IRole = User>({
+    eventBus,
     command: {
       data: { id },
     },
   }: IHandleContext<"SyncAccountCommand", TRole>): Promise<
     { success: true } | { success: false; reason: string }
   > {
+    eventBus.emit("AccountSyncStarted", { accountId: id });
+
     this.logger.silly(`Starting get accounts service`, LOG_CONTEXT);
     const tokenPromise = this.oauthTokenRepository.get(
       this.currentUser.id,
@@ -81,6 +88,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
 
     await this.transactionRepository.saveTransactions(transactions);
     await this.syncDetailsRepo.save(theSyncDetails);
+    eventBus.emit("AccountSyncFinished", { accountId: id });
 
     return { success: true } as const;
   }

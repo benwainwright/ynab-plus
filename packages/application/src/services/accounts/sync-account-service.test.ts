@@ -181,5 +181,12 @@ describe("sync account service", () => {
 
     expect(syncDetailsRepo.save).toHaveBeenCalledWith(newDetails);
     expect(result.success).toEqual(true);
+    expect(context.eventBus.emit).toHaveBeenCalledWith("AccountSyncStarted", {
+      accountId: "the-id",
+    });
+
+    expect(context.eventBus.emit).toHaveBeenCalledWith("AccountSyncFinished", {
+      accountId: "the-id",
+    });
   });
 });

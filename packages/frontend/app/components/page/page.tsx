@@ -4,14 +4,15 @@ import { Navigate } from "react-router";
 
 import { canAccess } from "@utils";
 import { routesList, type RouteSpec } from "@config";
-import { Title } from "@mantine/core";
+import { Flex, Title } from "@mantine/core";
 
 interface PageProps {
   routeName: keyof typeof routesList;
   children: ReactNode;
+  headerActions?: ReactNode;
 }
 
-export const Page = ({ children, routeName }: PageProps) => {
+export const Page = ({ children, routeName, headerActions }: PageProps) => {
   const { currentUser, initialLoadComplete } = useContext(CurrentUserContext);
   const routeConfig: RouteSpec = routesList[routeName];
   const loading = <div aria-busy></div>;
@@ -33,7 +34,10 @@ export const Page = ({ children, routeName }: PageProps) => {
   return initialLoadComplete ? (
     <>
       <Title order={2} mb="lg">
-        {capitalisedHeader}
+        <Flex gap="1rem" align="center">
+          {capitalisedHeader}
+          {headerActions}
+        </Flex>
       </Title>
       {children}
     </>
