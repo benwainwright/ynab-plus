@@ -13,7 +13,7 @@
       "@test-helpers": ["./src/test-helpers/index.ts"]
     }
   },
-  "include": ["src/**/*.test.ts"],
+  "include": ["src/**/*.test.ts", "src/test-helpers/**/*"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

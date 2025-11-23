@@ -8,6 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
     "paths": {
+      "@http-client": ["./src/http-client/index.ts"],
       "@ynab": ["./src/ynab/index.ts"],
       "@errors": ["./src/errors/index.ts"]
     }
@@ -24,5 +25,5 @@
     }
   ],
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "exclude": ["src/**/*.test.ts", "src/test-helpers/**/*"]
 }

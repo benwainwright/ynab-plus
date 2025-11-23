@@ -29,4 +29,5 @@ export {
   type IAccountsFetcher,
   type ITransactionRepository,
   type ISerialiser,
+  type IBankConnectionCreator,
 } from "@ports";
