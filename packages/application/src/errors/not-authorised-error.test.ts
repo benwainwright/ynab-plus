@@ -13,12 +13,12 @@ describe("not authorised error", () => {
       permissions: ["public"],
     });
 
-    const error = new NotAuthorisedError("foo", "HelloWorldCommand", user, [
+    const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, [
       "public",
     ]);
 
     expect(error.message).toEqual("foo");
-    expect(error.handler).toEqual("HelloWorldCommand");
+    expect(error.handler).toEqual("SyncAccountsCommand");
     expect(error.role).toEqual(user);
     expect(error.requiredPermissions).toEqual(["public"]);
   });
@@ -32,7 +32,7 @@ describe("not authorised error", () => {
         permissions: ["public"],
       });
 
-      const error = new NotAuthorisedError("foo", "HelloWorldCommand", user, [
+      const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, [
         "admin",
       ]);
 
@@ -41,7 +41,7 @@ describe("not authorised error", () => {
       error.handle(events);
 
       expect(events.emit).toHaveBeenCalledWith("NotAuthorisedError", {
-        handler: "HelloWorldCommand",
+        handler: "SyncAccountsCommand",
         role: user,
         requiredPermissions: ["admin"],
       });

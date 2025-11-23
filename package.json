@@ -12,6 +12,7 @@
     "dev": "pnpm run dev:websocket & pnpm run dev:frontend",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
+    "test:e2e": "playwright test",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "type-check": "pnpm run --filter '*frontend' typegen && tsc --build",
@@ -20,6 +21,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
     "@types/bun": "latest",
     "@types/node": "^24.10.1",
     "@types/ws": "^8.18.1",
