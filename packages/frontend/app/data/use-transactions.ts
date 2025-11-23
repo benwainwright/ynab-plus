@@ -8,7 +8,7 @@ const PER_PAGE = 20;
 
 export const useTransactions = (accountId?: string) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const pageQueryParam = Number(searchParams.get("page") ?? "0");
+  const pageQueryParam = Number(searchParams.get("page") ?? "1");
   const [page, setPage] = useState<number>(pageQueryParam);
   const [isPending, startTransition] = useTransition();
   const [transactions, setTransactions] = useState<{
@@ -23,13 +23,13 @@ export const useTransactions = (accountId?: string) => {
         setTransactions(
           await command("ListTransactionsCommand", {
             accountId,
-            offset: pageQueryParam * PER_PAGE,
+            offset: (page - 1) * PER_PAGE,
             limit: PER_PAGE,
           }),
         );
       }
     });
-  }, [accountId, pageQueryParam, page]);
+  }, [accountId, page]);
 
   return {
     isPending,
