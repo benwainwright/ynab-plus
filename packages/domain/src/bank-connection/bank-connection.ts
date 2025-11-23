@@ -2,6 +2,8 @@ import { DomainModel } from "@core";
 import type { IBankConnection } from "./i-bank-connection.ts";
 
 export class BankConnection extends DomainModel implements IBankConnection {
+  public readonly id: string;
+  public readonly userId: string;
   public readonly bankName: string;
   public readonly logo: string;
   public readonly requisitionId: string | undefined;
@@ -12,6 +14,8 @@ export class BankConnection extends DomainModel implements IBankConnection {
 
   private constructor(config: IBankConnection) {
     super();
+    this.id = config.id;
+    this.userId = config.id;
     this.bankName = config.bankName;
     this.logo = config.logo;
     this.requisitionId = config.requisitionId;
@@ -23,6 +27,8 @@ export class BankConnection extends DomainModel implements IBankConnection {
 
   public freezeDry(secure?: boolean): IBankConnection {
     return {
+      id: this.id,
+      userId: this.userId,
       logo: this.logo,
       bankName: this.bankName,
       requisitionId: this.requisitionId,

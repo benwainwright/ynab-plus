@@ -23,7 +23,7 @@ export const getWinstonLogger = (): ILogger => {
 
     logger.add(
       new winston.transports.Console({
-        level: "silly",
+        level: process.env["YNAB_PLUS_LOG_LEVEL"] ?? "info",
         format: winston.format.combine(winston.format.colorize(), logFormat),
       }),
     );

@@ -108,8 +108,8 @@ export abstract class AbstractApplicationService<
 
     this.checkIsAuthorised(context);
 
+    this.logger.info(`Received ${command.key}`, LOG_CONTEXT);
     const result = await this.handle(context);
-
     this.logger.debug(`Handling complete`, { ...LOG_CONTEXT, result });
 
     return result;

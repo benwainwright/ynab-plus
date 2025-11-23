@@ -3,8 +3,9 @@ import type { IUser, User } from "@user";
 import type { Permission } from "@core";
 import type { RegularTask } from "@regular-task";
 import type { Transaction } from "@transaction";
+import type { BankConnectionCommands } from "@bank-connection";
 
-export interface Commands {
+export type Commands = {
   SyncAccountCommand: {
     request: {
       id: string;
@@ -131,4 +132,4 @@ export interface Commands {
       hello: string;
     };
   };
-}
+} & BankConnectionCommands;

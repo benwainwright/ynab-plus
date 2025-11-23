@@ -15,6 +15,8 @@ describe("the bank connection", () => {
       const refreshTokenExpiry = new Date();
       const connection = BankConnection.reconstite({
         bankName: "foo",
+        id: "foo",
+        userId: "ben",
         logo: "bar",
         requisitionId: "baz",
         token: "token",
@@ -39,6 +41,8 @@ describe("the bank connection", () => {
   describe("create", () => {
     it("creates a bank connection and emits an event", () => {
       const connection = BankConnection.create({
+        id: "foo",
+        userId: "ben",
         bankName: "foo",
         logo: "bar",
         token: "theToken",
@@ -69,6 +73,8 @@ describe("the bank connection", () => {
     const newRefreshTokenExpiry = new Date("2028-11-11T20:39:37.823Z");
 
     const connection = BankConnection.reconstite({
+      id: "foo",
+      userId: "ben",
       bankName: "foo",
       logo: "bar",
       requisitionId: "baz",
@@ -97,6 +103,8 @@ describe("the bank connection", () => {
         event: "BankConnectionRefreshed",
         data: {
           old: BankConnection.reconstite({
+            id: "foo",
+            userId: "ben",
             bankName: "foo",
             logo: "bar",
             requisitionId: "baz",
@@ -106,6 +114,8 @@ describe("the bank connection", () => {
             refreshTokenExpiry,
           }),
           new: BankConnection.reconstite({
+            id: "foo",
+            userId: "ben",
             bankName: "foo",
             logo: "bar",
             requisitionId: "baz",

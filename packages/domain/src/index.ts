@@ -53,3 +53,5 @@ export {
   type TransactionEvents,
   Transaction,
 } from "@transaction";
+
+export { type IBankConnection, BankConnection } from "@bank-connection";

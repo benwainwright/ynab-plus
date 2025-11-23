@@ -42,7 +42,7 @@ export class SessionIdHandler {
 
   public getSessionId(request: IncomingMessage): string {
     const id = this.sessionIds.get(request);
-    this.logger.info(
+    this.logger.debug(
       `Retrieving session id ${String(id)} from session id store`,
       LOG_CONTEXT,
     );

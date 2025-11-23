@@ -31,3 +31,6 @@ export type { NewTokenRequesterFactory } from "./new-token-requester-factory.ts"
 export type { RequestScopedServiceBusFactory } from "./request-scoped-service-bus-factory.ts";
 export type { SingletonServiceBusFactory } from "./singleton-service-bus-factory.ts";
 export type { ITaskScheduler } from "./i-task-scheduler.ts";
+export type { IOpenBankingTokenFetcher } from "./i-open-banking-token-fetcher.ts";
+export type { IBankConnectionRepository } from "./i-bank-connection-repository.ts";
+export type { IBankConnectionCreator } from "./i-bank-connection-creator.ts";
