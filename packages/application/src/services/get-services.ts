@@ -2,6 +2,8 @@ import { emitDomainEventsOnSave, type AbstractApplicationService } from "@core";
 import type {
   IAccountRepository,
   IAccountsFetcher,
+  IBankConnectionCreator,
+  IBankConnectionRepository,
   IEventBus,
   IMultipleRepository,
   IOauthCheckerFactory,
@@ -31,10 +33,13 @@ import type { ILogger } from "@ynab-plus/bootstrap";
 import type { SyncDetails, User } from "@ynab-plus/domain";
 import { SyncAccountService } from "./accounts/sync-account-service.ts";
 import { ListTransactionsService } from "./accounts/list-transactions-service.ts";
+import { CheckBankConnectionService } from "./open-banking/check-bank-connection-service.ts";
 
 interface IServiceDependencies {
   logger: ILogger;
   userRepository: IRepository<User> & IMultipleRepository<User>;
+  bankConnectionCreator: IBankConnectionCreator;
+  bankConnectionRepository: IBankConnectionRepository;
   oauthTokenRepository: IOauthTokenRepository;
   taskScheduler: ITaskScheduler;
   passwordVerifier: IPasswordVerifier;
@@ -53,6 +58,7 @@ export const getServices = ({
   userRepository,
   logger,
   newTokenRequesterFactory,
+  bankConnectionCreator,
   oauthTokenRepository,
   taskScheduler,
   oauthCheckerFactory,
@@ -62,8 +68,16 @@ export const getServices = ({
   accountsFetcher,
   transactionFetcher,
   transactionRepository,
+  bankConnectionRepository,
   eventBus,
 }: IServiceDependencies): AbstractApplicationService[] => {
+  const bankConnections = emitDomainEventsOnSave(
+    bankConnectionRepository,
+    eventBus,
+    "deleteConnection",
+    "saveConnection",
+  );
+
   const users = emitDomainEventsOnSave(userRepository, eventBus, "save");
   const tokens = emitDomainEventsOnSave(oauthTokenRepository, eventBus, "save");
   const transactions = emitDomainEventsOnSave(
@@ -96,6 +110,11 @@ export const getServices = ({
   );
 
   return [
+    new CheckBankConnectionService(
+      bankConnections,
+      bankConnectionCreator,
+      logger,
+    ),
     new GetUserService(users, logger),
     new ListUsersService(users, logger),
     new UpdateUserService(users, passwordHasher, logger),

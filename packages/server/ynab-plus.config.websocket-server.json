@@ -9,8 +9,11 @@
   "tokenTableName": "tokens",
   "tasksTableName": "tasks",
   "transactionsTableName": "transactions",
+  "bankconnectionTablename": "bankConnections",
   "syncdetailsTablename": "syncDetails",
   "accountsTableName": "accounts",
+  "gocardlessSecretId": "ee373c85-ddc5-4fd5-b89b-beec8178ac2f",
+  "gocardlessSecretKey": "c3eca0677d6255fd415de0131a2c26963a7a20e02d6674ef74494be27c6de35ce46bd2b8c6b0f612d3ed1535dddfad70d300e2674d8123c7df85fb32f5c2cbcf",
   "ynabClientId": "Vlsh5F-e3VFtkUPAiI4sXaX3AmL74opjS_8Gh5ndzdQ",
   "ynabClientSecret": "rqmlM8oMcQGtFd1AECrgzxPiNZnZ1vL8T3an9YHTAOc",
   "ynabRedirectUri": "http://localhost:5173/integrations"

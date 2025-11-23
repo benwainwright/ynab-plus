@@ -12,7 +12,7 @@ export const emitDomainEventsOnSave = <T extends object>(
   );
 };
 
-export const emitDomainEventsOnSaveHelper = <T extends object>(
+const emitDomainEventsOnSaveHelper = <T extends object>(
   thing: T,
   key: keyof T,
   bus: IEventBus,

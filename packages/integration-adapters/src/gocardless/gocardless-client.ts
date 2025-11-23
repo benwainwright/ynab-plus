@@ -21,7 +21,7 @@ export class GocardlessClient implements IBankConnectionCreator {
 
   private async getNewToken() {
     return await this.client.post({
-      path: "token/new",
+      path: "token/new/",
       body: {
         secret_id: await this.secretId.value,
         secret_key: await this.secretKey.value,
@@ -56,7 +56,6 @@ export class GocardlessClient implements IBankConnectionCreator {
             countries: z.array(z.string()),
             logo: z.string(),
             max_access_valid_for_days: z.string(),
-            max_access_valid_for_days_reconfirmation: z.string(),
           }),
         )
         .transform((data) =>

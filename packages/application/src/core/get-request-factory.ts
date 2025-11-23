@@ -2,6 +2,8 @@ import { ServiceBus, SessionStorage } from "@core";
 import type {
   IAccountRepository,
   IAccountsFetcher,
+  IBankConnectionCreator,
+  IBankConnectionRepository,
   IEventBus,
   IMultipleRepository,
   IOauthCheckerFactory,
@@ -30,6 +32,8 @@ interface IRequestFactoryConfig {
   oauthTokenRepository: IOauthTokenRepository;
   taskScheduler: ITaskScheduler;
   passwordVerifier: IPasswordVerifier;
+  bankConnectionRepository: IBankConnectionRepository;
+  bankConnectionCreator: IBankConnectionCreator;
   passwordHasher: IPasswordHasher;
   oauthCheckerFactory: IOauthCheckerFactory;
   accountsRepository: IAccountRepository;
@@ -47,6 +51,8 @@ export const getRequestFactory = ({
   sessionStorage,
   userRepository,
   newTokenRequesterFactory,
+  bankConnectionRepository,
+  bankConnectionCreator,
   oauthTokenRepository,
   taskScheduler,
   oauthCheckerFactory,
@@ -86,6 +92,8 @@ export const getRequestFactory = ({
     const childBus = eventBus.child(await sessionIdRequester.getSessionId());
     const services = getServices({
       eventBus: childBus,
+      bankConnectionCreator,
+      bankConnectionRepository,
       userRepository,
       oauthCheckerFactory,
       syncdetailsRepository,

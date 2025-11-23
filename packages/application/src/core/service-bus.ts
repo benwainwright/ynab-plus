@@ -1,4 +1,5 @@
 import { ServiceNotFoundError } from "@errors";
+import { inspect } from "util";
 import type { IEventBus, IServiceBus } from "@ports";
 import type { AbstractApplicationService } from "@core";
 import type { ILogger } from "@ynab-plus/bootstrap";
@@ -43,7 +44,7 @@ export class ServiceBus implements IServiceBus {
     });
 
     this.logger.debug(
-      `Service ${service.commandName} returned response, ${JSON.stringify(response)}`,
+      `Service ${service.commandName} returned response, ${inspect(response)}`,
       {
         ...LOG_CONTEXT,
         service: service.commandName,

@@ -31,14 +31,15 @@ export const buildApplication = ({
     accountsRepository,
     syncdetailsRepository,
     transactionRepository,
+    bankConnectionRepository,
   } = composeSqliteAdapters(bootstrapper, logger);
 
-  const { ynabClient, oauthClientFactory } = composeIntegrationAdapters(
-    bootstrapper,
-    logger,
-  );
+  const { ynabClient, oauthClientFactory, gocardlessClient } =
+    composeIntegrationAdapters(bootstrapper, logger);
 
   const applicationLayer = composeApplicationLayer({
+    bankConnectionCreator: gocardlessClient,
+    bankConnectionRepository,
     transactionRepository,
     syncdetailsRepository,
     taskScheduler: tasksRepository,

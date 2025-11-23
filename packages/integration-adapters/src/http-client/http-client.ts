@@ -6,7 +6,7 @@ const LOG_CONTEXT = { context: "http-client" };
 
 interface IRequestConfig<TResponse extends z4.ZodType> {
   path: string;
-  method: "GET" | "POST";
+  method: "get" | "post";
   body?: Record<string, string>;
   queryString: Record<string, string> | undefined;
   headers: Record<string, string> | undefined;
@@ -35,7 +35,7 @@ export class HttpClient {
       path,
       responseSchema,
       headers,
-      method: "GET",
+      method: "get",
       queryString,
     });
   }
@@ -58,7 +58,7 @@ export class HttpClient {
       headers,
       path,
       responseSchema,
-      method: "POST",
+      method: "post",
       body,
     });
   }
@@ -103,9 +103,9 @@ export class HttpClient {
     const withBody = body ? { body: JSON.stringify(body) } : {};
 
     const config: RequestInit = {
-      method,
       ...withBody,
       ...withHeaders,
+      method,
     };
 
     this.logger.silly(
@@ -117,7 +117,15 @@ export class HttpClient {
 
     if (!result.ok) {
       const text = await result.text();
-      throw new HttpError(`Request failed: ${text}`, result.status, text);
+      const urlObj = {
+        url,
+        ...config,
+      };
+      throw new HttpError(
+        `Request ${JSON.stringify(urlObj)} failed: ${text}`,
+        result.status,
+        text,
+      );
     }
 
     const data = (await result.json()) as unknown;

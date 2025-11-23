@@ -5,6 +5,8 @@ import type {
   IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
+  IBankConnectionCreator,
+  IBankConnectionRepository,
   IObjectStorage,
   IPasswordHasher,
   IPasswordVerifier,
@@ -22,6 +24,8 @@ export interface IInfrastructurePorts {
   bootstrapper: IBootstrapper;
   eventBus: IEventBus;
   taskScheduler: ITaskScheduler;
+  bankConnectionCreator: IBankConnectionCreator;
+  bankConnectionRepository: IBankConnectionRepository;
   passwordHasher: IPasswordHasher;
   passwordVerifier: IPasswordVerifier;
   accountsRepository: IAccountRepository;

@@ -1,9 +1,5 @@
 import { AbstractApplicationService } from "@core";
-import type {
-  IBankConnectionCreator,
-  IBankConnectionRepository,
-  IOpenBankingTokenFetcher,
-} from "@ports";
+import type { IBankConnectionCreator, IBankConnectionRepository } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Permission } from "@ynab-plus/domain";
 import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-connection/bank-connection.ts";
@@ -11,7 +7,6 @@ import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-con
 export class CheckBankConnectionService extends AbstractApplicationService<"CheckBankConnectionCommand"> {
   public constructor(
     private bankConnectionRepo: IBankConnectionRepository,
-    private tokenFetcher: IOpenBankingTokenFetcher,
     private institutionListFetcher: IBankConnectionCreator,
     logger: ILogger,
   ) {

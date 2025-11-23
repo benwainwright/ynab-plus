@@ -1,4 +1,4 @@
-import { IntegrationStatus, Page } from "@components";
+import { BankIntegrationStatus, IntegrationStatus, Page } from "@components";
 import { Stack } from "@mantine/core";
 
 export const Integrations = () => {
@@ -6,6 +6,7 @@ export const Integrations = () => {
     <Page routeName="integrations">
       <Stack>
         <IntegrationStatus provider="ynab" title="YNAB" />
+        <BankIntegrationStatus />
       </Stack>
     </Page>
   );

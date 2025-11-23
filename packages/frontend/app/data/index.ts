@@ -16,4 +16,10 @@ export {
 export { useUser } from "./use-user.ts";
 export { useUsers } from "./use-users.ts";
 export { useTasks } from "./use-tasks.ts";
+export {
+  useBankIntegrationStatus,
+  type BankConnectionLoading,
+  type BankConnectionNeedsToSelectInstitution,
+  type BankConnectionConnected,
+} from "./use-bank-integration-status.ts";
 export { useTransactions } from "./use-transactions.ts";

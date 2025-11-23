@@ -3,7 +3,6 @@ import { createMockServiceContext } from "@test-helpers";
 import { CheckBankConnectionService } from "./check-bank-connection-service.ts";
 import { mock } from "vitest-mock-extended";
 import {
-  type IOpenBankingTokenFetcher,
   type IBankConnectionRepository,
   type IBankConnectionCreator,
 } from "@ports";
@@ -19,7 +18,6 @@ describe("check bank connection service", () => {
     );
 
     const connectionRepo = mock<IBankConnectionRepository>();
-    const tokenFetcher = mock<IOpenBankingTokenFetcher>();
     const bankConnectionCreator = mock<IBankConnectionCreator>();
 
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(undefined);
@@ -44,7 +42,6 @@ describe("check bank connection service", () => {
 
     const service = new CheckBankConnectionService(
       connectionRepo,
-      tokenFetcher,
       bankConnectionCreator,
       mock(),
     );
