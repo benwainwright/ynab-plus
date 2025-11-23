@@ -1,6 +1,13 @@
-import { Command, RegularTask, SystemContext, User } from "@ynab-plus/domain";
+import {
+  Command,
+  RegularTask,
+  SystemContext,
+  User,
+  type Commands,
+  type IRole,
+} from "@ynab-plus/domain";
 import type { AllEvents, IEventBus, IServiceBus } from "@ynab-plus/app";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
 import { ServerError } from "@core";
 
@@ -19,6 +26,33 @@ export class TaskScheduler {
     private logger: ILogger,
   ) {}
 
+  public async executeCommand<
+    TKey extends keyof Commands = keyof Commands,
+    TRole extends IRole = User,
+  >(command: Command<TKey, TRole>): Promise<Commands[TKey]["response"]> {
+    try {
+      return await this.serviceBus.execute<TKey, TRole>(command);
+    } catch (error) {
+      if (error instanceof AbstractError) {
+        this.logger.error(
+          `${error.message}, ${String(error.stack)}`,
+          LOG_CONTEXT,
+        );
+        error.handle(this.eventBus);
+        return;
+      } else if (error instanceof Error) {
+        this.logger.error(
+          `${error.message}, ${String(error.stack)}`,
+          LOG_CONTEXT,
+        );
+        return;
+      } else {
+        this.logger.error(String(error), LOG_CONTEXT);
+        return;
+      }
+    }
+  }
+
   public async initialise() {
     this.logger.info(`Getting existing scheduled tasks`, LOG_CONTEXT);
 
@@ -31,7 +65,7 @@ export class TaskScheduler {
       new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"]),
     );
 
-    const tasks = await this.serviceBus.execute(command);
+    const tasks = await this.executeCommand(command);
 
     const taskOrTasks = tasks.length > 1 ? `tasks` : `task`;
 
@@ -102,7 +136,7 @@ export class TaskScheduler {
       new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"]),
     );
 
-    return await this.serviceBus.execute(getUserCommand);
+    return await this.executeCommand(getUserCommand);
   }
 
   private async executeTask(task: RegularTask, owner: User | undefined) {
@@ -115,7 +149,7 @@ export class TaskScheduler {
     );
 
     const command = task.getCommand(context);
-    await this.serviceBus.execute(command);
+    await this.executeCommand(command);
 
     task.updateTask({
       lastExecution: new Date(),
@@ -127,7 +161,7 @@ export class TaskScheduler {
       context,
     );
 
-    await this.serviceBus.execute(updateTaskCommand);
+    await this.executeCommand(updateTaskCommand);
   }
 
   private async makeCronTask(task: RegularTask) {

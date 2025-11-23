@@ -6,6 +6,7 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
     "paths": {
+      "@errors": ["./src/errors/index.ts"],
       "@core": ["./src/core/index.ts"],
       "@user": ["./src/user/index.ts"],
       "@regular-task": ["./src/regular-task/index.ts"],
@@ -16,5 +17,6 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "exclude": ["src/**/*.test.ts"],
+  "references": []
 }

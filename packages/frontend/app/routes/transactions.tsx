@@ -8,8 +8,6 @@ const dateFormat = {
   weekday: "short",
   month: "short",
   day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
 } as const;
 
 export const Transactions = () => {
@@ -21,7 +19,7 @@ export const Transactions = () => {
       <Loader isPending={isPending} data={transactions}>
         {(data) => (
           <>
-            <Table>
+            <Table highlightOnHover tabularNums>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Date</Table.Th>

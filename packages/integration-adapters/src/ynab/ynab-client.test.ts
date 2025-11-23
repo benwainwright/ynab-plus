@@ -19,8 +19,14 @@ beforeAll(() => {
   server.listen();
 });
 
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
 afterEach(() => {
   server.resetHandlers();
+  vi.useRealTimers();
+  vi.setSystemTime(vi.getRealSystemTime());
 });
 
 afterAll(() => {
@@ -44,6 +50,8 @@ describe("the getaccountTransactions method", () => {
     );
 
     const client = new YnabClient(YNAB_API, mock());
+
+    vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
     const token = OauthToken.reconstitute({
       provider: "ynab",
@@ -135,6 +143,8 @@ describe("the getaccounts method", () => {
     const logger = mock<ILogger>();
 
     const client = new YnabClient(`https://api.ynab.com`, logger);
+
+    vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
     const token = OauthToken.reconstitute({
       provider: "ynab",

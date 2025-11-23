@@ -31,7 +31,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     token.lastUse = new Date();
 
     const headers = {
-      Authorization: `Bearer ${token.token}`,
+      Authorization: `Bearer ${token.use()}`,
       accept: "application/json",
     };
 

@@ -1,5 +1,6 @@
 import { DomainModel } from "@core";
 import { oAuthTokenSchema, type IOauthToken } from "./i-outh-token.ts";
+import { TokenExpiredError } from "@errors";
 
 export class OauthToken extends DomainModel implements IOauthToken {
   public readonly provider: string;
@@ -52,7 +53,17 @@ export class OauthToken extends DomainModel implements IOauthToken {
     this.raiseEvent({ event: "OauthTokenRefreshed", data: { old, new: this } });
   }
 
+  public isOutOfDate() {
+    return this.expiry < new Date();
+  }
+
   public use(): string {
+    if (this.isOutOfDate()) {
+      throw new TokenExpiredError(
+        `Token for provider ${this.provider} has expired`,
+        this.provider,
+      );
+    }
     const token = this.token;
     this.lastUse = new Date();
     this.raiseEvent({ event: "OauthTokenUsed", data: this });
