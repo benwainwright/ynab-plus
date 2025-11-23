@@ -9,6 +9,7 @@ const PER_PAGE = 20;
 
 export const useTransactions = (accountId?: string) => {
   const [syncing, setSyncing] = useState<boolean>(false);
+  const [dirty, setDirty] = useState(true);
 
   useEvents((event) => {
     if (
@@ -22,6 +23,7 @@ export const useTransactions = (accountId?: string) => {
       event.data.accountId === accountId
     ) {
       setSyncing(false);
+      setDirty(true);
     }
   });
 
@@ -42,24 +44,30 @@ export const useTransactions = (accountId?: string) => {
 
   useEffect(() => {
     setSearchParams({ page: String(page) });
-    startTransition(async () => {
-      if (accountId) {
-        setTransactions(
-          await command("ListTransactionsCommand", {
-            accountId,
-            offset: (page - 1) * PER_PAGE,
-            limit: PER_PAGE,
-          }),
-        );
-      }
-    });
-  }, [accountId, page]);
+    if (dirty) {
+      startTransition(async () => {
+        if (accountId) {
+          setTransactions(
+            await command("ListTransactionsCommand", {
+              accountId,
+              offset: (page - 1) * PER_PAGE,
+              limit: PER_PAGE,
+            }),
+          );
+        }
+      });
+      setDirty(false);
+    }
+  }, [accountId, page, dirty]);
 
   return {
     isPending,
     transactions: transactions?.transactions,
     page,
-    setPage,
+    setPage: (page: number) => {
+      setPage(page);
+      setDirty(true);
+    },
     totalPages: (transactions?.count ?? 0) / PER_PAGE,
     syncing,
     sync: triggerSync,
