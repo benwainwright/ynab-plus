@@ -1,6 +1,7 @@
-import { Button, Flex, Image, Modal, Paper, Stack } from "@mantine/core";
+import { Autocomplete, Button, Flex, Modal } from "@mantine/core";
 import type { BankConnection } from "@ynab-plus/domain";
 import { useState } from "react";
+import { getOptionRenderer } from "./get-option-renderer.tsx";
 
 interface SelectInstitutionButtonProps {
   institutions: BankConnection[];
@@ -10,6 +11,7 @@ export const SelectInstitutionButton = ({
   institutions,
 }: SelectInstitutionButtonProps) => {
   const [modalOpened, setModalOpened] = useState(false);
+  const [bank, setBank] = useState<string>();
   return (
     <>
       <Modal
@@ -19,15 +21,15 @@ export const SelectInstitutionButton = ({
         }}
         title="Select Bank"
       >
-        <Stack>
-          {institutions.map((institition) => (
-            <Paper>
-              <Flex dir="row">
-                <Image radius="md" src={institition.logo} />
-              </Flex>
-            </Paper>
-          ))}
-        </Stack>
+        <Autocomplete
+          data={institutions.map((institution) => institution.bankName)}
+          renderOption={getOptionRenderer(institutions)}
+          onChange={setBank}
+          value={bank ?? ""}
+        />
+        <Button mt="md" disabled={!bank}>
+          Connect
+        </Button>
       </Modal>
       <Flex justify={"center"}>
         <Button
