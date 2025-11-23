@@ -35,6 +35,7 @@ describe("list transactions service", () => {
     const transactions = [
       Transaction.reconstitute({
         id: "foo",
+        userId: "ben",
         accountId: "bar",
         amount: 1000,
         cleared: "cleared",
@@ -45,6 +46,7 @@ describe("list transactions service", () => {
       }),
 
       Transaction.reconstitute({
+        userId: "ben",
         id: "biz",
         accountId: "bar",
         amount: 100,
@@ -57,11 +59,11 @@ describe("list transactions service", () => {
     ];
 
     when(mockTxRepo.getAccountTransactions)
-      .calledWith("bar", 0, 30)
+      .calledWith("ben", "bar", 0, 30)
       .thenResolve(transactions);
 
     when(mockTxRepo.getAccountTransactionCount)
-      .calledWith("bar")
+      .calledWith("ben", "bar")
       .thenResolve(4);
 
     const mockAccounts = mock<IAccountRepository>();
@@ -110,6 +112,7 @@ describe("list transactions service", () => {
 
     const transactions = [
       Transaction.reconstitute({
+        userId: "ben",
         id: "foo",
         accountId: "bar",
         payee: "foo",
@@ -121,6 +124,7 @@ describe("list transactions service", () => {
       }),
 
       Transaction.reconstitute({
+        userId: "ben",
         id: "biz",
         accountId: "bar",
         payee: "foo",
@@ -133,7 +137,7 @@ describe("list transactions service", () => {
     ];
 
     when(mockTxRepo.getAccountTransactions)
-      .calledWith("bar", 0, 30)
+      .calledWith("ben", "bar", 0, 30)
       .thenResolve(transactions);
 
     const service = new ListTransactionsService(

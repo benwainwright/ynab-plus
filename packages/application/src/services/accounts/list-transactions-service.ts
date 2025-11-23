@@ -38,13 +38,16 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
     }
 
     const txPromise = this.transactionsRepo.getAccountTransactions(
+      this.currentUser.id,
       accountId,
       offset,
       limit,
     );
 
-    const countPromise =
-      this.transactionsRepo.getAccountTransactionCount(accountId);
+    const countPromise = this.transactionsRepo.getAccountTransactionCount(
+      this.currentUser.id,
+      accountId,
+    );
 
     const [transactions, count] = await Promise.all([txPromise, countPromise]);
 

@@ -6,6 +6,7 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 interface RawTransaction {
   id: string;
   accountId: string;
+  userId: string;
   date: string;
   amount: number;
   cleared: "cleared" | "uncleared" | "reconciled";
@@ -19,12 +20,15 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     private database: SqliteDatabase,
   ) {}
 
-  public async getAccountTransactionCount(accountId: string): Promise<number> {
+  public async getAccountTransactionCount(
+    userId: string,
+    accountId: string,
+  ): Promise<number> {
     const result = await this.database.getFromDb<{ count: number } | null>(
       `SELECT COUNT(*) as count
          FROM ${await this.tableName.value}
-        WHERE accountId = ?`,
-      [accountId],
+        WHERE accountId = ? and userId = ?`,
+      [accountId, userId],
     );
 
     return result?.count ?? 0;
@@ -43,14 +47,17 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   public async create() {
     await this.database.runQuery(
       `CREATE TABLE IF NOT EXISTS ${await this.tableName.value} (
-          id TEXT PRIMARY KEY,
+          id TEXT,
+          userId TEXT,
           accountId TEXT NOT NULL,
           date TEXT NOT NULL,
           amount INTEGER NOT NULL,
           cleared TEXT NOT NULL,
           memo TEXT,
           payee TEXT NOT NULL,
-          approved TEXT NOT NULL
+          approved TEXT NOT NULL,
+          PRIMARY KEY (id, userId)
+
       );`,
       [],
     );
@@ -58,7 +65,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
 
   public async getTransaction(id: string): Promise<Transaction | undefined> {
     const result = await this.database.getFromDb<RawTransaction | undefined>(
-      `SELECT id, accountId, date, amount, cleared, memo, payee, approved
+      `SELECT id, userId, accountId, date, amount, cleared, memo, payee, approved
         FROM ${await this.tableName.value}
         where id = ?`,
       [id],
@@ -73,9 +80,9 @@ export class SqliteTransactionRepository implements ITransactionRepository {
 
   public async saveTransaction(transaction: Transaction): Promise<Transaction> {
     const data = await this.database.getFromDb<RawTransaction>(
-      `INSERT INTO ${await this.tableName.value} (id, accountId, date, amount, cleared, memo, payee, approved)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
+      `INSERT INTO ${await this.tableName.value} (id, userId, accountId, date, amount, cleared, memo, payee, approved)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id, userId) DO UPDATE SET
           accountId = excluded.accountId,
           date = excluded.date,
           amount = excluded.amount,
@@ -83,9 +90,10 @@ export class SqliteTransactionRepository implements ITransactionRepository {
           memo = excluded.memo,
           payee = excluded.payee,
           approved = excluded.approved
-        RETURNING id, accountId, date, amount, cleared, memo, payee, approved`,
+        RETURNING id, userId, accountId, date, amount, cleared, memo, payee, approved`,
       [
         transaction.id,
+        transaction.userId,
         transaction.accountId,
         transaction.date.toISOString(),
         transaction.amount,
@@ -100,17 +108,18 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   }
 
   public async getAccountTransactions(
+    userId: string,
     accountId: string,
     offset: number,
     limit: number,
   ): Promise<Transaction[]> {
     const result = await this.database.getAllFromDatabase<RawTransaction[]>(
-      `SELECT id, accountId, date, amount, cleared, memo, payee, approved
+      `SELECT id, userId, accountId, date, amount, cleared, memo, payee, approved
         FROM ${await this.tableName.value}
-        WHERE accountId = ?
+        WHERE accountId = ? AND userId = ?
         ORDER BY date DESC
         LIMIT ? OFFSET ?`,
-      [accountId, limit, offset],
+      [accountId, userId, limit, offset],
     );
 
     return result.map((account) => this.mapRaw(account));

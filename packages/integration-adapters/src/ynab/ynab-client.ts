@@ -54,7 +54,8 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     const result = await fetch(url, { method, headers });
 
     if (!result.ok) {
-      throw new HttpError(`Request failed`, result.status, await result.text());
+      const text = await result.text();
+      throw new HttpError(`Request failed: ${text}`, result.status, text);
     }
 
     return (await result.json()) as unknown;
@@ -110,6 +111,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
               .transform((item) =>
                 Transaction.reconstitute({
                   ...item,
+                  userId: token.userId,
                   accountId: item.account_id,
                   memo: item.memo ?? undefined,
                   payee: item.payee_name ?? "",

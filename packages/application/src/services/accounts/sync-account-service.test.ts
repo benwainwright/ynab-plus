@@ -121,6 +121,7 @@ describe("sync account service", () => {
     const dummyTransactions = [
       Transaction.reconstitute({
         id: "tx-001",
+        userId: "ben",
         payee: "foo",
         accountId: "the-id",
         date: new Date("2024-11-10T10:15:00Z"),
@@ -130,6 +131,7 @@ describe("sync account service", () => {
         memo: "Groceries - Tesco",
       }),
       Transaction.reconstitute({
+        userId: "ben",
         id: "tx-002",
         payee: "foo",
         accountId: "the-id",
@@ -140,6 +142,7 @@ describe("sync account service", () => {
         memo: "Coffee and breakfast",
       }),
       Transaction.reconstitute({
+        userId: "ben",
         id: "tx-003",
         accountId: "the-id",
         date: new Date("2024-11-12T20:45:00Z"),
@@ -150,6 +153,7 @@ describe("sync account service", () => {
         memo: "Salary",
       }),
       Transaction.reconstitute({
+        userId: "ben",
         id: "tx-004",
         accountId: "the-id",
         payee: "none",
@@ -160,6 +164,7 @@ describe("sync account service", () => {
         memo: "Spotify subscription",
       }),
       Transaction.reconstitute({
+        userId: "ben",
         id: "tx-005",
         payee: "none",
         accountId: "the-id",

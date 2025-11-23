@@ -5,6 +5,7 @@ export type ITransaction = z.output<typeof transactionSchema>;
 export const transactionSchema = z.object({
   id: z.string(),
   accountId: z.string(),
+  userId: z.string(),
 
   date: z
     .union([z.date(), z.string()])

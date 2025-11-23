@@ -9,6 +9,7 @@ export const testTransactionRepository = (
       const repo = await create();
 
       const transaction1 = Transaction.reconstitute({
+        userId: "ben",
         id: "foo",
         accountId: "bar",
         amount: 1000,
@@ -20,6 +21,7 @@ export const testTransactionRepository = (
       });
 
       const transaction2 = Transaction.reconstitute({
+        userId: "ben",
         id: "biz",
         accountId: "bop",
         amount: 100,
@@ -41,12 +43,25 @@ export const testTransactionRepository = (
     it("allows you to save and retrieve transacions by account", async () => {
       const repo = await create();
 
+      const fredTransaction = Transaction.reconstitute({
+        id: "bing",
+        accountId: "bar",
+        payee: "foo",
+        amount: 100,
+        userId: "fred",
+        cleared: "cleared",
+        date: new Date(),
+        approved: false,
+        memo: "foo",
+      });
+
       const accountTransactions = [
         Transaction.reconstitute({
           id: "foo",
           payee: "foo",
           accountId: "bar",
           amount: 1000,
+          userId: "ben",
           cleared: "cleared",
           date: new Date(),
           approved: false,
@@ -54,6 +69,7 @@ export const testTransactionRepository = (
         }),
         Transaction.reconstitute({
           id: "biz",
+          userId: "ben",
           payee: "foo",
           accountId: "bar",
           amount: 100,
@@ -67,6 +83,7 @@ export const testTransactionRepository = (
           accountId: "bar",
           payee: "foo",
           amount: 100,
+          userId: "ben",
           cleared: "cleared",
           date: new Date(),
           approved: false,
@@ -74,12 +91,13 @@ export const testTransactionRepository = (
         }),
       ];
 
-      await repo.saveTransactions(accountTransactions);
+      await repo.saveTransactions([...accountTransactions, fredTransaction]);
 
       const separateAccountTransaction = Transaction.reconstitute({
         id: "barp2",
         accountId: "bar",
         payee: "foo",
+        userId: "ben",
         amount: 100,
         cleared: "uncleared",
         date: new Date(),
@@ -91,6 +109,7 @@ export const testTransactionRepository = (
 
       await repo.saveTransactions([
         Transaction.reconstitute({
+          userId: "ben",
           id: "barp",
           accountId: "bof",
           amount: 100,
@@ -102,6 +121,7 @@ export const testTransactionRepository = (
         }),
 
         Transaction.reconstitute({
+          userId: "ben",
           id: "burpie",
           accountId: "bof",
           amount: 100,
@@ -113,7 +133,7 @@ export const testTransactionRepository = (
         }),
       ]);
 
-      const result = await repo.getAccountTransactions("bar", 0, 30);
+      const result = await repo.getAccountTransactions("ben", "bar", 0, 30);
       expect(result).toHaveLength(4);
 
       expect(result).toEqual(
@@ -122,6 +142,8 @@ export const testTransactionRepository = (
           separateAccountTransaction,
         ]),
       );
+
+      expect(result).not.toEqual(expect.arrayContaining([fredTransaction]));
     });
 
     it("allows you to retrieve a total count of txs in a given account", async () => {
@@ -129,6 +151,18 @@ export const testTransactionRepository = (
 
       const accountTransactions = [
         Transaction.reconstitute({
+          userId: "fred",
+          id: "burpie",
+          accountId: "bar",
+          amount: 100,
+          payee: "foo",
+          cleared: "cleared",
+          date: new Date(),
+          approved: false,
+          memo: "foo",
+        }),
+        Transaction.reconstitute({
+          userId: "ben",
           id: "foo",
           payee: "foo",
           accountId: "bar",
@@ -139,6 +173,7 @@ export const testTransactionRepository = (
           memo: "foo",
         }),
         Transaction.reconstitute({
+          userId: "ben",
           id: "biz",
           payee: "foo",
           accountId: "bar",
@@ -149,6 +184,7 @@ export const testTransactionRepository = (
           memo: "foo",
         }),
         Transaction.reconstitute({
+          userId: "ben",
           id: "bing",
           accountId: "bar",
           payee: "foo",
@@ -163,6 +199,7 @@ export const testTransactionRepository = (
       await repo.saveTransactions(accountTransactions);
 
       const separateAccountTransaction = Transaction.reconstitute({
+        userId: "ben",
         id: "barp2",
         accountId: "bar",
         payee: "foo",
@@ -177,6 +214,7 @@ export const testTransactionRepository = (
 
       await repo.saveTransactions([
         Transaction.reconstitute({
+          userId: "ben",
           id: "barp",
           accountId: "bof",
           amount: 100,
@@ -188,6 +226,7 @@ export const testTransactionRepository = (
         }),
 
         Transaction.reconstitute({
+          userId: "ben",
           id: "burpie",
           accountId: "bof",
           amount: 100,
@@ -199,7 +238,7 @@ export const testTransactionRepository = (
         }),
       ]);
 
-      const result = await repo.getAccountTransactionCount("bar");
+      const result = await repo.getAccountTransactionCount("ben", "bar");
       expect(result).toEqual(4);
     });
   });

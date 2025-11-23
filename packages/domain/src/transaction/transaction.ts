@@ -3,6 +3,7 @@ import { transactionSchema, type ITransaction } from "./i-transaction.ts";
 
 export class Transaction extends DomainModel implements ITransaction {
   public readonly id: string;
+  public readonly userId: string;
   public readonly accountId: string;
   public readonly date: Date;
   public readonly amount: number;
@@ -14,6 +15,7 @@ export class Transaction extends DomainModel implements ITransaction {
   private constructor(config: ITransaction) {
     super();
     this.id = config.id;
+    this.userId = config.userId;
     this.amount = config.amount;
     this.payee = config.payee;
     this.accountId = config.accountId;
