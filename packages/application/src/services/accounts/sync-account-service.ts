@@ -44,52 +44,53 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     { success: true } | { success: false; reason: string }
   > {
     eventBus.emit("AccountSyncStarted", { accountId: id });
+    try {
+      this.logger.silly(`Starting get accounts service`, LOG_CONTEXT);
+      const tokenPromise = this.oauthTokenRepository.get(
+        this.currentUser.id,
+        "ynab",
+      );
 
-    this.logger.silly(`Starting get accounts service`, LOG_CONTEXT);
-    const tokenPromise = this.oauthTokenRepository.get(
-      this.currentUser.id,
-      "ynab",
-    );
+      const syncDetailsPromise = this.syncDetailsRepo.get(
+        `ynab-account-sync-${id}`,
+      );
 
-    const syncDetailsPromise = this.syncDetailsRepo.get(
-      `ynab-account-sync-${id}`,
-    );
+      const [token, syncDetails] = await Promise.all([
+        tokenPromise,
+        syncDetailsPromise,
+      ]);
 
-    const [token, syncDetails] = await Promise.all([
-      tokenPromise,
-      syncDetailsPromise,
-    ]);
+      const theSyncDetails =
+        syncDetails ??
+        SyncDetails.create({
+          provider: "ynab",
+          id: `ynab-account-sync-${id}`,
+        });
 
-    const theSyncDetails =
-      syncDetails ??
-      SyncDetails.create({
-        provider: "ynab",
-        id: `ynab-account-sync-${id}`,
-      });
+      if (!token) {
+        return {
+          success: false,
+          reason: `Token for ynab could not be found`,
+        } as const;
+      }
 
-    if (!token) {
-      return {
-        success: false,
-        reason: `Token for ynab could not be found`,
-      } as const;
+      this.logger.silly(`Fetching transactions`, LOG_CONTEXT);
+
+      const transactions = await this.transactionFetcher.getAccountTransactions(
+        token,
+        id,
+        theSyncDetails,
+      );
+      this.logger.silly(
+        `Fetched ${String(transactions.length)} transactions!`,
+        LOG_CONTEXT,
+      );
+
+      await this.transactionRepository.saveTransactions(transactions);
+      await this.syncDetailsRepo.save(theSyncDetails);
+      return { success: true } as const;
+    } finally {
+      eventBus.emit("AccountSyncFinished", { accountId: id });
     }
-
-    this.logger.silly(`Fetching transactions`, LOG_CONTEXT);
-
-    const transactions = await this.transactionFetcher.getAccountTransactions(
-      token,
-      id,
-      theSyncDetails,
-    );
-    this.logger.silly(
-      `Fetched ${String(transactions.length)} transactions!`,
-      LOG_CONTEXT,
-    );
-
-    await this.transactionRepository.saveTransactions(transactions);
-    await this.syncDetailsRepo.save(theSyncDetails);
-    eventBus.emit("AccountSyncFinished", { accountId: id });
-
-    return { success: true } as const;
   }
 }

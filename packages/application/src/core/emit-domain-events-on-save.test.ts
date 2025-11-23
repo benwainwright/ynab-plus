@@ -4,7 +4,7 @@ import { SyncDetails, type DomainEvents } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 
 describe("repo with event emitting", () => {
-  it.only("causes domain events to be emitted on the event the method is called with a domain model", async () => {
+  it("causes domain events to be emitted on the event the method is called with a domain model", async () => {
     let theDetails: SyncDetails | undefined;
 
     class MockRepo implements IRepository<SyncDetails> {
