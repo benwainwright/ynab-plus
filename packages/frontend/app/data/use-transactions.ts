@@ -2,11 +2,14 @@ import { type ITransaction } from "@ynab-plus/domain";
 import { useEffect, useState, useTransition } from "react";
 
 import { command } from "./command.ts";
+import { useSearchParams } from "react-router";
 
-const PER_PAGE = 30;
+const PER_PAGE = 20;
 
 export const useTransactions = (accountId?: string) => {
-  const [page, setPage] = useState<number>(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageQueryParam = Number(searchParams.get("page") ?? "0");
+  const [page, setPage] = useState<number>(pageQueryParam);
   const [isPending, startTransition] = useTransition();
   const [transactions, setTransactions] = useState<{
     transactions: ITransaction[];
@@ -14,18 +17,19 @@ export const useTransactions = (accountId?: string) => {
   }>();
 
   useEffect(() => {
+    setSearchParams({ page: String(page) });
     startTransition(async () => {
       if (accountId) {
         setTransactions(
           await command("ListTransactionsCommand", {
             accountId,
-            offset: page * 30,
+            offset: pageQueryParam * PER_PAGE,
             limit: PER_PAGE,
           }),
         );
       }
     });
-  }, [accountId, page]);
+  }, [accountId, pageQueryParam, page]);
 
   return {
     isPending,

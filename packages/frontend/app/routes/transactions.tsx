@@ -19,7 +19,7 @@ export const Transactions = () => {
       <Loader isPending={isPending} data={transactions}>
         {(data) => (
           <>
-            <Table highlightOnHover tabularNums>
+            <Table highlightOnHover tabularNums verticalSpacing={"sm"}>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Date</Table.Th>
