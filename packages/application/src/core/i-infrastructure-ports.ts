@@ -15,6 +15,7 @@ import type {
   ITransactionFetcher,
   ITransactionRepository,
   NewTokenRequesterFactory,
+  IInstitutionAuthPageLinkFetcher,
 } from "@ports";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import type { SyncDetails, User } from "@ynab-plus/domain";
@@ -24,6 +25,7 @@ export interface IInfrastructurePorts {
   bootstrapper: IBootstrapper;
   eventBus: IEventBus;
   taskScheduler: ITaskScheduler;
+  bankLinkFetcher: IInstitutionAuthPageLinkFetcher;
   bankConnectionCreator: IBankConnectionCreator;
   bankConnectionRepository: IBankConnectionRepository;
   passwordHasher: IPasswordHasher;

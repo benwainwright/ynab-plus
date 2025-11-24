@@ -27,7 +27,7 @@ describe("the bank connection", () => {
 
       expect(connection.bankName).toEqual("foo");
       expect(connection.logo).toEqual("bar");
-      expect(connection.requisitionId).toEqual("baz");
+      expect(connection.freezeDry().requisitionId).toEqual("baz");
       expect(connection.freezeDry(true).token).toEqual("token");
       expect(connection.freezeDry(true).refreshToken).toEqual("refreshToken");
       expect(connection.freezeDry().tokenExpiry).toEqual(tokenExpiry);
@@ -51,7 +51,7 @@ describe("the bank connection", () => {
 
       expect(connection.bankName).toEqual("foo");
       expect(connection.logo).toEqual("bar");
-      expect(connection.requisitionId).toEqual(undefined);
+      expect(connection.freezeDry().requisitionId).toEqual(undefined);
       expect(connection.freezeDry(true).token).toEqual("theToken");
       expect(connection.freezeDry(true).refreshToken).toEqual("refreshToken");
 
@@ -62,6 +62,46 @@ describe("the bank connection", () => {
         },
       ]);
     });
+  });
+
+  it("save requisition id", () => {
+    const connection = BankConnection.reconstite({
+      id: "foo",
+      userId: "ben",
+      bankName: "foo",
+      logo: "bar",
+      token: "token",
+      refreshToken: "refreshToken",
+    });
+
+    connection.saveRequisitionId("foo");
+
+    expect(connection.freezeDry().requisitionId).toEqual("foo");
+
+    expect(connection.pullEvents()).toEqual([
+      {
+        event: "BankConnectionRequisitionSaved",
+        data: {
+          old: BankConnection.reconstite({
+            id: "foo",
+            userId: "ben",
+            bankName: "foo",
+            logo: "bar",
+            token: "token",
+            refreshToken: "refreshToken",
+          }),
+          new: BankConnection.reconstite({
+            id: "foo",
+            userId: "ben",
+            bankName: "foo",
+            requisitionId: "foo",
+            logo: "bar",
+            token: "token",
+            refreshToken: "refreshToken",
+          }),
+        },
+      },
+    ]);
   });
 
   it("refreshConnection", () => {

@@ -28,6 +28,7 @@ export const composeApplicationLayer = ({
   transactionRepository,
   syncdetailsRepository,
   bankConnectionCreator,
+  bankLinkFetcher,
   bankConnectionRepository,
 }: IInfrastructurePorts): IApplicationLayer => {
   logger.info(`Composing application layer`, LOG_CONTEXT);
@@ -51,6 +52,7 @@ export const composeApplicationLayer = ({
       transactionRepository,
       accountsFetcher,
       syncdetailsRepository,
+      bankLinkFetcher,
       newTokenRequesterFactory,
       eventBus,
       bankConnectionCreator,
@@ -72,6 +74,7 @@ export const composeApplicationLayer = ({
   const withSingletonServiceBus = async () => {
     const services = getServices({
       eventBus,
+      authLinkFetcher: bankLinkFetcher,
       userRepository,
       oauthCheckerFactory,
       syncdetailsRepository,

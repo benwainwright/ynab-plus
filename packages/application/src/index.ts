@@ -10,6 +10,7 @@ export {
   type IEventPacket,
   type IListener,
   type IOauthCheckerFactory,
+  type IInstitutionAuthPageLinkFetcher,
   type IOauthNewTokenRequester,
   type IOauthRedirectUrlGenerator,
   type IOAuthTokenRefresher,

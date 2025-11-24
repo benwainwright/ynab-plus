@@ -19,6 +19,35 @@ afterEach(() => {
 });
 
 describe("the gocardless client", () => {
+  describe("getLink", () => {
+    it("calls the requsitions endpoint with the token and the institution and returns the url and req id", async () => {
+      const client = new GocardlessClient(
+        `https://bankaccountdata.gocardless.com`,
+        { value: Promise.resolve(mockGocardlessData.secretId) },
+        { value: Promise.resolve(mockGocardlessData.secretKey) },
+        mock(),
+      );
+
+      const connection = BankConnection.reconstite({
+        bankName: "foo",
+        id: mockGocardlessData.mockRequisitionResponse.institution_id,
+        userId: "ben",
+        logo: "bar",
+        requisitionId: "baz",
+        token: mockGocardlessData.mockToken,
+      });
+
+      const result = await client.getLink(connection);
+
+      expect(result.url).toEqual(
+        mockGocardlessData.mockRequisitionResponse.link,
+      );
+      expect(result.requsitionId).toEqual(
+        mockGocardlessData.mockRequisitionResponse.id,
+      );
+    });
+  });
+
   describe("getconnections", () => {
     it("gets a token, then makes a request to the institutions endpoint and returns a list of bankconnectionsl", async () => {
       const today = new Date("2025-11-23T19:14:37.986Z");

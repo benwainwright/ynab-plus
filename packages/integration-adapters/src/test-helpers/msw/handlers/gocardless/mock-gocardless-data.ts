@@ -3,6 +3,22 @@ export const mockGocardlessData = {
   secretKey: "secret-key",
   mockToken: "the-token",
   mockRefreshToken: "the-refresh-token",
+  mockRequisitionResponse: {
+    id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    created: "2025-05-14T11:05:56.276Z",
+    redirect: "http://www.yourwebpage.com",
+    status: "CR",
+    institution_id: "string",
+    agreement: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    reference: "string",
+    accounts: [],
+    user_language: "EN",
+    link: "https://ob.gocardless.com/psd2/start/3fa85f64-5717-4562-b3fc-2c963f66afa6/{$INSTITUTION_ID}",
+    ssn: "string",
+    account_selection: false,
+    redirect_immediate: false,
+  },
+
   mockInstititionsList: [
     {
       id: "ABNAMRO_ABNAGB2LXXX",

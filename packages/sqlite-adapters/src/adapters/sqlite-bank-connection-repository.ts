@@ -80,7 +80,7 @@ export class SqliteBankConnectionRepository
         connection.userId,
         connection.bankName,
         connection.logo,
-        connection.requisitionId ?? null,
+        connection.freezeDry().requisitionId ?? null,
         connection.freezeDry(true).token ?? null,
         connection.freezeDry(true).tokenExpiry?.toISOString() ?? null,
         connection.freezeDry(true).refreshToken ?? null,

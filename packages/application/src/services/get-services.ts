@@ -5,6 +5,7 @@ import type {
   IBankConnectionCreator,
   IBankConnectionRepository,
   IEventBus,
+  IInstitutionAuthPageLinkFetcher,
   IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
@@ -34,6 +35,7 @@ import type { SyncDetails, User } from "@ynab-plus/domain";
 import { SyncAccountService } from "./accounts/sync-account-service.ts";
 import { ListTransactionsService } from "./accounts/list-transactions-service.ts";
 import { CheckBankConnectionService } from "./open-banking/check-bank-connection-service.ts";
+import { GetInstitutionAuthorizationPageLinkService } from "./open-banking/get-institution-authorization-page-link-service.ts";
 
 interface IServiceDependencies {
   logger: ILogger;
@@ -47,6 +49,7 @@ interface IServiceDependencies {
   oauthCheckerFactory: IOauthCheckerFactory;
   accountsRepository: IAccountRepository;
   newTokenRequesterFactory: NewTokenRequesterFactory;
+  authLinkFetcher: IInstitutionAuthPageLinkFetcher;
   accountsFetcher: IAccountsFetcher;
   syncdetailsRepository: IRepository<SyncDetails>;
   transactionFetcher: ITransactionFetcher;
@@ -57,6 +60,7 @@ interface IServiceDependencies {
 export const getServices = ({
   userRepository,
   logger,
+  authLinkFetcher,
   newTokenRequesterFactory,
   bankConnectionCreator,
   oauthTokenRepository,
@@ -110,6 +114,11 @@ export const getServices = ({
   );
 
   return [
+    new GetInstitutionAuthorizationPageLinkService(
+      authLinkFetcher,
+      bankConnections,
+      logger,
+    ),
     new CheckBankConnectionService(
       bankConnections,
       bankConnectionCreator,

@@ -1,10 +1,15 @@
 import { HttpClient } from "@http-client";
-import { type IBankConnectionCreator } from "@ynab-plus/app";
+import {
+  type IBankConnectionCreator,
+  type IInstitutionAuthPageLinkFetcher,
+} from "@ynab-plus/app";
 import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
 import z from "zod";
 
-export class GocardlessClient implements IBankConnectionCreator {
+export class GocardlessClient
+  implements IBankConnectionCreator, IInstitutionAuthPageLinkFetcher
+{
   private client: HttpClient;
 
   public constructor(
@@ -17,6 +22,36 @@ export class GocardlessClient implements IBankConnectionCreator {
       accept: "application/json",
       "content-type": "application/json",
     });
+  }
+  public async getLink(
+    connection: BankConnection,
+  ): Promise<{ requsitionId: string; url: string }> {
+    const result = await this.client.post({
+      path: "requisitions",
+      body: {
+        institution_id: connection.id,
+      },
+      headers: {
+        Authorization: `Bearer ${connection.useToken() ?? ""}`,
+      },
+      responseSchema: z.object({
+        id: z.string(),
+        created: z.string(),
+        redirect: z.string(),
+        status: z.string(),
+        institution_id: z.string(),
+        agreement: z.string(),
+        reference: z.string(),
+        user_language: z.string(),
+        link: z.string(),
+        ssn: z.string(),
+      }),
+    });
+
+    return {
+      url: result.link,
+      requsitionId: result.id,
+    };
   }
 
   private async getNewToken() {

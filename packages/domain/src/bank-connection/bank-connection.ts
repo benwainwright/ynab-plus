@@ -6,7 +6,7 @@ export class BankConnection extends DomainModel implements IBankConnection {
   public readonly userId: string;
   public readonly bankName: string;
   public readonly logo: string;
-  public readonly requisitionId: string | undefined;
+  private _requisitionId: string | undefined;
   private _token: string | undefined;
   private _refreshToken: string | undefined;
   private _tokenExpiry: Date | undefined;
@@ -18,7 +18,7 @@ export class BankConnection extends DomainModel implements IBankConnection {
     this.userId = config.userId;
     this.bankName = config.bankName;
     this.logo = config.logo;
-    this.requisitionId = config.requisitionId;
+    this._requisitionId = config.requisitionId;
     this._token = config.token;
     this._refreshToken = config.refreshToken;
     this._tokenExpiry = config.tokenExpiry;
@@ -31,7 +31,7 @@ export class BankConnection extends DomainModel implements IBankConnection {
       userId: this.userId,
       logo: this.logo,
       bankName: this.bankName,
-      requisitionId: this.requisitionId,
+      requisitionId: this._requisitionId,
       token: secure ? this._token : "",
       refreshToken: secure ? this._refreshToken : "",
       tokenExpiry: this._tokenExpiry,
@@ -50,8 +50,21 @@ export class BankConnection extends DomainModel implements IBankConnection {
     return connection;
   }
 
+  public useToken(): string | undefined {
+    return this._token;
+  }
+
   public static reconstite(config: IBankConnection) {
     return new BankConnection(config);
+  }
+
+  public saveRequisitionId(id: string) {
+    const old = BankConnection.reconstite(this.freezeDry(true));
+    this._requisitionId = id;
+    this.raiseEvent({
+      event: "BankConnectionRequisitionSaved",
+      data: { old, new: this },
+    });
   }
 
   public refreshConnection(config: {

@@ -5,6 +5,7 @@ import type {
   IBankConnectionCreator,
   IBankConnectionRepository,
   IEventBus,
+  IInstitutionAuthPageLinkFetcher,
   IMultipleRepository,
   IOauthCheckerFactory,
   IOauthTokenRepository,
@@ -30,6 +31,7 @@ interface IRequestFactoryConfig {
   logger: ILogger;
   sessionStorage: IObjectStorage;
   oauthTokenRepository: IOauthTokenRepository;
+  bankLinkFetcher: IInstitutionAuthPageLinkFetcher;
   taskScheduler: ITaskScheduler;
   passwordVerifier: IPasswordVerifier;
   bankConnectionRepository: IBankConnectionRepository;
@@ -63,6 +65,7 @@ export const getRequestFactory = ({
   transactionRepository,
   passwordHasher,
   passwordVerifier,
+  bankLinkFetcher,
   eventBus,
 }: IRequestFactoryConfig): RequestScopedServiceBusFactory => {
   return async ({
@@ -99,6 +102,7 @@ export const getRequestFactory = ({
       syncdetailsRepository,
       oauthTokenRepository,
       taskScheduler,
+      authLinkFetcher: bankLinkFetcher,
       passwordHasher,
       passwordVerifier,
       transactionFetcher,

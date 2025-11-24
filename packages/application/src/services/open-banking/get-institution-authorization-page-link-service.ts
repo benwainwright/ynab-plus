@@ -1,11 +1,16 @@
 import { AbstractApplicationService } from "@core";
-import type { IHandleContext, IInstitutionAuthPageLinkFetcher } from "@ports";
+import type {
+  IBankConnectionRepository,
+  IHandleContext,
+  IInstitutionAuthPageLinkFetcher,
+} from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
 
 export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicationService<"GetInstitutionAuthorizationPageLinkCommand"> {
   public constructor(
     private authLinkFetcher: IInstitutionAuthPageLinkFetcher,
+    private bankConnectionRepository: IBankConnectionRepository,
     logger: ILogger,
   ) {
     super(logger);
@@ -27,6 +32,12 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
     "GetInstitutionAuthorizationPageLinkCommand",
     TRole
   >): Promise<{ url: string }> {
-    return { url: await this.authLinkFetcher.getLink(data) };
+    const result = await this.authLinkFetcher.getLink(data);
+
+    data.saveRequisitionId(result.requsitionId);
+
+    await this.bankConnectionRepository.saveConnection(data);
+
+    return { url: result.url };
   }
 }
