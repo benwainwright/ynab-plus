@@ -12,4 +12,10 @@ export interface BankConnectionCommands {
           status: "connected";
         };
   };
+  GetInstitutionAuthorizationPageLinkCommand: {
+    request: BankConnection;
+    response: {
+      url: string;
+    };
+  };
 }

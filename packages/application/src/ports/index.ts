@@ -33,4 +33,5 @@ export type { SingletonServiceBusFactory } from "./singleton-service-bus-factory
 export type { ITaskScheduler } from "./i-task-scheduler.ts";
 export type { IOpenBankingTokenFetcher } from "./i-open-banking-token-fetcher.ts";
 export type { IBankConnectionRepository } from "./i-bank-connection-repository.ts";
+export type { IInstitutionAuthPageLinkFetcher } from "./i-institution-auth-page-link-fetcher.ts";
 export type { IBankConnectionCreator } from "./i-bank-connection-creator.ts";
