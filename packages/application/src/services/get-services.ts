@@ -36,6 +36,7 @@ import { SyncAccountService } from "./accounts/sync-account-service.ts";
 import { ListTransactionsService } from "./accounts/list-transactions-service.ts";
 import { CheckBankConnectionService } from "./open-banking/check-bank-connection-service.ts";
 import { GetInstitutionAuthorizationPageLinkService } from "./open-banking/get-institution-authorization-page-link-service.ts";
+import { GetUsersService } from "./users/get-users-service.ts";
 
 interface IServiceDependencies {
   logger: ILogger;
@@ -125,6 +126,7 @@ export const getServices = ({
       logger,
     ),
     new GetUserService(users, logger),
+    new GetUsersService(users, logger),
     new ListUsersService(users, logger),
     new UpdateUserService(users, passwordHasher, logger),
     new DisconnectOauthIntegrationService(tokens, tasks, logger),

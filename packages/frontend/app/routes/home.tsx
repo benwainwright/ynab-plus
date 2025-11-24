@@ -5,7 +5,10 @@ const Home = () => {
   return (
     <Page routeName="home">
       <Typography>
-        <p>You are now logged in</p>
+        <p>
+          Welcome to YNAB plus - to get started, head over to the integrations
+          page
+        </p>
       </Typography>
     </Page>
   );

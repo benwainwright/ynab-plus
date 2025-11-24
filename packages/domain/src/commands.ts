@@ -124,6 +124,12 @@ export type Commands = {
     };
     response: User | undefined;
   };
+  GetUsersCommand: {
+    request: {
+      usernames: string[];
+    };
+    response: (User | undefined)[];
+  };
   HelloWorldCommand: {
     request: {
       data: string;
