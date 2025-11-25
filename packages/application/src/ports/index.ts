@@ -110,3 +110,5 @@ export {
   type IBankConnectionCreator,
   BankConnectionCreatorToken,
 } from "./i-bank-connection-creator.ts";
+
+export { ServiceToken } from "./service-token.ts";

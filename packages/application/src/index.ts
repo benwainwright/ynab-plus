@@ -1,6 +1,9 @@
 export { composeApplicationLayer } from "./compose-application-layer.ts";
+
 export { type IInfrastructurePorts, type AllEvents } from "@core";
+
 export { type IApplicationLayer } from "./i-application-layer.ts";
+
 export {
   type IAccountRepository,
   type IEventBus,
@@ -31,3 +34,5 @@ export {
   type IBankConnectionCreator,
   type IBankConnectionRepository,
 } from "@ports";
+
+export { applicationServicesModule } from "./module.ts";
