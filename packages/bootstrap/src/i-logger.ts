@@ -16,3 +16,5 @@ export interface ILogger {
 
   silly<TData extends { context: string }>(message: string, data: TData): void;
 }
+
+export const LoggerToken = Symbol.for("Logger");

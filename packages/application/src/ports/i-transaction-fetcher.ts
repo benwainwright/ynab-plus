@@ -8,3 +8,5 @@ export interface ITransactionFetcher {
     sinceDate?: Date,
   ): Promise<Transaction[]>;
 }
+
+export const TransactionFetcherToken = Symbol.for("TransactionFetcher");

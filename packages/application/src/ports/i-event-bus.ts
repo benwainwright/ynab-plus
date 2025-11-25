@@ -6,3 +6,5 @@ export type IEventBus<TEvents = AllEvents> = IEventListener<TEvents> &
   IEventEmitter<TEvents> & {
     child: (namespace: string) => IEventBus<TEvents>;
   };
+
+export const EventBusToken = Symbol.for("EventBus");

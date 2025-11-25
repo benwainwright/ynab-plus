@@ -1,17 +1,34 @@
-import type { IHandleContext, IPasswordVerifier, IRepository } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import {
+  CurrentUserSetterToken,
+  PasswordVerifierToken,
+  UserRepositoryToken,
+  type IHandleContext,
+  type IPasswordVerifier,
+  type IRepository,
+} from "@ports";
+
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import type { Commands, IRole, Permission, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public override requiredPermissions: Permission[] = ["public"];
 
   public constructor(
+    @inject(UserRepositoryToken)
     private users: IRepository<User>,
+
+    @inject(PasswordVerifierToken)
     private passwordVerifier: IPasswordVerifier,
+
+    @inject(CurrentUserSetterToken)
     private currentUserSetter: ICurrentUserSetter,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

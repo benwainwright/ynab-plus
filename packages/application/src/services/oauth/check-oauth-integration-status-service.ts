@@ -1,9 +1,11 @@
-import type {
-  IHandleContext,
-  IOauthCheckerFactory,
-  IOauthTokenRepository,
+import {
+  OauthCheckerFactory,
+  OauthTokenRepositoryToken,
+  type IHandleContext,
+  type IOauthCheckerFactory,
+  type IOauthTokenRepository,
 } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = {
@@ -11,11 +13,18 @@ export const LOG_CONTEXT = {
 };
 
 import { AbstractApplicationService } from "@core";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
+    @inject(OauthTokenRepositoryToken)
     private tokenRepository: IOauthTokenRepository,
+
+    @inject(OauthCheckerFactory)
     private oauthClientFactory: IOauthCheckerFactory,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

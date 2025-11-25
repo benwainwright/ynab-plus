@@ -3,7 +3,6 @@ export { type IInfrastructurePorts, type AllEvents } from "@core";
 export { type IApplicationLayer } from "./i-application-layer.ts";
 export {
   type IAccountRepository,
-  type ICommandMessage,
   type IEventBus,
   type IEventListener,
   type IEventEmitter,

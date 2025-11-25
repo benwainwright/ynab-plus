@@ -1,29 +1,45 @@
 import { AbstractApplicationService } from "@core";
-import type {
-  IHandleContext,
-  IOauthTokenRepository,
-  IRepository,
-  ITransactionFetcher,
+import {
+  OauthTokenRepositoryToken,
+  SyncDetailsRepositoryToken,
+  TransactionFetcherToken,
+  TransactionRepositoryToken,
+  type IHandleContext,
+  type IOauthTokenRepository,
+  type IRepository,
+  type ITransactionFetcher,
 } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import {
   SyncDetails,
   type IRole,
   type Permission,
   type User,
 } from "@ynab-plus/domain";
+import { inject, injectable } from "inversify";
+
 import type { ITransactionRepository } from "src/ports/i-transaction-repository.ts";
 
 export const LOG_CONTEXT = { context: "sync-account-service" };
 
+@injectable()
 export class SyncAccountService extends AbstractApplicationService<"SyncAccountCommand"> {
   public override readonly commandName = "SyncAccountCommand";
 
   public constructor(
+    @inject(SyncDetailsRepositoryToken)
     private syncDetailsRepo: IRepository<SyncDetails>,
+
+    @inject(OauthTokenRepositoryToken)
     private oauthTokenRepository: IOauthTokenRepository,
+
+    @inject(TransactionFetcherToken)
     private transactionFetcher: ITransactionFetcher,
+
+    @inject(TransactionRepositoryToken)
     private transactionRepository: ITransactionRepository,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

@@ -1,26 +1,41 @@
 import { AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
-import type {
-  IAccountRepository,
-  IAccountsFetcher,
-  IHandleContext,
-  IOauthTokenRepository,
-  ITaskScheduler,
+import {
+  AccountRepositoryToken,
+  AccountsFetcherToken,
+  OauthTokenRepositoryToken,
+  TaskSchedulerToken,
+  type IAccountRepository,
+  type IAccountsFetcher,
+  type IHandleContext,
+  type IOauthTokenRepository,
+  type ITaskScheduler,
 } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 
 import { RegularTask, type IRole } from "@ynab-plus/domain";
+import { inject, injectable } from "inversify";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 
 const LOG_CONTEXT = { context: "download-accounts-service" };
 
+@injectable()
 export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
+    @inject(OauthTokenRepositoryToken)
     private tokenRepository: IOauthTokenRepository,
+
+    @inject(AccountsFetcherToken)
     private accountsFetcher: IAccountsFetcher,
+
+    @inject(AccountRepositoryToken)
     private accountsRepo: IAccountRepository,
+
+    @inject(TaskSchedulerToken)
     private taskScheduler: ITaskScheduler,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

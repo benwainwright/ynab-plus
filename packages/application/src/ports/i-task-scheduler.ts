@@ -13,3 +13,5 @@ export interface ITaskScheduler {
     limit: number,
   ): Promise<RegularTask[]>;
 }
+
+export const TaskSchedulerToken = Symbol.for("TaskScheduler");

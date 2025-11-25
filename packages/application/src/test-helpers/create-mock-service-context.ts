@@ -1,13 +1,10 @@
-import type {
-  ICommandMessage,
-  IEventBus,
-  ISingleItemStore,
-} from "@ynab-plus/app";
+import type { IEventBus, ISingleItemStore } from "@ynab-plus/app";
 import {
   Command,
   SystemContext,
   User,
   type Commands,
+  type ICommandMessage,
   type IRole,
 } from "@ynab-plus/domain";
 import { vi } from "vitest";

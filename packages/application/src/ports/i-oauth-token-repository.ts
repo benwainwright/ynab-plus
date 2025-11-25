@@ -5,3 +5,5 @@ export interface IOauthTokenRepository {
   save(token: OauthToken): Promise<OauthToken>;
   delete(userId: string, provider: string): Promise<void>;
 }
+
+export const OauthTokenRepositoryToken = Symbol.for("OauthTokenRepository");

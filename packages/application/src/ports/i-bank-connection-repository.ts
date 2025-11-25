@@ -5,3 +5,7 @@ export interface IBankConnectionRepository {
   saveConnection(connection: BankConnection): Promise<BankConnection>;
   deleteConnection(connection: BankConnection): Promise<void>;
 }
+
+export const BankConnectionRepositoryToken = Symbol.for(
+  "BankConnectionRepository",
+);

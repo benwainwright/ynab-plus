@@ -18,3 +18,7 @@ export interface ITransactionRepository {
 
   saveTransactions(transactions: Transaction[]): Promise<Transaction[]>;
 }
+
+export const TransactionRepositoryToken = Symbol.for(
+  "TransactionRepositoryToken",
+);

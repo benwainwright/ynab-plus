@@ -4,3 +4,5 @@ import type { IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
 export type IOauthCheckerFactory = (
   provider: string,
 ) => IOauthRedirectUrlGenerator & IOAuthTokenRefresher;
+
+export const OauthCheckerFactory = Symbol.for("OauthCheckerFactory");

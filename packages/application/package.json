@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@ynab-plus/bootstrap": "workspace:*",
-    "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
+    "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/test-helpers": "workspace:*",
+    "inversify": "^7.10.4",
     "stacktracey": "^2.1.8"
   },
   "module": "src/index.ts",
