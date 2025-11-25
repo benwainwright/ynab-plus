@@ -1,12 +1,21 @@
-import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
-import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
+import {
+  CurrentUserSetterToken,
+  PasswordHasherToken,
+  UserRepositoryToken,
+  type IHandleContext,
+  type IPasswordHasher,
+  type IRepository,
+} from "@ports";
+import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
+import { inject, injectable } from "inversify";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 
+@injectable()
 export class RegisterUserService extends AbstractApplicationService<"RegisterCommand"> {
   public override readonly commandName = "RegisterCommand";
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
@@ -14,9 +23,16 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
   ];
 
   public constructor(
+    @inject(UserRepositoryToken)
     private users: IRepository<User>,
+
+    @inject(PasswordHasherToken)
     private passwordHasher: IPasswordHasher,
+
+    @inject(CurrentUserSetterToken)
     private currentUserSetter: ICurrentUserSetter,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

@@ -5,3 +5,7 @@ export interface IInstitutionAuthPageLinkFetcher {
     connection: BankConnection,
   ): Promise<{ requsitionId: string; url: string }>;
 }
+
+export const InstitutionAuthPageLinkFetcherToken = Symbol.for(
+  "InstitutionAuthPageLinkFetcher",
+);

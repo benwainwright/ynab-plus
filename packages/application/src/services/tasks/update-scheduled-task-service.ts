@@ -1,11 +1,20 @@
 import { AbstractApplicationService } from "@core";
-import type { IHandleContext, ITaskScheduler } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import {
+  TaskSchedulerToken,
+  type IHandleContext,
+  type ITaskScheduler,
+} from "@ports";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class UpdateScheduledTaskService extends AbstractApplicationService<"UpdateScheduledTaskCommand"> {
   public constructor(
+    @inject(TaskSchedulerToken)
     private taskScheduler: ITaskScheduler,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

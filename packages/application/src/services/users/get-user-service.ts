@@ -1,10 +1,16 @@
 import { UserNotFoundError } from "@errors";
-import type { IHandleContext, IRepository } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import {
+  CurrentUserSetterToken,
+  type IHandleContext,
+  type IRepository,
+} from "@ports";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class GetUserService extends AbstractApplicationService<"GetUserCommand"> {
   public override readonly commandName = "GetUserCommand";
 
@@ -16,7 +22,10 @@ export class GetUserService extends AbstractApplicationService<"GetUserCommand">
   ];
 
   public constructor(
+    @inject(CurrentUserSetterToken)
     private users: IRepository<User>,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

@@ -1,10 +1,18 @@
 import { AppError } from "@errors";
-import type { ICurrentUserSetter, IHandleContext, IRepository } from "@ports";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import {
+  CurrentUserSetterToken,
+  UserRepositoryToken,
+  type ICurrentUserSetter,
+  type IHandleContext,
+  type IRepository,
+} from "@ports";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class GetCurrentUserService extends AbstractApplicationService<"GetCurrentUserCommand"> {
   public override readonly commandName = "GetCurrentUserCommand";
 
@@ -15,8 +23,13 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
   ];
 
   public constructor(
+    @inject(UserRepositoryToken)
     private users: IRepository<User>,
+
+    @inject(CurrentUserSetterToken)
     private currentUserSetter: ICurrentUserSetter,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);

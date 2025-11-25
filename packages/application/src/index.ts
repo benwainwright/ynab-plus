@@ -28,7 +28,6 @@ export {
   type ITaskScheduler,
   type IAccountsFetcher,
   type ITransactionRepository,
-  type ISerialiser,
   type IBankConnectionCreator,
   type IBankConnectionRepository,
 } from "@ports";

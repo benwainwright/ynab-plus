@@ -7,14 +7,16 @@ export {
   type IAccountsFetcher,
   AccountsFetcherToken,
 } from "./i-accounts-fetcher.ts";
-export type { IEventBus } from "./i-event-bus.ts";
+
+export { type IEventBus, EventBusToken } from "./i-event-bus.ts";
+
 export {
   type IEventListener,
   type IEventPacket,
   type IListener,
 } from "./i-event-listener.ts";
 export type { IEventEmitter } from "./i-event-emitter.ts";
-export type { ISerialiser } from "./i-serialiser.ts";
+
 export type { IHandleContext } from "./i-handle-context.ts";
 
 export {
@@ -22,7 +24,11 @@ export {
   OauthCheckerFactory,
 } from "./i-oauth-checker-factory.ts";
 
-export type { IOauthNewTokenRequester } from "./i-oauth-new-token-requester.ts";
+export {
+  type IOauthNewTokenRequester,
+  OauthNewTokenRequester,
+} from "./i-oauth-new-token-requester.ts";
+
 export type { IMultipleRepository } from "./i-multiple-repository.ts";
 
 export {
@@ -30,12 +36,20 @@ export {
   TransactionFetcherToken,
 } from "./i-transaction-fetcher.ts";
 
-export type { IOauthRedirectUrlGenerator } from "./i-oauth-redirect-url-generator.ts";
+export {
+  type IOauthRedirectUrlGenerator,
+  OauthRedirectUrlGeneratorToken,
+} from "./i-oauth-redirect-url-generator.ts";
+
 export {
   type ICurrentUserSetter,
   CurrentUserSetterToken,
 } from "./i-current-user-setter.ts";
-export type { IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
+
+export {
+  type IOAuthTokenRefresher,
+  OauthTokenRefresherToken,
+} from "./i-oauth-token-refresher.ts";
 
 export {
   type IOauthTokenRepository,
@@ -73,10 +87,26 @@ export {
   type NewTokenRequesterFactory,
   NewTokenRequesterFactoryToken,
 } from "./new-token-requester-factory.ts";
+
 export type { RequestScopedServiceBusFactory } from "./request-scoped-service-bus-factory.ts";
+
 export type { SingletonServiceBusFactory } from "./singleton-service-bus-factory.ts";
+
 export { type ITaskScheduler, TaskSchedulerToken } from "./i-task-scheduler.ts";
+
 export type { IOpenBankingTokenFetcher } from "./i-open-banking-token-fetcher.ts";
-export type { IBankConnectionRepository } from "./i-bank-connection-repository.ts";
-export type { IInstitutionAuthPageLinkFetcher } from "./i-institution-auth-page-link-fetcher.ts";
-export type { IBankConnectionCreator } from "./i-bank-connection-creator.ts";
+
+export {
+  type IBankConnectionRepository,
+  BankConnectionRepositoryToken,
+} from "./i-bank-connection-repository.ts";
+
+export {
+  type IInstitutionAuthPageLinkFetcher,
+  InstitutionAuthPageLinkFetcherToken,
+} from "./i-institution-auth-page-link-fetcher.ts";
+
+export {
+  type IBankConnectionCreator,
+  BankConnectionCreatorToken,
+} from "./i-bank-connection-creator.ts";

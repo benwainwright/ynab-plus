@@ -1,11 +1,19 @@
-import type { IHandleContext, IPasswordHasher, IRepository } from "@ports";
-import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
+import {
+  PasswordHasherToken,
+  UserRepositoryToken,
+  type IHandleContext,
+  type IPasswordHasher,
+  type IRepository,
+} from "@ports";
+import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
+import { inject, injectable } from "inversify";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 
+@injectable()
 export class UpdateUserService extends AbstractApplicationService<"UpdateUserCommand"> {
   public override readonly commandName = "UpdateUserCommand";
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
@@ -13,8 +21,13 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
   ];
 
   public constructor(
+    @inject(UserRepositoryToken)
     private users: IRepository<User>,
+
+    @inject(PasswordHasherToken)
     private passwordHasher: IPasswordHasher,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
     super(logger);
