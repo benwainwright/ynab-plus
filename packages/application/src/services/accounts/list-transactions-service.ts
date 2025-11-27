@@ -1,26 +1,24 @@
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import {
-  AccountRepositoryToken,
-  TransactionRepositoryToken,
   type IAccountRepository,
   type IHandleContext,
   type ITransactionRepository,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User, Transaction, Permission } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 @injectable()
 export class ListTransactionsService extends AbstractApplicationService<"ListTransactionsCommand"> {
   public constructor(
-    @inject(TransactionRepositoryToken)
+    @$inject("TransactionRepository")
     private transactionsRepo: ITransactionRepository,
 
-    @inject(AccountRepositoryToken)
+    @$inject("AccountRepository")
     private accountsRepo: IAccountRepository,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

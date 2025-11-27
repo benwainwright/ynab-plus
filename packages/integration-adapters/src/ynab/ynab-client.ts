@@ -1,13 +1,15 @@
 import { HttpError } from "@errors";
 import type { IAccountsFetcher, ITransactionFetcher } from "@ynab-plus/app";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import {
   Account,
   SyncDetails,
   Transaction,
   type OauthToken,
 } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
+import { $inject } from "@core";
+
 import z from "zod";
 
 const LOG_CONTEXT = { context: "ynab-client" };
@@ -15,7 +17,7 @@ const LOG_CONTEXT = { context: "ynab-client" };
 @injectable()
 export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
   public constructor(
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
   ) {}
 

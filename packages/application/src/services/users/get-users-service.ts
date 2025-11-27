@@ -1,13 +1,13 @@
 import {
-  UserRepositoryToken,
   type IHandleContext,
+  type IMultipleRepository,
   type IRepository,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "@core";
-import { inject, injectable } from "inversify";
+import { $inject, AbstractApplicationService } from "@core";
+import { injectable } from "inversify";
 
 @injectable()
 export class GetUsersService extends AbstractApplicationService<"GetUsersCommand"> {
@@ -21,10 +21,10 @@ export class GetUsersService extends AbstractApplicationService<"GetUsersCommand
   ];
 
   public constructor(
-    @inject(UserRepositoryToken)
-    private users: IRepository<User>,
+    @$inject("UserRepository")
+    private users: IRepository<User> & IMultipleRepository<User>,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

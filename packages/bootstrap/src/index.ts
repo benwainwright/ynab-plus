@@ -1,7 +1,6 @@
 export { AbstractError } from "./abstract-error.ts";
 export { Bootstrapper } from "./bootstrapper.ts";
 export { ConfigValue } from "./config-value.ts";
-export { getContainer } from "./container.ts";
 export { ApplicationContainerToken } from "./application-container-token.ts";
 export { type BootstrapTypes } from "./bootstrap-types.ts";
 export { type IBootstrapper, BootstrapperToken } from "./i-bootstrapper.ts";

@@ -1,10 +1,12 @@
 import { createMockServiceContext } from "@test-helpers";
+
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
 import { ListUsersService } from "./list-users-service.ts";
 import type { IMultipleRepository } from "../../ports/i-multiple-repository.ts";
+import type { IRepository } from "@ports";
 
 describe("list users service", () => {
   it("returns a list of all the users, passing through the offset and limit", async () => {
@@ -36,7 +38,7 @@ describe("list users service", () => {
       mockUser,
     );
 
-    const repo = mock<IMultipleRepository<User>>();
+    const repo = mock<IMultipleRepository<User> & IRepository<User>>();
 
     when(repo.getMany).calledWith(0, 10).thenResolve(mockUserList);
 

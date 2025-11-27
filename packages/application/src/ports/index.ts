@@ -36,10 +36,7 @@ export {
 
 export type { IMultipleRepository } from "./i-multiple-repository.ts";
 
-export {
-  type ITransactionFetcher,
-  TransactionFetcherToken,
-} from "./i-transaction-fetcher.ts";
+export { type ITransactionFetcher } from "./i-transaction-fetcher.ts";
 
 export {
   type IOauthRedirectUrlGenerator,
@@ -85,10 +82,7 @@ export {
 export type { IRepository } from "./i-repository.ts";
 export { type IServiceBus, ServiceBusToken } from "./i-service-bus.ts";
 
-export {
-  type ISessionIdRequester,
-  SessionIdRequsterToken,
-} from "./i-session-id-requester.ts";
+export { type ISessionIdRequester } from "./i-session-id-requester.ts";
 
 export type { ISingleItemStore } from "./i-single-item-store.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";

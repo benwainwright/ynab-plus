@@ -1,5 +1,5 @@
 import { AppError } from "@errors";
-import type { IPasswordHasher, IRepository } from "@ports";
+import type { IMultipleRepository, IPasswordHasher, IRepository } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -28,7 +28,7 @@ describe("update users service", () => {
 
     const hasher = mock<IPasswordHasher>();
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const existingUser = User.reconstitute({
       id: "ben",
@@ -68,7 +68,7 @@ describe("update users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const existingUser = User.reconstitute({
       id: "ben",
@@ -112,7 +112,7 @@ describe("update users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const existingUser = mock<User>({
       id: "ben",
@@ -165,7 +165,7 @@ describe("update users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     when(mockRepo.get).calledWith("ben").thenResolve(undefined);
 
@@ -206,7 +206,7 @@ describe("update users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const existingUser = User.reconstitute({
       id: "ben",

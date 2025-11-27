@@ -1,14 +1,11 @@
 import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { cwd } from "node:process";
+import { $inject } from "@core";
 
 import type { IObjectStorage } from "@ynab-plus/app";
-import {
-  LoggerToken,
-  type ConfigValue,
-  type ILogger,
-} from "@ynab-plus/bootstrap";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
+import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
+import { injectable, type ServiceIdentifier } from "inversify";
 
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
 
@@ -19,9 +16,9 @@ export const FlatFileObjectStoreFolderToken: ServiceIdentifier<
 @injectable()
 export class FlatFileObjectStore implements IObjectStorage {
   public constructor(
-    @inject(FlatFileObjectStoreFolderToken)
+    @$inject("SessionPath")
     private folder: ConfigValue<string>,
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
   ) {}
 

@@ -1,4 +1,4 @@
-import type { IOauthTokenRepository } from "@ynab-plus/app";
+import { type IOauthTokenRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
 
@@ -14,19 +14,16 @@ interface RawOauthToken {
 }
 
 import { SqliteDatabase } from "./sqlite-database.ts";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
-
-export const Oauth2RepositoryTableNameConfigValueToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("Oauth2RepoTableNameConfigValue");
+import { injectable } from "inversify";
+import { $inject } from "@core";
 
 @injectable()
 export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   public constructor(
-    @inject(Oauth2RepositoryTableNameConfigValueToken)
+    @$inject("OauthTokenTableName")
     private tableName: ConfigValue<string>,
 
-    @inject(SqliteDatabase)
+    @$inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

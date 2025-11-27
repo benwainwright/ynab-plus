@@ -1,1 +1,1 @@
-export { sqliteDataAdaptersModule } from "./module.ts";
+export { sqliteDataAdaptersModule } from "@core";

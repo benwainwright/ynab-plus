@@ -1,25 +1,21 @@
 import { emitDomainEventsOnSave } from "@core";
-import {
-  AccountRepositoryToken,
-  BankConnectionRepositoryToken,
-  EventBusToken,
-  OauthTokenRepositoryToken,
-  SyncDetailsRepositoryToken,
-  TaskSchedulerToken,
-  UserRepositoryToken,
-} from "@ports";
-import type { ContainerModuleLoadOptions } from "inversify";
+import type {
+  TypedContainer,
+  TypedContainerModuleLoadOptions,
+} from "@inversifyjs/strongly-typed";
+import type { IApplicationDependencies } from "@ports/groups";
 
 export const attachDomainEventEmitter = (
-  options: ContainerModuleLoadOptions,
+  options: TypedContainerModuleLoadOptions<IApplicationDependencies>,
+  container: TypedContainer<IApplicationDependencies>,
 ) => {
-  options.onActivation(UserRepositoryToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("UserRepository", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(repo, eventBus, "save");
   });
 
-  options.onActivation(BankConnectionRepositoryToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("BankConnectionRepository", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(
       repo,
       eventBus,
@@ -28,13 +24,13 @@ export const attachDomainEventEmitter = (
     );
   });
 
-  options.onActivation(OauthTokenRepositoryToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("OauthTokenRepository", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(repo, eventBus, "save");
   });
 
-  options.onActivation(TaskSchedulerToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("TaskScheduler", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(
       repo,
       eventBus,
@@ -44,8 +40,8 @@ export const attachDomainEventEmitter = (
     );
   });
 
-  options.onActivation(AccountRepositoryToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("AccountRepository", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(
       repo,
       eventBus,
@@ -55,8 +51,8 @@ export const attachDomainEventEmitter = (
     );
   });
 
-  options.onActivation(SyncDetailsRepositoryToken, (context, repo) => {
-    const eventBus = context.get(EventBusToken);
+  options.onActivation("SyncDetailsRepository", (_context, repo) => {
+    const eventBus = container.get("EventBus");
     return emitDomainEventsOnSave(repo, eventBus, "save", "delete");
   });
 };

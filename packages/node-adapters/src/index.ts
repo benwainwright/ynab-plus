@@ -1,1 +1,1 @@
-export { nodeAdaptersModule } from "./module.ts";
+export { nodeAdaptersModule } from "@core";

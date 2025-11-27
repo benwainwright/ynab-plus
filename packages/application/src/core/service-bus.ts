@@ -1,28 +1,24 @@
 import { ServiceNotFoundError } from "@errors";
 import { inspect } from "util";
-import {
-  EventBusToken,
-  ServiceToken,
-  type IEventBus,
-  type IServiceBus,
-} from "@ports";
-import type { AbstractApplicationService } from "@core";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type IEventBus, type IServiceBus } from "@ports";
+import { $inject, $multiInject } from "./typed-inject.ts";
+import { type AbstractApplicationService } from "@core";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { Command, Commands, IRole, User } from "@ynab-plus/domain";
-import { inject, injectable, multiInject } from "inversify";
+import { injectable } from "inversify";
 
 export const LOG_CONTEXT = { context: "service-bus" };
 
 @injectable()
 export class ServiceBus implements IServiceBus {
   public constructor(
-    @multiInject(ServiceToken)
+    @$multiInject("Service")
     private services: AbstractApplicationService[],
 
-    @inject(EventBusToken)
+    @$inject("EventBus")
     private eventBus: IEventBus,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
   ) {
     this.services.forEach((service) => {

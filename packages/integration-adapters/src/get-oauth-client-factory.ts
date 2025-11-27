@@ -30,7 +30,6 @@ export const getOauthClientFactory = (
     switch (provider) {
       case "ynab":
         return new YnabOauth2Client(
-          `https://app.ynab.com`,
           ynabClientId,
           ynabClientSecret,
           ynabRedirectUri,

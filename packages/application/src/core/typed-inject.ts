@@ -1,5 +1,20 @@
-import { inject as inversifyInject } from "inversify";
-import type { TypedInject } from "@inversifyjs/strongly-typed";
-import type { IIntegrationPorts } from "@ports/groups";
+import {
+  inject as inversifyInject,
+  multiInject as inversifyMultiInject,
+} from "inversify";
 
-export const $inject = inversifyInject as TypedInject<IIntegrationPorts>;
+import type {
+  TypedInject,
+  TypedMultiInject,
+} from "@inversifyjs/strongly-typed";
+
+import type { IApplicationDependencies } from "@ports/groups";
+import type { BootstrapTypes } from "@ynab-plus/bootstrap";
+
+export const $inject = inversifyInject as TypedInject<
+  BootstrapTypes & IApplicationDependencies
+>;
+
+export const $multiInject = inversifyMultiInject as TypedMultiInject<
+  BootstrapTypes & IApplicationDependencies
+>;

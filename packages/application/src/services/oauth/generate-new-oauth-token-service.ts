@@ -1,18 +1,15 @@
 import {
-  OauthCheckerFactoryToken,
-  OauthTokenRepositoryToken,
-  TaskSchedulerToken,
   type IHandleContext,
   type IOauthCheckerFactory,
   type IOauthTokenRepository,
   type ITaskScheduler,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import { RegularTask, type IRole, type Permission } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 const LOG_CONTEXT = { context: "geenrate-new-oauth-token-service" };
 
@@ -23,16 +20,16 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   public override requiredPermissions: Permission[] = ["user", "admin"];
 
   public constructor(
-    @inject(OauthTokenRepositoryToken)
+    @$inject("OauthTokenRepository")
     private tokenRepository: IOauthTokenRepository,
 
-    @inject(OauthCheckerFactoryToken)
+    @$inject("OauthCheckerFactory")
     private newTokenRequesterFactory: IOauthCheckerFactory,
 
-    @inject(TaskSchedulerToken)
+    @$inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

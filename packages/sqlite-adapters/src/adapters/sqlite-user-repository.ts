@@ -1,11 +1,11 @@
-import type { IRepository } from "@ynab-plus/app";
+import { type IRepository, type IMultipleRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 
 import { type Permission, User } from "@ynab-plus/domain";
 
 import { SqliteDatabase } from "./sqlite-database.ts";
-import type { IMultipleRepository } from "../../../application/src/ports/i-multiple-repository.ts";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
+import { $inject } from "@core";
 
 interface RawUser {
   id: string;
@@ -14,17 +14,15 @@ interface RawUser {
   permissions: string;
 }
 
-export const TableNameConfigValueToken = Symbol.for("TableNameConfigValue");
-
 @injectable()
 export class SqliteUserRepository
   implements IRepository<User>, IMultipleRepository<User>
 {
   public constructor(
-    @inject(TableNameConfigValueToken)
+    @$inject("UsersTableName")
     private tableName: ConfigValue<string>,
 
-    @inject(SqliteDatabase)
+    @$inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

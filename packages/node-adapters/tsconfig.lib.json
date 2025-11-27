@@ -8,7 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
     "paths": {
-      "@adapters": ["./src/adapters/index.ts"]
+      "@adapters": ["./src/adapters/index.ts"],
+      "@core": ["./src/core/index.ts"]
     }
   },
   "references": [

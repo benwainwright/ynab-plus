@@ -1,10 +1,21 @@
-export { type IInfrastructurePorts, type AllEvents } from "@core";
+export {
+  type IInfrastructurePorts,
+  type AllEvents,
+  $inject,
+  $multiInject,
+} from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";
 
-export { type IIntegrationPorts } from "./ports/groups/i-integration-ports.ts";
+export {
+  type IIntegrationPorts,
+  type IDataPorts,
+  type IRuntimePorts,
+  type IEntrypointPorts,
+} from "@ports/groups";
 
 export {
+  type IMultipleRepository,
   type IAccountRepository,
   AccountRepositoryToken,
   SessionStoreObjectStoreToken,
@@ -15,14 +26,12 @@ export {
   type IListener,
   type IOauthCheckerFactory,
   type IInstitutionAuthPageLinkFetcher,
-  SessionIdRequsterToken,
   type IOauthNewTokenRequester,
   EventBusToken,
   type IOauthRedirectUrlGenerator,
   type IOAuthTokenRefresher,
   type IOauthTokenRepository,
   AccountsFetcherToken,
-  TransactionFetcherToken,
   SessionStoreToken,
   OauthTokenRepositoryToken,
   type IObjectStorage,

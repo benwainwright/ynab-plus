@@ -2,7 +2,9 @@ import type { IRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { SyncDetails } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
+
+import { injectable } from "inversify";
+import { $inject } from "@core";
 
 interface RawSyncDetails {
   id: string;
@@ -11,16 +13,12 @@ interface RawSyncDetails {
   lastSync: Date | undefined;
 }
 
-export const SqliteSyncDetailsRepositoryTableNameConfigValue: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("SyncDetailsConfigValueTableName");
-
 @injectable()
 export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   public constructor(
-    @inject(SqliteSyncDetailsRepositoryTableNameConfigValue)
+    @$inject("SyncDetailsTableName")
     private tableName: ConfigValue<string>,
-    @inject(SqliteDatabase)
+    @$inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

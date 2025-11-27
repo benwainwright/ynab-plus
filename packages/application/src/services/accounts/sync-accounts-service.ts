@@ -1,19 +1,16 @@
 import { $inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import {
-  AccountRepositoryToken,
-  OauthTokenRepositoryToken,
-  TaskSchedulerToken,
   type IAccountRepository,
   type IAccountsFetcher,
   type IHandleContext,
   type IOauthTokenRepository,
   type ITaskScheduler,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 
 import { RegularTask, type IRole } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 const COOLOFF_WINDOW = 60 * 1000 * 5;
 
@@ -22,19 +19,19 @@ const LOG_CONTEXT = { context: "download-accounts-service" };
 @injectable()
 export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
-    @inject(OauthTokenRepositoryToken)
+    @$inject("OauthTokenRepository")
     private tokenRepository: IOauthTokenRepository,
 
     @$inject("AccountsFetcher")
     private accountsFetcher: IAccountsFetcher,
 
-    @inject(AccountRepositoryToken)
+    @$inject("AccountRepository")
     private accountsRepo: IAccountRepository,
 
-    @inject(TaskSchedulerToken)
+    @$inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

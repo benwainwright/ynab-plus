@@ -10,6 +10,7 @@
     "paths": {
       "@http-client": ["./src/http-client/index.ts"],
       "@ynab": ["./src/ynab/index.ts"],
+      "@core": ["./src/core/index.ts"],
       "@errors": ["./src/errors/index.ts"]
     }
   },

@@ -1,17 +1,14 @@
+import { $inject } from "@core";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import BetterSqlite3 from "better-sqlite3";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
-
-export const SqliteDatabaseNameConfigToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("SqliteDatabaseNameConfig");
+import { injectable } from "inversify";
 
 @injectable()
 export class SqliteDatabase {
   private database: InstanceType<typeof BetterSqlite3> | undefined;
 
   public constructor(
-    @inject(SqliteDatabaseNameConfigToken)
+    @$inject("DatabaseFilename")
     private readonly databaseName: ConfigValue<string>,
   ) {}
 

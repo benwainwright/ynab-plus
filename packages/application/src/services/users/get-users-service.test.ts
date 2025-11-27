@@ -1,4 +1,4 @@
-import type { IRepository } from "@ports";
+import type { IMultipleRepository, IRepository } from "@ports";
 import { User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
@@ -22,7 +22,7 @@ describe("get users service", () => {
       permissions: ["public"],
     });
 
-    const mockUserRepo = mock<IRepository<User>>({
+    const mockUserRepo = mock<IRepository<User> & IMultipleRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return Promise.resolve(user1);

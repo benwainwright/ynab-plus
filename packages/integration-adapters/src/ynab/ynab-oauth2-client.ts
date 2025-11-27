@@ -16,7 +16,6 @@ export class YnabOauth2Client
     IOAuthTokenRefresher
 {
   public constructor(
-    private baseUrl: string,
     private clientId: ConfigValue<string>,
     private clientSecret: ConfigValue<string>,
     private redirectUri: ConfigValue<string>,
@@ -35,7 +34,7 @@ export class YnabOauth2Client
     formData.set("grant_type", "refresh_token");
     formData.set("refresh_token", token.refreshToken);
 
-    const response = await fetch(`${this.baseUrl}/oauth/token`, {
+    const response = await fetch(`https://app.ynab.com/oauth/token`, {
       method: "POST",
       body: formData,
     });
@@ -86,7 +85,7 @@ export class YnabOauth2Client
     formData.set("grant_type", "authorization_code");
     formData.set("code", code);
 
-    const response = await fetch(`${this.baseUrl}/oauth/token`, {
+    const response = await fetch(`https://app.ynab.com/oauth/token`, {
       method: "POST",
       body: formData,
     });
@@ -119,6 +118,6 @@ export class YnabOauth2Client
     const redirectUri = encodeURIComponent(await this.redirectUri.value);
     const clientId = await this.clientId.value;
 
-    return `${this.baseUrl}/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+    return `https://app.ynab.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
   }
 }

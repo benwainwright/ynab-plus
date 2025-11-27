@@ -5,7 +5,6 @@ import { mock } from "vitest-mock-extended";
 
 import { Bootstrapper, LOG_CONTEXT } from "./bootstrapper.ts";
 import type { ILogger } from "./i-logger.ts";
-import { Container } from "inversify";
 
 // Mock fs once for the whole file – this is fine in ESM, unlike spyOn
 vi.mock("fs", () => ({
@@ -30,8 +29,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const container = mock<Container>();
-    const bootstrapper = new Bootstrapper("config.json", logger, container);
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     const portConfig = bootstrapper.configValue("port", z.number() as any);
     const hostConfig = bootstrapper.configValue("host", z.string() as any);
@@ -62,8 +60,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const container = mock<Container>();
-    const bootstrapper = new Bootstrapper("config.json", logger, container);
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     bootstrapper.configValue("foo", z.string() as any);
 
@@ -98,8 +95,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(badConfigJson));
 
-    const container = mock<Container>();
-    const bootstrapper = new Bootstrapper("config.json", logger, container);
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     bootstrapper.configValue("port", z.number() as any);
 
@@ -133,8 +129,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const container = mock<Container>();
-    const bootstrapper = new Bootstrapper("config.json", logger, container);
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     const someConfig = bootstrapper.configValue("someKey", z.string() as any);
 
@@ -151,8 +146,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify({}));
 
-    const container = mock<Container>();
-    new Bootstrapper("config.json", logger, container);
+    new Bootstrapper("config.json", logger);
 
     expect(logger.silly).toHaveBeenCalledWith("Initialising bootstrapper", {
       context: "bootstrapper",

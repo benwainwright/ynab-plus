@@ -1,5 +1,6 @@
 import {
   type ICurrentUserSetter,
+  type IMultipleRepository,
   type IPasswordVerifier,
   type IRepository,
 } from "@ports";
@@ -21,7 +22,7 @@ describe("login service", () => {
     const mockUserSetter = mock<ICurrentUserSetter>();
     const password = "foo";
 
-    const userRepo = mock<IRepository<User>>();
+    const userRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     when(userRepo.get).calledWith("ben").thenResolve(mockUser);
 
@@ -67,7 +68,7 @@ describe("login service", () => {
 
     const password = "bar";
 
-    const userRepo = mock<IRepository<User>>();
+    const userRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     when(userRepo.get).calledWith("ben").thenResolve(mockUser);
 
@@ -104,7 +105,7 @@ describe("login service", () => {
   it("rejects the login if the user isn't found", async () => {
     const password = "bar";
 
-    const userRepo = mock<IRepository<User>>();
+    const userRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     when(userRepo.get).calledWith("ben").thenResolve(undefined);
 

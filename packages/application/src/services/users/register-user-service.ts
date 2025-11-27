@@ -1,17 +1,15 @@
 import {
-  CurrentUserSetterToken,
-  PasswordHasherToken,
-  UserRepositoryToken,
   type IHandleContext,
+  type IMultipleRepository,
   type IPasswordHasher,
   type IRepository,
 } from "@ports";
-import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
-import { inject, injectable, optional } from "inversify";
+import { injectable, optional } from "inversify";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 
@@ -23,17 +21,17 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
   ];
 
   public constructor(
-    @inject(UserRepositoryToken)
-    private users: IRepository<User>,
+    @$inject("UserRepository")
+    private users: IRepository<User> & IMultipleRepository<User>,
 
-    @inject(PasswordHasherToken)
+    @$inject("PasswordHasher")
     private passwordHasher: IPasswordHasher,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
 
     @optional()
-    @inject(CurrentUserSetterToken)
+    @$inject("CurrentUserSetter")
     private currentUserSetter?: ICurrentUserSetter,
   ) {
     super(logger);

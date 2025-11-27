@@ -1,24 +1,13 @@
+import { $inject } from "@core";
 import { HttpClient } from "@http-client";
 import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
 } from "@ynab-plus/app";
-import {
-  LoggerToken,
-  type ConfigValue,
-  type ILogger,
-} from "@ynab-plus/bootstrap";
+import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
+import { injectable } from "inversify";
 import z from "zod";
-
-export const GocardlessClientSecretIdConfigValueToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("GoCardlessClientSecretIdConfigValue");
-
-export const GocardlessClientSecretKeyConfigValueToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("GoCardlessClientSecretKeyConfigValue");
 
 @injectable()
 export class GocardlessClient
@@ -27,13 +16,13 @@ export class GocardlessClient
   private client: HttpClient;
 
   public constructor(
-    @inject(GocardlessClientSecretIdConfigValueToken)
+    @$inject("GocardlessClientSecretIdConfigValue")
     private secretId: ConfigValue<string>,
 
-    @inject(GocardlessClientSecretKeyConfigValueToken)
+    @$inject("GocardlessClientSecretKeyConfigValue")
     private secretKey: ConfigValue<string>,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     this.client = new HttpClient(

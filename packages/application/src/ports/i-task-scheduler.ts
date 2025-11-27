@@ -2,7 +2,7 @@ import type { RegularTask } from "@ynab-plus/domain";
 import type { ServiceIdentifier } from "inversify";
 import type { ICreatable } from "./i-creatable.ts";
 
-export interface ITaskScheduler {
+export interface ITaskScheduler extends ICreatable {
   scheduleTask(task: RegularTask): Promise<RegularTask>;
   updateTask(task: RegularTask): Promise<void>;
   deleteTask(task: RegularTask): Promise<void>;

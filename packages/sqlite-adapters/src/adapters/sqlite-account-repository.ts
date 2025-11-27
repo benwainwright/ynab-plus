@@ -3,7 +3,8 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { Account } from "@ynab-plus/domain";
 
 import { SqliteDatabase } from "./sqlite-database.ts";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
+import { injectable } from "inversify";
+import { $inject } from "@core";
 
 interface RawAccount {
   id: string;
@@ -15,17 +16,13 @@ interface RawAccount {
   deleted: string;
 }
 
-export const AccountsRepositoryNameConfigValueToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("AccountsRepoNameConfigValue");
-
 @injectable()
 export class Sqlite3AccountRepository implements IAccountRepository {
   public constructor(
-    @inject(AccountsRepositoryNameConfigValueToken)
+    @$inject("AccountsTableName")
     private tableName: ConfigValue<string>,
 
-    @inject(SqliteDatabase)
+    @$inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

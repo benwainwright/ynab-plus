@@ -1,30 +1,28 @@
 import {
-  OauthCheckerFactoryToken,
-  OauthTokenRepositoryToken,
   type IHandleContext,
   type IOauthCheckerFactory,
   type IOauthTokenRepository,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = {
   context: "check-oauth-integration-status-service",
 };
 
-import { AbstractApplicationService } from "@core";
-import { inject, injectable } from "inversify";
+import { $inject, AbstractApplicationService } from "@core";
+import { injectable } from "inversify";
 
 @injectable()
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
-    @inject(OauthTokenRepositoryToken)
+    @$inject("OauthTokenRepository")
     private tokenRepository: IOauthTokenRepository,
 
-    @inject(OauthCheckerFactoryToken)
+    @$inject("OauthCheckerFactory")
     private oauthClientFactory: IOauthCheckerFactory,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

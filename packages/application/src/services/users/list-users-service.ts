@@ -1,10 +1,9 @@
-import { UserRepositoryToken, type IHandleContext } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type IHandleContext, type IRepository } from "@ports";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
 
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import type { IMultipleRepository } from "src/ports/i-multiple-repository.ts";
-import { inject } from "inversify";
 
 export class ListUsersService extends AbstractApplicationService<"ListUsersCommand"> {
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
@@ -12,10 +11,10 @@ export class ListUsersService extends AbstractApplicationService<"ListUsersComma
   ];
 
   public constructor(
-    @inject(UserRepositoryToken)
-    private users: IMultipleRepository<User>,
+    @$inject("UserRepository")
+    private users: IMultipleRepository<User> & IRepository<User>,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

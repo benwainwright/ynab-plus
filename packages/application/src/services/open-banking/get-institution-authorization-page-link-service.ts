@@ -1,25 +1,23 @@
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import {
-  BankConnectionRepositoryToken,
-  InstitutionAuthPageLinkFetcherToken,
   type IBankConnectionRepository,
   type IHandleContext,
   type IInstitutionAuthPageLinkFetcher,
 } from "@ports";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 @injectable()
 export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicationService<"GetInstitutionAuthorizationPageLinkCommand"> {
   public constructor(
-    @inject(InstitutionAuthPageLinkFetcherToken)
+    @$inject("InstitutionAuthPageLinkFetcher")
     private authLinkFetcher: IInstitutionAuthPageLinkFetcher,
 
-    @inject(BankConnectionRepositoryToken)
+    @$inject("BankConnectionRepository")
     private bankConnectionRepository: IBankConnectionRepository,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

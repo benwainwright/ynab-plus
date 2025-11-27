@@ -1,26 +1,24 @@
 import {
-  OauthTokenRepositoryToken,
-  TaskSchedulerToken,
   type IHandleContext,
   type IOauthTokenRepository,
   type ITaskScheduler,
 } from "@ports";
-import { AbstractApplicationService } from "@core";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { $inject, AbstractApplicationService } from "@core";
+import { type ILogger } from "@ynab-plus/bootstrap";
 import { getTokenRefreshTaskKey } from "./get-token-refresh-task-key.ts";
 import type { IRole } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 @injectable()
 export class DisconnectOauthIntegrationService extends AbstractApplicationService<"DisconnectOauthIntegrationCommand"> {
   public constructor(
-    @inject(OauthTokenRepositoryToken)
+    @$inject("OauthTokenRepository")
     private tokenRepo: IOauthTokenRepository,
 
-    @inject(TaskSchedulerToken)
+    @$inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

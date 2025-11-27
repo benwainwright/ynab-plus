@@ -7,21 +7,19 @@ import {
   type IRole,
 } from "@ynab-plus/domain";
 import {
-  EventBusToken,
-  ServiceBusToken,
   type AllEvents,
   type IEventBus,
   type IServiceBus,
 } from "@ynab-plus/app";
+
 import {
   AbstractError,
-  LoggerToken,
   type ILogger,
   type IStartable,
 } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
-import { ServerError } from "@core";
-import { inject, injectable } from "inversify";
+import { $inject, ServerError } from "@core";
+import { injectable } from "inversify";
 
 const LOG_CONTEXT = { context: "task-scheduler" };
 
@@ -34,13 +32,13 @@ export class TaskScheduler implements IStartable {
     | undefined;
 
   public constructor(
-    @inject(ServiceBusToken)
+    @$inject("ServiceBus")
     private serviceBus: IServiceBus,
 
-    @inject(EventBusToken)
+    @$inject("EventBus")
     private eventBus: IEventBus,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
   ) {}
   public readonly name = "Task Scheduler";

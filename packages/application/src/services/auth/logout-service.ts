@@ -1,20 +1,18 @@
-import type { IHandleContext } from "@ports";
-import { AbstractApplicationService } from "@core";
-import {
-  CurrentUserSetterToken,
-  type ICurrentUserSetter,
-} from "src/ports/i-current-user-setter.ts";
-import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import type { IHandleContext, ICurrentUserSetter } from "@ports";
+import { $inject, AbstractApplicationService } from "@core";
+
+import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
-import { inject, injectable } from "inversify";
+
+import { injectable } from "inversify";
 
 @injectable()
 export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public constructor(
-    @inject(CurrentUserSetterToken)
+    @$inject("CurrentUserSetter")
     private currentUserSetter: ICurrentUserSetter,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

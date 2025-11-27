@@ -1,5 +1,9 @@
 import { AppError } from "@errors";
-import type { ICurrentUserSetter, IRepository } from "@ports";
+import type {
+  ICurrentUserSetter,
+  IMultipleRepository,
+  IRepository,
+} from "@ports";
 import { SystemContext, User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
@@ -30,7 +34,7 @@ describe("get user command handler", () => {
       email: "email",
     });
 
-    const repo = mock<IRepository<User>>({
+    const repo = mock<IRepository<User> & IMultipleRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return Promise.resolve(mockUser);
@@ -66,7 +70,7 @@ describe("get user command handler", () => {
       email: "email",
     });
 
-    const repo = mock<IRepository<User>>({
+    const repo = mock<IRepository<User> & IMultipleRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return Promise.resolve(mockUser);
@@ -97,7 +101,7 @@ describe("get user command handler", () => {
       email: "email",
     });
 
-    const repo = mock<IRepository<User>>({
+    const repo = mock<IRepository<User> & IMultipleRepository<User>>({
       get: vi.fn(async (id: string) => {
         if (id === "ben") {
           return Promise.resolve(mockUser);
@@ -133,7 +137,7 @@ describe("get user command handler", () => {
   });
 
   it("throws an error if the logged in user does not exist in the database", async () => {
-    const repo = mock<IRepository<User>>({
+    const repo = mock<IRepository<User> & IMultipleRepository<User>>({
       get: vi.fn().mockResolvedValue(undefined),
     });
 

@@ -1,30 +1,18 @@
-import {
-  RequestContainerFactoryToken,
-  type ISessionIdRequester,
-} from "@ynab-plus/app";
+import { type ISessionIdRequester } from "@ynab-plus/app";
 import {
   ConfigValue,
-  LoggerToken,
   type ILogger,
   type IStartable,
 } from "@ynab-plus/bootstrap";
 import { WebSocketServer } from "ws";
 
 import { SessionIdHandler } from "./session-id-handler.ts";
-import { ServerWebsocketClient } from "./websocket-client.ts";
-import { inject, type Container, type ServiceIdentifier } from "inversify";
+import { $inject, type IInternalTypes } from "@core";
+import type { TypedContainer } from "@inversifyjs/strongly-typed";
 
 export const LOG_CONTEXT = {
   context: "app-server",
 };
-
-export const WebsocketServerPortConfigValueToken: ServiceIdentifier<
-  ConfigValue<number>
-> = Symbol.for("ServerPortConfigValue");
-
-export const WebsocketServerHostConfigValueToken: ServiceIdentifier<
-  ConfigValue<string>
-> = Symbol.for("ServerHostConfigValue");
 
 export class AppServer implements IStartable {
   private sessionIdHandler: SessionIdHandler;
@@ -32,17 +20,17 @@ export class AppServer implements IStartable {
   public readonly name = "Websocket Server";
 
   public constructor(
-    @inject(RequestContainerFactoryToken)
+    @$inject("ContainerFactory")
     private requestContainerFactory: (
       sessionIdRequester: ISessionIdRequester,
-    ) => Promise<Container>,
-    @inject(WebsocketServerPortConfigValueToken)
+    ) => Promise<TypedContainer<IInternalTypes>>,
+    @$inject("WebsocketServerPort")
     private port: ConfigValue<number>,
 
-    @inject(WebsocketServerHostConfigValueToken)
+    @$inject("WebsocketServerHost")
     private host: ConfigValue<string>,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
   ) {
     this.sessionIdHandler = new SessionIdHandler(logger);
@@ -88,9 +76,7 @@ export class AppServer implements IStartable {
         },
       });
 
-      console.log({ container });
-
-      const client = await container.getAsync(ServerWebsocketClient);
+      const client = await container.getAsync("ServerWebsocketClient");
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ws.on("message", client.onMessage.bind(client));

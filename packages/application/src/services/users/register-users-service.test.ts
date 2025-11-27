@@ -1,5 +1,10 @@
 import { AppError } from "@errors";
-import type { ICurrentUserSetter, IPasswordHasher, IRepository } from "@ports";
+import type {
+  ICurrentUserSetter,
+  IMultipleRepository,
+  IPasswordHasher,
+  IRepository,
+} from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -19,7 +24,7 @@ describe("register users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 
@@ -63,7 +68,7 @@ describe("register users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 
@@ -113,7 +118,7 @@ describe("register users service", () => {
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
-    const mockRepo = mock<IRepository<User>>();
+    const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 

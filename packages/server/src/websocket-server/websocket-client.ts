@@ -1,15 +1,13 @@
 import {
-  EventBusToken,
-  ServiceBusToken,
-  SessionStoreToken,
+  $inject,
   type IEventBus,
   type IServiceBus,
   type ISingleItemStore,
 } from "@ynab-plus/app";
-import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { Command, User, type ICommandMessage } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { WebSocket } from "ws";
 import z from "zod";
 
@@ -20,16 +18,16 @@ export const LOG_CONTEXT = {
 @injectable()
 export class ServerWebsocketClient {
   public constructor(
-    @inject(ServiceBusToken)
+    @$inject("ServiceBus")
     private serviceBus: IServiceBus,
 
-    @inject(EventBusToken)
+    @$inject("EventBus")
     private eventBus: IEventBus,
 
-    @inject(LoggerToken)
+    @$inject("Logger")
     private logger: ILogger,
 
-    @inject(SessionStoreToken)
+    @$inject("SessionStore")
     private currentUserCache: ISingleItemStore<User>,
   ) {}
 

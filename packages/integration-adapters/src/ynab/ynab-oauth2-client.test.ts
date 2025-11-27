@@ -41,7 +41,6 @@ describe("ynab auth client", () => {
       const redirectUrl = "https://www.google.com";
 
       const client = new YnabOauth2Client(
-        `https://app.ynab.com`,
         {
           value: Promise.resolve(clientId),
         },
@@ -72,7 +71,6 @@ describe("ynab auth client", () => {
       const redirectUrl = "https://www.google.com";
 
       const client = new YnabOauth2Client(
-        `https://api.ynab.com`,
         {
           value: Promise.resolve(clientId),
         },
@@ -127,7 +125,6 @@ describe("ynab auth client", () => {
       const redirectUrl = "https://www.google.com";
 
       const client = new YnabOauth2Client(
-        `https://api.ynab.com`,
         {
           value: Promise.resolve(clientId),
         },
