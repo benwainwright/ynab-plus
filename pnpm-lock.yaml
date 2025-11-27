@@ -142,6 +142,9 @@ importers:
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      inversify:
+        specifier: ^7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       typeson:
         specifier: ^9.0.4
         version: 9.0.4
@@ -289,6 +292,9 @@ importers:
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      inversify:
+        specifier: ^7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       zod:
         specifier: 4.1.12
         version: 4.1.12
@@ -320,6 +326,9 @@ importers:
       better-sqlite3:
         specifier: 12.4.1
         version: 12.4.1
+      inversify:
+        specifier: ^7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       typeson:
         specifier: ^9.0.4
         version: 9.0.4
@@ -376,6 +385,9 @@ importers:
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
+      inversify:
+        specifier: ^7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       isbot:
         specifier: ^5.1.31
         version: 5.1.32
@@ -468,6 +480,9 @@ importers:
       better-sqlite3:
         specifier: 12.4.1
         version: 12.4.1
+      inversify:
+        specifier: ^7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       zod:
         specifier: 4.1.12
         version: 4.1.12

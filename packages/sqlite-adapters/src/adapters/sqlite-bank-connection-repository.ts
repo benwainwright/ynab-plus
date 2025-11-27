@@ -1,7 +1,8 @@
 import type { IBankConnectionRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
-import type { SqliteDatabase } from "./sqlite-database.ts";
+import { SqliteDatabase } from "./sqlite-database.ts";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
 interface RawBankConnection {
   id: string;
@@ -15,11 +16,18 @@ interface RawBankConnection {
   refreshTokenExpiry: string | null;
 }
 
+export const SqliteBankConnectionRepositoryTableNameConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("BankConnectionTableNameConfigValue");
+
+@injectable()
 export class SqliteBankConnectionRepository
   implements IBankConnectionRepository
 {
   public constructor(
+    @inject(SqliteBankConnectionRepositoryTableNameConfigValueToken)
     private tableName: ConfigValue<string>,
+    @inject(SqliteDatabase)
     private database: SqliteDatabase,
   ) {}
 

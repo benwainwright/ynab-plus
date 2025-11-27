@@ -3,13 +3,25 @@ import { join } from "node:path";
 import { cwd } from "node:process";
 
 import type { IObjectStorage } from "@ynab-plus/app";
-import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
+import {
+  LoggerToken,
+  type ConfigValue,
+  type ILogger,
+} from "@ynab-plus/bootstrap";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
 
+export const FlatFileObjectStoreFolderToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("FlatFileObjectStoreFolderToken");
+
+@injectable()
 export class FlatFileObjectStore implements IObjectStorage {
   public constructor(
+    @inject(FlatFileObjectStoreFolderToken)
     private folder: ConfigValue<string>,
+    @inject(LoggerToken)
     private logger: ILogger,
   ) {}
 

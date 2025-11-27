@@ -1,4 +1,5 @@
 import type { OauthToken, SyncDetails, Transaction } from "@ynab-plus/domain";
+import type { ServiceIdentifier } from "inversify";
 
 export interface ITransactionFetcher {
   getAccountTransactions(
@@ -9,4 +10,5 @@ export interface ITransactionFetcher {
   ): Promise<Transaction[]>;
 }
 
-export const TransactionFetcherToken = Symbol.for("TransactionFetcher");
+export const TransactionFetcherToken: ServiceIdentifier<ITransactionFetcher> =
+  Symbol.for("TransactionFetcher");

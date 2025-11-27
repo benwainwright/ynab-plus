@@ -1,6 +1,10 @@
 export { AbstractError } from "./abstract-error.ts";
 export { Bootstrapper } from "./bootstrapper.ts";
 export { ConfigValue } from "./config-value.ts";
-export type { IBootstrapper } from "./i-bootstrapper.ts";
+export { getContainer } from "./container.ts";
+export { ApplicationContainerToken } from "./application-container-token.ts";
+export { type IBootstrapper, BootstrapperToken } from "./i-bootstrapper.ts";
 export { type ILogger, LoggerToken } from "./i-logger.ts";
 export { getWinstonLogger } from "./winston-logger.ts";
+export { bootstrapModule } from "./module.ts";
+export { getConfigValueFactory as getConfigValueFactory } from "./get-config-factory.ts";

@@ -33,6 +33,7 @@ describe("generate new oauth token service", () => {
         get: vi.fn(),
         save,
         delete: vi.fn(),
+        create: vi.fn(),
       };
 
       const mockTaskScheduler = mock<ITaskScheduler>();

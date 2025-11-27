@@ -13,11 +13,20 @@ interface RawOauthToken {
   created: string;
 }
 
-import type { SqliteDatabase } from "./sqlite-database.ts";
+import { SqliteDatabase } from "./sqlite-database.ts";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
+export const Oauth2RepositoryTableNameConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("Oauth2RepoTableNameConfigValue");
+
+@injectable()
 export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   public constructor(
+    @inject(Oauth2RepositoryTableNameConfigValueToken)
     private tableName: ConfigValue<string>,
+
+    @inject(SqliteDatabase)
     private database: SqliteDatabase,
   ) {}
 

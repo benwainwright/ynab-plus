@@ -10,11 +10,16 @@ export {
 
 export { type IEventBus, EventBusToken } from "./i-event-bus.ts";
 
+export { RequestContainerFactoryToken } from "./request-container-factory-token.ts";
+
+export { SessionStoreToken } from "./session-store-token.ts";
+
 export {
   type IEventListener,
   type IEventPacket,
   type IListener,
 } from "./i-event-listener.ts";
+export { SessionStoreObjectStoreToken } from "./session-store-object-store-token.ts";
 export type { IEventEmitter } from "./i-event-emitter.ts";
 
 export type { IHandleContext } from "./i-handle-context.ts";
@@ -78,8 +83,13 @@ export {
 } from "./i-transaction-repository.ts";
 
 export type { IRepository } from "./i-repository.ts";
-export type { IServiceBus } from "./i-service-bus.ts";
-export type { ISessionIdRequester } from "./i-session-id-requester.ts";
+export { type IServiceBus, ServiceBusToken } from "./i-service-bus.ts";
+
+export {
+  type ISessionIdRequester,
+  SessionIdRequsterToken,
+} from "./i-session-id-requester.ts";
+
 export type { ISingleItemStore } from "./i-single-item-store.ts";
 export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 

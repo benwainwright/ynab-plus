@@ -1,7 +1,8 @@
 import type { ITaskScheduler } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { RegularTask, schedulableTasksSchema } from "@ynab-plus/domain";
-import type { SqliteDatabase } from "./sqlite-database.ts";
+import { SqliteDatabase } from "./sqlite-database.ts";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
 interface RawTask {
   id: string;
@@ -20,9 +21,17 @@ interface RawTask {
   command: string;
 }
 
+export const TaskRepositoryTableNameConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("TaskRepoTableNameConfigValue");
+
+@injectable()
 export class SqliteRegularTaskRepository implements ITaskScheduler {
   public constructor(
+    @inject(TaskRepositoryTableNameConfigValueToken)
     private tableName: ConfigValue<string>,
+
+    @inject(SqliteDatabase)
     private database: SqliteDatabase,
   ) {}
 

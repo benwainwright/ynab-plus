@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 
+import type { ServiceIdentifier } from "inversify";
+
 export interface ILogger {
   error<TData extends { context: string }>(message: string, data: TData): void;
 
@@ -17,4 +19,4 @@ export interface ILogger {
   silly<TData extends { context: string }>(message: string, data: TData): void;
 }
 
-export const LoggerToken = Symbol.for("Logger");
+export const LoggerToken: ServiceIdentifier<ILogger> = Symbol.for("Logger");

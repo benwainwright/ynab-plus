@@ -1,4 +1,6 @@
 import type { RegularTask } from "@ynab-plus/domain";
+import type { ServiceIdentifier } from "inversify";
+import type { ICreatable } from "./i-creatable.ts";
 
 export interface ITaskScheduler {
   scheduleTask(task: RegularTask): Promise<RegularTask>;
@@ -14,4 +16,6 @@ export interface ITaskScheduler {
   ): Promise<RegularTask[]>;
 }
 
-export const TaskSchedulerToken = Symbol.for("TaskScheduler");
+export const TaskSchedulerToken: ServiceIdentifier<
+  ITaskScheduler & ICreatable
+> = Symbol.for("TaskScheduler");

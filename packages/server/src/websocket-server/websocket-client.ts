@@ -1,12 +1,15 @@
-import type {
-  ICommandMessage,
-  IEventBus,
-  IServiceBus,
-  ISingleItemStore,
+import {
+  EventBusToken,
+  ServiceBusToken,
+  SessionStoreToken,
+  type IEventBus,
+  type IServiceBus,
+  type ISingleItemStore,
 } from "@ynab-plus/app";
-import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
-import { Command, User } from "@ynab-plus/domain";
+import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import { Command, User, type ICommandMessage } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
+import { inject, injectable } from "inversify";
 import { WebSocket } from "ws";
 import z from "zod";
 
@@ -14,11 +17,19 @@ export const LOG_CONTEXT = {
   context: "websocket-server-socket-client",
 };
 
+@injectable()
 export class ServerWebsocketClient {
   public constructor(
+    @inject(ServiceBusToken)
     private serviceBus: IServiceBus,
+
+    @inject(EventBusToken)
     private eventBus: IEventBus,
+
+    @inject(LoggerToken)
     private logger: ILogger,
+
+    @inject(SessionStoreToken)
     private currentUserCache: ISingleItemStore<User>,
   ) {}
 
@@ -47,6 +58,10 @@ export class ServerWebsocketClient {
     });
 
     return commandMessage.parse(content) as ICommandMessage;
+  }
+
+  public onClose() {
+    this.eventBus.removeAll();
   }
 
   public async onMessage(message: WebSocket.RawData) {

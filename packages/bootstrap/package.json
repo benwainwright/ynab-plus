@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ynab-plus/domain": "workspace:*",
+    "inversify": "^7.10.4",
     "typeson": "^9.0.4"
   },
   "devDependencies": {

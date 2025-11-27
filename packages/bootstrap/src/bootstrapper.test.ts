@@ -29,10 +29,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const bootstrapper = new Bootstrapper({
-      configFile: "config.json",
-      logger,
-    });
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     const portConfig = bootstrapper.configValue("port", z.number() as any);
     const hostConfig = bootstrapper.configValue("host", z.string() as any);
@@ -63,10 +60,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const bootstrapper = new Bootstrapper({
-      configFile: "config.json",
-      logger,
-    });
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     bootstrapper.configValue("foo", z.string() as any);
 
@@ -101,10 +95,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(badConfigJson));
 
-    const bootstrapper = new Bootstrapper({
-      configFile: "config.json",
-      logger,
-    });
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     bootstrapper.configValue("port", z.number() as any);
 
@@ -138,10 +129,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify(configJson));
 
-    const bootstrapper = new Bootstrapper({
-      configFile: "config.json",
-      logger,
-    });
+    const bootstrapper = new Bootstrapper("config.json", logger);
 
     const someConfig = bootstrapper.configValue("someKey", z.string() as any);
 
@@ -158,11 +146,7 @@ describe("Bootstrapper", () => {
     };
     readFileSyncMock.mockReturnValue(JSON.stringify({}));
 
-     
-    new Bootstrapper({
-      configFile: "config.json",
-      logger,
-    });
+    new Bootstrapper("config.json", logger);
 
     expect(logger.silly).toHaveBeenCalledWith("Initialising bootstrapper", {
       context: "bootstrapper",

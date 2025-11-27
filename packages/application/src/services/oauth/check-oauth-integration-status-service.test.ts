@@ -13,6 +13,7 @@ import { CheckOauthIntegrationStatusService } from "./check-oauth-integration-st
 describe("check oauth-integration-status-service", () => {
   it("responds with a redirect url if there is no token", async () => {
     const mockTokenRepo: IOauthTokenRepository = {
+      create: vi.fn(),
       get: vi.fn().mockResolvedValue(undefined),
       save: vi.fn(),
       delete: vi.fn(),
@@ -72,6 +73,7 @@ describe("check oauth-integration-status-service", () => {
       const save = vi.fn();
 
       const mockTokenRepo: IOauthTokenRepository = {
+        create: vi.fn(),
         delete: vi.fn(),
         get: vi.fn((userId: string, provider: string) => {
           if (userId === "ben" && provider === "ynab") {
@@ -153,6 +155,7 @@ describe("check oauth-integration-status-service", () => {
       const save = vi.fn();
 
       const mockTokenRepo: IOauthTokenRepository = {
+        create: vi.fn(),
         delete: vi.fn(),
         get: vi.fn((userId: string, provider: string) => {
           if (userId === "ben" && provider === "ynab") {

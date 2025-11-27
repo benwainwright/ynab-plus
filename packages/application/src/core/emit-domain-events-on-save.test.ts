@@ -8,6 +8,9 @@ describe("repo with event emitting", () => {
     let theDetails: SyncDetails | undefined;
 
     class MockRepo implements IRepository<SyncDetails> {
+      create(): Promise<void> {
+        throw new Error("Method not implemented.");
+      }
       // eslint-disable-next-line @typescript-eslint/require-await
       async get(_theID: string): Promise<SyncDetails | undefined> {
         return undefined;

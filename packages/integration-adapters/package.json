@@ -16,6 +16,7 @@
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
+    "inversify": "^7.10.4",
     "zod": "4.1.12"
   },
   "devDependencies": {

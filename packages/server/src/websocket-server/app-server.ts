@@ -1,21 +1,42 @@
-import type { RequestScopedServiceBusFactory } from "@ynab-plus/app";
-import { ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
+import {
+  RequestContainerFactoryToken,
+  type ISessionIdRequester,
+} from "@ynab-plus/app";
+import { ConfigValue, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { WebSocketServer } from "ws";
 
 import { SessionIdHandler } from "./session-id-handler.ts";
 import { ServerWebsocketClient } from "./websocket-client.ts";
+import { inject, type Container, type ServiceIdentifier } from "inversify";
 
 export const LOG_CONTEXT = {
   context: "app-server",
 };
 
+export const WebsocketServerPortConfigValueToken: ServiceIdentifier<
+  ConfigValue<number>
+> = Symbol.for("ServerPortConfigValue");
+
+export const WebsocketServerHostConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("ServerHostConfigValue");
+
 export class AppServer {
   private sessionIdHandler: SessionIdHandler;
 
   public constructor(
-    private serviceBusFactory: RequestScopedServiceBusFactory,
+    @inject(RequestContainerFactoryToken)
+    private requestContainerFactory: (
+      containerFactory: ISessionIdRequester,
+    ) => Promise<Container>,
+
+    @inject(WebsocketServerPortConfigValueToken)
     private port: ConfigValue<number>,
+
+    @inject(WebsocketServerHostConfigValueToken)
     private host: ConfigValue<string>,
+
+    @inject(LoggerToken)
     private logger: ILogger,
   ) {
     this.sessionIdHandler = new SessionIdHandler(logger);
@@ -54,26 +75,18 @@ export class AppServer {
     wss.on("connection", async (ws, request) => {
       this.logger.debug("Websocket connection established", LOG_CONTEXT);
 
-      const { serviceBus, eventBus, currentUserCache } =
-        await this.serviceBusFactory({
-          sessionIdRequester: {
-            // eslint-disable-next-line @typescript-eslint/require-await
-            getSessionId: async () => {
-              return this.sessionIdHandler.getSessionId(request);
-            },
-          },
-        });
+      const container = await this.requestContainerFactory({
+        // eslint-disable-next-line @typescript-eslint/require-await
+        getSessionId: async () => {
+          return this.sessionIdHandler.getSessionId(request);
+        },
+      });
 
-      const client = new ServerWebsocketClient(
-        serviceBus,
-        eventBus,
-        this.logger,
-        currentUserCache,
-      );
+      const client = container.get(ServerWebsocketClient);
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ws.on("message", client.onMessage.bind(client));
-      ws.on("close", eventBus.removeAll.bind(eventBus));
+      ws.on("close", client.onClose.bind(client));
 
       client.onConnect(ws);
     });

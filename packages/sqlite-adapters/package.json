@@ -14,14 +14,15 @@
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
-    "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/data-adapter-tests": "workspace:*",
+    "@ynab-plus/domain": "workspace:*",
     "better-sqlite3": "12.4.1",
+    "inversify": "^7.10.4",
     "zod": "4.1.12"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
-    "vitest-mock-extended": "3.1.0",
-    "@types/node": "22.19.1"
+    "@types/node": "22.19.1",
+    "vitest-mock-extended": "3.1.0"
   }
 }

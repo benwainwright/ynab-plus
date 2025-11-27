@@ -7,13 +7,16 @@ import {
   Transaction,
   type OauthToken,
 } from "@ynab-plus/domain";
+import { injectable } from "inversify";
 import z from "zod";
 
 const LOG_CONTEXT = { context: "ynab-client" };
 
+@injectable()
 export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
   public constructor(
     private baseUrl: string,
+
     private logger: ILogger,
   ) {}
 

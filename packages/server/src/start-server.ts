@@ -1,23 +1,29 @@
-import { buildApplication, composeWebApp } from "@core";
-import { Bootstrapper, getWinstonLogger } from "@ynab-plus/bootstrap";
+import { applicationServicesModule } from "@ynab-plus/app";
 
-const logger = getWinstonLogger();
+import {
+  getContainer,
+  bootstrapModule,
+  BootstrapperToken,
+} from "@ynab-plus/bootstrap";
 
-const bootstrapper = new Bootstrapper({
-  configFile: "ynab-plus.config.websocket-server.json",
-  logger,
-});
+export { integrationsModule } from "@ynab-plus/integration-adapters";
+import { nodeAdaptersModule } from "@ynab-plus/node-adapters";
+import { sqliteDataAdaptersModule } from "@ynab-plus/sqlite-adapters";
+import { integrationsModule } from "@ynab-plus/integration-adapters";
 
-const application = buildApplication({
-  logger,
-  name: "Websocket Server",
-  bootstrapper,
-});
+import { serverModule } from "./server-module.ts";
 
-await composeWebApp({
-  application,
-  bootstrapper,
-  logger,
-});
+const container = getContainer();
+
+await container.load(
+  bootstrapModule,
+  nodeAdaptersModule,
+  applicationServicesModule,
+  sqliteDataAdaptersModule,
+  integrationsModule,
+  serverModule,
+);
+
+const bootstrapper = container.get(BootstrapperToken);
 
 await bootstrapper.start();

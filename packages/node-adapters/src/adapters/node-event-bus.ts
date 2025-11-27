@@ -2,12 +2,23 @@ import type { EventEmitter } from "node:events";
 
 import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
 import { v7 } from "uuid";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
+export const EventBusListenerToken: ServiceIdentifier<EventEmitter> =
+  Symbol.for("EventBusListener");
+
+export const EventBusNamespaceToken: ServiceIdentifier<string> =
+  Symbol.for("NamespaceToken");
+
+@injectable()
 export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   private listenerMap = new Map<string, IListener<TEvent>>();
   private children: IEventBus<TEvent>[] = [];
   public constructor(
+    @inject(EventBusListenerToken)
     private listener: EventEmitter,
+
+    @inject(EventBusNamespaceToken)
     private namespace: string,
     private parent?: IEventBus<TEvent>,
   ) {}

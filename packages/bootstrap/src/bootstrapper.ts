@@ -7,12 +7,18 @@ import z, { ZodError } from "zod";
 
 import { ConfigValue } from "./config-value.ts";
 import type { IBootstrapper } from "./i-bootstrapper.ts";
-import type { ILogger } from "./i-logger.ts";
+import { LoggerToken, type ILogger } from "./i-logger.ts";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
 export const LOG_CONTEXT = { context: "bootstrapper" };
 
 const RESOLVE_CONFIG = "resolve-config";
 
+export const BootstrapConfigFileToken: ServiceIdentifier<string> = Symbol.for(
+  "BootstrapConfigFileToken",
+);
+
+@injectable()
 export class Bootstrapper implements IBootstrapper {
   private bootstrappingSteps: (() => Promise<void>)[] = [];
   private emitter = new EventEmitter();
@@ -20,11 +26,16 @@ export class Bootstrapper implements IBootstrapper {
 
   private _config: Record<string, unknown>;
 
-  public constructor(private config: { configFile: string; logger: ILogger }) {
-    this.config.logger.silly("Initialising bootstrapper", {
+  public constructor(
+    @inject(BootstrapConfigFileToken)
+    private configFile: string,
+    @inject(LoggerToken)
+    private logger: ILogger,
+  ) {
+    this.logger.silly("Initialising bootstrapper", {
       context: "bootstrapper",
     });
-    const configFilePath = join(cwd(), config.configFile);
+    const configFilePath = join(cwd(), this.configFile);
 
     this._config = JSON.parse(readFileSync(configFilePath, "utf-8")) as Record<
       string,
@@ -37,17 +48,17 @@ export class Bootstrapper implements IBootstrapper {
   }
 
   public async start(): Promise<void> {
-    this.config.logger.debug(`Starting application`, LOG_CONTEXT);
+    this.logger.debug(`Starting application`, LOG_CONTEXT);
     try {
       z.object(this.fullSchema).parse(this._config);
     } catch (error) {
       if (error instanceof ZodError) {
-        this.config.logger.error(z.prettifyError(error), LOG_CONTEXT);
+        this.logger.error(z.prettifyError(error), LOG_CONTEXT);
         return;
       }
     }
 
-    this.config.logger.debug(
+    this.logger.debug(
       `Application config ${JSON.stringify(this._config)}`,
       LOG_CONTEXT,
     );

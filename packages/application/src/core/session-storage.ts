@@ -1,19 +1,28 @@
 import { AppError } from "@errors";
-import type {
-  IObjectStorage,
-  ISessionIdRequester,
-  ISingleItemStore,
+import {
+  SessionIdRequsterToken,
+  type IObjectStorage,
+  type ISessionIdRequester,
+  type ISingleItemStore,
 } from "@ports";
-import { type ILogger } from "@ynab-plus/bootstrap";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
+import { inject, injectable } from "inversify";
+import { SessionStoreObjectStoreToken } from "src/ports/session-store-object-store-token.ts";
 
 export const LOG_CONTEXT = { context: "session-storage" };
 
+@injectable()
 export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
+    @inject(SessionStoreObjectStoreToken)
     private storage: IObjectStorage,
+
+    @inject(SessionIdRequsterToken)
     private sessionIdRequester: ISessionIdRequester,
+
+    @inject(LoggerToken)
     private logger: ILogger,
   ) {}
 

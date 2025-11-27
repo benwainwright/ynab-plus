@@ -1,7 +1,8 @@
 import type { ITransactionRepository } from "@ynab-plus/app";
 import { Transaction, transactionSchema } from "@ynab-plus/domain";
-import type { SqliteDatabase } from "./sqlite-database.ts";
+import { SqliteDatabase } from "./sqlite-database.ts";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 
 interface RawTransaction {
   id: string;
@@ -14,9 +15,16 @@ interface RawTransaction {
   approved: string;
 }
 
+export const TransactionRepoTableNameConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("TxRepoTableNameConfigValue");
+
+@injectable()
 export class SqliteTransactionRepository implements ITransactionRepository {
   public constructor(
+    @inject(TransactionRepoTableNameConfigValueToken)
     private tableName: ConfigValue<string>,
+    @inject(SqliteDatabase)
     private database: SqliteDatabase,
   ) {}
 
