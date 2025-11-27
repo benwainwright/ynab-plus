@@ -7,10 +7,10 @@ import type {
 import type { BootstrapTypes } from "@ynab-plus/bootstrap";
 import type { IInternalTypes } from "./i-internal-types.ts";
 
-export const $inject = inversifyInject as TypedInject<
+export const inject = inversifyInject as TypedInject<
   BootstrapTypes & IInternalTypes
 >;
 
-export const $multiInject = inversifyInject as TypedMultiInject<
+export const multiInject = inversifyInject as TypedMultiInject<
   BootstrapTypes & IInternalTypes
 >;

@@ -8,10 +8,10 @@ import type { IIntegrationPorts } from "@ynab-plus/app";
 import type { IInternalTypes } from "./i-internal-types.ts";
 import type { BootstrapTypes } from "@ynab-plus/bootstrap";
 
-export const $inject = inversifyInject as TypedInject<
+export const inject = inversifyInject as TypedInject<
   IIntegrationPorts & IInternalTypes & BootstrapTypes
 >;
 
-export const $multiInject = inversifyInject as TypedMultiInject<
+export const multiInject = inversifyInject as TypedMultiInject<
   IIntegrationPorts & IInternalTypes & BootstrapTypes
 >;

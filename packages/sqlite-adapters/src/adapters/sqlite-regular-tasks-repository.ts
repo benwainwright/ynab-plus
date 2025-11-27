@@ -3,7 +3,7 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { RegularTask, schedulableTasksSchema } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 interface RawTask {
   id: string;
@@ -25,10 +25,10 @@ interface RawTask {
 @injectable()
 export class SqliteRegularTaskRepository implements ITaskScheduler {
   public constructor(
-    @$inject("TasksTableName")
+    @inject("TasksTableName")
     private tableName: ConfigValue<string>,
 
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

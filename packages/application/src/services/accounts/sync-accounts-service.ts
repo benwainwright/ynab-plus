@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import {
   type IAccountRepository,
@@ -19,19 +19,19 @@ const LOG_CONTEXT = { context: "download-accounts-service" };
 @injectable()
 export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
-    @$inject("OauthTokenRepository")
+    @inject("OauthTokenRepository")
     private tokenRepository: IOauthTokenRepository,
 
-    @$inject("AccountsFetcher")
+    @inject("AccountsFetcher")
     private accountsFetcher: IAccountsFetcher,
 
-    @$inject("AccountRepository")
+    @inject("AccountRepository")
     private accountsRepo: IAccountRepository,
 
-    @$inject("TaskScheduler")
+    @inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

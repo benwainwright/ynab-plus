@@ -5,7 +5,7 @@ import { type Permission, User } from "@ynab-plus/domain";
 
 import { SqliteDatabase } from "./sqlite-database.ts";
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 interface RawUser {
   id: string;
@@ -19,10 +19,10 @@ export class SqliteUserRepository
   implements IRepository<User>, IMultipleRepository<User>
 {
   public constructor(
-    @$inject("UsersTableName")
+    @inject("UsersTableName")
     private tableName: ConfigValue<string>,
 
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

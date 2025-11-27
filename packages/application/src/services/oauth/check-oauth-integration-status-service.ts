@@ -10,19 +10,19 @@ export const LOG_CONTEXT = {
   context: "check-oauth-integration-status-service",
 };
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { injectable } from "inversify";
 
 @injectable()
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
-    @$inject("OauthTokenRepository")
+    @inject("OauthTokenRepository")
     private tokenRepository: IOauthTokenRepository,
 
-    @$inject("OauthCheckerFactory")
+    @inject("OauthCheckerFactory")
     private oauthClientFactory: IOauthCheckerFactory,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

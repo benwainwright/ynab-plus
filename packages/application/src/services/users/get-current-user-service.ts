@@ -8,7 +8,7 @@ import {
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { injectable, optional } from "inversify";
 
 @injectable()
@@ -22,14 +22,14 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
   ];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
 
     @optional()
-    @$inject("CurrentUserSetter")
+    @inject("CurrentUserSetter")
     private currentUserSetter?: ICurrentUserSetter,
   ) {
     super(logger);

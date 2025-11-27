@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import type { ITransactionRepository } from "@ynab-plus/app";
 import { Transaction, transactionSchema } from "@ynab-plus/domain";
-import { $inject } from "@core";
+import { inject } from "@core";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 interface RawTransaction {
@@ -20,9 +20,9 @@ interface RawTransaction {
 @injectable()
 export class SqliteTransactionRepository implements ITransactionRepository {
   public constructor(
-    @$inject("TransactionsTableName")
+    @inject("TransactionsTableName")
     private tableName: ConfigValue<string>,
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

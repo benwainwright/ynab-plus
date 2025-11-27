@@ -1,7 +1,7 @@
 import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { cwd } from "node:process";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 import type { IObjectStorage } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
@@ -16,9 +16,9 @@ export const FlatFileObjectStoreFolderToken: ServiceIdentifier<
 @injectable()
 export class FlatFileObjectStore implements IObjectStorage {
   public constructor(
-    @$inject("SessionPath")
+    @inject("SessionPath")
     private folder: ConfigValue<string>,
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
   ) {}
 

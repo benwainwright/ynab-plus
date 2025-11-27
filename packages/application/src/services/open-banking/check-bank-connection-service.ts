@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 
 import {
   type IBankConnectionCreator,
@@ -16,13 +16,13 @@ import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-con
 @injectable()
 export class CheckBankConnectionService extends AbstractApplicationService<"CheckBankConnectionCommand"> {
   public constructor(
-    @$inject("BankConnectionRepository")
+    @inject("BankConnectionRepository")
     private bankConnectionRepo: IBankConnectionRepository,
 
-    @$inject("BankConnectionCreator")
+    @inject("BankConnectionCreator")
     private institutionListFetcher: IBankConnectionCreator,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

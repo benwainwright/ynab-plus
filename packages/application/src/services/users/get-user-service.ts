@@ -7,7 +7,7 @@ import {
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { injectable } from "inversify";
 
 @injectable()
@@ -22,10 +22,10 @@ export class GetUserService extends AbstractApplicationService<"GetUserCommand">
   ];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

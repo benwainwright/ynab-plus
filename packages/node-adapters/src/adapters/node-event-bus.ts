@@ -3,17 +3,17 @@ import type { EventEmitter } from "node:events";
 import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
 import { v7 } from "uuid";
 import { injectable, unmanaged } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 @injectable()
 export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   private listenerMap = new Map<string, IListener<TEvent>>();
   private children: IEventBus<TEvent>[] = [];
   public constructor(
-    @$inject("EventBusListener")
+    @inject("EventBusListener")
     private listener: EventEmitter,
 
-    @$inject("BusNamespace")
+    @inject("BusNamespace")
     private namespace: string,
 
     @unmanaged()

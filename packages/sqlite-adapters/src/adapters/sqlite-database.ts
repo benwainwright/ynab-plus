@@ -1,4 +1,4 @@
-import { $inject } from "@core";
+import { inject } from "@core";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import BetterSqlite3 from "better-sqlite3";
 import { injectable } from "inversify";
@@ -8,7 +8,7 @@ export class SqliteDatabase {
   private database: InstanceType<typeof BetterSqlite3> | undefined;
 
   public constructor(
-    @$inject("DatabaseFilename")
+    @inject("DatabaseFilename")
     private readonly databaseName: ConfigValue<string>,
   ) {}
 

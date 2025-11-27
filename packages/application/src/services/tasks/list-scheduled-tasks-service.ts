@@ -1,7 +1,7 @@
 import { type IHandleContext, type ITaskScheduler } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import type { IRole, Permission, RegularTask } from "@ynab-plus/domain";
 import { injectable } from "inversify";
 
@@ -10,10 +10,10 @@ export class ListScheduledTasksService extends AbstractApplicationService<"ListS
   public override requiredPermissions: Permission[] = ["admin", "system"];
 
   public constructor(
-    @$inject("TaskScheduler")
+    @inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

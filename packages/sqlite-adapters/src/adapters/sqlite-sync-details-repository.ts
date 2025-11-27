@@ -4,7 +4,7 @@ import { SyncDetails } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
 
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 interface RawSyncDetails {
   id: string;
@@ -16,9 +16,9 @@ interface RawSyncDetails {
 @injectable()
 export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   public constructor(
-    @$inject("SyncDetailsTableName")
+    @inject("SyncDetailsTableName")
     private tableName: ConfigValue<string>,
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

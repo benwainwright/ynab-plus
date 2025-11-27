@@ -1,5 +1,5 @@
 import type { IHandleContext, ICurrentUserSetter } from "@ports";
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
@@ -9,10 +9,10 @@ import { injectable } from "inversify";
 @injectable()
 export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public constructor(
-    @$inject("CurrentUserSetter")
+    @inject("CurrentUserSetter")
     private currentUserSetter: ICurrentUserSetter,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

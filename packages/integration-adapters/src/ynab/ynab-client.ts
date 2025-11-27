@@ -8,7 +8,7 @@ import {
   type OauthToken,
 } from "@ynab-plus/domain";
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 import z from "zod";
 
@@ -17,7 +17,7 @@ const LOG_CONTEXT = { context: "ynab-client" };
 @injectable()
 export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
   public constructor(
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
   ) {}
 

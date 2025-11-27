@@ -9,7 +9,7 @@ import { ConfigValue } from "./config-value.ts";
 import type { IBootstrapper } from "./i-bootstrapper.ts";
 import { type ILogger } from "./i-logger.ts";
 import { injectable, type ServiceIdentifier } from "inversify";
-import { $inject } from "./typed-inject.ts";
+import { inject } from "./typed-inject.ts";
 
 export const LOG_CONTEXT = { context: "bootstrapper" };
 
@@ -28,10 +28,10 @@ export class Bootstrapper implements IBootstrapper {
   private _config: Record<string, unknown>;
 
   public constructor(
-    @$inject("ConfigFile")
+    @inject("ConfigFile")
     private configFile: string,
 
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
   ) {
     this.logger.silly("Initialising bootstrapper", {

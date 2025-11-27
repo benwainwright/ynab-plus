@@ -1,4 +1,4 @@
-import { $inject } from "@core";
+import { inject } from "@core";
 import { HttpClient } from "@http-client";
 import {
   type IBankConnectionCreator,
@@ -16,13 +16,13 @@ export class GocardlessClient
   private client: HttpClient;
 
   public constructor(
-    @$inject("GocardlessClientSecretIdConfigValue")
+    @inject("GocardlessClientSecretIdConfigValue")
     private secretId: ConfigValue<string>,
 
-    @$inject("GocardlessClientSecretKeyConfigValue")
+    @inject("GocardlessClientSecretKeyConfigValue")
     private secretKey: ConfigValue<string>,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     this.client = new HttpClient(

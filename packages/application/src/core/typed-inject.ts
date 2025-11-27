@@ -11,10 +11,10 @@ import type {
 import type { IApplicationDependencies } from "@ports/groups";
 import type { BootstrapTypes } from "@ynab-plus/bootstrap";
 
-export const $inject = inversifyInject as TypedInject<
+export const inject = inversifyInject as TypedInject<
   BootstrapTypes & IApplicationDependencies
 >;
 
-export const $multiInject = inversifyMultiInject as TypedMultiInject<
+export const multiInject = inversifyMultiInject as TypedMultiInject<
   BootstrapTypes & IApplicationDependencies
 >;

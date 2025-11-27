@@ -7,7 +7,7 @@ import {
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
 import { injectable, optional } from "inversify";
 
@@ -21,17 +21,17 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
   ];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @$inject("PasswordHasher")
+    @inject("PasswordHasher")
     private passwordHasher: IPasswordHasher,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
 
     @optional()
-    @$inject("CurrentUserSetter")
+    @inject("CurrentUserSetter")
     private currentUserSetter?: ICurrentUserSetter,
   ) {
     super(logger);

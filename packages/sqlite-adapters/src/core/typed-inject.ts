@@ -7,10 +7,10 @@ import type {
 import type { IDataPorts } from "@ynab-plus/app";
 import type { IInternalTypes } from "./internal-types.ts";
 
-export const $inject = inversifyInject as TypedInject<
+export const inject = inversifyInject as TypedInject<
   IDataPorts & IInternalTypes
 >;
 
-export const $multiInject = inversifyInject as TypedMultiInject<
+export const multiInject = inversifyInject as TypedMultiInject<
   IDataPorts & IInternalTypes
 >;

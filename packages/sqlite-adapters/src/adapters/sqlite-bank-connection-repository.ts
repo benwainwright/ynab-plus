@@ -3,7 +3,7 @@ import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 interface RawBankConnection {
   id: string;
@@ -22,9 +22,9 @@ export class SqliteBankConnectionRepository
   implements IBankConnectionRepository
 {
   public constructor(
-    @$inject("BankConnectionTableName")
+    @inject("BankConnectionTableName")
     private tableName: ConfigValue<string>,
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

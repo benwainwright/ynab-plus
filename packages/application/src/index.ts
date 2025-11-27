@@ -1,8 +1,8 @@
 export {
   type IInfrastructurePorts,
   type AllEvents,
-  $inject,
-  $multiInject,
+  inject,
+  multiInject,
 } from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";

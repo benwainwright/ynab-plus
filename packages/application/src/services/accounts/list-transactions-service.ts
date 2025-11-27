@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import {
   type IAccountRepository,
@@ -12,13 +12,13 @@ import { injectable } from "inversify";
 @injectable()
 export class ListTransactionsService extends AbstractApplicationService<"ListTransactionsCommand"> {
   public constructor(
-    @$inject("TransactionRepository")
+    @inject("TransactionRepository")
     private transactionsRepo: ITransactionRepository,
 
-    @$inject("AccountRepository")
+    @inject("AccountRepository")
     private accountsRepo: IAccountRepository,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

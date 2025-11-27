@@ -1,5 +1,5 @@
 import {
-  $inject,
+  inject,
   type IEventBus,
   type IServiceBus,
   type ISingleItemStore,
@@ -18,16 +18,16 @@ export const LOG_CONTEXT = {
 @injectable()
 export class ServerWebsocketClient {
   public constructor(
-    @$inject("ServiceBus")
+    @inject("ServiceBus")
     private serviceBus: IServiceBus,
 
-    @$inject("EventBus")
+    @inject("EventBus")
     private eventBus: IEventBus,
 
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
 
-    @$inject("SessionStore")
+    @inject("SessionStore")
     private currentUserCache: ISingleItemStore<User>,
   ) {}
 

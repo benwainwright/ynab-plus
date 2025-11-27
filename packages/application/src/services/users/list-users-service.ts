@@ -2,7 +2,7 @@ import { type IHandleContext, type IRepository } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import type { IMultipleRepository } from "src/ports/i-multiple-repository.ts";
 
 export class ListUsersService extends AbstractApplicationService<"ListUsersCommand"> {
@@ -11,10 +11,10 @@ export class ListUsersService extends AbstractApplicationService<"ListUsersComma
   ];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IMultipleRepository<User> & IRepository<User>,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

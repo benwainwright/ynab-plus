@@ -7,7 +7,7 @@ import {
 import { WebSocketServer } from "ws";
 
 import { SessionIdHandler } from "./session-id-handler.ts";
-import { $inject, type IInternalTypes } from "@core";
+import { inject, type IInternalTypes } from "@core";
 import type { TypedContainer } from "@inversifyjs/strongly-typed";
 
 export const LOG_CONTEXT = {
@@ -20,17 +20,17 @@ export class AppServer implements IStartable {
   public readonly name = "Websocket Server";
 
   public constructor(
-    @$inject("ContainerFactory")
+    @inject("ContainerFactory")
     private requestContainerFactory: (
       sessionIdRequester: ISessionIdRequester,
     ) => Promise<TypedContainer<IInternalTypes>>,
-    @$inject("WebsocketServerPort")
+    @inject("WebsocketServerPort")
     private port: ConfigValue<number>,
 
-    @$inject("WebsocketServerHost")
+    @inject("WebsocketServerHost")
     private host: ConfigValue<string>,
 
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
   ) {
     this.sessionIdHandler = new SessionIdHandler(logger);

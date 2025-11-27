@@ -8,7 +8,7 @@ import {
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { Commands, IRole, Permission, User } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
 import { injectable } from "inversify";
 
@@ -17,16 +17,16 @@ export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public override requiredPermissions: Permission[] = ["public"];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @$inject("PasswordVerifier")
+    @inject("PasswordVerifier")
     private passwordVerifier: IPasswordVerifier,
 
-    @$inject("CurrentUserSetter")
+    @inject("CurrentUserSetter")
     private currentUserSetter: ICurrentUserSetter,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

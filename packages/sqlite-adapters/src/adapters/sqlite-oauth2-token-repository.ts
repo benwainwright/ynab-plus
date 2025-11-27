@@ -15,15 +15,15 @@ interface RawOauthToken {
 
 import { SqliteDatabase } from "./sqlite-database.ts";
 import { injectable } from "inversify";
-import { $inject } from "@core";
+import { inject } from "@core";
 
 @injectable()
 export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   public constructor(
-    @$inject("OauthTokenTableName")
+    @inject("OauthTokenTableName")
     private tableName: ConfigValue<string>,
 
-    @$inject("SqliteDatabase")
+    @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}
 

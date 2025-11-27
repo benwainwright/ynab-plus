@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 
 import {
   type IHandleContext,
@@ -25,19 +25,19 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
   public override readonly commandName = "SyncAccountCommand";
 
   public constructor(
-    @$inject("SyncDetailsRepository")
+    @inject("SyncDetailsRepository")
     private syncDetailsRepo: IRepository<SyncDetails>,
 
-    @$inject("OauthTokenRepository")
+    @inject("OauthTokenRepository")
     private oauthTokenRepository: IOauthTokenRepository,
 
-    @$inject("TransactionFetcher")
+    @inject("TransactionFetcher")
     private transactionFetcher: ITransactionFetcher,
 
-    @$inject("TransactionRepository")
+    @inject("TransactionRepository")
     private transactionRepository: ITransactionRepository,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

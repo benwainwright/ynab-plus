@@ -7,7 +7,7 @@ import {
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { injectable } from "inversify";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
@@ -20,13 +20,13 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
   ];
 
   public constructor(
-    @$inject("UserRepository")
+    @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @$inject("PasswordHasher")
+    @inject("PasswordHasher")
     private passwordHasher: IPasswordHasher,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import {
   type IBankConnectionRepository,
   type IHandleContext,
@@ -11,13 +11,13 @@ import { injectable } from "inversify";
 @injectable()
 export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicationService<"GetInstitutionAuthorizationPageLinkCommand"> {
   public constructor(
-    @$inject("InstitutionAuthPageLinkFetcher")
+    @inject("InstitutionAuthPageLinkFetcher")
     private authLinkFetcher: IInstitutionAuthPageLinkFetcher,
 
-    @$inject("BankConnectionRepository")
+    @inject("BankConnectionRepository")
     private bankConnectionRepository: IBankConnectionRepository,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

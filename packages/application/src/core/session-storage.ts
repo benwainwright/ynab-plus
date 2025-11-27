@@ -1,4 +1,4 @@
-import { $inject } from "./typed-inject.ts";
+import { inject } from "./typed-inject.ts";
 import { AppError } from "@errors";
 import {
   type IObjectStorage,
@@ -15,13 +15,13 @@ export const LOG_CONTEXT = { context: "session-storage" };
 @injectable()
 export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
-    @$inject("SessionStoreObjectStore")
+    @inject("SessionStoreObjectStore")
     private storage: IObjectStorage,
 
-    @$inject("SessionIdRequester")
+    @inject("SessionIdRequester")
     private sessionIdRequester: ISessionIdRequester,
 
-    @$inject("Logger")
+    @inject("Logger")
     private logger: ILogger,
   ) {}
 

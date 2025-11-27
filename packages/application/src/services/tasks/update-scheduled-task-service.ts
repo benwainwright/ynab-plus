@@ -1,4 +1,4 @@
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { type IHandleContext, type ITaskScheduler } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
@@ -7,10 +7,10 @@ import { injectable } from "inversify";
 @injectable()
 export class UpdateScheduledTaskService extends AbstractApplicationService<"UpdateScheduledTaskCommand"> {
   public constructor(
-    @$inject("TaskScheduler")
+    @inject("TaskScheduler")
     private taskScheduler: ITaskScheduler,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { type IAccountRepository } from "@ports";
-import { $inject, AbstractApplicationService } from "@core";
+import { inject, AbstractApplicationService } from "@core";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { type Account, type Permission } from "@ynab-plus/domain";
 
@@ -9,10 +9,10 @@ export class ListAccountsService extends AbstractApplicationService<"ListAccount
   public override requiredPermissions: Permission[] = ["user", "admin"];
 
   public constructor(
-    @$inject("AccountRepository")
+    @inject("AccountRepository")
     private accounts: IAccountRepository,
 
-    @$inject("Logger")
+    @inject("Logger")
     logger: ILogger,
   ) {
     super(logger);
