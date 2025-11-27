@@ -34,9 +34,8 @@ export class AppServer implements IStartable {
   public constructor(
     @inject(RequestContainerFactoryToken)
     private requestContainerFactory: (
-      containerFactory: ISessionIdRequester,
+      sessionIdRequester: ISessionIdRequester,
     ) => Promise<Container>,
-
     @inject(WebsocketServerPortConfigValueToken)
     private port: ConfigValue<number>,
 
@@ -89,7 +88,9 @@ export class AppServer implements IStartable {
         },
       });
 
-      const client = container.get(ServerWebsocketClient);
+      console.log({ container });
+
+      const client = await container.getAsync(ServerWebsocketClient);
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ws.on("message", client.onMessage.bind(client));

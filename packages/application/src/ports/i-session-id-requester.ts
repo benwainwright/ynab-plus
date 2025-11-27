@@ -5,4 +5,4 @@ export interface ISessionIdRequester {
 }
 
 export const SessionIdRequsterToken: ServiceIdentifier<ISessionIdRequester> =
-  Symbol.for("SessionIdRequester");
+  Symbol.for("SessionIdRequesterToken");

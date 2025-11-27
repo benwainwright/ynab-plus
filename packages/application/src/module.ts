@@ -2,6 +2,7 @@ import { Container, ContainerModule, type ResolutionContext } from "inversify";
 
 import {
   EventBusToken,
+  SessionIdRequsterToken,
   SessionStoreToken,
   type ISessionIdRequester,
 } from "@ports";
@@ -28,9 +29,9 @@ export const applicationServicesModule = applicationModule(
     load
       .bind(RequestContainerFactoryToken)
       .toFactory((context: ResolutionContext) => {
-        return () => async (sessionIdRequester: ISessionIdRequester) => {
-          const container = context.get(ApplicationContainerToken);
-          const parentEventBus = container.get(EventBusToken);
+        return async (sessionIdRequester: ISessionIdRequester) => {
+          const container = await context.getAsync(ApplicationContainerToken);
+          const parentEventBus = await container.getAsync(EventBusToken);
 
           const requestContainer = new Container({
             parent: container,
@@ -41,6 +42,10 @@ export const applicationServicesModule = applicationModule(
           await requestContainer.load(requestScopedServicesModule);
 
           const sessionId = await sessionIdRequester.getSessionId();
+
+          requestContainer
+            .bind(SessionIdRequsterToken)
+            .toConstantValue(sessionIdRequester);
 
           requestContainer
             .bind(EventBusToken)

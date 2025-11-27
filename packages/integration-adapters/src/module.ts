@@ -25,7 +25,7 @@ export const integrationsModule = applicationModule(
     load.bind(BankConnectionCreatorToken).to(GocardlessClient);
     load.bind(InstitutionAuthPageLinkFetcherToken).to(GocardlessClient);
     load.bind(OauthCheckerFactoryToken).toFactory(() => {
-      return () => getOauthClientFactory(bootstrapper);
+      return getOauthClientFactory(bootstrapper);
     });
 
     load

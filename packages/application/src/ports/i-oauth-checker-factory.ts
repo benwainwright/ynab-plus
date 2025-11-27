@@ -10,5 +10,5 @@ export type IOauthCheckerFactory = (
   IOauthNewTokenRequester;
 
 export const OauthCheckerFactoryToken: ServiceIdentifier<
-  Factory<IOauthCheckerFactory>
+  Factory<ReturnType<IOauthCheckerFactory>>
 > = Symbol.for("OauthCheckerFactory");
