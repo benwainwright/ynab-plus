@@ -1,4 +1,5 @@
 import type { BankConnection } from "@ynab-plus/domain";
+import type { ServiceIdentifier } from "inversify";
 
 export interface IInstitutionAuthPageLinkFetcher {
   getLink(
@@ -6,6 +7,5 @@ export interface IInstitutionAuthPageLinkFetcher {
   ): Promise<{ requsitionId: string; url: string }>;
 }
 
-export const InstitutionAuthPageLinkFetcherToken = Symbol.for(
-  "InstitutionAuthPageLinkFetcher",
-);
+export const InstitutionAuthPageLinkFetcherToken: ServiceIdentifier<IInstitutionAuthPageLinkFetcher> =
+  Symbol.for("InstitutionAuthPageLinkFetcher");

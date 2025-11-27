@@ -11,7 +11,7 @@ import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
 import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
-import { inject, injectable } from "inversify";
+import { inject, injectable, optional } from "inversify";
 
 export const LOG_CONTEXT = { context: `register-user-service` };
 
@@ -29,11 +29,12 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
     @inject(PasswordHasherToken)
     private passwordHasher: IPasswordHasher,
 
-    @inject(CurrentUserSetterToken)
-    private currentUserSetter: ICurrentUserSetter,
-
     @inject(LoggerToken)
     logger: ILogger,
+
+    @optional()
+    @inject(CurrentUserSetterToken)
+    private currentUserSetter?: ICurrentUserSetter,
   ) {
     super(logger);
   }
@@ -58,7 +59,7 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
       await this.users.save(user);
       this.logger.verbose(`Save successful!`, LOG_CONTEXT);
 
-      await this.currentUserSetter.set(user);
+      await this.currentUserSetter?.set(user);
       eventBus.emit("RegisterSuccess", undefined);
       return { success: true, id: username } as const;
     } catch (error) {

@@ -13,7 +13,12 @@ import {
   type IEventBus,
   type IServiceBus,
 } from "@ynab-plus/app";
-import { AbstractError, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import {
+  AbstractError,
+  LoggerToken,
+  type ILogger,
+  type IStartable,
+} from "@ynab-plus/bootstrap";
 import cron from "node-cron";
 import { ServerError } from "@core";
 import { inject, injectable } from "inversify";
@@ -23,7 +28,7 @@ const LOG_CONTEXT = { context: "task-scheduler" };
 const TASK_SCHEDULER_CONTEXT_NAME = "Task Scheduler";
 
 @injectable()
-export class TaskScheduler {
+export class TaskScheduler implements IStartable {
   private _taskMap:
     | Map<string, { cronTask: cron.ScheduledTask; appTask: RegularTask }>
     | undefined;
@@ -38,6 +43,7 @@ export class TaskScheduler {
     @inject(LoggerToken)
     private logger: ILogger,
   ) {}
+  public readonly name = "Task Scheduler";
 
   public async executeCommand<
     TKey extends keyof Commands = keyof Commands,
@@ -66,7 +72,7 @@ export class TaskScheduler {
     }
   }
 
-  public async initialise() {
+  public async start() {
     this.logger.info(`Getting existing scheduled tasks`, LOG_CONTEXT);
 
     const command = new Command(

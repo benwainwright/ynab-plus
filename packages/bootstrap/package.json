@@ -14,6 +14,7 @@
   "dependencies": {
     "@ynab-plus/domain": "workspace:*",
     "inversify": "^7.10.4",
+    "reflect-metadata": "^0.2.2",
     "typeson": "^9.0.4"
   },
   "devDependencies": {

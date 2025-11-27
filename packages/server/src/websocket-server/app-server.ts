@@ -2,7 +2,12 @@ import {
   RequestContainerFactoryToken,
   type ISessionIdRequester,
 } from "@ynab-plus/app";
-import { ConfigValue, LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
+import {
+  ConfigValue,
+  LoggerToken,
+  type ILogger,
+  type IStartable,
+} from "@ynab-plus/bootstrap";
 import { WebSocketServer } from "ws";
 
 import { SessionIdHandler } from "./session-id-handler.ts";
@@ -21,8 +26,10 @@ export const WebsocketServerHostConfigValueToken: ServiceIdentifier<
   ConfigValue<string>
 > = Symbol.for("ServerHostConfigValue");
 
-export class AppServer {
+export class AppServer implements IStartable {
   private sessionIdHandler: SessionIdHandler;
+
+  public readonly name = "Websocket Server";
 
   public constructor(
     @inject(RequestContainerFactoryToken)

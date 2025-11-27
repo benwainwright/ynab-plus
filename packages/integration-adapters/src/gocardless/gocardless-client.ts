@@ -3,25 +3,47 @@ import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
 } from "@ynab-plus/app";
-import type { ConfigValue, ILogger } from "@ynab-plus/bootstrap";
+import {
+  LoggerToken,
+  type ConfigValue,
+  type ILogger,
+} from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
+import { inject, injectable, type ServiceIdentifier } from "inversify";
 import z from "zod";
 
+export const GocardlessClientSecretIdConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("GoCardlessClientSecretIdConfigValue");
+
+export const GocardlessClientSecretKeyConfigValueToken: ServiceIdentifier<
+  ConfigValue<string>
+> = Symbol.for("GoCardlessClientSecretKeyConfigValue");
+
+@injectable()
 export class GocardlessClient
   implements IBankConnectionCreator, IInstitutionAuthPageLinkFetcher
 {
   private client: HttpClient;
 
   public constructor(
-    baseUrl: string,
+    @inject(GocardlessClientSecretIdConfigValueToken)
     private secretId: ConfigValue<string>,
+
+    @inject(GocardlessClientSecretKeyConfigValueToken)
     private secretKey: ConfigValue<string>,
+
+    @inject(LoggerToken)
     logger: ILogger,
   ) {
-    this.client = new HttpClient(`${baseUrl}/api/v2`, logger, {
-      accept: "application/json",
-      "content-type": "application/json",
-    });
+    this.client = new HttpClient(
+      `https://bankaccountdata.gocardless.com/api/v2`,
+      logger,
+      {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+    );
   }
   public async getLink(
     connection: BankConnection,

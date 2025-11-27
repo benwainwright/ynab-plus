@@ -26,7 +26,7 @@ export type { IHandleContext } from "./i-handle-context.ts";
 
 export {
   type IOauthCheckerFactory,
-  OauthCheckerFactory,
+  OauthCheckerFactoryToken,
 } from "./i-oauth-checker-factory.ts";
 
 export {

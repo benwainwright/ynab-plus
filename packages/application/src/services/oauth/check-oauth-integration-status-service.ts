@@ -1,5 +1,5 @@
 import {
-  OauthCheckerFactory,
+  OauthCheckerFactoryToken,
   OauthTokenRepositoryToken,
   type IHandleContext,
   type IOauthCheckerFactory,
@@ -21,7 +21,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     @inject(OauthTokenRepositoryToken)
     private tokenRepository: IOauthTokenRepository,
 
-    @inject(OauthCheckerFactory)
+    @inject(OauthCheckerFactoryToken)
     private oauthClientFactory: IOauthCheckerFactory,
 
     @inject(LoggerToken)

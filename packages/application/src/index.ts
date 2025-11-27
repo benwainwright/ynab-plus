@@ -1,5 +1,3 @@
-export { composeApplicationLayer } from "./compose-application-layer.ts";
-
 export { type IInfrastructurePorts, type AllEvents } from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";
@@ -45,9 +43,12 @@ export {
   type ITaskScheduler,
   TaskSchedulerToken,
   type IAccountsFetcher,
+  InstitutionAuthPageLinkFetcherToken,
   type ITransactionRepository,
   TransactionRepositoryToken,
   type IBankConnectionCreator,
+  OauthCheckerFactoryToken,
+  BankConnectionCreatorToken,
   type IBankConnectionRepository,
   RequestContainerFactoryToken,
 } from "@ports";

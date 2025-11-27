@@ -1,4 +1,3 @@
-import { ContainerModule } from "inversify";
 import {
   AccountRepositoryToken,
   OauthTokenRepositoryToken,
@@ -18,7 +17,7 @@ import {
 } from "@adapters";
 
 import { TableNameConfigValueToken } from "./adapters/sqlite-user-repository.ts";
-import { BootstrapperToken } from "@ynab-plus/bootstrap";
+import { applicationModule } from "@ynab-plus/bootstrap";
 import z from "zod";
 import { AccountsRepositoryNameConfigValueToken } from "./adapters/sqlite-account-repository.ts";
 import { TaskRepositoryTableNameConfigValueToken } from "./adapters/sqlite-regular-tasks-repository.ts";
@@ -35,11 +34,20 @@ import {
   SqliteBankConnectionRepositoryTableNameConfigValueToken,
 } from "./adapters/sqlite-bank-connection-repository.ts";
 import { Oauth2RepositoryTableNameConfigValueToken } from "./adapters/sqlite-oauth2-token-repository.ts";
+import { SqliteDatabaseNameConfigToken } from "./adapters/sqlite-database.ts";
 
-export const sqliteDataAdaptersModule = new ContainerModule((load) => {
-  load.bind(SqliteDatabase).toSelf();
+export const LOG_CONTEXT = { context: "sqlite-data-adapters-module" };
 
-  load.onActivation(BootstrapperToken, (_context, bootstrapper) => {
+export const sqliteDataAdaptersModule = applicationModule(
+  ({ load, bootstrapper, logger }) => {
+    logger.debug(`Initialising sqlite adapters module`, LOG_CONTEXT);
+
+    load
+      .bind(SqliteDatabaseNameConfigToken)
+      .toConstantValue(bootstrapper.configValue("sqliteFilename", z.string()));
+
+    load.bind(SqliteDatabase).toSelf();
+
     load
       .bind(TableNameConfigValueToken)
       .toConstantValue(bootstrapper.configValue("userTableName", z.string()));
@@ -52,9 +60,7 @@ export const sqliteDataAdaptersModule = new ContainerModule((load) => {
 
     load
       .bind(Oauth2RepositoryTableNameConfigValueToken)
-      .toConstantValue(
-        bootstrapper.configValue("oauthTokenTableName", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("tokenTableName", z.string()));
 
     load
       .bind(TaskRepositoryTableNameConfigValueToken)
@@ -69,71 +75,71 @@ export const sqliteDataAdaptersModule = new ContainerModule((load) => {
     load
       .bind(SqliteSyncDetailsRepositoryTableNameConfigValue)
       .toConstantValue(
-        bootstrapper.configValue("syncDetailsTableName", z.string()),
+        bootstrapper.configValue("syncdetailsTablename", z.string()),
       );
 
     load
       .bind(SqliteBankConnectionRepositoryTableNameConfigValueToken)
       .toConstantValue(
-        bootstrapper.configValue("bankConnectionTableName", z.string()),
+        bootstrapper.configValue("bankconnectionTablename", z.string()),
       );
 
-    return bootstrapper;
-  });
+    load
+      .bind(UserRepositoryToken)
+      .to(SqliteUserRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(UserRepositoryToken)
-    .to(SqliteUserRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(AccountRepositoryToken)
+      .to(Sqlite3AccountRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(AccountRepositoryToken)
-    .to(Sqlite3AccountRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(OauthTokenRepositoryToken)
+      .to(SqliteOauth2TokenRepsoitory)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(OauthTokenRepositoryToken)
-    .to(SqliteOauth2TokenRepsoitory)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(TaskSchedulerToken)
+      .to(SqliteRegularTaskRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(TaskSchedulerToken)
-    .to(SqliteRegularTaskRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(TransactionRepositoryToken)
+      .to(SqliteTransactionRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(TransactionRepositoryToken)
-    .to(SqliteTransactionRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(SyncDetailsRepositoryToken)
+      .to(SqliteSyncDetailsRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(SyncDetailsRepositoryToken)
-    .to(SqliteSyncDetailsRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
+    load
+      .bind(BankConnectionRepositoryToken)
+      .to(SqliteBankConnectionRepository)
+      .onActivation(async (_context, repo) => {
+        await repo.create();
+        return repo;
+      });
 
-  load
-    .bind(BankConnectionRepositoryToken)
-    .to(SqliteBankConnectionRepository)
-    .onActivation(async (_context, repo) => {
-      await repo.create();
-      return repo;
-    });
-});
+    logger.debug(`Finished initialising sqlite adapters module`, LOG_CONTEXT);
+  },
+);

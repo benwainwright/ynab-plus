@@ -2,7 +2,12 @@ import type { EventEmitter } from "node:events";
 
 import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
 import { v7 } from "uuid";
-import { inject, injectable, type ServiceIdentifier } from "inversify";
+import {
+  inject,
+  injectable,
+  unmanaged,
+  type ServiceIdentifier,
+} from "inversify";
 
 export const EventBusListenerToken: ServiceIdentifier<EventEmitter> =
   Symbol.for("EventBusListener");
@@ -20,6 +25,8 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
 
     @inject(EventBusNamespaceToken)
     private namespace: string,
+
+    @unmanaged()
     private parent?: IEventBus<TEvent>,
   ) {}
 

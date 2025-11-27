@@ -15,7 +15,9 @@ describe("get user command handler", () => {
       new SystemContext("test", ["system"]),
     );
 
-    const service = new GetCurrentUserService(mock(), mock(), mock());
+    const mockSetter = mock<ICurrentUserSetter>();
+
+    const service = new GetCurrentUserService(mock(), mock(), mockSetter);
 
     await expect(service.doHandle(context)).rejects.toThrow(AppError);
   });
@@ -48,7 +50,8 @@ describe("get user command handler", () => {
       }),
     );
 
-    const handler = new GetCurrentUserService(repo, mock(), mock());
+    const mockSetter = mock<ICurrentUserSetter>();
+    const handler = new GetCurrentUserService(repo, mock(), mockSetter);
 
     const response = await handler.doHandle(context);
 
@@ -78,7 +81,8 @@ describe("get user command handler", () => {
       undefined,
     );
 
-    const handler = new GetCurrentUserService(repo, mock(), mock());
+    const mockSetter = mock<ICurrentUserSetter>();
+    const handler = new GetCurrentUserService(repo, mock(), mockSetter);
 
     const response = await handler.doHandle(context);
 
@@ -106,8 +110,8 @@ describe("get user command handler", () => {
 
     const handler = new GetCurrentUserService(
       repo,
-      mockCurrentUserSetter,
       mock(),
+      mockCurrentUserSetter,
     );
 
     const context = createMockServiceContext(
@@ -133,7 +137,12 @@ describe("get user command handler", () => {
       get: vi.fn().mockResolvedValue(undefined),
     });
 
-    const handler = new GetCurrentUserService(repo, mock(), mock());
+    const mockCurrentUserSetter = mock<ICurrentUserSetter>();
+    const handler = new GetCurrentUserService(
+      repo,
+      mock(),
+      mockCurrentUserSetter,
+    );
 
     const context = createMockServiceContext(
       "GetCurrentUserCommand",

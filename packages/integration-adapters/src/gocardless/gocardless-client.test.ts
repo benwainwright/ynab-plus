@@ -22,7 +22,6 @@ describe("the gocardless client", () => {
   describe("getLink", () => {
     it("calls the requsitions endpoint with the token and the institution and returns the url and req id", async () => {
       const client = new GocardlessClient(
-        `https://bankaccountdata.gocardless.com`,
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         mock(),
@@ -53,7 +52,6 @@ describe("the gocardless client", () => {
       const today = new Date("2025-11-23T19:14:37.986Z");
       vi.setSystemTime(today);
       const client = new GocardlessClient(
-        `https://bankaccountdata.gocardless.com`,
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         mock(),

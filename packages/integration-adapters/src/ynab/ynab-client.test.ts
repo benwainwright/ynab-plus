@@ -49,7 +49,7 @@ describe("the getaccountTransactions method", () => {
       ),
     );
 
-    const client = new YnabClient(YNAB_API, mock());
+    const client = new YnabClient(mock());
 
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
@@ -78,7 +78,7 @@ describe("the getaccountTransactions method", () => {
   it("updates syncDetails", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(`https://api.ynab.com`, logger);
+    const client = new YnabClient(logger);
 
     const token = OauthToken.reconstitute({
       provider: "ynab",
@@ -105,7 +105,7 @@ describe("the getaccountTransactions method", () => {
   it("calls the correct endpoint and parses the response data into a transaction", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(`https://api.ynab.com`, logger);
+    const client = new YnabClient(logger);
 
     const token = OauthToken.reconstitute({
       provider: "ynab",
@@ -142,7 +142,7 @@ describe("the getaccounts method", () => {
   it("calls the correct endpoint and parses the response data", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(`https://api.ynab.com`, logger);
+    const client = new YnabClient(logger);
 
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 

@@ -26,8 +26,8 @@ describe("register users service", () => {
     const service = new RegisterUserService(
       mockRepo,
       hasher,
-      mockUserSetter,
       mock(),
+      mockUserSetter,
     );
 
     const result = await service.doHandle(context);
@@ -70,8 +70,8 @@ describe("register users service", () => {
     const service = new RegisterUserService(
       mockRepo,
       hasher,
-      mockUserSetter,
       mock(),
+      mockUserSetter,
     );
 
     const error = new AppError(`whoops`);
@@ -120,8 +120,8 @@ describe("register users service", () => {
     const service = new RegisterUserService(
       mockRepo,
       hasher,
-      mockUserSetter,
       mock(),
+      mockUserSetter,
     );
 
     when(mockRepo.save)

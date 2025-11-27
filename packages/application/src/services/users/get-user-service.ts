@@ -1,6 +1,6 @@
 import { UserNotFoundError } from "@errors";
 import {
-  CurrentUserSetterToken,
+  UserRepositoryToken,
   type IHandleContext,
   type IRepository,
 } from "@ports";
@@ -22,7 +22,7 @@ export class GetUserService extends AbstractApplicationService<"GetUserCommand">
   ];
 
   public constructor(
-    @inject(CurrentUserSetterToken)
+    @inject(UserRepositoryToken)
     private users: IRepository<User>,
 
     @inject(LoggerToken)

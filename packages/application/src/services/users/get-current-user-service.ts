@@ -10,7 +10,7 @@ import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
 
 import { AbstractApplicationService } from "@core";
-import { inject, injectable } from "inversify";
+import { inject, injectable, optional } from "inversify";
 
 @injectable()
 export class GetCurrentUserService extends AbstractApplicationService<"GetCurrentUserCommand"> {
@@ -26,11 +26,12 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
     @inject(UserRepositoryToken)
     private users: IRepository<User>,
 
-    @inject(CurrentUserSetterToken)
-    private currentUserSetter: ICurrentUserSetter,
-
     @inject(LoggerToken)
     logger: ILogger,
+
+    @optional()
+    @inject(CurrentUserSetterToken)
+    private currentUserSetter?: ICurrentUserSetter,
   ) {
     super(logger);
   }
@@ -60,7 +61,7 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
     ) {
       role.update({ permissions: user.permissions });
 
-      await this.currentUserSetter.set(role);
+      await this.currentUserSetter?.set(role);
     }
 
     if (!user) {

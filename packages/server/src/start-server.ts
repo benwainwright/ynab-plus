@@ -24,6 +24,6 @@ await container.load(
   serverModule,
 );
 
-const bootstrapper = container.get(BootstrapperToken);
+const bootstrapper = await container.getAsync(BootstrapperToken);
 
 await bootstrapper.start();

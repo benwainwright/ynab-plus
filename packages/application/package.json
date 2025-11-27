@@ -14,6 +14,7 @@
     "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/test-helpers": "workspace:*",
     "inversify": "^7.10.4",
+    "reflect-metadata": "^0.2.2",
     "stacktracey": "^2.1.8"
   },
   "module": "src/index.ts",

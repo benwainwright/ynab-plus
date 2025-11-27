@@ -5,6 +5,8 @@ export { getContainer } from "./container.ts";
 export { ApplicationContainerToken } from "./application-container-token.ts";
 export { type IBootstrapper, BootstrapperToken } from "./i-bootstrapper.ts";
 export { type ILogger, LoggerToken } from "./i-logger.ts";
+export { type IStartable } from "./i-startable.ts";
 export { getWinstonLogger } from "./winston-logger.ts";
 export { bootstrapModule } from "./module.ts";
 export { getConfigValueFactory as getConfigValueFactory } from "./get-config-factory.ts";
+export { applicationModule } from "./application-module.ts";

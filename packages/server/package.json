@@ -17,6 +17,7 @@
     "inversify": "^7.10.4",
     "isbot": "^5.1.31",
     "node-cron": "^4.2.1",
+    "reflect-metadata": "^0.2.2",
     "typeson": "^9.0.4",
     "uuid": "^13.0.0",
     "winston": "^3.18.3",

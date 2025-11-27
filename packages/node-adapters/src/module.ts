@@ -1,4 +1,3 @@
-import { ContainerModule } from "inversify";
 import {
   EventBusListenerToken,
   EventBusNamespaceToken,
@@ -13,22 +12,23 @@ import {
 } from "@ynab-plus/app";
 import { FlatFileObjectStore, NodePasswordHashValidator } from "@adapters";
 import { FlatFileObjectStoreFolderToken } from "./adapters/flat-file-object-store.ts";
-import { BootstrapperToken } from "@ynab-plus/bootstrap";
+import { applicationModule } from "@ynab-plus/bootstrap";
 import z from "zod";
 
-export const nodeAdaptersModule = new ContainerModule((load) => {
-  load.bind(EventBusListenerToken).toConstantValue(new EventEmitter());
-  load.bind(EventBusNamespaceToken).toConstantValue(`ynab-plus`);
-  load.bind(SessionStoreObjectStoreToken).to(FlatFileObjectStore);
-  load.bind(PasswordHasherToken).to(NodePasswordHashValidator);
-  load.bind(PasswordVerifierToken).to(NodePasswordHashValidator);
-  load.bind(EventBusToken).to(NodeEventBus);
+const LOG_CONTEXT = { context: "log-context" };
 
-  load.onActivation(BootstrapperToken, (_context, bootstrapper) => {
+export const nodeAdaptersModule = applicationModule(
+  ({ load, bootstrapper, logger }) => {
+    logger.info(`Initialising node adapters module`, LOG_CONTEXT);
+    load.bind(EventBusListenerToken).toConstantValue(new EventEmitter());
+    load.bind(EventBusNamespaceToken).toConstantValue(`ynab-plus`);
+    load.bind(SessionStoreObjectStoreToken).to(FlatFileObjectStore);
+    load.bind(PasswordHasherToken).to(NodePasswordHashValidator);
+    load.bind(PasswordVerifierToken).to(NodePasswordHashValidator);
+    load.bind(EventBusToken).to(NodeEventBus);
     load
       .bind(FlatFileObjectStoreFolderToken)
       .toConstantValue(bootstrapper.configValue("sessionPath", z.string()));
-
-    return bootstrapper;
-  });
-});
+    logger.debug(`Finished initialising node adapters module`, LOG_CONTEXT);
+  },
+);

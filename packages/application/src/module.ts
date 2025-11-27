@@ -6,40 +6,52 @@ import {
   type ISessionIdRequester,
 } from "@ports";
 import { ServiceBus, SessionStorage } from "@core";
-import { ApplicationContainerToken } from "@ynab-plus/bootstrap";
+import {
+  ApplicationContainerToken,
+  applicationModule,
+} from "@ynab-plus/bootstrap";
 import { RequestContainerFactoryToken } from "./ports/request-container-factory-token.ts";
 import { ServiceBusToken } from "./ports/i-service-bus.ts";
 import { loadServices } from "./services/load-services.ts";
 import { attachDomainEventEmitter } from "./attach-domain-event-emitter.ts";
 
-export const applicationServicesModule = new ContainerModule((load) => {
-  load.bind(SessionStoreToken).to(SessionStorage).inRequestScope();
-  load.bind(ServiceBusToken).to(ServiceBus).inRequestScope();
-  loadServices(load);
-  attachDomainEventEmitter(load);
+export const LOG_CONTEXT = { context: "app-services-module" };
 
-  load
-    .bind(RequestContainerFactoryToken)
-    .toFactory((context: ResolutionContext) => {
-      return () => async (sessionIdRequester: ISessionIdRequester) => {
-        const container = context.get(ApplicationContainerToken);
-        const parentEventBus = container.get(EventBusToken);
+export const applicationServicesModule = applicationModule(
+  ({ load, logger }) => {
+    logger.info(`Initialising application services module`, LOG_CONTEXT);
+    load.bind(SessionStoreToken).to(SessionStorage).inRequestScope();
+    load.bind(ServiceBusToken).to(ServiceBus).inRequestScope();
+    loadServices(load);
+    attachDomainEventEmitter(load);
 
-        const requestContainer = new Container({
-          parent: container,
-          defaultScope: "Request",
-        });
+    load
+      .bind(RequestContainerFactoryToken)
+      .toFactory((context: ResolutionContext) => {
+        return () => async (sessionIdRequester: ISessionIdRequester) => {
+          const container = context.get(ApplicationContainerToken);
+          const parentEventBus = container.get(EventBusToken);
 
-        const requestScopedServicesModule = new ContainerModule(loadServices);
-        await requestContainer.load(requestScopedServicesModule);
+          const requestContainer = new Container({
+            parent: container,
+            defaultScope: "Request",
+          });
 
-        const sessionId = await sessionIdRequester.getSessionId();
+          const requestScopedServicesModule = new ContainerModule(loadServices);
+          await requestContainer.load(requestScopedServicesModule);
 
-        requestContainer
-          .bind(EventBusToken)
-          .toConstantValue(parentEventBus.child(sessionId));
+          const sessionId = await sessionIdRequester.getSessionId();
 
-        return requestContainer;
-      };
-    });
-});
+          requestContainer
+            .bind(EventBusToken)
+            .toConstantValue(parentEventBus.child(sessionId));
+
+          return requestContainer;
+        };
+      });
+    logger.debug(
+      `Finished initialising application services module`,
+      LOG_CONTEXT,
+    );
+  },
+);

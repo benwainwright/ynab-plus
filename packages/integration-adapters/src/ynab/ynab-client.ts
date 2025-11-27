@@ -1,13 +1,13 @@
 import { HttpError } from "@errors";
 import type { IAccountsFetcher, ITransactionFetcher } from "@ynab-plus/app";
-import type { ILogger } from "@ynab-plus/bootstrap";
+import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import {
   Account,
   SyncDetails,
   Transaction,
   type OauthToken,
 } from "@ynab-plus/domain";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import z from "zod";
 
 const LOG_CONTEXT = { context: "ynab-client" };
@@ -15,8 +15,7 @@ const LOG_CONTEXT = { context: "ynab-client" };
 @injectable()
 export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
   public constructor(
-    private baseUrl: string,
-
+    @inject(LoggerToken)
     private logger: ILogger,
   ) {}
 
@@ -35,7 +34,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       ? `?last_knowledge_of_server=${String(syncDetails.checkpoint)}`
       : ``;
 
-    const url = `${this.baseUrl}/v1${path}${knowledgeString}`;
+    const url = `https://api.ynab.com/v1${path}${knowledgeString}`;
 
     token.lastUse = new Date();
 

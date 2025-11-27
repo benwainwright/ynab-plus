@@ -14,9 +14,10 @@
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
-    "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
+    "@ynab-plus/serialiser": "workspace:*",
     "better-sqlite3": "12.4.1",
+    "reflect-metadata": "^0.2.2",
     "zod": "4.1.12"
   },
   "devDependencies": {

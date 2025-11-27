@@ -1,4 +1,3 @@
-export { getServices } from "./get-services.ts";
 export { type LoginEvents } from "./auth/login-events.ts";
 export { type AccountsEvents } from "./accounts/accounts-events.ts";
 export { type UserEvents } from "./users/user-events.ts";

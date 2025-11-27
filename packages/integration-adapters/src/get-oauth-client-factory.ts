@@ -1,8 +1,19 @@
 import { YnabOauth2Client } from "@ynab";
+import type {
+  IOauthNewTokenRequester,
+  IOauthRedirectUrlGenerator,
+  IOAuthTokenRefresher,
+} from "@ynab-plus/app";
 import { type IBootstrapper } from "@ynab-plus/bootstrap";
 import z from "zod";
 
-export const getOauthClientFactory = (bootstrapper: IBootstrapper) => {
+export const getOauthClientFactory = (
+  bootstrapper: IBootstrapper,
+): ((
+  provider: string,
+) => IOauthRedirectUrlGenerator &
+  IOauthNewTokenRequester &
+  IOAuthTokenRefresher) => {
   const ynabClientId = bootstrapper.configValue(`ynabClientId`, z.string());
 
   const ynabClientSecret = bootstrapper.configValue(

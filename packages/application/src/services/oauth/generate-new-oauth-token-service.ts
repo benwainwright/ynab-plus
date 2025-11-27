@@ -1,11 +1,11 @@
 import {
-  NewTokenRequesterFactoryToken,
+  OauthCheckerFactoryToken,
   OauthTokenRepositoryToken,
   TaskSchedulerToken,
   type IHandleContext,
+  type IOauthCheckerFactory,
   type IOauthTokenRepository,
   type ITaskScheduler,
-  type NewTokenRequesterFactory,
 } from "@ports";
 import { LoggerToken, type ILogger } from "@ynab-plus/bootstrap";
 import { RegularTask, type IRole, type Permission } from "@ynab-plus/domain";
@@ -26,8 +26,8 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     @inject(OauthTokenRepositoryToken)
     private tokenRepository: IOauthTokenRepository,
 
-    @inject(NewTokenRequesterFactoryToken)
-    private newTokenRequesterFactory: NewTokenRequesterFactory,
+    @inject(OauthCheckerFactoryToken)
+    private newTokenRequesterFactory: IOauthCheckerFactory,
 
     @inject(TaskSchedulerToken)
     private taskScheduler: ITaskScheduler,
