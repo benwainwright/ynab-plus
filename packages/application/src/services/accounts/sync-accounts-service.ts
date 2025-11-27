@@ -1,8 +1,7 @@
-import { AbstractApplicationService } from "@core";
+import { $inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
 import {
   AccountRepositoryToken,
-  AccountsFetcherToken,
   OauthTokenRepositoryToken,
   TaskSchedulerToken,
   type IAccountRepository,
@@ -26,7 +25,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     @inject(OauthTokenRepositoryToken)
     private tokenRepository: IOauthTokenRepository,
 
-    @inject(AccountsFetcherToken)
+    @$inject("AccountsFetcher")
     private accountsFetcher: IAccountsFetcher,
 
     @inject(AccountRepositoryToken)

@@ -2,6 +2,8 @@ export { type IInfrastructurePorts, type AllEvents } from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";
 
+export { type IIntegrationPorts } from "./ports/groups/i-integration-ports.ts";
+
 export {
   type IAccountRepository,
   AccountRepositoryToken,

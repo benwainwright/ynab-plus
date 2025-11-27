@@ -12,6 +12,7 @@ import { sqliteDataAdaptersModule } from "@ynab-plus/sqlite-adapters";
 import { integrationsModule } from "@ynab-plus/integration-adapters";
 
 import { serverModule } from "./server-module.ts";
+import type { TypedContainer } from "@inversifyjs/strongly-typed";
 
 const container = getContainer();
 
@@ -20,9 +21,12 @@ await container.load(
   nodeAdaptersModule,
   applicationServicesModule,
   sqliteDataAdaptersModule,
-  integrationsModule,
   serverModule,
 );
+
+const containerAs = container as TypedContainer;
+
+await containerAs.load(integrationsModule);
 
 const bootstrapper = await container.getAsync(BootstrapperToken);
 

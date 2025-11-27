@@ -5,3 +5,4 @@ export { SessionStorage } from "./session-storage.ts";
 export { type ApplicationEvents } from "./application-events.ts";
 export { type AllEvents } from "./all-events.ts";
 export { emitDomainEventsOnSave } from "./emit-domain-events-on-save.ts";
+export { $inject } from "./typed-inject.ts";

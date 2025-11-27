@@ -11,6 +11,7 @@
     "paths": {
       "@core": ["./src/core/index.ts"],
       "@ports": ["./src/ports/index.ts"],
+      "@ports/groups": ["./src/ports/groups/index.ts"],
       "@errors": ["./src/errors/index.ts"],
       "@services": ["./src/services/index.ts"]
     }
