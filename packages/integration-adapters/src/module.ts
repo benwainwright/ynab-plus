@@ -18,8 +18,10 @@ export const integrationsModule = typedApplicationModule<
   load.bind("BankConnectionCreator").to(GocardlessClient);
   load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
 
+  const oauthClientFactory = getOauthClientFactory(bootstrapper);
+
   load.bind("OauthCheckerFactory").toFactory(() => {
-    return getOauthClientFactory(bootstrapper);
+    return oauthClientFactory;
   });
 
   load
