@@ -16,7 +16,6 @@ export const applicationServicesModule =
     ({ load, logger, container }) => {
       logger.info(`Initialising application services module`, LOG_CONTEXT);
 
-      load.bind("SessionStore").to(SessionStorage).inRequestScope();
       load.bind("ServiceBus").to(ServiceBus).inRequestScope();
       loadServices(load);
       attachDomainEventEmitter(load, container);
@@ -35,17 +34,27 @@ export const applicationServicesModule =
           const requestScopedServicesModule =
             new TypedContainerModule<IApplicationDependencies>(loadServices);
 
-          await requestContainer.load(requestScopedServicesModule);
+          requestContainer
+            .bind("CurrentUserSetter")
+            .to(SessionStorage)
+            .inRequestScope();
 
-          const sessionId = await sessionIdRequester.getSessionId();
+          requestContainer
+            .bind("SessionStore")
+            .to(SessionStorage)
+            .inRequestScope();
 
           requestContainer
             .bind("SessionIdRequester")
             .toConstantValue(sessionIdRequester);
 
+          const sessionId = await sessionIdRequester.getSessionId();
+
           requestContainer
             .bind("EventBus")
             .toConstantValue(parentEventBus.child(sessionId));
+
+          await requestContainer.load(requestScopedServicesModule);
 
           return requestContainer;
         };
