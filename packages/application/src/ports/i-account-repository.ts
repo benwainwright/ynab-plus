@@ -1,9 +1,5 @@
 import type { Account } from "@ynab-plus/domain";
-import type { ServiceIdentifier } from "inversify";
 import type { ICreatable } from "./i-creatable.ts";
-
-export const AccountRepositoryToken: ServiceIdentifier<IAccountRepository> =
-  Symbol.for("IAccountRepository");
 
 export interface IAccountRepository extends ICreatable {
   getAccounts(id: string): Promise<Account | undefined>;

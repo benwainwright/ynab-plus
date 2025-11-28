@@ -1,5 +1,4 @@
-import type { ServiceIdentifier } from "inversify";
-import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-connection/bank-connection.ts";
+import type { BankConnection } from "@ynab-plus/domain";
 import type { ICreatable } from "./i-creatable.ts";
 
 export interface IBankConnectionRepository extends ICreatable {
@@ -7,6 +6,3 @@ export interface IBankConnectionRepository extends ICreatable {
   saveConnection(connection: BankConnection): Promise<BankConnection>;
   deleteConnection(connection: BankConnection): Promise<void>;
 }
-
-export const BankConnectionRepositoryToken: ServiceIdentifier<IBankConnectionRepository> =
-  Symbol.for("BankConnectionRepository");

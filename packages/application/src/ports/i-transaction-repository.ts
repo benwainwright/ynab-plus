@@ -1,5 +1,4 @@
 import type { Transaction } from "@ynab-plus/domain";
-import type { ServiceIdentifier } from "inversify";
 import type { ICreatable } from "./i-creatable.ts";
 
 export interface ITransactionRepository extends ICreatable {
@@ -20,6 +19,3 @@ export interface ITransactionRepository extends ICreatable {
 
   saveTransactions(transactions: Transaction[]): Promise<Transaction[]>;
 }
-
-export const TransactionRepositoryToken: ServiceIdentifier<ITransactionRepository> =
-  Symbol.for("TransactionRepositoryToken");
