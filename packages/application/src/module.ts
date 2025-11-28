@@ -8,13 +8,33 @@ import {
   TypedContainer,
   TypedContainerModule,
 } from "@inversifyjs/strongly-typed";
+import z from "zod";
+import { User } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "app-services-module" };
 
 export const applicationServicesModule =
   typedApplicationModule<IApplicationDependencies>(
-    ({ load, logger, container }) => {
+    ({ load, logger, container, bootstrapper }) => {
       logger.info(`Initialising application services module`, LOG_CONTEXT);
+
+      const adminEmail = bootstrapper.configValue("adminEmail", z.string());
+      const adminPassword = bootstrapper.configValue(
+        "adminPassword",
+        z.string(),
+      );
+
+      bootstrapper.addInitStep(async () => {
+        const userRepo = await container.getAsync("UserRepository");
+        const passwordHasher = await container.getAsync("PasswordHasher");
+        const bootstrapAdmin = User.reconstitute({
+          id: "admin",
+          email: await adminEmail.value,
+          passwordHash: await passwordHasher.hash(await adminPassword.value),
+          permissions: ["user", "admin"],
+        });
+        await userRepo.save(bootstrapAdmin);
+      });
 
       load.bind("ServiceBus").to(ServiceBus).inRequestScope();
       loadServices(load);
