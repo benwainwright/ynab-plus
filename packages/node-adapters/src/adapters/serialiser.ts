@@ -21,6 +21,7 @@ export class Serialiser {
       token: [
         (thing) => thing instanceof OauthToken,
         (token: OauthToken): IOauthToken => ({
+          refreshExpiry: token.refreshExpiry,
           refreshToken: token.refreshToken,
           provider: token.provider,
           userId: token.userId,

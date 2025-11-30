@@ -54,6 +54,7 @@ describe("the getaccountTransactions method", () => {
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       provider: "ynab",
       userId: "ben",
       expiry: new Date("2025-11-11T20:39:37.823Z"),
@@ -81,6 +82,7 @@ describe("the getaccountTransactions method", () => {
     const client = new YnabClient(logger);
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       provider: "ynab",
       expiry: new Date("2025-12-11T20:39:37.823Z"),
       token: MOCK_TOKEN,
@@ -108,6 +110,7 @@ describe("the getaccountTransactions method", () => {
     const client = new YnabClient(logger);
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       provider: "ynab",
       expiry: new Date("2025-12-11T20:39:37.823Z"),
       token: MOCK_TOKEN,
@@ -147,6 +150,7 @@ describe("the getaccounts method", () => {
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       provider: "ynab",
       userId: "ben",
       expiry: new Date("2025-11-11T20:39:37.823Z"),

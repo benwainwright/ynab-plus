@@ -103,6 +103,7 @@ export class YnabOauth2Client
       token: json.access_token,
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
+      refreshExpiry: undefined,
       userId,
     });
 
