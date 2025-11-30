@@ -9,6 +9,7 @@ export const testOauthRepository = (
       const repo = await create();
 
       const tokenOne = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         provider: "ynab",
         expiry: new Date("2025-12-11T20:39:37.823Z"),
         token: "foo",
@@ -20,6 +21,7 @@ export const testOauthRepository = (
       });
 
       const tokenTwo = OauthToken.reconstitute({
+        refreshExpiry: new Date(),
         provider: "monzo",
         userId: "ben",
         expiry: new Date("2025-11-11T20:39:37.823Z"),
@@ -42,6 +44,7 @@ export const testOauthRepository = (
       const repo = await create();
 
       const tokenOne = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         provider: "ynab",
         expiry: new Date("2025-12-11T20:39:37.823Z"),
         token: "foo",
@@ -53,6 +56,7 @@ export const testOauthRepository = (
       });
 
       const tokenTwo = OauthToken.reconstitute({
+        refreshExpiry: new Date(),
         provider: "monzo",
         userId: "ben",
         expiry: new Date("2025-11-11T20:39:37.823Z"),

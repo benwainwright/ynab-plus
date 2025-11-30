@@ -60,6 +60,7 @@ describe("check oauth-integration-status-service", () => {
 
     try {
       const mockToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         token: "foo",
         userId: "ben",
         refreshToken: "foo-refresh",
@@ -131,6 +132,7 @@ describe("check oauth-integration-status-service", () => {
     vi.setSystemTime(new Date("2020-01-01T00:00:00.000Z"));
     try {
       const mockFirstToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         token: "foo",
         refreshToken: "foo-refresh",
         provider: "ynab",
@@ -142,6 +144,7 @@ describe("check oauth-integration-status-service", () => {
       });
 
       const mockSecondToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         token: "bar",
         refreshToken: "foo-refresh-2",
         userId: "ben",

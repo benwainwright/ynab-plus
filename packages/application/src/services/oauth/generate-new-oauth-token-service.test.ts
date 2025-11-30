@@ -59,6 +59,7 @@ describe("generate new oauth token service", () => {
         token: "foo",
         userId: "ben",
         refreshToken: "foo-refresh",
+        refreshExpiry: undefined,
         provider: "ynab",
         expiry: new Date("2021-01-01T00:00:00.000Z"),
         created: new Date(),

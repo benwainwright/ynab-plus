@@ -59,6 +59,7 @@ describe("download-accounts service", () => {
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -139,6 +140,7 @@ describe("download-accounts service", () => {
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -296,6 +298,7 @@ describe("download-accounts service", () => {
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -374,6 +377,7 @@ describe("download-accounts service", () => {
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -428,6 +432,7 @@ describe("download-accounts service", () => {
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),
@@ -507,6 +512,7 @@ describe("download-accounts service", () => {
     });
 
     const token = OauthToken.reconstitute({
+      refreshExpiry: undefined,
       expiry: new Date(),
       created: new Date(),
       refreshed: new Date(),

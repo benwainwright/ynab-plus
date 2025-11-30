@@ -9,6 +9,7 @@ export class OauthToken extends DomainModel implements IOauthToken {
   public expiry: Date;
   public token: string;
   public refreshToken: string;
+  public refreshExpiry: Date | undefined;
   public refreshed: Date | undefined;
   public lastUse: Date | undefined;
 
@@ -20,6 +21,7 @@ export class OauthToken extends DomainModel implements IOauthToken {
     this.provider = config.provider;
     this.userId = config.userId;
     this.lastUse = config.lastUse;
+    this.refreshExpiry = config.refreshExpiry;
     this.refreshed = config.refreshed;
     this.created = config.created;
   }
@@ -42,13 +44,19 @@ export class OauthToken extends DomainModel implements IOauthToken {
     return new OauthToken(oAuthTokenSchema.parse(config));
   }
 
-  public refresh(newToken: string, newRefreshToken: string, expiry: Date) {
+  public refresh(
+    newToken: string,
+    newRefreshToken: string,
+    expiry: Date,
+    refreshExpiry?: Date,
+  ) {
     const old = OauthToken.reconstitute(this);
 
     this.token = newToken;
     this.refreshToken = newRefreshToken;
     this.refreshed = new Date();
     this.expiry = expiry;
+    this.refreshExpiry = refreshExpiry;
 
     this.raiseEvent({ event: "OauthTokenRefreshed", data: { old, new: this } });
   }

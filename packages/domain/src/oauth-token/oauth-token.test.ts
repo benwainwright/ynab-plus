@@ -18,6 +18,7 @@ describe("the oauth token", () => {
       token: "token",
       refreshToken: "string",
       expiry: new Date(),
+      refreshExpiry: new Date(),
       userId: "user",
     });
 
@@ -39,6 +40,7 @@ describe("the oauth token", () => {
       vi.setSystemTime(today);
 
       const newToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
         provider: "ynab",
         token: "token",
         refreshToken: "string",
@@ -67,6 +69,7 @@ describe("the oauth token", () => {
         vi.setSystemTime(today);
 
         const newToken = OauthToken.reconstitute({
+          refreshExpiry: undefined,
           provider: "ynab",
           token: "token",
           refreshToken: "string",
@@ -78,7 +81,8 @@ describe("the oauth token", () => {
         });
 
         const expiry = new Date("2025-11-22T13:18:27.377Z");
-        newToken.refresh("foo", "bar", expiry);
+        const refreshExpiry = new Date("2025-12-22T13:18:27.377Z");
+        newToken.refresh("foo", "bar", expiry, refreshExpiry);
 
         expect(newToken.token).toEqual("foo");
         expect(newToken.refreshToken).toEqual("bar");
@@ -92,6 +96,7 @@ describe("the oauth token", () => {
               old: OauthToken.reconstitute({
                 provider: "ynab",
                 token: "token",
+                refreshExpiry: undefined,
                 refreshToken: "string",
                 expiry: new Date(),
                 lastUse: undefined,
@@ -102,6 +107,7 @@ describe("the oauth token", () => {
               new: OauthToken.reconstitute({
                 provider: "ynab",
                 token: "foo",
+                refreshExpiry,
                 refreshToken: "bar",
                 expiry,
                 lastUse: undefined,

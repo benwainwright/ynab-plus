@@ -1,14 +1,12 @@
 export { type IAccountRepository } from "./i-account-repository.ts";
 export { type IAccountsFetcher } from "./i-accounts-fetcher.ts";
 export { type IEventBus } from "./i-event-bus.ts";
-export { SessionStoreToken } from "./session-store-token.ts";
 
 export {
   type IEventListener,
   type IEventPacket,
   type IListener,
 } from "./i-event-listener.ts";
-export { SessionStoreObjectStoreToken } from "./session-store-object-store-token.ts";
 export type { IEventEmitter } from "./i-event-emitter.ts";
 export type { IHandleContext } from "./i-handle-context.ts";
 export { type IOauthCheckerFactory } from "./i-oauth-checker-factory.ts";
@@ -36,5 +34,3 @@ export type { IOpenBankingTokenFetcher } from "./i-open-banking-token-fetcher.ts
 export { type IBankConnectionRepository } from "./i-bank-connection-repository.ts";
 export { type IInstitutionAuthPageLinkFetcher } from "./i-institution-auth-page-link-fetcher.ts";
 export { type IBankConnectionCreator } from "./i-bank-connection-creator.ts";
-
-export { ServiceToken } from "./service-token.ts";

@@ -5,6 +5,7 @@ import { OauthToken } from "@ynab-plus/domain";
 interface RawOauthToken {
   token: string;
   refreshToken: string;
+  refreshExpiry?: string;
   provider: string;
   userId: string;
   expiry: string;
@@ -46,9 +47,23 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
           lastUse TEXT,
           refreshed TEXT,
           created TEXT NOT NULL,
+          refreshExpiry TEXT,
           PRIMARY KEY (userId, provider)
       );`,
     );
+  }
+
+  public mapRaw(raw: RawOauthToken): OauthToken {
+    return OauthToken.reconstitute({
+      ...raw,
+      expiry: new Date(raw.expiry),
+      lastUse: raw.lastUse ? new Date(raw.lastUse) : undefined,
+      refreshed: raw.refreshed ? new Date(raw.refreshed) : undefined,
+      refreshExpiry: raw.refreshExpiry
+        ? new Date(raw.refreshExpiry)
+        : undefined,
+      created: new Date(raw.created),
+    });
   }
 
   public async get(
@@ -56,35 +71,28 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     provider: string,
   ): Promise<OauthToken | undefined> {
     const result = await this.database.getFromDb<RawOauthToken | undefined>(
-      `SELECT userId, provider, token, refreshToken, expiry, lastUse, refreshed, created
+      `SELECT userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry
         FROM ${await this.tableName.value} WHERE userId = ? AND provider = ?`,
       [userId, provider],
     );
 
-    return result
-      ? OauthToken.reconstitute({
-          ...result,
-          expiry: new Date(result.expiry),
-          lastUse: result.lastUse ? new Date(result.lastUse) : undefined,
-          refreshed: result.refreshed ? new Date(result.refreshed) : undefined,
-          created: new Date(result.created),
-        })
-      : undefined;
+    return result ? this.mapRaw(result) : undefined;
   }
 
   public async save(token: OauthToken): Promise<OauthToken> {
     const data = await this.database.getFromDb<RawOauthToken>(
-      `INSERT INTO ${await this.tableName.value} (userId, provider, token, refreshToken, expiry, lastUse, refreshed, created)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO ${await this.tableName.value} (userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(userId, provider) DO UPDATE SET
             token = excluded.token,
             refreshToken = excluded.refreshToken,
             expiry = excluded.expiry,
             lastUse = excluded.lastUse,
             refreshed = excluded.refreshed,
-            created = excluded.created
+            created = excluded.created,
+            refreshExpiry = excluded.refreshExpiry
 
-          RETURNING userId, provider, token, refreshToken, expiry, lastUse, refreshed, created;`,
+          RETURNING userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry;`,
       [
         token.userId,
         token.provider,
@@ -94,15 +102,10 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
         token.lastUse?.toISOString() ?? null,
         token.refreshed?.toISOString() ?? null,
         token.created.toISOString(),
+        token.refreshExpiry?.toISOString() ?? null,
       ],
     );
 
-    return OauthToken.reconstitute({
-      ...data,
-      expiry: new Date(data.expiry),
-      lastUse: data.lastUse ? new Date(data.lastUse) : undefined,
-      refreshed: data.refreshed ? new Date(data.refreshed) : undefined,
-      created: new Date(data.created),
-    });
+    return this.mapRaw(data);
   }
 }

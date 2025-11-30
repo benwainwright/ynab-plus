@@ -17,7 +17,6 @@ export {
 export {
   type IMultipleRepository,
   type IAccountRepository,
-  SessionStoreObjectStoreToken,
   type IEventBus,
   type IEventListener,
   type IEventEmitter,
@@ -29,7 +28,6 @@ export {
   type IOauthRedirectUrlGenerator,
   type IOAuthTokenRefresher,
   type IOauthTokenRepository,
-  SessionStoreToken,
   type IObjectStorage,
   type IPasswordHasher,
   type ITransactionFetcher,
