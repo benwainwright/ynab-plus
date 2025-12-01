@@ -12,6 +12,7 @@
   "bankconnectionTablename": "bankConnections",
   "syncdetailsTablename": "syncDetails",
   "accountsTableName": "accounts",
+  "gocardlessRedirectUrl": "http://localhost:5173/integrations",
   "adminEmail": "a@b.c",
   "adminPassword": "password",
   "gocardlessSecretId": "ee373c85-ddc5-4fd5-b89b-beec8178ac2f",
