@@ -24,8 +24,8 @@ export const handlers = [
     return HttpResponse.json(mockGocardlessData.mockInstititionsList);
   }),
 
-  http.post<object, { institution_id: string }>(
-    `${GOCARDLESS_API}/api/v2/requisitions`,
+  http.post<object, { institution_id: string; redirect: string }>(
+    `${GOCARDLESS_API}/api/v2/requisitions/`,
     async ({ request }) => {
       const invalidResponse = invalidRequestResponse(request);
 
@@ -35,11 +35,12 @@ export const handlers = [
 
       const data = await request.json();
 
-      const { institution_id } = data;
+      const { institution_id, redirect } = data;
 
       if (
         institution_id !==
-        mockGocardlessData.mockRequisitionResponse.institution_id
+          mockGocardlessData.mockRequisitionResponse.institution_id ||
+        !redirect
       ) {
         return HttpResponse.json({ error: "not found" }, { status: 404 });
       }
@@ -49,7 +50,7 @@ export const handlers = [
   ),
 
   http.post<object, { secret_id: string; secret_key: string }>(
-    `${GOCARDLESS_API}/api/v2/token/new`,
+    `${GOCARDLESS_API}/api/v2/token/new/`,
     async ({ request }) => {
       const invalidResponse = invalidRequestResponse(request, true);
 

@@ -26,6 +26,12 @@ export const integrationsModule = typedApplicationModule<
   });
 
   load
+    .bind("GocardlessRedirectUrlConfigValue")
+    .toConstantValue(
+      bootstrapper.configValue("gocardlessRedirectUrl", z.string()),
+    );
+
+  load
     .bind("GocardlessClientSecretIdConfigValue")
     .toConstantValue(
       bootstrapper.configValue("gocardlessSecretId", z.string()),

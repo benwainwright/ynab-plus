@@ -3,6 +3,7 @@ export const mockGocardlessData = {
   secretKey: "secret-key",
   mockToken: "the-token",
   mockRefreshToken: "the-refresh-token",
+  mockRedirectUrl: "http://www.yourwebpage.com",
   mockRequisitionResponse: {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     created: "2025-05-14T11:05:56.276Z",

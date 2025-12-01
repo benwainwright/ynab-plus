@@ -2,6 +2,7 @@ import type { Commands, ICommandMessage } from "@ynab-plus/domain";
 import { v7 } from "uuid";
 
 import { SocketEventListener } from "./socket-event-listener.ts";
+import { Serialiser } from "@ynab-plus/serialiser";
 
 export class CommandClient {
   public constructor(private socket: WebSocket) {}
@@ -18,7 +19,9 @@ export class CommandClient {
       data,
     };
 
-    this.socket.send(JSON.stringify(message));
+    const serialiser = new Serialiser();
+
+    this.socket.send(serialiser.serialise(message));
 
     const listener = new SocketEventListener(this.socket);
     try {

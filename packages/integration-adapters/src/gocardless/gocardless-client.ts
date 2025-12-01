@@ -26,6 +26,9 @@ export class GocardlessClient
     @inject("GocardlessClientSecretKeyConfigValue")
     private secretKey: ConfigValue<string>,
 
+    @inject("GocardlessRedirectUrlConfigValue")
+    private redirectUrl: ConfigValue<string>,
+
     @inject("Logger")
     logger: ILogger,
   ) {
@@ -43,9 +46,10 @@ export class GocardlessClient
     token: OauthToken,
   ): Promise<{ requsitionId: string; url: string }> {
     const result = await this.client.post({
-      path: "requisitions",
+      path: "requisitions/",
       body: {
         institution_id: connection.id,
+        redirect: await this.redirectUrl.value,
       },
       headers: {
         Authorization: `Bearer ${token.use()}`,
@@ -58,9 +62,7 @@ export class GocardlessClient
         institution_id: z.string(),
         agreement: z.string(),
         reference: z.string(),
-        user_language: z.string(),
         link: z.string(),
-        ssn: z.string(),
       }),
     });
 
@@ -72,7 +74,7 @@ export class GocardlessClient
 
   public async getNewToken() {
     return await this.client.post({
-      path: "token/new",
+      path: "token/new/",
       body: {
         secret_id: await this.secretId.value,
         secret_key: await this.secretKey.value,

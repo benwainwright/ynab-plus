@@ -9,7 +9,6 @@ import { Command, User, type ICommandMessage } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
 import { injectable } from "inversify";
 import { WebSocket } from "ws";
-import z from "zod";
 
 export const LOG_CONTEXT = {
   context: "websocket-server-socket-client",
@@ -42,20 +41,20 @@ export class ServerWebsocketClient {
   }
 
   private parseMessage(message: unknown) {
+    const serialiser = new Serialiser();
     const content =
       message instanceof Buffer
-        ? (JSON.parse(message.toString("utf-8")) as Record<string, unknown>)
+        ? (serialiser.deserialise(message.toString("utf-8")) as Record<
+            string,
+            unknown
+          >)
         : typeof message === "string"
-          ? (JSON.parse(message) as Record<string, unknown>)
+          ? (serialiser.deserialise(message) as Record<string, unknown>)
           : message;
 
-    const commandMessage = z.object({
-      id: z.string(),
-      key: z.string(),
-      data: z.any(),
-    });
+    console.log({ content });
 
-    return commandMessage.parse(content) as ICommandMessage;
+    return content as ICommandMessage;
   }
 
   public onClose() {

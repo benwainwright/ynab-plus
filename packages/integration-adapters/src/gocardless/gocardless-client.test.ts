@@ -26,6 +26,7 @@ describe("the gocardless client", () => {
       const client = new GocardlessClient(
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
         mock(),
       );
 
@@ -67,6 +68,7 @@ describe("the gocardless client", () => {
       const client = new GocardlessClient(
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
         mock(),
       );
 
@@ -88,6 +90,7 @@ describe("the gocardless client", () => {
       const client = new GocardlessClient(
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
         mock(),
       );
 

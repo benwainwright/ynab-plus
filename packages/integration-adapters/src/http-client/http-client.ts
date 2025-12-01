@@ -130,6 +130,8 @@ export class HttpClient {
 
     const data = (await result.json()) as unknown;
 
+    this.logger.silly(JSON.stringify(data, null, 2), LOG_CONTEXT);
+
     return responseSchema.parse(data);
   }
 }
