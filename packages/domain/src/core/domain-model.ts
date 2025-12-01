@@ -1,7 +1,8 @@
 import type { DomainEvents } from "./domain-event.ts";
 import type { IEvent } from "./i-event.ts";
 
-export abstract class DomainModel {
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+export abstract class DomainModel<TShape = unknown> {
   private events: IEvent<DomainEvents, keyof DomainEvents>[] = [];
 
   public pullEvents(): IEvent<DomainEvents, keyof DomainEvents>[] {
@@ -15,4 +16,6 @@ export abstract class DomainModel {
   ) {
     this.events.push(event);
   }
+
+  public abstract freezeDry(config?: { secure: boolean }): TShape;
 }

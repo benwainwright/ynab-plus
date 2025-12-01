@@ -14,10 +14,6 @@ export const testBankConnectionRepository = (
         userId: "ben",
         logo: "bar",
         requisitionId: "baz",
-        token: "token",
-        refreshToken: "refreshToken",
-        tokenExpiry: new Date(),
-        refreshTokenExpiry: new Date(),
       });
 
       const connectionTwo = BankConnection.reconstite({
@@ -26,10 +22,6 @@ export const testBankConnectionRepository = (
         userId: "fred",
         logo: "bar",
         requisitionId: "baz",
-        token: "token",
-        refreshToken: "refreshToken",
-        tokenExpiry: new Date(),
-        refreshTokenExpiry: new Date(),
       });
 
       await repo.saveConnection(connectionOne);
@@ -49,10 +41,6 @@ export const testBankConnectionRepository = (
         userId: "ben",
         logo: "bar",
         requisitionId: "baz",
-        token: "token",
-        refreshToken: "refreshToken",
-        tokenExpiry: new Date(),
-        refreshTokenExpiry: new Date(),
       });
 
       const connectionTwo = BankConnection.reconstite({
@@ -61,10 +49,6 @@ export const testBankConnectionRepository = (
         userId: "fred",
         logo: "bar",
         requisitionId: "baz",
-        token: "token",
-        refreshToken: "refreshToken",
-        tokenExpiry: new Date(),
-        refreshTokenExpiry: new Date(),
       });
 
       await repo.saveConnection(connectionOne);

@@ -32,12 +32,6 @@ export class SqliteBankConnectionRepository
     return BankConnection.reconstite({
       ...raw,
       requisitionId: raw.requisitionId ?? undefined,
-      token: raw.token ?? undefined,
-      tokenExpiry: raw.tokenExpiry ? new Date(raw.tokenExpiry) : undefined,
-      refreshToken: raw.refreshToken ?? undefined,
-      refreshTokenExpiry: raw.refreshTokenExpiry
-        ? new Date(raw.refreshTokenExpiry)
-        : undefined,
     });
   }
 
@@ -48,11 +42,7 @@ export class SqliteBankConnectionRepository
           userId TEXT PRIMARY KEY,
           bankName TEXT NOT NULL,
           logo TEXT NOT NULL,
-          requisitionId TEXT,
-          token TEXT,
-          tokenExpiry TEXT,
-          refreshToken TEXT,
-          refreshTokenExpiry TEXT
+          requisitionId TEXT
       );`,
     );
   }
@@ -61,7 +51,7 @@ export class SqliteBankConnectionRepository
     userId: string,
   ): Promise<BankConnection | undefined> {
     const result = await this.database.getFromDb<RawBankConnection | undefined>(
-      `SELECT id, userId, bankName, logo, requisitionId, token, tokenExpiry, refreshToken, refreshTokenExpiry
+      `SELECT id, userId, bankName, logo, requisitionId
         FROM ${await this.tableName.value} WHERE userId = ?`,
       [userId],
     );
@@ -77,19 +67,15 @@ export class SqliteBankConnectionRepository
     connection: BankConnection,
   ): Promise<BankConnection> {
     const data = await this.database.getFromDb<RawBankConnection>(
-      `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId, token, tokenExpiry, refreshToken, refreshTokenExpiry)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        RETURNING id, userId, bankName, logo, requisitionId, token, tokenExpiry, refreshToken, refreshTokenExpiry`,
+      `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId)
+        VALUES (?, ?, ?, ?, ?)
+        RETURNING id, userId, bankName, logo, requisitionId`,
       [
         connection.id,
         connection.userId,
         connection.bankName,
         connection.logo,
         connection.freezeDry().requisitionId ?? null,
-        connection.freezeDry(true).token ?? null,
-        connection.freezeDry(true).tokenExpiry?.toISOString() ?? null,
-        connection.freezeDry(true).refreshToken ?? null,
-        connection.freezeDry(true).refreshTokenExpiry?.toISOString(),
       ],
     );
 

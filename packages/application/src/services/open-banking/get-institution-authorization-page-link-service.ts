@@ -1,8 +1,10 @@
 import { inject, AbstractApplicationService } from "@core";
+import { AppError } from "@errors";
 import {
   type IBankConnectionRepository,
   type IHandleContext,
   type IInstitutionAuthPageLinkFetcher,
+  type IOauthTokenRepository,
 } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
@@ -16,6 +18,9 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
 
     @inject("BankConnectionRepository")
     private bankConnectionRepository: IBankConnectionRepository,
+
+    @inject("OauthTokenRepository")
+    private oauthTokenRepository: IOauthTokenRepository,
 
     @inject("Logger")
     logger: ILogger,
@@ -39,7 +44,16 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
     "GetInstitutionAuthorizationPageLinkCommand",
     TRole
   >): Promise<{ url: string }> {
-    const result = await this.authLinkFetcher.getLink(data);
+    const token = await this.oauthTokenRepository.get(
+      this.currentUser.id,
+      "open-banking",
+    );
+
+    if (!token) {
+      throw new AppError("No bank token found");
+    }
+
+    const result = await this.authLinkFetcher.getLink(data, token);
 
     data.saveRequisitionId(result.requsitionId);
 

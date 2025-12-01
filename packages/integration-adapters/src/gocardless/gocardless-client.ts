@@ -3,15 +3,19 @@ import { HttpClient } from "@http-client";
 import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
+  type IOpenBankingTokenFetcher,
 } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
-import { BankConnection } from "@ynab-plus/domain";
+import { BankConnection, OauthToken } from "@ynab-plus/domain";
 import { injectable } from "inversify";
 import z from "zod";
 
 @injectable()
 export class GocardlessClient
-  implements IBankConnectionCreator, IInstitutionAuthPageLinkFetcher
+  implements
+    IBankConnectionCreator,
+    IInstitutionAuthPageLinkFetcher,
+    IOpenBankingTokenFetcher
 {
   private client: HttpClient;
 
@@ -36,6 +40,7 @@ export class GocardlessClient
   }
   public async getLink(
     connection: BankConnection,
+    token: OauthToken,
   ): Promise<{ requsitionId: string; url: string }> {
     const result = await this.client.post({
       path: "requisitions",
@@ -43,7 +48,7 @@ export class GocardlessClient
         institution_id: connection.id,
       },
       headers: {
-        Authorization: `Bearer ${connection.useToken() ?? ""}`,
+        Authorization: `Bearer ${token.use()}`,
       },
       responseSchema: z.object({
         id: z.string(),
@@ -65,32 +70,40 @@ export class GocardlessClient
     };
   }
 
-  private async getNewToken() {
+  public async getNewToken() {
     return await this.client.post({
-      path: "token/new/",
+      path: "token/new",
       body: {
         secret_id: await this.secretId.value,
         secret_key: await this.secretKey.value,
       },
-      responseSchema: z.object({
-        access: z.string(),
-        access_expires: z.number(),
-        refresh: z.string(),
-        refresh_expires: z.number(),
-      }),
+      responseSchema: z
+        .object({
+          access: z.string(),
+          access_expires: z.number(),
+          refresh: z.string(),
+          refresh_expires: z.number(),
+        })
+        .transform((data) => ({
+          token: data.access,
+          refreshToken: data.refresh,
+          tokenExpiresIn: data.access_expires,
+          refreshTokenExpiresIn: data.refresh_expires,
+        })),
     });
   }
 
-  public async getConnections(userId: string): Promise<BankConnection[]> {
-    const tokenResponse = await this.getNewToken();
-
+  public async getConnections(
+    userId: string,
+    token: OauthToken,
+  ): Promise<BankConnection[]> {
     return await this.client.get({
       path: "institutions",
       queryString: {
         country: "GB",
       },
       headers: {
-        Authorization: `Bearer ${tokenResponse.access}`,
+        Authorization: `Bearer ${token.use()}`,
       },
       responseSchema: z
         .array(
@@ -111,14 +124,6 @@ export class GocardlessClient
               userId,
               bankName: item.name,
               logo: item.logo,
-              token: tokenResponse.access,
-              tokenExpiry: new Date(
-                Date.now() + tokenResponse.access_expires * 1000,
-              ),
-              refreshToken: tokenResponse.refresh,
-              refreshTokenExpiry: new Date(
-                Date.now() + tokenResponse.refresh_expires * 1000,
-              ),
             }),
           ),
         ),

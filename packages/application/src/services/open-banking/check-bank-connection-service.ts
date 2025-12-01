@@ -3,11 +3,13 @@ import { inject, AbstractApplicationService } from "@core";
 import {
   type IBankConnectionCreator,
   type IBankConnectionRepository,
+  type IOauthTokenRepository,
+  type IOpenBankingTokenFetcher,
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
 
-import type { Permission } from "@ynab-plus/domain";
+import { OauthToken, type Permission } from "@ynab-plus/domain";
 
 import { injectable } from "inversify";
 
@@ -22,6 +24,12 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
     @inject("BankConnectionCreator")
     private institutionListFetcher: IBankConnectionCreator,
 
+    @inject("BankConnectionTokenFetcher")
+    private bankingTokenFetcher: IOpenBankingTokenFetcher,
+
+    @inject("OauthTokenRepository")
+    private oauthTokenRepository: IOauthTokenRepository,
+
     @inject("Logger")
     logger: ILogger,
   ) {
@@ -32,6 +40,33 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
 
   public override requiredPermissions: Permission[] = ["admin", "user"];
 
+  private async getToken() {
+    const token = await this.oauthTokenRepository.get(
+      this.currentUser.id,
+      "open-banking",
+    );
+
+    if (token) {
+      return token;
+    }
+
+    const tokenResponse = await this.bankingTokenFetcher.getNewToken();
+
+    const newToken = OauthToken.create({
+      provider: "open-banking",
+      userId: this.currentUser.id,
+      token: tokenResponse.token,
+      refreshToken: tokenResponse.refreshToken,
+      expiry: new Date(Date.now() + tokenResponse.tokenExpiresIn * 1000),
+      refreshExpiry: new Date(
+        Date.now() + tokenResponse.refreshTokenExpiresIn * 1000,
+      ),
+    });
+
+    await this.oauthTokenRepository.save(newToken);
+    return newToken;
+  }
+
   protected override async handle(): Promise<
     | { status: "new"; potentialInstitutions: BankConnection[] }
     | { status: "connected" }
@@ -41,10 +76,13 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
     );
 
     if (!connection) {
+      const token = await this.getToken();
+
       return {
         status: "new",
         potentialInstitutions: await this.institutionListFetcher.getConnections(
           this.currentUser.id,
+          token,
         ),
       };
     }

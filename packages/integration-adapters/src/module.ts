@@ -16,6 +16,7 @@ export const integrationsModule = typedApplicationModule<
   load.bind("AccountsFetcher").to(YnabClient);
   load.bind("TransactionFetcher").to(YnabClient);
   load.bind("BankConnectionCreator").to(GocardlessClient);
+  load.bind("BankConnectionTokenFetcher").to(GocardlessClient);
   load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
 
   const oauthClientFactory = getOauthClientFactory(bootstrapper);

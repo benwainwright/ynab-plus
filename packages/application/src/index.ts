@@ -15,6 +15,7 @@ export {
 } from "@ports/groups";
 
 export {
+  type IOpenBankingTokenFetcher,
   type IMultipleRepository,
   type IAccountRepository,
   type IEventBus,

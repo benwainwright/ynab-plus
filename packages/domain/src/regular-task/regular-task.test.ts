@@ -9,6 +9,44 @@ afterAll(() => {
 });
 
 describe("the regular task domain model", () => {
+  describe("freeze dry", () => {
+    it("returns an object version of the value object", () => {
+      const task = RegularTask.reconstitute({
+        id: "foo",
+        onBehalfOf: "ben",
+        created: new Date(),
+        triggerImmediately: true,
+        lastExecution: undefined,
+        minute: "1",
+        hour: "2",
+        data: "{}",
+        day: "1",
+        month: "*",
+        weekDay: "*",
+        name: "Do my shopping",
+        description: "A task to do my shopping",
+        command: "SyncAccountsCommand",
+      });
+
+      expect(task.freezeDry()).toEqual({
+        id: "foo",
+        onBehalfOf: "ben",
+        created: new Date(),
+        triggerImmediately: true,
+        lastExecution: undefined,
+        minute: "1",
+        hour: "2",
+        data: "{}",
+        day: "1",
+        month: "*",
+        weekDay: "*",
+        name: "Do my shopping",
+        description: "A task to do my shopping",
+        command: "SyncAccountsCommand",
+      });
+    });
+  });
+
   it("raises an event when created", () => {
     const task = RegularTask.create({
       id: "foo",

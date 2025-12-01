@@ -1,7 +1,21 @@
 import { userSchema, type IUser } from "./i-user.ts";
 import { DomainModel, type Permission, type IRole } from "@core";
 
-export class User extends DomainModel implements IUser, IRole {
+export class User extends DomainModel<IUser> implements IUser, IRole {
+  public override freezeDry(config?: { secure: boolean }): {
+    id: string;
+    passwordHash: string;
+    email: string;
+    permissions: ("public" | "user" | "admin" | "system")[];
+  } {
+    return {
+      id: this.id,
+      passwordHash: config?.secure ? this._passwordHash : ``,
+      email: this._email,
+      permissions: this._permissions,
+    };
+  }
+
   public readonly id: string;
   private _passwordHash: string;
   private _email: string;

@@ -1,7 +1,34 @@
 import { DomainModel } from "@core";
 import { transactionSchema, type ITransaction } from "./i-transaction.ts";
 
-export class Transaction extends DomainModel implements ITransaction {
+export class Transaction
+  extends DomainModel<ITransaction>
+  implements ITransaction
+{
+  public override freezeDry(_config?: { secure: boolean }): {
+    id: string;
+    accountId: string;
+    userId: string;
+    date: Date;
+    payee: string;
+    amount: number;
+    cleared: "cleared" | "uncleared" | "reconciled";
+    approved: boolean;
+    memo?: string | undefined;
+  } {
+    return {
+      id: this.id,
+      accountId: this.accountId,
+      userId: this.userId,
+      date: this.date,
+      payee: this.payee,
+      amount: this.amount,
+      cleared: this.cleared,
+      approved: this.approved,
+      memo: this.memo,
+    };
+  }
+
   public readonly id: string;
   public readonly userId: string;
   public readonly accountId: string;

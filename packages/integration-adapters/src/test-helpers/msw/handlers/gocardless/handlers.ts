@@ -67,7 +67,7 @@ export const handlers = [
       ) {
         return HttpResponse.json({
           summary: "Authentication failed",
-          detail: "No active account found with the given credentials",
+          detail: "No active account found with the given credentials!",
           status_code: 401,
         });
       }

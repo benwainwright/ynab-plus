@@ -1,7 +1,7 @@
 import { DomainModel } from "@core";
 import { accountSchema, type IAccount } from "./i-account.ts";
 
-export class Account extends DomainModel implements IAccount {
+export class Account extends DomainModel<IAccount> implements IAccount {
   public readonly id: string;
 
   public readonly userId: string;
@@ -24,6 +24,26 @@ export class Account extends DomainModel implements IAccount {
 
   public delete() {
     this.raiseEvent({ event: "AccountDeleted", data: this });
+  }
+
+  public override freezeDry(_config?: { secure: boolean }): {
+    id: string;
+    userId: string;
+    name: string;
+    type: string;
+    closed: boolean;
+    deleted: boolean;
+    note?: string | undefined;
+  } {
+    return {
+      id: this.id,
+      userId: this.userId,
+      name: this.name,
+      type: this.type,
+      closed: this.closed,
+      deleted: this.deleted,
+      note: this.note,
+    };
   }
 
   public static reconstitute(

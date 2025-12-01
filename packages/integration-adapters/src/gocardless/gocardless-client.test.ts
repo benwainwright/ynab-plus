@@ -2,10 +2,12 @@ import { server } from "@test-helpers";
 import { GocardlessClient } from "./gocardless-client.ts";
 import { mockGocardlessData } from "../test-helpers/msw/index.ts";
 import { mock } from "vitest-mock-extended";
-import { BankConnection } from "@ynab-plus/domain";
+import { BankConnection, OauthToken } from "@ynab-plus/domain";
 
 beforeAll(() => {
-  server.listen();
+  server.listen({
+    onUnhandledRequest: "error",
+  });
 });
 
 beforeEach(() => {
@@ -33,10 +35,21 @@ describe("the gocardless client", () => {
         userId: "ben",
         logo: "bar",
         requisitionId: "baz",
-        token: mockGocardlessData.mockToken,
       });
 
-      const result = await client.getLink(connection);
+      const token = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: mockGocardlessData.mockToken,
+        refreshToken: "string",
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      const result = await client.getLink(connection, token);
 
       expect(result.url).toEqual(
         mockGocardlessData.mockRequisitionResponse.link,
@@ -44,6 +57,27 @@ describe("the gocardless client", () => {
       expect(result.requsitionId).toEqual(
         mockGocardlessData.mockRequisitionResponse.id,
       );
+    });
+  });
+
+  describe("getNewToken", () => {
+    it("returns the correct token", async () => {
+      const today = new Date("2025-11-23T19:14:37.986Z");
+      vi.setSystemTime(today);
+      const client = new GocardlessClient(
+        { value: Promise.resolve(mockGocardlessData.secretId) },
+        { value: Promise.resolve(mockGocardlessData.secretKey) },
+        mock(),
+      );
+
+      const token = await client.getNewToken();
+
+      expect(token).toEqual({
+        token: mockGocardlessData.mockToken,
+        tokenExpiresIn: 86400,
+        refreshToken: mockGocardlessData.mockRefreshToken,
+        refreshTokenExpiresIn: 2592000,
+      });
     });
   });
 
@@ -57,7 +91,19 @@ describe("the gocardless client", () => {
         mock(),
       );
 
-      const connections = await client.getConnections("ben");
+      const newToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: mockGocardlessData.mockToken,
+        refreshToken: "string",
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      const connections = await client.getConnections("ben", newToken);
 
       expect(connections).toEqual([
         BankConnection.reconstite({
@@ -65,20 +111,12 @@ describe("the gocardless client", () => {
           id: mockGocardlessData.mockInstititionsList[0]?.id ?? "",
           logo: mockGocardlessData.mockInstititionsList[0]?.logo ?? "",
           userId: "ben",
-          token: mockGocardlessData.mockToken,
-          refreshToken: mockGocardlessData.mockRefreshToken,
-          tokenExpiry: new Date(today.getTime() + 86400 * 1000),
-          refreshTokenExpiry: new Date(today.getTime() + 2592000 * 1000),
         }),
         BankConnection.reconstite({
           bankName: mockGocardlessData.mockInstititionsList[1]?.name ?? "",
           id: mockGocardlessData.mockInstititionsList[1]?.id ?? "",
           logo: mockGocardlessData.mockInstititionsList[1]?.logo ?? "",
           userId: "ben",
-          token: mockGocardlessData.mockToken,
-          refreshToken: mockGocardlessData.mockRefreshToken,
-          tokenExpiry: new Date(today.getTime() + 86400 * 1000),
-          refreshTokenExpiry: new Date(today.getTime() + 2592000 * 1000),
         }),
       ]);
     });

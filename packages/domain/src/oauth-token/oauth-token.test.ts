@@ -63,6 +63,64 @@ describe("the oauth token", () => {
       ]);
     });
 
+    describe("freezeDry", () => {
+      it("does not return actual token is secure is not true", () => {
+        const newToken = OauthToken.reconstitute({
+          refreshExpiry: undefined,
+          provider: "ynab",
+          expiry: new Date(),
+          token: "foo-token",
+          refreshToken: "foo-refresh",
+          lastUse: undefined,
+          created: new Date(),
+          refreshed: undefined,
+          userId: "user",
+        });
+
+        const dried = newToken.freezeDry();
+
+        expect(dried).not.toBeInstanceOf(OauthToken);
+
+        expect(dried).toEqual({
+          refreshExpiry: undefined,
+          provider: "ynab",
+          expiry: new Date(),
+          token: "",
+          refreshToken: "",
+          lastUse: undefined,
+          created: new Date(),
+          refreshed: undefined,
+          userId: "user",
+        });
+      });
+
+      it("returns token if secure is true", () => {
+        const newToken = OauthToken.reconstitute({
+          refreshExpiry: undefined,
+          provider: "ynab",
+          expiry: new Date(),
+          token: "foo-token",
+          refreshToken: "foo-refresh",
+          lastUse: undefined,
+          created: new Date(),
+          refreshed: undefined,
+          userId: "user",
+        });
+
+        expect(newToken.freezeDry({ secure: true })).toEqual({
+          refreshExpiry: undefined,
+          provider: "ynab",
+          expiry: new Date(),
+          token: "foo-token",
+          refreshToken: "foo-refresh",
+          lastUse: undefined,
+          created: new Date(),
+          refreshed: undefined,
+          userId: "user",
+        });
+      });
+    });
+
     describe("refreshToken", () => {
       it("sets the token and refresh token, updates the refreshed date and emits an event", () => {
         const today = new Date("2025-11-21T13:18:27.377Z");

@@ -11,7 +11,28 @@ import { DomainModel, type SystemContext } from "@core";
 
 export class RegularTask<
   TTaskKey extends SchedulableTask = SchedulableTask,
-> extends DomainModel {
+> extends DomainModel<IRegularTask<SchedulableTask>> {
+  public override freezeDry(_config?: {
+    secure: boolean;
+  }): IRegularTask<SchedulableTask> {
+    return {
+      id: this.id,
+      onBehalfOf: this.onBehalfOf,
+      created: this.created,
+      minute: this.minute,
+      hour: this.hour,
+      day: this.day,
+      month: this.month,
+      triggerImmediately: this.triggerImmediately,
+      weekDay: this.weekDay,
+      name: this.name,
+      description: this.description,
+      lastExecution: this.lastExecution,
+      command: this.command,
+      data: this.data,
+    };
+  }
+
   public readonly id: string;
   public readonly onBehalfOf: string | undefined;
   public readonly data: string | undefined;

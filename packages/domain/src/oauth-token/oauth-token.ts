@@ -2,7 +2,23 @@ import { DomainModel } from "@core";
 import { oAuthTokenSchema, type IOauthToken } from "./i-outh-token.ts";
 import { TokenExpiredError } from "@errors";
 
-export class OauthToken extends DomainModel implements IOauthToken {
+export class OauthToken
+  extends DomainModel<IOauthToken>
+  implements IOauthToken
+{
+  public override freezeDry(config?: { secure: boolean }): IOauthToken {
+    return {
+      provider: this.provider,
+      created: this.created,
+      userId: this.userId,
+      expiry: this.expiry,
+      token: config?.secure ? this.token : ``,
+      refreshToken: config?.secure ? this.refreshToken : ``,
+      refreshed: this.refreshed,
+      lastUse: this.lastUse,
+      refreshExpiry: this.refreshExpiry,
+    };
+  }
   public readonly provider: string;
   public readonly created: Date;
   public readonly userId: string;
@@ -50,7 +66,7 @@ export class OauthToken extends DomainModel implements IOauthToken {
     expiry: Date,
     refreshExpiry?: Date,
   ) {
-    const old = OauthToken.reconstitute(this);
+    const old = OauthToken.reconstitute(this.freezeDry({ secure: true }));
 
     this.token = newToken;
     this.refreshToken = newRefreshToken;
