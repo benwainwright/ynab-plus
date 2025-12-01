@@ -33,7 +33,7 @@ export class SqliteDatabase implements IUnitOfWork {
 
   public async commit(): Promise<void> {
     const db = await this.getDatabase();
-    const prepared = db.prepare("COMMIT;");
+    const prepared = db.prepare("COMMIT TRANSACTION;");
     prepared.run();
   }
 
