@@ -1,5 +1,6 @@
 export {
   DomainModel,
+  type IEvent,
   type IRole,
   SystemContext,
   type Permission,

@@ -1,4 +1,4 @@
-import type { IServiceBus, IUnitOfWork } from "@ports";
+import type { IEventBus, IServiceBus, IUnitOfWork } from "@ports";
 import type { Commands, IRole, User, Command } from "@ynab-plus/domain";
 import { injectable } from "inversify";
 import { inject } from "./typed-inject.ts";
@@ -11,6 +11,9 @@ export class TransactionalServiceBus implements IServiceBus {
 
     @inject("UnitOfWork")
     private unitOfWork: IUnitOfWork,
+
+    @inject("EventBus")
+    private eventBus: IEventBus,
   ) {}
 
   public async execute<
@@ -21,6 +24,11 @@ export class TransactionalServiceBus implements IServiceBus {
       await this.unitOfWork.begin();
       const result = await this.rootBus.execute(command);
       await this.unitOfWork.commit();
+      const events = this.unitOfWork.drainEvents();
+      events.forEach((event) => {
+        this.eventBus.emit(event.event, event.data);
+      });
+
       return result;
     } catch (error) {
       await this.unitOfWork.rollback();
