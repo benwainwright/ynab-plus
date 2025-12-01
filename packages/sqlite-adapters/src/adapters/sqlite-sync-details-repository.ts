@@ -18,6 +18,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   public constructor(
     @inject("SyncDetailsTableName")
     private tableName: ConfigValue<string>,
+
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
   ) {}

@@ -24,6 +24,7 @@ export {
   type IEventPacket,
   type IListener,
   type IOauthCheckerFactory,
+  type IUnitOfWork,
   type IInstitutionAuthPageLinkFetcher,
   type IOauthNewTokenRequester,
   type IOauthRedirectUrlGenerator,

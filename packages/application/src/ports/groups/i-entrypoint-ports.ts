@@ -10,6 +10,7 @@ export interface IEntrypointPorts {
   ContainerFactory: Factory<TypedContainer>;
   SessionStore: ISingleItemStore<User>;
   SessionIdRequester: ISessionIdRequester;
+  RootServiceBus: IServiceBus;
   ServiceBus: IServiceBus;
   EventBus: IEventBus;
 }

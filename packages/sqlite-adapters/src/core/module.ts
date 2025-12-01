@@ -29,6 +29,8 @@ export const sqliteDataAdaptersModule = typedApplicationModule<
 
   load.bind("SqliteDatabase").to(SqliteDatabase);
 
+  load.bind("UnitOfWork").to(SqliteDatabase);
+
   load
     .bind("UsersTableName")
     .toConstantValue(bootstrapper.configValue("userTableName", z.string()));

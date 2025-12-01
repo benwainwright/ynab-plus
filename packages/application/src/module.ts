@@ -1,5 +1,5 @@
 import { type ISessionIdRequester } from "@ports";
-import { ServiceBus, SessionStorage } from "@core";
+import { ServiceBus, SessionStorage, TransactionalServiceBus } from "@core";
 import { typedApplicationModule } from "@ynab-plus/bootstrap";
 import { loadServices } from "./services/load-services.ts";
 import { attachDomainEventEmitter } from "./attach-domain-event-emitter.ts";
@@ -36,7 +36,9 @@ export const applicationServicesModule =
         await userRepo.save(bootstrapAdmin);
       });
 
-      load.bind("ServiceBus").to(ServiceBus).inRequestScope();
+      load.bind("RootServiceBus").to(ServiceBus).inRequestScope();
+      load.bind("ServiceBus").to(TransactionalServiceBus).inRequestScope();
+
       loadServices(load);
       attachDomainEventEmitter(load, container);
 
