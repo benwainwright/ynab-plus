@@ -1,9 +1,4 @@
-import {
-  inject,
-  type IEventBus,
-  type IServiceBus,
-  type ISingleItemStore,
-} from "@ynab-plus/app";
+import { inject, type IEventBus, type IServiceBus, type ISingleItemStore } from "@ynab-plus/app";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { Command, User, type ICommandMessage } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
@@ -44,15 +39,10 @@ export class ServerWebsocketClient {
     const serialiser = new Serialiser();
     const content =
       message instanceof Buffer
-        ? (serialiser.deserialise(message.toString("utf-8")) as Record<
-            string,
-            unknown
-          >)
+        ? (serialiser.deserialise(message.toString("utf-8")) as Record<string, unknown>)
         : typeof message === "string"
           ? (serialiser.deserialise(message) as Record<string, unknown>)
           : message;
-
-    console.log({ content });
 
     return content as ICommandMessage;
   }
@@ -71,11 +61,7 @@ export class ServerWebsocketClient {
         message: JSON.stringify(parsed),
       });
 
-      const command = new Command(
-        parsed.key,
-        parsed.data,
-        await this.currentUserCache.get(),
-      );
+      const command = new Command(parsed.key, parsed.data, await this.currentUserCache.get());
 
       const response = await this.serviceBus.execute(command);
 
@@ -86,17 +72,11 @@ export class ServerWebsocketClient {
       });
     } catch (error) {
       if (error instanceof AbstractError) {
-        this.logger.error(
-          `${error.message}, ${String(error.stack)}`,
-          LOG_CONTEXT,
-        );
+        this.logger.error(`${error.message}, ${String(error.stack)}`, LOG_CONTEXT);
         error.handle(this.eventBus);
         return;
       } else if (error instanceof Error) {
-        this.logger.error(
-          `${error.message}, ${String(error.stack)}`,
-          LOG_CONTEXT,
-        );
+        this.logger.error(`${error.message}, ${String(error.stack)}`, LOG_CONTEXT);
       } else {
         this.logger.error(String(error), LOG_CONTEXT);
       }
