@@ -19,19 +19,16 @@ import type { TypedContainerModule } from "@inversifyjs/strongly-typed";
 
 export const LOG_CONTEXT = { context: "sqlite-data-adapters-module" };
 
-export const sqliteDataAdaptersModule: TypedContainerModule<
-  IDataPorts & IInternalTypes
-> = typedApplicationModule<IDataPorts & IInternalTypes>(
-  ({ load, bootstrapper, logger }) => {
+export const sqliteDataAdaptersModule: TypedContainerModule<IDataPorts & IInternalTypes> =
+  typedApplicationModule<IDataPorts & IInternalTypes>(({ load, bootstrapper, logger }) => {
     logger.debug(`Initialising sqlite adapters module`, LOG_CONTEXT);
 
     load
       .bind("DatabaseFilename")
       .toConstantValue(bootstrapper.configValue("sqliteFilename", z.string()));
 
-    load.bind("SqliteDatabase").to(SqliteDatabase);
-
-    load.bind("UnitOfWork").to(SqliteDatabase);
+    load.bind("SqliteDatabase").to(SqliteDatabase).inSingletonScope();
+    load.bind("UnitOfWork").toService("SqliteDatabase");
 
     load
       .bind("UsersTableName")
@@ -39,9 +36,7 @@ export const sqliteDataAdaptersModule: TypedContainerModule<
 
     load
       .bind("AccountsTableName")
-      .toConstantValue(
-        bootstrapper.configValue("accountsTableName", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("accountsTableName", z.string()));
 
     load
       .bind("OauthTokenTableName")
@@ -53,21 +48,15 @@ export const sqliteDataAdaptersModule: TypedContainerModule<
 
     load
       .bind("TransactionsTableName")
-      .toConstantValue(
-        bootstrapper.configValue("transactionsTableName", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("transactionsTableName", z.string()));
 
     load
       .bind("SyncDetailsTableName")
-      .toConstantValue(
-        bootstrapper.configValue("syncdetailsTablename", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("syncdetailsTablename", z.string()));
 
     load
       .bind("BankConnectionTableName")
-      .toConstantValue(
-        bootstrapper.configValue("bankconnectionTablename", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("bankconnectionTablename", z.string()));
 
     load
       .bind("UserRepository")
@@ -126,5 +115,4 @@ export const sqliteDataAdaptersModule: TypedContainerModule<
       });
 
     logger.debug(`Finished initialising sqlite adapters module`, LOG_CONTEXT);
-  },
-);
+  });
