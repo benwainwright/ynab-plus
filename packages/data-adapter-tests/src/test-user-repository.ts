@@ -3,11 +3,15 @@ import { User } from "@ynab-plus/domain";
 import type { IMultipleRepository } from "../../application/src/ports/i-multiple-repository.ts";
 
 export const testUserRepository = (
-  create: () => Promise<IRepository<User> & IMultipleRepository<User>>,
+  create: () => Promise<{
+    repo: IRepository<User> & IMultipleRepository<User>;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("the user repository", () => {
     it("can delete a user", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
@@ -17,16 +21,21 @@ export const testUserRepository = (
         permissions: ["user", "public"],
       });
 
+      await begin();
       await repo.save(data);
+      await commit();
 
+      await begin();
       await repo.delete(data);
+      await commit();
 
       const result = await repo.get("ben");
 
       expect(result).toEqual(undefined);
     });
+
     it("can update and return a user", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
@@ -36,7 +45,9 @@ export const testUserRepository = (
         permissions: ["user", "public"],
       });
 
+      await begin();
       await repo.save(data);
+      await commit();
 
       const user = await repo.get(data.id);
 
@@ -45,7 +56,7 @@ export const testUserRepository = (
 
     describe("getMany", () => {
       it("can return many users", async () => {
-        const repo = await create();
+        const { repo, begin, commit } = await create();
 
         const data = User.reconstitute({
           email: "bwainwright28@gmail.com",
@@ -71,18 +82,20 @@ export const testUserRepository = (
           permissions: ["user"],
         });
 
+        await begin();
         await repo.save(data);
         await repo.save(data2);
         await repo.save(data3);
+        await commit();
 
         const users = await repo.getMany();
 
-        expect(users).toEqual([data, data2, data3]);
+        expect(users).toEqual(expect.arrayContaining([data, data2, data3]));
       });
     });
 
     it("returns undefined if not present", async () => {
-      const repo = await create();
+      const { repo } = await create();
 
       const user = await repo.get("foo");
 

@@ -18,9 +18,7 @@ interface RawBankConnection {
 }
 
 @injectable()
-export class SqliteBankConnectionRepository
-  implements IBankConnectionRepository
-{
+export class SqliteBankConnectionRepository implements IBankConnectionRepository {
   public constructor(
     @inject("BankConnectionTableName")
     private tableName: ConfigValue<string>,
@@ -47,9 +45,7 @@ export class SqliteBankConnectionRepository
     );
   }
 
-  public async getConnection(
-    userId: string,
-  ): Promise<BankConnection | undefined> {
+  public async getConnection(userId: string): Promise<BankConnection | undefined> {
     const result = await this.database.getFromDb<RawBankConnection | undefined>(
       `SELECT id, userId, bankName, logo, requisitionId
         FROM ${await this.tableName.value} WHERE userId = ?`,
@@ -63,10 +59,8 @@ export class SqliteBankConnectionRepository
     return this.mapRaw(result);
   }
 
-  public async saveConnection(
-    connection: BankConnection,
-  ): Promise<BankConnection> {
-    const data = await this.database.getFromDb<RawBankConnection>(
+  public async saveConnection(connection: BankConnection): Promise<BankConnection> {
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId)
         VALUES (?, ?, ?, ?, ?)
         RETURNING id, userId, bankName, logo, requisitionId`,
@@ -79,11 +73,11 @@ export class SqliteBankConnectionRepository
       ],
     );
 
-    return this.mapRaw(data);
+    return connection;
   }
 
   public async deleteConnection(connection: BankConnection): Promise<void> {
-    await this.database.runQuery(
+    await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE userId = ?`,
       [connection.userId],

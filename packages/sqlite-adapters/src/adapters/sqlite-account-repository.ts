@@ -27,7 +27,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   ) {}
 
   public async deleteAccount(account: Account): Promise<void> {
-    await this.database.runQuery(
+    await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
       [account.id],
@@ -86,7 +86,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   }
 
   public async saveAccount(thing: Account): Promise<Account> {
-    const data = await this.database.getFromDb<RawAccount>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -108,25 +108,14 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       ],
     );
 
-    return this.mapRaw(data);
+    return thing;
   }
 
   public async saveAccounts(accounts: Account[]): Promise<Account[]> {
-    await this.database.runQuery("BEGIN;", []);
-
-    const returnVal: Account[] = [];
-
-    try {
-      for (const account of accounts) {
-        returnVal.push(await this.saveAccount(account));
-      }
-
-      await this.database.runQuery("COMMIT;", []);
-
-      return returnVal;
-    } catch (err) {
-      await this.database.runQuery("ROLLBACK;", []);
-      throw err;
+    for (const account of accounts) {
+      await this.saveAccount(account);
     }
+
+    return accounts;
   }
 }

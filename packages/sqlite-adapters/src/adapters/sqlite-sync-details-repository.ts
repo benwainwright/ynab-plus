@@ -67,7 +67,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   }
 
   public async save(thing: SyncDetails): Promise<SyncDetails> {
-    const data = await this.database.getFromDb<RawSyncDetails>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, provider, checkpoint, lastSync)
         VALUES (?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -75,14 +75,9 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
           checkpoint = excluded.checkpoint,
           lastSync = excluded.lastSync
         RETURNING id, provider, checkpoint, lastSync`,
-      [
-        thing.id,
-        thing.provider,
-        thing.checkpoint,
-        thing.lastSync?.toISOString() ?? null,
-      ],
+      [thing.id, thing.provider, thing.checkpoint, thing.lastSync?.toISOString() ?? null],
     );
 
-    return this.mapRaw(data);
+    return thing;
   }
 }

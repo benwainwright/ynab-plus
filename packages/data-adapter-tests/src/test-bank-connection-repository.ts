@@ -2,11 +2,17 @@ import type { IBankConnectionRepository } from "@ynab-plus/app";
 import { BankConnection } from "@ynab-plus/domain";
 
 export const testBankConnectionRepository = (
-  create: () => Promise<IBankConnectionRepository>,
+  create: () => Promise<{
+    repo: IBankConnectionRepository;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("the connection repository", () => {
     it("can update and return a connection", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
+
+      await begin();
 
       const connectionOne = BankConnection.reconstite({
         bankName: "foo",
@@ -26,6 +32,8 @@ export const testBankConnectionRepository = (
 
       await repo.saveConnection(connectionOne);
       await repo.saveConnection(connectionTwo);
+
+      await commit();
 
       const recieved = await repo.getConnection("ben");
 
@@ -33,7 +41,7 @@ export const testBankConnectionRepository = (
     });
 
     it("can delete a token", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const connectionOne = BankConnection.reconstite({
         bankName: "foo",
@@ -51,10 +59,14 @@ export const testBankConnectionRepository = (
         requisitionId: "baz",
       });
 
+      await begin();
       await repo.saveConnection(connectionOne);
       await repo.saveConnection(connectionTwo);
+      await commit();
 
+      await begin();
       await repo.deleteConnection(connectionOne);
+      await commit();
 
       const empty = await repo.getConnection("ben");
 

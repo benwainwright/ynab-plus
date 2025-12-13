@@ -2,11 +2,15 @@ import type { IOauthTokenRepository } from "@ynab-plus/app";
 import { OauthToken } from "@ynab-plus/domain";
 
 export const testOauthRepository = (
-  create: () => Promise<IOauthTokenRepository>,
+  create: () => Promise<{
+    repo: IOauthTokenRepository;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("the token repository", () => {
     it("can update and return a token", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const tokenOne = OauthToken.reconstitute({
         refreshExpiry: undefined,
@@ -32,8 +36,10 @@ export const testOauthRepository = (
         created: new Date("2025-11-10T20:39:37.823Z"),
       });
 
+      await begin();
       await repo.save(tokenTwo);
       await repo.save(tokenOne);
+      await commit();
 
       const token = await repo.get("ben", "monzo");
 
@@ -41,7 +47,7 @@ export const testOauthRepository = (
     });
 
     it("can delete a token", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const tokenOne = OauthToken.reconstitute({
         refreshExpiry: undefined,
@@ -67,10 +73,14 @@ export const testOauthRepository = (
         created: new Date("2025-11-10T20:39:37.823Z"),
       });
 
+      await begin();
       await repo.save(tokenTwo);
       await repo.save(tokenOne);
+      await commit();
 
+      await begin();
       await repo.delete("ben", "monzo");
+      await commit();
       const token = await repo.get("ben", "monzo");
       const isPresentToken = await repo.get("ben", "ynab");
 

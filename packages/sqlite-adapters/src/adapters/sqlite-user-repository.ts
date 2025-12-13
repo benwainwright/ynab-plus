@@ -15,9 +15,7 @@ interface RawUser {
 }
 
 @injectable()
-export class SqliteUserRepository
-  implements IRepository<User>, IMultipleRepository<User>
-{
+export class SqliteUserRepository implements IRepository<User>, IMultipleRepository<User> {
   public constructor(
     @inject("UsersTableName")
     private tableName: ConfigValue<string>,
@@ -27,7 +25,7 @@ export class SqliteUserRepository
   ) {}
 
   public async delete(user: User): Promise<void> {
-    await this.database.runQuery(
+    await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
       [user.id],
@@ -79,7 +77,7 @@ export class SqliteUserRepository
   }
 
   public async save(thing: User): Promise<User> {
-    const data = await this.database.getFromDb<RawUser>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, email, passwordHash, permissions)
         VALUES (?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -87,16 +85,8 @@ export class SqliteUserRepository
           passwordHash    = excluded.passwordHash,
           permissions = excluded.permissions
         RETURNING id, email, passwordHash, permissions;`,
-      [
-        thing.id,
-        thing.email,
-        thing.passwordHash,
-        JSON.stringify(thing.permissions),
-      ],
+      [thing.id, thing.email, thing.passwordHash, JSON.stringify(thing.permissions)],
     );
-    return User.reconstitute({
-      ...data,
-      permissions: JSON.parse(data.permissions) as Permission[],
-    });
+    return thing;
   }
 }

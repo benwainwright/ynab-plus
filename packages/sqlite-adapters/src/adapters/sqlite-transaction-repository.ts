@@ -26,10 +26,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     private database: SqliteDatabase,
   ) {}
 
-  public async getAccountTransactionCount(
-    userId: string,
-    accountId: string,
-  ): Promise<number> {
+  public async getAccountTransactionCount(userId: string, accountId: string): Promise<number> {
     const result = await this.database.getFromDb<{ count: number } | null>(
       `SELECT COUNT(*) as count
          FROM ${await this.tableName.value}
@@ -85,7 +82,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   }
 
   public async saveTransaction(transaction: Transaction): Promise<Transaction> {
-    const data = await this.database.getFromDb<RawTransaction>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, accountId, date, amount, cleared, memo, payee, approved)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id, userId) DO UPDATE SET
@@ -110,7 +107,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
       ],
     );
 
-    return this.mapRaw(data);
+    return transaction;
   }
 
   public async getAccountTransactions(
@@ -131,23 +128,10 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     return result.map((account) => this.mapRaw(account));
   }
 
-  public async saveTransactions(
-    transactions: Transaction[],
-  ): Promise<Transaction[]> {
-    await this.database.runQuery("BEGIN;", []);
-    const returnVal: Transaction[] = [];
-
-    try {
-      for (const transaction of transactions) {
-        returnVal.push(await this.saveTransaction(transaction));
-      }
-
-      await this.database.runQuery("COMMIT;", []);
-
-      return returnVal;
-    } catch (err) {
-      await this.database.runQuery("ROLLBACK;", []);
-      throw err;
+  public async saveTransactions(transactions: Transaction[]): Promise<Transaction[]> {
+    for (const transaction of transactions) {
+      await this.saveTransaction(transaction);
     }
+    return transactions;
   }
 }

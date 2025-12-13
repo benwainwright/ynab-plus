@@ -2,11 +2,15 @@ import type { ITransactionRepository } from "@ynab-plus/app";
 import { Transaction } from "@ynab-plus/domain";
 
 export const testTransactionRepository = (
-  create: () => Promise<ITransactionRepository>,
+  create: () => Promise<{
+    repo: ITransactionRepository;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("The transaction repository", () => {
     it("allows you to save and retrieve individual transactions", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const transaction1 = Transaction.reconstitute({
         userId: "ben",
@@ -32,8 +36,10 @@ export const testTransactionRepository = (
         memo: "foo",
       });
 
+      await begin();
       await repo.saveTransaction(transaction1);
       await repo.saveTransaction(transaction2);
+      await commit();
 
       const result = await repo.getTransaction("foo");
 
@@ -41,7 +47,7 @@ export const testTransactionRepository = (
     });
 
     it("allows you to save and retrieve transacions by account", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const fredTransaction = Transaction.reconstitute({
         id: "bing",
@@ -91,6 +97,7 @@ export const testTransactionRepository = (
         }),
       ];
 
+      await begin();
       await repo.saveTransactions([...accountTransactions, fredTransaction]);
 
       const separateAccountTransaction = Transaction.reconstitute({
@@ -133,21 +140,19 @@ export const testTransactionRepository = (
         }),
       ]);
 
+      await commit();
       const result = await repo.getAccountTransactions("ben", "bar", 0, 30);
       expect(result).toHaveLength(4);
 
       expect(result).toEqual(
-        expect.arrayContaining([
-          ...accountTransactions,
-          separateAccountTransaction,
-        ]),
+        expect.arrayContaining([...accountTransactions, separateAccountTransaction]),
       );
 
       expect(result).not.toEqual(expect.arrayContaining([fredTransaction]));
     });
 
     it("allows you to retrieve a total count of txs in a given account", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const accountTransactions = [
         Transaction.reconstitute({
@@ -196,6 +201,7 @@ export const testTransactionRepository = (
         }),
       ];
 
+      await begin();
       await repo.saveTransactions(accountTransactions);
 
       const separateAccountTransaction = Transaction.reconstitute({
@@ -238,6 +244,7 @@ export const testTransactionRepository = (
         }),
       ]);
 
+      await commit();
       const result = await repo.getAccountTransactionCount("ben", "bar");
       expect(result).toEqual(4);
     });

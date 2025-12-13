@@ -5,10 +5,17 @@ import type { IEvent, DomainEvents } from "@ynab-plus/domain";
 import BetterSqlite3 from "better-sqlite3";
 import { injectable } from "inversify";
 
+type StoredQuery = {
+  sql: string;
+  params: unknown[];
+};
+
 @injectable()
 export class SqliteDatabase implements IUnitOfWork {
   private database: InstanceType<typeof BetterSqlite3> | undefined;
   private events: IEvent<DomainEvents, keyof DomainEvents>[] = [];
+
+  private storedQueries: StoredQuery[] = [];
 
   public constructor(
     @inject("DatabaseFilename")
@@ -26,21 +33,29 @@ export class SqliteDatabase implements IUnitOfWork {
   }
 
   public async begin(): Promise<void> {
-    const db = await this.getDatabase();
-    const prepared = db.prepare("BEGIN TRANSACTION;");
-    prepared.run();
+    // NOOP - all handled by the bettersqlite3 transaction function
   }
 
   public async commit(): Promise<void> {
     const db = await this.getDatabase();
-    const prepared = db.prepare("COMMIT TRANSACTION;");
-    prepared.run();
+    try {
+      this.runQuerySync(db, "BEGIN TRANSACTION;");
+      let query: StoredQuery | undefined;
+
+      do {
+        query = this.storedQueries.pop();
+        if (query) {
+          this.runQuerySync(db, query.sql, ...query.params);
+        }
+      } while (typeof query !== "undefined");
+      this.runQuerySync(db, "COMMIT TRANSACTION;");
+    } catch {
+      this.runQuerySync(db, "ROLLBACK TRANSACTION;");
+    }
   }
 
   public async rollback(): Promise<void> {
-    const db = await this.getDatabase();
-    const prepared = db.prepare("ROLLBACK;");
-    prepared.run();
+    // NOOP - all handled by the bettersqlite3 transaction function
   }
 
   private async getDatabase(): Promise<InstanceType<typeof BetterSqlite3>> {
@@ -51,11 +66,27 @@ export class SqliteDatabase implements IUnitOfWork {
     return this.database;
   }
 
+  // oxlint-disable eslint/require-await
+  public async deferQueryToTransaction(sql: string, ...params: unknown[]) {
+    this.storedQueries.push({
+      sql,
+      params,
+    });
+  }
+
+  private runQuerySync(
+    database: InstanceType<typeof BetterSqlite3>,
+    sql: string,
+    ...params: unknown[]
+  ) {
+    const prepared = database.prepare(sql);
+    prepared.run(...params);
+  }
+
   public async runQuery(sql: string, ...params: unknown[]) {
     const db = await this.getDatabase();
 
-    const prepared = db.prepare(sql);
-    prepared.run(...params);
+    this.runQuerySync(db, sql, ...params);
   }
 
   public async getFromDb<TResponse>(sql: string, ...params: unknown[]) {
@@ -65,10 +96,7 @@ export class SqliteDatabase implements IUnitOfWork {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async getAllFromDatabase<TResponse extends any[]>(
-    sql: string,
-    ...params: unknown[]
-  ) {
+  public async getAllFromDatabase<TResponse extends any[]>(sql: string, ...params: unknown[]) {
     const db = await this.getDatabase();
     const prepared = db.prepare(sql);
     return prepared.all(...params) as TResponse;

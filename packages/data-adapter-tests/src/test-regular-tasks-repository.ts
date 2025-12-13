@@ -2,12 +2,16 @@ import type { ITaskScheduler } from "@ynab-plus/app";
 import { RegularTask } from "@ynab-plus/domain";
 
 export const testRegularTasksRepository = (
-  create: () => Promise<ITaskScheduler>,
+  create: () => Promise<{
+    repo: ITaskScheduler;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("the regular  repository", () => {
     describe("gettasks", () => {
       it("returns an empty array if there is nothing to return", async () => {
-        const repo = await create();
+        const { repo } = await create();
 
         const results = await repo.getTasks(0, 10);
         expect(results).toBeDefined();
@@ -17,7 +21,7 @@ export const testRegularTasksRepository = (
 
     describe("getUserTasks", () => {
       it("returns an empty array if there is nothing to return", async () => {
-        const repo = await create();
+        const { repo } = await create();
         const results = await repo.getUserTasks("foo", 0, 10);
         expect(results).toBeDefined();
         expect(results).toHaveLength(0);
@@ -25,7 +29,7 @@ export const testRegularTasksRepository = (
     });
     describe("schedule task", () => {
       it("results in a task being persisted", async () => {
-        const repo = await create();
+        const { repo, begin, commit } = await create();
 
         const task = RegularTask.reconstitute({
           id: "foo",
@@ -44,7 +48,9 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
 
+        await begin();
         await repo.scheduleTask(task);
+        await commit();
 
         const returnedTask = await repo.getTask("foo");
         expect(returnedTask).toEqual(task);
@@ -53,7 +59,7 @@ export const testRegularTasksRepository = (
 
     describe("get all tasks", () => {
       it("gets all the tasks in the database if you dont supply a limit", async () => {
-        const repo = await create();
+        const { repo, begin, commit } = await create();
         const task = RegularTask.reconstitute({
           triggerImmediately: false,
           id: "foo",
@@ -71,6 +77,7 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
 
+        await begin();
         await repo.scheduleTask(task);
 
         const task2 = RegularTask.reconstitute({
@@ -109,6 +116,8 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
         await repo.scheduleTask(johns);
+
+        await commit();
 
         const allTasks = await repo.getTasks(0);
         expect(allTasks).toHaveLength(3);
@@ -117,7 +126,7 @@ export const testRegularTasksRepository = (
 
     describe("get user tasks", () => {
       it("gets all the tasks associated with a user", async () => {
-        const repo = await create();
+        const { repo, begin, commit } = await create();
         const task = RegularTask.reconstitute({
           triggerImmediately: true,
           id: "foo",
@@ -135,6 +144,7 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
 
+        await begin();
         await repo.scheduleTask(task);
 
         const task2 = RegularTask.reconstitute({
@@ -173,6 +183,7 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
         await repo.scheduleTask(johns);
+        await commit();
 
         const allTasks = await repo.getUserTasks("john", 0, 30);
         expect(allTasks).toHaveLength(1);
@@ -181,7 +192,7 @@ export const testRegularTasksRepository = (
 
     describe("delete task", () => {
       it("deletes a task", async () => {
-        const repo = await create();
+        const { repo, begin, commit } = await create();
 
         const task = RegularTask.reconstitute({
           triggerImmediately: true,
@@ -217,10 +228,14 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
 
+        await begin();
         await repo.scheduleTask(task);
         await repo.scheduleTask(task2);
+        await commit();
 
+        await begin();
         await repo.deleteTask(task2);
+        await commit();
 
         const returnedTask = await repo.getTask("foo");
 
@@ -236,7 +251,7 @@ export const testRegularTasksRepository = (
 
       describe("update task", () => {
         it("can update an existing task", async () => {
-          const repo = await create();
+          const { repo, begin, commit } = await create();
           const task = RegularTask.reconstitute({
             triggerImmediately: true,
             id: "foo",
@@ -254,8 +269,11 @@ export const testRegularTasksRepository = (
             command: "SyncAccountsCommand",
           });
 
+          await begin();
           await repo.scheduleTask(task);
+          await commit();
 
+          await begin();
           const updated = RegularTask.reconstitute({
             triggerImmediately: false,
             id: "foo",
@@ -273,6 +291,7 @@ export const testRegularTasksRepository = (
             command: "SyncAccountsCommand",
           });
           await repo.updateTask(updated);
+          await commit();
 
           const returnedTask = await repo.getTask("foo");
 
@@ -284,7 +303,7 @@ export const testRegularTasksRepository = (
 
         describe("delete task", () => {
           it("deletes a task", async () => {
-            const repo = await create();
+            const { repo, begin, commit } = await create();
             const task = RegularTask.reconstitute({
               triggerImmediately: true,
 
@@ -320,10 +339,14 @@ export const testRegularTasksRepository = (
               command: "SyncAccountsCommand",
             });
 
+            await begin();
             await repo.scheduleTask(task);
             await repo.scheduleTask(task2);
+            await commit();
 
+            await begin();
             await repo.deleteTask(task2);
+            await commit();
 
             const returnedTask = await repo.getTask("foo");
 

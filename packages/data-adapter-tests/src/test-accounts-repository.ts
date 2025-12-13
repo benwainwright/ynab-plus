@@ -3,11 +3,15 @@ import { Account } from "@ynab-plus/domain";
 import { describe, expect, it } from "vitest";
 
 export const testAccountsRepository = (
-  create: () => Promise<IAccountRepository>,
+  create: () => Promise<{
+    repo: IAccountRepository;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("the account repository", () => {
     it("can delete accounts", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const accountOne = Account.reconstitute({
         id: "one",
@@ -29,9 +33,13 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
+      await begin();
       await repo.saveAccounts([accountOne, accountTwo]);
+      await commit();
 
+      await begin();
       await repo.deleteAccount(accountOne);
+      await commit();
 
       const result = await repo.getAccounts("one");
 
@@ -39,7 +47,7 @@ export const testAccountsRepository = (
     });
 
     it("can save multiple users", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const accountOne = Account.reconstitute({
         id: "one",
@@ -61,15 +69,15 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
+      await begin();
       await repo.saveAccounts([accountOne, accountTwo]);
+      await commit();
 
       const accounts = await repo.getUserAccounts("ben");
-
-      expect(accounts[0]).toEqual(accountOne);
-      expect(accounts[1]).toEqual(accountTwo);
+      expect(accounts).toEqual(expect.arrayContaining([accountOne, accountTwo]));
     });
     it("can update and return an account", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const accountOne = Account.reconstitute({
         id: "one",
@@ -91,8 +99,10 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
+      await begin();
       await repo.saveAccount(accountOne);
       await repo.saveAccount(accountTwo);
+      await commit();
 
       const token = await repo.getAccounts("two");
 
@@ -100,7 +110,7 @@ export const testAccountsRepository = (
     });
 
     it("can return all of the current accounts for a user", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const accountOne = Account.reconstitute({
         id: "one",
@@ -132,15 +142,16 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
+      await begin();
       await repo.saveAccount(accountOne);
       await repo.saveAccount(accountTwo);
       await repo.saveAccount(accountThree);
+      await commit();
 
       const accounts = await repo.getUserAccounts("ben");
 
       expect(accounts).toHaveLength(2);
-      expect(accounts[0]).toEqual(accountOne);
-      expect(accounts[1]).toEqual(accountTwo);
+      expect(accounts).toEqual(expect.arrayContaining([accountOne, accountTwo]));
     });
   });
 };

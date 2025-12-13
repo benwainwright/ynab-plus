@@ -2,11 +2,15 @@ import { SyncDetails, type ISyncDetails } from "@ynab-plus/domain";
 import type { IRepository } from "@ynab-plus/app";
 
 export const testSyncDetailsRepository = (
-  create: () => Promise<IRepository<ISyncDetails>>,
+  create: () => Promise<{
+    repo: IRepository<ISyncDetails>;
+    begin: () => Promise<void>;
+    commit: () => Promise<void>;
+  }>,
 ) => {
   describe("sqlite sync details adapter", () => {
     it("can save and get sync details by id", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
@@ -22,8 +26,12 @@ export const testSyncDetailsRepository = (
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
+      await begin();
+
       await repo.save(newDetails1);
       await repo.save(newDetails2);
+
+      await commit();
 
       const receivedDetails = await repo.get("foo-bar-1");
 
@@ -31,7 +39,7 @@ export const testSyncDetailsRepository = (
     });
 
     it("allows you to delete sync details", async () => {
-      const repo = await create();
+      const { repo, begin, commit } = await create();
 
       const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
@@ -47,9 +55,13 @@ export const testSyncDetailsRepository = (
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
+      await begin();
       await repo.save(newDetails1);
       await repo.save(newDetails2);
+      await commit();
+      await begin();
       await repo.delete(newDetails1);
+      await commit();
 
       const receivedDetails = await repo.get("foo-bar-1");
 
@@ -57,7 +69,7 @@ export const testSyncDetailsRepository = (
     });
 
     it("returns undefined if it doesn't exist", async () => {
-      const repo = await create();
+      const { repo } = await create();
 
       const receivedDetails = await repo.get("foo-bar-1");
 

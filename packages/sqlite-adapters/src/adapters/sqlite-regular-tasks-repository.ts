@@ -32,8 +32,8 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     private database: SqliteDatabase,
   ) {}
 
-  public async updateTask(task: RegularTask): Promise<void> {
-    await this.database.getFromDb<RawTask>(
+  public async updateTask(task: RegularTask): Promise<RegularTask> {
+    await this.database.deferQueryToTransaction(
       `UPDATE ${await this.tableName.value}
         SET onBehalfOf = ?,
             lastExecution = ?,
@@ -67,6 +67,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         task.id,
       ],
     );
+    return task;
   }
 
   async create() {
@@ -94,9 +95,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     return RegularTask.reconstitute({
       ...raw,
       created: new Date(raw.created),
-      lastExecution: raw.lastExecution
-        ? new Date(raw.lastExecution)
-        : undefined,
+      lastExecution: raw.lastExecution ? new Date(raw.lastExecution) : undefined,
       command: schedulableTasksSchema.parse(raw.command),
       data: raw.data ?? undefined,
       onBehalfOf: raw.onBehalfOf ?? undefined,
@@ -105,7 +104,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
   }
 
   public async scheduleTask(task: RegularTask): Promise<RegularTask> {
-    const data = await this.database.getFromDb<RawTask>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately`,
@@ -126,7 +125,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         String(task.triggerImmediately),
       ],
     );
-    return this.mapRaw(data);
+    return task;
   }
 
   public async deleteTask(task: RegularTask): Promise<void> {
@@ -151,10 +150,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
 
     return this.mapRaw(result);
   }
-  public async getTasks(
-    offset: number,
-    limit?: number,
-  ): Promise<RegularTask[]> {
+  public async getTasks(offset: number, limit?: number): Promise<RegularTask[]> {
     const result = await this.database.getAllFromDatabase<RawTask[]>(
       `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
@@ -165,11 +161,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     return result.map((result) => this.mapRaw(result));
   }
 
-  public async getUserTasks(
-    userId: string,
-    offset: number,
-    limit: number,
-  ): Promise<RegularTask[]> {
+  public async getUserTasks(userId: string, offset: number, limit: number): Promise<RegularTask[]> {
     const result = await this.database.getAllFromDatabase<RawTask[]>(
       `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}

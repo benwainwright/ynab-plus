@@ -29,7 +29,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   ) {}
 
   public async delete(userId: string, provider: string): Promise<void> {
-    await this.database.runQuery(
+    await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
        WHERE userId = ? AND provider = ?`,
       [userId, provider],
@@ -59,17 +59,12 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
       expiry: new Date(raw.expiry),
       lastUse: raw.lastUse ? new Date(raw.lastUse) : undefined,
       refreshed: raw.refreshed ? new Date(raw.refreshed) : undefined,
-      refreshExpiry: raw.refreshExpiry
-        ? new Date(raw.refreshExpiry)
-        : undefined,
+      refreshExpiry: raw.refreshExpiry ? new Date(raw.refreshExpiry) : undefined,
       created: new Date(raw.created),
     });
   }
 
-  public async get(
-    userId: string,
-    provider: string,
-  ): Promise<OauthToken | undefined> {
+  public async get(userId: string, provider: string): Promise<OauthToken | undefined> {
     const result = await this.database.getFromDb<RawOauthToken | undefined>(
       `SELECT userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry
         FROM ${await this.tableName.value} WHERE userId = ? AND provider = ?`,
@@ -80,7 +75,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   }
 
   public async save(token: OauthToken): Promise<OauthToken> {
-    const data = await this.database.getFromDb<RawOauthToken>(
+    await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(userId, provider) DO UPDATE SET
@@ -106,6 +101,6 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
       ],
     );
 
-    return this.mapRaw(data);
+    return token;
   }
 }

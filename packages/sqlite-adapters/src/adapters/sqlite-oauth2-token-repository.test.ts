@@ -17,5 +17,9 @@ testOauthRepository(async () => {
 
   await repo.create();
 
-  return repo;
+  return {
+    repo,
+    begin: async () =>{  await database.begin(); },
+    commit: async () =>{  await database.commit(); },
+  };
 });
