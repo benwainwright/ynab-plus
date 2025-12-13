@@ -9,14 +9,13 @@
     }
   },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "oxlint --type-aware",
+    "type-check": "tsgo --build"
   },
   "dependencies": {
     "@ynab-plus/domain": "workspace:*",
-    "reflect-metadata": "^0.2.2",
-    "typeson": "^9.0.4"
-  },
-  "devDependencies": {
-    "vitest-mock-extended": "^3.1.0"
+    "reflect-metadata": "0.2.2",
+    "typeson": "9.0.4"
   }
 }

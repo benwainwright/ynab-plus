@@ -3,8 +3,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Container } from "@mantine/core";
 import { Outlet } from "react-router";
 import { useNotifications } from "@data";
+import type { ReactNode } from "react";
 
-const AppLayout = () => {
+const AppLayout = (): ReactNode => {
   const [opened, { toggle }] = useDisclosure();
   useNotifications();
   return (

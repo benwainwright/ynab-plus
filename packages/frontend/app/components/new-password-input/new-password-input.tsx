@@ -1,10 +1,12 @@
-import { type ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type ReactNode, useEffect, useState } from "react";
 
 interface NewPasswordInputProps {
   onChange: (password: string) => void;
 }
 
-export const NewPasswordInput = ({ onChange }: NewPasswordInputProps) => {
+export const NewPasswordInput = ({
+  onChange,
+}: NewPasswordInputProps): ReactNode => {
   const [password, setPassword] = useState<string>("");
   const [matchPassword, setMatchPassword] = useState<string>("");
 

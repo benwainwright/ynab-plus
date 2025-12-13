@@ -1,11 +1,12 @@
 import { Image, Card, Text } from "@mantine/core";
 import type { BankConnection } from "@ynab-plus/domain";
+import type { ReactNode } from "react";
 
 interface BankCardProps {
   institution: BankConnection;
 }
 
-export const BankCard = ({ institution }: BankCardProps) => {
+export const BankCard = ({ institution }: BankCardProps): ReactNode => {
   return (
     <Card shadow="sm" p={"lg"}>
       <Card.Section>

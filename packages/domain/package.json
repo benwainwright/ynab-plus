@@ -10,9 +10,10 @@
   },
   "scripts": {
     "test": "vitest",
-    "type-check": "tsc --build"
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
   },
   "dependencies": {
-    "zod": "^4.1.12"
+    "zod": "4.1.12"
   }
 }

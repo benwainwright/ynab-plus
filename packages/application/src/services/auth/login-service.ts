@@ -3,13 +3,13 @@ import {
   type IMultipleRepository,
   type IPasswordVerifier,
   type IRepository,
+  type ICurrentUserSetter,
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { Commands, IRole, Permission, User } from "@ynab-plus/domain";
 
 import { inject, AbstractApplicationService } from "@core";
-import type { ICurrentUserSetter } from "src/ports/i-current-user-setter.ts";
 import { injectable } from "inversify";
 
 @injectable()

@@ -2,8 +2,9 @@ import { Loader, Page } from "@components";
 import { useAccounts } from "@data";
 import { Table } from "@mantine/core";
 import { Link } from "react-router";
+import { type ReactNode } from "react";
 
-export const Transactions = () => {
+export const Transactions = (): ReactNode => {
   const { isPending, accounts } = useAccounts();
   return (
     <Page routeName="accounts">

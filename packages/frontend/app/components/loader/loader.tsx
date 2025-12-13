@@ -10,7 +10,7 @@ export const Loader = <TData,>({
   isPending,
   data,
   children,
-}: LoaderProps<TData>) => {
+}: LoaderProps<TData>): ReactNode => {
   if (isPending || data === undefined) {
     return <div aria-busy />;
   }

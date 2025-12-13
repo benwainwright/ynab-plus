@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,

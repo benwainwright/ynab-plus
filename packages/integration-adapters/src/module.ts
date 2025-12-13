@@ -5,43 +5,46 @@ import { GocardlessClient } from "./gocardless/gocardless-client.ts";
 import z from "zod";
 import { getOauthClientFactory } from "./get-oauth-client-factory.ts";
 import type { IInternalTypes } from "@core";
+import type { TypedContainerModule } from "@inversifyjs/strongly-typed";
 
 export const LOG_CONTEXT = { context: "integrations-module" };
 
-export const integrationsModule = typedApplicationModule<
+export const integrationsModule: TypedContainerModule<
   IIntegrationPorts & IInternalTypes
->(({ load, logger, bootstrapper }) => {
-  logger.info(`Initialising integrations module`, LOG_CONTEXT);
+> = typedApplicationModule<IIntegrationPorts & IInternalTypes>(
+  ({ load, logger, bootstrapper }) => {
+    logger.info(`Initialising integrations module`, LOG_CONTEXT);
 
-  load.bind("AccountsFetcher").to(YnabClient);
-  load.bind("TransactionFetcher").to(YnabClient);
-  load.bind("BankConnectionCreator").to(GocardlessClient);
-  load.bind("BankConnectionTokenFetcher").to(GocardlessClient);
-  load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
+    load.bind("AccountsFetcher").to(YnabClient);
+    load.bind("TransactionFetcher").to(YnabClient);
+    load.bind("BankConnectionCreator").to(GocardlessClient);
+    load.bind("BankConnectionTokenFetcher").to(GocardlessClient);
+    load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
 
-  const oauthClientFactory = getOauthClientFactory(bootstrapper);
+    const oauthClientFactory = getOauthClientFactory(bootstrapper);
 
-  load.bind("OauthCheckerFactory").toFactory(() => {
-    return oauthClientFactory;
-  });
+    load.bind("OauthCheckerFactory").toFactory(() => {
+      return oauthClientFactory;
+    });
 
-  load
-    .bind("GocardlessRedirectUrlConfigValue")
-    .toConstantValue(
-      bootstrapper.configValue("gocardlessRedirectUrl", z.string()),
-    );
+    load
+      .bind("GocardlessRedirectUrlConfigValue")
+      .toConstantValue(
+        bootstrapper.configValue("gocardlessRedirectUrl", z.string()),
+      );
 
-  load
-    .bind("GocardlessClientSecretIdConfigValue")
-    .toConstantValue(
-      bootstrapper.configValue("gocardlessSecretId", z.string()),
-    );
+    load
+      .bind("GocardlessClientSecretIdConfigValue")
+      .toConstantValue(
+        bootstrapper.configValue("gocardlessSecretId", z.string()),
+      );
 
-  load
-    .bind("GocardlessClientSecretKeyConfigValue")
-    .toConstantValue(
-      bootstrapper.configValue("gocardlessSecretKey", z.string()),
-    );
+    load
+      .bind("GocardlessClientSecretKeyConfigValue")
+      .toConstantValue(
+        bootstrapper.configValue("gocardlessSecretKey", z.string()),
+      );
 
-  logger.debug(`Finished initialising integrations module`, LOG_CONTEXT);
-});
+    logger.debug(`Finished initialising integrations module`, LOG_CONTEXT);
+  },
+);

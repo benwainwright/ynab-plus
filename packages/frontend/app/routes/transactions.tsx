@@ -7,6 +7,7 @@ import {
   Table,
 } from "@mantine/core";
 import { DateTime } from "luxon";
+import type { ReactNode } from "react";
 import { useParams } from "react-router";
 
 const dateFormat = {
@@ -15,7 +16,7 @@ const dateFormat = {
   day: "2-digit",
 } as const;
 
-export const Transactions = () => {
+export const Transactions = (): ReactNode => {
   const { accountId } = useParams<{ accountId: string }>();
   const { isPending, transactions, page, setPage, totalPages, syncing, sync } =
     useTransactions(accountId);

@@ -9,23 +9,23 @@
     }
   },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
   },
   "dependencies": {
-    "@types/bcrypt": "^6.0.0",
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
-    "bcrypt": "^6.0.0",
+    "bcrypt": "6.0.0",
     "better-sqlite3": "12.4.1",
-    "inversify": "^7.10.4",
-    "reflect-metadata": "^0.2.2",
-    "typeson": "^9.0.4",
+    "inversify": "7.10.4",
+    "reflect-metadata": "0.2.2",
+    "typeson": "9.0.4",
     "zod": "4.1.12"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
-    "@types/node": "22.19.1",
-    "vitest-mock-extended": "3.1.0"
+    "@types/node": "22.19.1"
   }
 }

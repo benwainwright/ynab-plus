@@ -9,11 +9,9 @@ import {
 
 import { type ILogger } from "@ynab-plus/bootstrap";
 
-import { OauthToken, type Permission } from "@ynab-plus/domain";
+import { BankConnection, OauthToken, type Permission } from "@ynab-plus/domain";
 
 import { injectable } from "inversify";
-
-import type { BankConnection } from "node_modules/@ynab-plus/domain/src/bank-connection/bank-connection.ts";
 
 @injectable()
 export class CheckBankConnectionService extends AbstractApplicationService<"CheckBankConnectionCommand"> {

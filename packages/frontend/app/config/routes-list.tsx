@@ -22,7 +22,7 @@ export interface RouteSpec {
   sidebarIcon?: ReactElement;
 }
 
-export const routesList = {
+export const routesList: Record<string, RouteSpec> = {
   home: {
     component: "routes/home.tsx",
     isIndex: true,

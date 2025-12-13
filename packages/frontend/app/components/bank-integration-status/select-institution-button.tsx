@@ -1,6 +1,6 @@
 import { Text, Autocomplete, Button, Flex, Modal } from "@mantine/core";
 import type { BankConnection } from "@ynab-plus/domain";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { getOptionRenderer } from "./get-option-renderer.tsx";
 import { command } from "@data";
 
@@ -10,7 +10,7 @@ interface SelectInstitutionButtonProps {
 
 export const SelectInstitutionButton = ({
   institutions,
-}: SelectInstitutionButtonProps) => {
+}: SelectInstitutionButtonProps): ReactNode => {
   const [modalOpened, setModalOpened] = useState(false);
   const [bank, setBank] = useState<string>();
 

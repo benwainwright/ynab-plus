@@ -18,7 +18,9 @@ interface CurrentUserProviderProps {
   children: ReactNode;
 }
 
-export const CurrentUserProvider = ({ children }: CurrentUserProviderProps) => {
+export const CurrentUserProvider = ({
+  children,
+}: CurrentUserProviderProps): ReactNode => {
   const { currentUser, reloadUser, initialLoadComplete } = useCurrentUser();
   return (
     <CurrentUserContext

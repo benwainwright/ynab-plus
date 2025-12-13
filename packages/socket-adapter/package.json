@@ -9,7 +9,9 @@
     }
   },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
@@ -17,14 +19,14 @@
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/serialiser": "workspace:*",
     "better-sqlite3": "12.4.1",
-    "reflect-metadata": "^0.2.2",
+    "reflect-metadata": "0.2.2",
     "zod": "4.1.12"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
     "@types/node": "22.19.1",
-    "get-port": "^7.1.0",
+    "get-port": "7.1.0",
     "vitest-mock-extended": "3.1.0",
-    "ws": "^8.18.3"
+    "ws": "8.18.3"
   }
 }

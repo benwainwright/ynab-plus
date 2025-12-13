@@ -1,7 +1,8 @@
 import { Page } from "@components";
 import { Typography } from "@mantine/core";
+import type { ReactNode } from "react";
 
-const Home = () => {
+const Home = (): ReactNode => {
   return (
     <Page routeName="home">
       <Typography>

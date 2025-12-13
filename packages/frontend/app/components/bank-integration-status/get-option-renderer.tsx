@@ -1,7 +1,19 @@
-import { Text, Avatar, Group, type ComboboxStringItem } from "@mantine/core";
+import {
+  Text,
+  Avatar,
+  Group,
+  type ComboboxStringItem,
+  type RenderAutocompleteOption,
+} from "@mantine/core";
 import type { BankConnection } from "@ynab-plus/domain";
 
-export const getOptionRenderer = (instititions: BankConnection[]) => {
+type OptionRendererFactory = (
+  institutions: BankConnection[],
+) => RenderAutocompleteOption;
+
+export const getOptionRenderer: OptionRendererFactory = (
+  instititions: BankConnection[],
+) => {
   const instititionMap = new Map<string, BankConnection>();
 
   instititions.forEach((bank) => instititionMap.set(bank.bankName, bank));

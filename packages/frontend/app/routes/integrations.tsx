@@ -1,7 +1,8 @@
 import { BankIntegrationStatus, IntegrationStatus, Page } from "@components";
 import { Stack } from "@mantine/core";
+import type { ReactNode } from "react";
 
-export const Integrations = () => {
+export const Integrations = (): ReactNode => {
   return (
     <Page routeName="integrations">
       <Stack>

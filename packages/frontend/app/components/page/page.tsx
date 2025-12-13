@@ -3,7 +3,7 @@ import { type ReactNode, useContext } from "react";
 import { Navigate } from "react-router";
 
 import { canAccess } from "@utils";
-import { routesList, type RouteSpec } from "@config";
+import { routesList } from "@config";
 import { Flex, Title } from "@mantine/core";
 
 interface PageProps {
@@ -12,9 +12,16 @@ interface PageProps {
   headerActions?: ReactNode;
 }
 
-export const Page = ({ children, routeName, headerActions }: PageProps) => {
+export const Page = ({
+  children,
+  routeName,
+  headerActions,
+}: PageProps): ReactNode => {
   const { currentUser, initialLoadComplete } = useContext(CurrentUserContext);
-  const routeConfig: RouteSpec = routesList[routeName];
+  const routeConfig = routesList[routeName];
+  if (!routeConfig) {
+    return null;
+  }
   const loading = <div aria-busy></div>;
   const header = routeConfig.header ?? routeName;
   const capitalisedHeader = `${header.charAt(0).toLocaleUpperCase()}${header.slice(1)}`;

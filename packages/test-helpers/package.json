@@ -8,9 +8,14 @@
       "import": "./src/index.ts"
     }
   },
+  "scripts": {
+    "test": "vitest",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
+  },
   "dependencies": {},
   "devDependencies": {
-    "@types/bun": "^1.3.2",
-    "vitest-mock-extended": "^3.1.0"
+    "@types/bun": "1.3.2",
+    "vitest-mock-extended": "3.1.0"
   }
 }

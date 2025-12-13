@@ -1,9 +1,10 @@
 import { Loader, Page } from "@components";
 import { useUsers } from "@data";
 import { Table } from "@mantine/core";
+import type { ReactNode } from "react";
 import { Link } from "react-router";
 
-export const Users = () => {
+export const Users = (): ReactNode => {
   const { users, isPending } = useUsers(0, 30);
   return (
     <Page routeName="users">

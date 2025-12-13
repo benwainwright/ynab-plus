@@ -3,8 +3,9 @@ import { useTasks } from "@data";
 import { Table } from "@mantine/core";
 import cronstrue from "cronstrue";
 import RelativeTime from "@yaireo/relative-time";
+import type { ReactNode } from "react";
 
-export const Tasks = () => {
+export const Tasks = (): ReactNode => {
   const { tasks, isPending } = useTasks(0, 30);
   const relativeTime = new RelativeTime();
   return (

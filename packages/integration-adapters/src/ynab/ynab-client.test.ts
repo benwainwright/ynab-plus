@@ -84,7 +84,7 @@ describe("the getaccountTransactions method", () => {
     const token = OauthToken.reconstitute({
       refreshExpiry: undefined,
       provider: "ynab",
-      expiry: new Date("2025-12-11T20:39:37.823Z"),
+      expiry: new Date(Date.now() + 10_000),
       token: MOCK_TOKEN,
       userId: "ben",
       refreshToken: "bar",
@@ -112,7 +112,7 @@ describe("the getaccountTransactions method", () => {
     const token = OauthToken.reconstitute({
       refreshExpiry: undefined,
       provider: "ynab",
-      expiry: new Date("2025-12-11T20:39:37.823Z"),
+      expiry: new Date(Date.now() + 10_000),
       token: MOCK_TOKEN,
       userId: "ben",
       refreshToken: "bar",

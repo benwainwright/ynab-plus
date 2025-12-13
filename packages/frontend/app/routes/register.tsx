@@ -1,6 +1,6 @@
 import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 
 import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
@@ -13,7 +13,7 @@ interface FormValues {
   validatePassword: string;
 }
 
-export const Register = () => {
+export const Register = (): ReactNode => {
   const navigate = useNavigate();
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
 

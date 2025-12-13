@@ -10,7 +10,7 @@ import {
   PasswordInput,
   TextInput,
 } from "@mantine/core";
-import { useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 import { permissions, type Permission } from "@ynab-plus/domain";
 
 interface FormValues {
@@ -20,7 +20,7 @@ interface FormValues {
   validatePassword: string;
 }
 
-export const EditUser = () => {
+export const EditUser = (): ReactNode => {
   const { userId } = useParams<{ userId: string }>();
   const { user, saveUser, isPending } = useUser(userId);
 

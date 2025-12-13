@@ -1,9 +1,9 @@
 import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 
-export const Logout = () => {
+export const Logout = (): ReactNode => {
   const navigate = useNavigate();
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
 

@@ -10,18 +10,20 @@
   },
   "scripts": {
     "test:coverage": "vitest --coverage",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "oxlint --type-aware",
+    "type-check": "tsgo --build"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
     "@ynab-plus/bootstrap": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
-    "inversify": "^7.10.4",
-    "reflect-metadata": "^0.2.2",
+    "inversify": "7.10.4",
+    "reflect-metadata": "0.2.2",
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "msw": "^2.12.2",
+    "msw": "2.12.2",
     "vitest-mock-extended": "3.1.0"
   }
 }

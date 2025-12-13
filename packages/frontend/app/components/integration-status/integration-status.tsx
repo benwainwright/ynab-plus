@@ -1,6 +1,7 @@
 import { useOauth2IntegrationStatus } from "@data";
 import { Card, Group, LoadingOverlay, Title } from "@mantine/core";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
+import type { ReactNode } from "react";
 import { RedirectButton } from "./redirect-button.tsx";
 import { ConnectedIntegrationStatusBody } from "./connected-integration-status-body.tsx";
 
@@ -12,7 +13,7 @@ interface IntegrationStatusProps {
 export const IntegrationStatus = ({
   provider,
   title,
-}: IntegrationStatusProps) => {
+}: IntegrationStatusProps): ReactNode => {
   const { status } = useOauth2IntegrationStatus({
     provider,
   });

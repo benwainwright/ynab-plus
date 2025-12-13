@@ -1,4 +1,5 @@
 import { AppShell, Burger, Group } from "@mantine/core";
+import type { ReactNode } from "react";
 
 interface HeaderProps {
   title: string;
@@ -10,7 +11,7 @@ export const Header = ({
   title,
   sideBarOpened,
   onBurgerClick,
-}: HeaderProps) => {
+}: HeaderProps): ReactNode => {
   return (
     <AppShell.Header>
       <Group h="100%" px="md">

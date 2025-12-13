@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "no-caret-version-dependencies": "error",
+    "no-caret-version-devDependencies": "error",
+    "prefer-scripts": ["error", [
+      "lint",
+      "test",
+      "type-check"
+    ]]
+  }
+}

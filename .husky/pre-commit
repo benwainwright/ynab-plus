@@ -1,3 +1,4 @@
 pnpx lint-staged
 pnpm run test
 pnpm type-check
+pnpm run lint:packageJson

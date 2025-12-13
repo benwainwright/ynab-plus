@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite-node src/start-server.ts"
+    "dev": "vite-node src/start-server.ts",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware",
+    "test": "vitest"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
@@ -13,22 +16,15 @@
     "@ynab-plus/node-adapters": "workspace:*",
     "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/sqlite-adapters": "workspace:*",
-    "cookie": "^1.0.2",
-    "inversify": "^7.10.4",
-    "isbot": "^5.1.31",
-    "node-cron": "^4.2.1",
-    "reflect-metadata": "^0.2.2",
-    "typeson": "^9.0.4",
-    "uuid": "^13.0.0",
-    "winston": "^3.18.3",
-    "ws": "^8.18.3",
-    "zod": "^4.1.12"
-  },
-  "devDependencies": {
-    "@types/node": "^22",
-    "typescript": "^5.9.2",
-    "vite": "7.2.2",
-    "vite-node": "^5.0.0",
-    "vite-tsconfig-paths": "5.1.4"
+    "cookie": "1.0.2",
+    "inversify": "7.10.4",
+    "isbot": "5.1.31",
+    "node-cron": "4.2.1",
+    "reflect-metadata": "0.2.2",
+    "typeson": "9.0.4",
+    "uuid": "13.0.0",
+    "winston": "3.18.3",
+    "ws": "8.18.3",
+    "zod": "4.1.12"
   }
 }

@@ -5,6 +5,7 @@ import {
   type IOauthTokenRepository,
   type IRepository,
   type ITransactionFetcher,
+  type ITransactionRepository,
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -15,8 +16,6 @@ import {
   type User,
 } from "@ynab-plus/domain";
 import { injectable } from "inversify";
-
-import type { ITransactionRepository } from "src/ports/i-transaction-repository.ts";
 
 export const LOG_CONTEXT = { context: "sync-account-service" };
 

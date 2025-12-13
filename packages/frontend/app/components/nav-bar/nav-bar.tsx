@@ -1,11 +1,11 @@
 import { AppShell, NavLink } from "@mantine/core";
 import { routesList, type RouteSpec } from "@config";
-import { useContext } from "react";
+import { useContext, type ReactNode } from "react";
 import { CurrentUserContext } from "@components";
 import { canAccess } from "@utils";
 import { Link } from "react-router";
 
-export const NavBar = () => {
+export const NavBar = (): ReactNode => {
   const list: Record<string, RouteSpec> = routesList;
   const { currentUser: user } = useContext(CurrentUserContext);
   return (

@@ -9,7 +9,9 @@
     }
   },
   "scripts": {
-    "test": "vitest --watch"
+    "test": "vitest --watch",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
   },
   "dependencies": {
     "@ynab-plus/app": "workspace:*",
@@ -17,8 +19,8 @@
     "@ynab-plus/data-adapter-tests": "workspace:*",
     "@ynab-plus/domain": "workspace:*",
     "better-sqlite3": "12.4.1",
-    "inversify": "^7.10.4",
-    "reflect-metadata": "^0.2.2",
+    "inversify": "7.10.4",
+    "reflect-metadata": "0.2.2",
     "zod": "4.1.12"
   },
   "devDependencies": {

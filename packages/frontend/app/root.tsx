@@ -17,10 +17,11 @@ import {
 
 import type { Route } from "./+types/root.ts";
 import { Notifications } from "@mantine/notifications";
+import type { ReactNode } from "react";
 
 export const links: Route.LinksFunction = () => [];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: { children: React.ReactNode }): ReactNode {
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -42,11 +43,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function App(): ReactNode {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps): ReactNode {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;

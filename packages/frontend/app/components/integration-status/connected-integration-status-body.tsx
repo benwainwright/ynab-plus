@@ -1,6 +1,7 @@
 import { command, type Oauth2IntegrationStatusConnected } from "@data";
 import { SimpleGrid, Text, Button, Group } from "@mantine/core";
 import { DateTime } from "luxon";
+import type { ReactNode } from "react";
 
 const dateFormat = {
   weekday: "short",
@@ -18,7 +19,7 @@ interface ConnectedIntegrationStatusBodyProps {
 export const ConnectedIntegrationStatusBody = ({
   provider,
   status,
-}: ConnectedIntegrationStatusBodyProps) => {
+}: ConnectedIntegrationStatusBodyProps): ReactNode => {
   const disconnect = async () => {
     await command("DisconnectOauthIntegrationCommand", { provider });
   };

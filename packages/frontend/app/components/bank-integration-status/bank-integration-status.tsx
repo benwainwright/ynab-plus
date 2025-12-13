@@ -2,8 +2,9 @@ import { useBankIntegrationStatus } from "@data";
 import { Card, Group, LoadingOverlay, Title } from "@mantine/core";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { SelectInstitutionButton } from "./select-institution-button.tsx";
+import type { ReactNode } from "react";
 
-export const BankIntegrationStatus = () => {
+export const BankIntegrationStatus = (): ReactNode => {
   const { status } = useBankIntegrationStatus();
 
   return (

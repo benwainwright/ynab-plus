@@ -13,22 +13,15 @@
     "@ynab-plus/domain": "workspace:*",
     "@ynab-plus/serialiser": "workspace:*",
     "@ynab-plus/test-helpers": "workspace:*",
-    "inversify": "^7.10.4",
-    "reflect-metadata": "^0.2.2",
-    "stacktracey": "^2.1.8"
+    "inversify": "7.10.4",
+    "reflect-metadata": "0.2.2",
+    "stacktracey": "2.1.8"
   },
   "module": "src/index.ts",
   "scripts": {
-    "test": "vitest --coverage"
+    "test": "vitest --coverage",
+    "type-check": "tsgo --build",
+    "lint": "oxlint --type-aware"
   },
-  "private": true,
-  "devDependencies": {
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "4.0.8",
-    "vitest-mock-extended": "^3.1.0",
-    "vitest-when": "^0.10.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "private": true
 }

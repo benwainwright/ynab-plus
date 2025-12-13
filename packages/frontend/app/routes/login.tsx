@@ -9,7 +9,7 @@ import {
   Anchor,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
 
 interface FormValues {
@@ -17,7 +17,7 @@ interface FormValues {
   password: string;
 }
 
-export const Login = () => {
+export const Login = (): ReactNode => {
   const { currentUser, reloadUser } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
