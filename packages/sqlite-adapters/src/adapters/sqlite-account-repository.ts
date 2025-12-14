@@ -16,6 +16,7 @@ interface RawAccount {
   balance: number;
   clearedBalance: number;
   unclearedBalance: number;
+  linkedOpenBankingAccount: string | null;
   deleted: string;
 }
 
@@ -43,7 +44,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
 
   async getAccounts(id: string): Promise<Account | undefined> {
     const result = await this.database.getFromDb<RawAccount | undefined>(
-      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance
+      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance, linkedOpenBankingAccount
         FROM ${await this.tableName.value}
         where id = ?`,
       [id],
@@ -62,12 +63,13 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       closed: account.closed === "closed",
       deleted: account.deleted === "deleted",
       note: account.note ?? undefined,
+      linkedOpenBankingAccount: account.linkedOpenBankingAccount ?? undefined,
     });
   }
 
   async getUserAccounts(userId: string): Promise<Account[]> {
     const result = await this.database.getAllFromDatabase<RawAccount[]>(
-      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance
+      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance, linkedOpenBankingAccount
         FROM ${await this.tableName.value}
         WHERE userId = ?
         `,
@@ -89,7 +91,8 @@ export class Sqlite3AccountRepository implements IAccountRepository {
           clearedBalance INTEGER NOT NULL,
           unclearedBalance INTEGER NOT NULL,
           note TEXT,
-          deleted TEXT NOT NULL
+          deleted TEXT NOT NULL,
+          linkedOpenBankingAccount TEXT
       );`,
       [],
     );
@@ -98,8 +101,8 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   public async saveAccount(thing: Account): Promise<Account> {
     this.domainEventStore.stageEvents(thing);
     await this.database.deferQueryToTransaction(
-      `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance, linkedOpenBankingAccount)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           userId = excluded.userId,
           name = excluded.name,
@@ -109,7 +112,8 @@ export class Sqlite3AccountRepository implements IAccountRepository {
           deleted = excluded.deleted,
           balance = excluded.balance,
           clearedBalance = excluded.clearedBalance,
-          unclearedBalance = excluded.unclearedBalance`,
+          unclearedBalance = excluded.unclearedBalance,
+          linkedOpenBankingAccount = excluded.linkedOpenBankingAccount`,
       [
         thing.id,
         thing.userId,
@@ -121,6 +125,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
         thing.balance,
         thing.clearedBalance,
         thing.unclearedBalance,
+        thing.linkedOpenBankingAccount,
       ],
     );
 

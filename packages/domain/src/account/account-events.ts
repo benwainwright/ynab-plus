@@ -4,4 +4,5 @@ export interface AccountEvents {
   AccountCreated: Account;
   AccountDeleted: Account;
   AccountBalanceUpdated: { old: Account; new: Account };
+  AccountLinked: { old: Account; new: Account };
 }

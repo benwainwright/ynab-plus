@@ -4,6 +4,7 @@ import type { Permission } from "@core";
 import type { RegularTask } from "@regular-task";
 import type { Transaction } from "@transaction";
 import type { BankConnectionCommands } from "@bank-connection";
+import type { AccountsCommands } from "@account";
 
 export type Commands = {
   SyncAccountCommand: {
@@ -36,10 +37,6 @@ export type Commands = {
       id: string;
     };
     response: undefined;
-  };
-  SyncAccountsCommand: {
-    request: { force: boolean };
-    response: { synced: boolean };
   };
   DisconnectOauthIntegrationCommand: {
     request: { provider: string };
@@ -106,9 +103,7 @@ export type Commands = {
       email: string;
       password: string;
     };
-    response:
-      | { success: true; id: string }
-      | { success: false; reason: string };
+    response: { success: true; id: string } | { success: false; reason: string };
   };
   LogoutCommand: {
     request: undefined;
@@ -138,4 +133,5 @@ export type Commands = {
       hello: string;
     };
   };
-} & BankConnectionCommands;
+} & BankConnectionCommands &
+  AccountsCommands;

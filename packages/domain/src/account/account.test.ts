@@ -75,6 +75,55 @@ describe("the account model", () => {
     ]);
   });
 
+  it("allows you to link an account id", () => {
+    const newAccount = Account.reconstitute({
+      id: "id",
+      userId: "userId",
+      name: "account name",
+      type: "accont_type",
+      closed: false,
+      clearedBalance: 0,
+      balance: 1000,
+      unclearedBalance: 10000,
+      deleted: false,
+    });
+
+    newAccount.linkAccount("foo");
+
+    expect(newAccount.pullEvents()).toEqual([
+      {
+        event: "AccountLinked",
+        data: {
+          old: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            clearedBalance: 0,
+            balance: 1000,
+            unclearedBalance: 10000,
+            deleted: false,
+          }),
+          new: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            linkedOpenBankingAccount: "foo",
+            clearedBalance: 0,
+            balance: 1000,
+            unclearedBalance: 10000,
+            deleted: false,
+          }),
+        },
+      },
+    ]);
+
+    expect(newAccount.linkedOpenBankingAccount).toEqual("foo");
+  });
+
   it("allows you to update the balances", () => {
     const newAccount = Account.reconstitute({
       id: "id",

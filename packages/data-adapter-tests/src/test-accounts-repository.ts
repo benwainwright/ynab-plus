@@ -142,6 +142,7 @@ export const testAccountsRepository = (
         userId: "ben",
         name: "hello",
         type: "checking",
+        linkedOpenBankingAccount: "foo",
         closed: false,
         balance: 1000,
         clearedBalance: 1_000,

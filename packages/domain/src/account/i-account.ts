@@ -9,6 +9,7 @@ export const accountSchema = z.object({
   balance: z.number(),
   clearedBalance: z.number(),
   unclearedBalance: z.number(),
+  linkedOpenBankingAccount: z.string().optional(),
   note: z
     .union([z.string(), z.null()])
     .transform((item) => item ?? undefined)
