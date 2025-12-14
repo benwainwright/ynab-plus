@@ -1,11 +1,6 @@
-import { Page, Loader } from "@components";
+import { Page, Loader, Currency } from "@components";
 import { useTransactions } from "@data";
-import {
-  Loader as MantineLoader,
-  Button,
-  Pagination,
-  Table,
-} from "@mantine/core";
+import { Loader as MantineLoader, Button, Pagination, Table } from "@mantine/core";
 import { DateTime } from "luxon";
 import type { ReactNode } from "react";
 import { useParams } from "react-router";
@@ -44,27 +39,17 @@ export const Transactions = (): ReactNode => {
                 {data.map((transaction) => (
                   <Table.Tr key={`${transaction.id}-account-row`}>
                     <Table.Td>
-                      {DateTime.fromJSDate(
-                        new Date(transaction.date),
-                      ).toLocaleString(dateFormat)}
+                      {DateTime.fromJSDate(new Date(transaction.date)).toLocaleString(dateFormat)}
                     </Table.Td>
                     <Table.Td>{transaction.payee}</Table.Td>
                     <Table.Td>
-                      {new Intl.NumberFormat("en-GB", {
-                        style: "currency",
-                        currency: "GBP",
-                      }).format(transaction.amount / 1000)}
+                      <Currency>{transaction.amount}</Currency>
                     </Table.Td>
                   </Table.Tr>
                 ))}
               </Table.Tbody>
             </Table>
-            <Pagination
-              mt={"lg"}
-              value={page}
-              onChange={setPage}
-              total={totalPages}
-            />
+            <Pagination mt={"lg"} value={page} onChange={setPage} total={totalPages} />
           </>
         )}
       </Loader>
