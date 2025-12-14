@@ -1,4 +1,4 @@
-import { Loader, Page } from "@components";
+import { Currency, Loader, Page } from "@components";
 import { useAccounts } from "@data";
 import { Table } from "@mantine/core";
 import { Link } from "react-router";
@@ -14,6 +14,7 @@ export const Transactions = (): ReactNode => {
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Name</Table.Th>
+                <Table.Th>Balance</Table.Th>
                 <Table.Th>Type</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -22,6 +23,9 @@ export const Transactions = (): ReactNode => {
                 <Table.Tr key={`${account.id}-account-row`}>
                   <Table.Td>
                     <Link to={`/accounts/${account.id}`}>{account.name}</Link>
+                  </Table.Td>
+                  <Table.Td>
+                    <Currency>{account.clearedBalance}</Currency>
                   </Table.Td>
                   <Table.Td>{account.type}</Table.Td>
                 </Table.Tr>
