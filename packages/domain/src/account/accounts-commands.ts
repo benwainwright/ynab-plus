@@ -8,8 +8,12 @@ export interface AccountsCommands {
     response:
       | { status: "no_link" }
       | { status: "no_bank_connection" }
-      | { status: "balances_match" }
-      | { status: "balance_mismatch" };
+      | { status: "balances_match"; balance: number }
+      | {
+          status: "balance_mismatch";
+          ynabBalance: number;
+          bankBalance: number;
+        };
   };
   SyncAccountCommand: {
     request: {

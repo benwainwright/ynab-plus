@@ -30,6 +30,7 @@ export type { IUUIDGenerator } from "./i-uuid-generator.ts";
 export { type NewTokenRequesterFactory } from "./new-token-requester-factory.ts";
 export type { RequestScopedServiceBusFactory } from "./request-scoped-service-bus-factory.ts";
 export type { SingletonServiceBusFactory } from "./singleton-service-bus-factory.ts";
+export type { IOpenBankingAccountBalanceFetcher } from "./i-open-banking-account-balance-fetcher.ts";
 export type { IOpenBankingTokenFetcher } from "./i-open-banking-token-fetcher.ts";
 export { type IBankConnectionRepository } from "./i-bank-connection-repository.ts";
 export { type IAtomicContext } from "./i-atomic-context.ts";

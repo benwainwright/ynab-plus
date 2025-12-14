@@ -5,6 +5,7 @@ import type {
   IOauthNewTokenRequester,
   IOauthRedirectUrlGenerator,
   IOAuthTokenRefresher,
+  IOpenBankingAccountBalanceFetcher,
   IOpenBankingTokenFetcher,
   IRequesitionAccountFetcher,
   ITransactionFetcher,
@@ -15,6 +16,7 @@ export interface IIntegrationPorts {
   AccountsFetcher: IAccountsFetcher;
   TransactionFetcher: ITransactionFetcher;
   BankConnectionTokenFetcher: IOpenBankingTokenFetcher;
+  OpenBankingAccountBalanceFetcher: IOpenBankingAccountBalanceFetcher;
   BankConnectionCreator: IBankConnectionCreator;
   RequestionAccountFetcher: IRequesitionAccountFetcher;
   InstitutionAuthPageLinkFetcher: IInstitutionAuthPageLinkFetcher;
