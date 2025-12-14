@@ -144,6 +144,9 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
               closed: z.boolean(),
               note: z.union([z.string(), z.null()]),
               deleted: z.boolean(),
+              balance: z.number(),
+              cleared_balance: z.number(),
+              uncleared_balance: z.number(),
             }),
           ),
         }),
@@ -154,6 +157,8 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       Account.reconstitute({
         ...account,
         userId: token.userId,
+        clearedBalance: account.cleared_balance,
+        unclearedBalance: account.uncleared_balance,
       }),
     );
   }

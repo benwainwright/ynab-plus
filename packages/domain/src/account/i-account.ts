@@ -6,7 +6,9 @@ export const accountSchema = z.object({
   name: z.string(),
   type: z.string(),
   closed: z.boolean(),
-
+  balance: z.number(),
+  clearedBalance: z.number(),
+  unclearedBalance: z.number(),
   note: z
     .union([z.string(), z.null()])
     .transform((item) => item ?? undefined)

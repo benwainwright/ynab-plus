@@ -36,6 +36,9 @@ describe("list accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         deleted: false,
       }),
       Account.reconstitute({
@@ -43,6 +46,9 @@ describe("list accounts service", () => {
         userId: "ben",
         name: "current",
         type: "checking",
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         closed: true,
         note: undefined,
         deleted: false,
@@ -57,9 +63,7 @@ describe("list accounts service", () => {
 
     const repo = mock<IAccountRepository>();
 
-    when(repo.getUserAccounts)
-      .calledWith(mockUser.id)
-      .thenResolve(mockUserList);
+    when(repo.getUserAccounts).calledWith(mockUser.id).thenResolve(mockUserList);
 
     const service = new ListAccountsService(repo, mock());
 
@@ -78,6 +82,9 @@ describe("list accounts service", () => {
 
     const mockUserList = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -87,6 +94,9 @@ describe("list accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -97,17 +107,11 @@ describe("list accounts service", () => {
       }),
     ];
 
-    const context = createMockServiceContext(
-      "ListAccountsCommand",
-      undefined,
-      mockUser,
-    );
+    const context = createMockServiceContext("ListAccountsCommand", undefined, mockUser);
 
     const repo = mock<IAccountRepository>();
 
-    when(repo.getUserAccounts)
-      .calledWith(mockUser.id)
-      .thenResolve(mockUserList);
+    when(repo.getUserAccounts).calledWith(mockUser.id).thenResolve(mockUserList);
 
     const service = new ListAccountsService(repo, mock());
 

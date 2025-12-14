@@ -48,6 +48,9 @@ describe("the socket event bus", () => {
     const accounts = [
       Account.reconstitute({
         id: "one",
+        balance: 1000,
+        unclearedBalance: 10_000,
+        clearedBalance: 1000_0000,
         userId: "ben",
         name: "hello",
         type: "checking",
@@ -57,6 +60,9 @@ describe("the socket event bus", () => {
       }),
 
       Account.reconstitute({
+        balance: 1000,
+        unclearedBalance: 10_000,
+        clearedBalance: 1000_0000,
         id: "two",
         userId: "ben",
         name: "hello",
@@ -105,6 +111,9 @@ describe("the socket event bus", () => {
 
     const accounts = [
       Account.reconstitute({
+        balance: 1000,
+        unclearedBalance: 10_000,
+        clearedBalance: 1000_0000,
         id: "one",
         userId: "ben",
         name: "hello",
@@ -115,6 +124,9 @@ describe("the socket event bus", () => {
       }),
 
       Account.reconstitute({
+        balance: 1000,
+        unclearedBalance: 10_000,
+        clearedBalance: 1000_0000,
         id: "two",
         userId: "ben",
         name: "hello",

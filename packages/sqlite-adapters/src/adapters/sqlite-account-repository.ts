@@ -13,6 +13,9 @@ interface RawAccount {
   type: string;
   closed: string;
   note?: string | null;
+  balance: number;
+  clearedBalance: number;
+  unclearedBalance: number;
   deleted: string;
 }
 
@@ -40,7 +43,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
 
   async getAccounts(id: string): Promise<Account | undefined> {
     const result = await this.database.getFromDb<RawAccount | undefined>(
-      `SELECT id, userId, name, type, closed, note, deleted
+      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance
         FROM ${await this.tableName.value}
         where id = ?`,
       [id],
@@ -64,7 +67,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
 
   async getUserAccounts(userId: string): Promise<Account[]> {
     const result = await this.database.getAllFromDatabase<RawAccount[]>(
-      `SELECT id, userId, name, type, closed, note, deleted
+      `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance
         FROM ${await this.tableName.value}
         WHERE userId = ?
         `,
@@ -82,6 +85,9 @@ export class Sqlite3AccountRepository implements IAccountRepository {
           name TEXT NOT NULL,
           type TEXT NOT NULL,
           closed TEXT NOT NULL,
+          balance INTEGER NOT NULL,
+          clearedBalance INTEGER NOT NULL,
+          unclearedBalance INTEGER NOT NULL,
           note TEXT,
           deleted TEXT NOT NULL
       );`,
@@ -92,16 +98,18 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   public async saveAccount(thing: Account): Promise<Account> {
     this.domainEventStore.stageEvents(thing);
     await this.database.deferQueryToTransaction(
-      `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           userId = excluded.userId,
           name = excluded.name,
           type = excluded.type,
           closed = excluded.closed,
           note = excluded.note,
-          deleted = excluded.deleted
-        RETURNING id, userId, name, type, closed, note, deleted`,
+          deleted = excluded.deleted,
+          balance = excluded.balance,
+          clearedBalance = excluded.clearedBalance,
+          unclearedBalance = excluded.unclearedBalance`,
       [
         thing.id,
         thing.userId,
@@ -110,6 +118,9 @@ export class Sqlite3AccountRepository implements IAccountRepository {
         thing.closed ? "closed" : "open",
         thing.note,
         thing.deleted ? "deleted" : "not_deleted",
+        thing.balance,
+        thing.clearedBalance,
+        thing.unclearedBalance,
       ],
     );
 

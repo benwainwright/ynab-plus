@@ -7,13 +7,7 @@ import {
   type IOauthTokenRepository,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
-import {
-  Account,
-  OauthToken,
-  RegularTask,
-  SystemContext,
-  User,
-} from "@ynab-plus/domain";
+import { Account, OauthToken, RegularTask, SystemContext, User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
@@ -35,13 +29,7 @@ describe("download-accounts service", () => {
       new SystemContext("test", ["system"]),
     );
 
-    const service = new SyncAccountsService(
-      mock(),
-      mock(),
-      mock(),
-      mock(),
-      mock(),
-    );
+    const service = new SyncAccountsService(mock(), mock(), mock(), mock(), mock());
 
     await expect(service.doHandle(context)).rejects.toThrow(AppError);
   });
@@ -78,6 +66,9 @@ describe("download-accounts service", () => {
 
     const accounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -87,6 +78,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -101,9 +95,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    when(mockAccountsRepo.getUserAccounts)
-      .calledWith("ben")
-      .thenResolve(accounts);
+    when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
       mockTokenRepo,
@@ -159,6 +151,9 @@ describe("download-accounts service", () => {
 
     const fetchedAccounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -168,6 +163,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -177,6 +175,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "baz-account",
         userId: "ben",
         name: "current",
@@ -186,6 +187,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bip-account",
         userId: "ben",
         name: "current",
@@ -198,6 +202,9 @@ describe("download-accounts service", () => {
 
     const storedAccounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -207,6 +214,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -219,13 +229,9 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    when(mockFetcher.getAccounts)
-      .calledWith(token)
-      .thenResolve(fetchedAccounts);
+    when(mockFetcher.getAccounts).calledWith(token).thenResolve(fetchedAccounts);
 
-    when(mockAccountsRepo.getUserAccounts)
-      .calledWith("ben")
-      .thenResolve(storedAccounts);
+    when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(storedAccounts);
 
     const mockTaskScheduler = mock<ITaskScheduler>();
 
@@ -237,11 +243,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: true },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
 
     await service.doHandle(context);
 
@@ -317,6 +319,9 @@ describe("download-accounts service", () => {
 
     const accounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -326,6 +331,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -340,9 +348,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    when(mockAccountsRepo.getUserAccounts)
-      .calledWith("ben")
-      .thenResolve(accounts);
+    when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
       mockTokenRepo,
@@ -352,11 +358,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: true },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
 
     const result = await service.doHandle(context);
 
@@ -404,11 +406,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: false },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);
 
     await service.doHandle(context);
 
@@ -451,6 +449,9 @@ describe("download-accounts service", () => {
 
     const accounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -460,6 +461,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -474,9 +478,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    when(mockAccountsRepo.getUserAccounts)
-      .calledWith("ben")
-      .thenResolve(accounts);
+    when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
       mockTokenRepo,
@@ -486,11 +488,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: false },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);
 
     await service.doHandle(context);
 
@@ -531,6 +529,9 @@ describe("download-accounts service", () => {
 
     const accounts = [
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "foo-account",
         userId: "ben",
         name: "current",
@@ -540,6 +541,9 @@ describe("download-accounts service", () => {
         deleted: false,
       }),
       Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "bar-account",
         userId: "ben",
         name: "current",
@@ -554,9 +558,7 @@ describe("download-accounts service", () => {
 
     const mockAccountsRepo = mock<IAccountRepository>();
 
-    when(mockAccountsRepo.getUserAccounts)
-      .calledWith("ben")
-      .thenResolve(accounts);
+    when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
       mockTokenRepo,
@@ -566,11 +568,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: false },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);
 
     await service.doHandle(context);
 
@@ -608,11 +606,7 @@ describe("download-accounts service", () => {
       mock(),
     );
 
-    const context = createMockServiceContext(
-      "SyncAccountsCommand",
-      { force: true },
-      user,
-    );
+    const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
 
     await expect(service.doHandle(context)).rejects.toThrow(AppError);
   });

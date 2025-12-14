@@ -20,6 +20,9 @@ export const testAccountsRepository = (
         name: "hello",
         type: "checking",
         closed: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         note: "a note",
         deleted: false,
       });
@@ -30,6 +33,9 @@ export const testAccountsRepository = (
         name: "hello",
         type: "checking",
         closed: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         note: "a note",
         deleted: false,
       });
@@ -64,6 +70,9 @@ export const testAccountsRepository = (
         closed: false,
         note: "a note",
         deleted: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
       });
 
       const accountTwo = Account.reconstitute({
@@ -72,6 +81,9 @@ export const testAccountsRepository = (
         name: "hello",
         type: "checking",
         closed: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         note: "a note",
         deleted: false,
       });
@@ -92,6 +104,9 @@ export const testAccountsRepository = (
         name: "hello",
         type: "checking",
         closed: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         note: "a note",
         deleted: false,
       });
@@ -103,6 +118,9 @@ export const testAccountsRepository = (
         type: "checking",
         closed: false,
         note: "a note",
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         deleted: false,
       });
 
@@ -125,11 +143,17 @@ export const testAccountsRepository = (
         name: "hello",
         type: "checking",
         closed: false,
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         note: "a note",
         deleted: false,
       });
 
       const accountTwo = Account.reconstitute({
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         id: "two",
         userId: "ben",
         name: "hello",
@@ -144,6 +168,9 @@ export const testAccountsRepository = (
         userId: "fred",
         name: "hello",
         type: "checking",
+        balance: 1000,
+        clearedBalance: 1_000,
+        unclearedBalance: 10_000,
         closed: false,
         note: "a note",
         deleted: false,

@@ -9,6 +9,9 @@ describe("the account model", () => {
         type: "accont_type",
         closed: false,
         deleted: false,
+        balance: 0,
+        unclearedBalance: 100,
+        clearedBalance: 1000,
       });
 
       const frozen = newAccount.freezeDry();
@@ -20,6 +23,9 @@ describe("the account model", () => {
         name: "account name",
         type: "accont_type",
         closed: false,
+        balance: 0,
+        unclearedBalance: 100,
+        clearedBalance: 1000,
         deleted: false,
       });
     });
@@ -33,6 +39,9 @@ describe("the account model", () => {
       type: "accont_type",
       closed: false,
       deleted: false,
+      clearedBalance: 0,
+      balance: 1000,
+      unclearedBalance: 10000,
     });
 
     expect(newAccount.pullEvents()).toEqual([
@@ -50,6 +59,9 @@ describe("the account model", () => {
       name: "account name",
       type: "accont_type",
       closed: false,
+      clearedBalance: 0,
+      balance: 1000,
+      unclearedBalance: 10000,
       deleted: false,
     });
 
@@ -61,5 +73,59 @@ describe("the account model", () => {
         data: newAccount,
       },
     ]);
+  });
+
+  it("allows you to update the balances", () => {
+    const newAccount = Account.reconstitute({
+      id: "id",
+      userId: "userId",
+      name: "account name",
+      type: "accont_type",
+      closed: false,
+      clearedBalance: 0,
+      balance: 1000,
+      unclearedBalance: 10000,
+      deleted: false,
+    });
+
+    newAccount.updateBalance({
+      balance: 10_000,
+      unclearedBalance: 20,
+      clearedBalance: 200,
+    });
+
+    expect(newAccount.pullEvents()).toEqual([
+      {
+        event: "AccountBalanceUpdated",
+        data: {
+          old: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            clearedBalance: 0,
+            balance: 1000,
+            unclearedBalance: 10000,
+            deleted: false,
+          }),
+          new: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            clearedBalance: 200,
+            balance: 10_000,
+            unclearedBalance: 20,
+            deleted: false,
+          }),
+        },
+      },
+    ]);
+
+    expect(newAccount.balance).toEqual(10_000);
+    expect(newAccount.clearedBalance).toEqual(200);
+    expect(newAccount.unclearedBalance).toEqual(20);
   });
 });

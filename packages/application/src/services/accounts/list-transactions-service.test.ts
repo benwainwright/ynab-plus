@@ -23,6 +23,9 @@ describe("list transactions service", () => {
     );
 
     const account = Account.reconstitute({
+      balance: 1000,
+      clearedBalance: 1_000,
+      unclearedBalance: 10_000,
       id: "bar",
       userId: "ben",
       name: "hello",
@@ -62,18 +65,12 @@ describe("list transactions service", () => {
       .calledWith("ben", "bar", 0, 30)
       .thenResolve(transactions);
 
-    when(mockTxRepo.getAccountTransactionCount)
-      .calledWith("ben", "bar")
-      .thenResolve(4);
+    when(mockTxRepo.getAccountTransactionCount).calledWith("ben", "bar").thenResolve(4);
 
     const mockAccounts = mock<IAccountRepository>();
     when(mockAccounts.getAccounts).calledWith("bar").thenResolve(account);
 
-    const service = new ListTransactionsService(
-      mockTxRepo,
-      mockAccounts,
-      mock(),
-    );
+    const service = new ListTransactionsService(mockTxRepo, mockAccounts, mock());
 
     const result = await service.doHandle(context);
 
@@ -99,6 +96,9 @@ describe("list transactions service", () => {
     );
 
     const account = Account.reconstitute({
+      balance: 1000,
+      clearedBalance: 1_000,
+      unclearedBalance: 10_000,
       id: "one",
       userId: "fred",
       name: "hello",
@@ -140,11 +140,7 @@ describe("list transactions service", () => {
       .calledWith("ben", "bar", 0, 30)
       .thenResolve(transactions);
 
-    const service = new ListTransactionsService(
-      mockTxRepo,
-      mockAccounts,
-      mock(),
-    );
+    const service = new ListTransactionsService(mockTxRepo, mockAccounts, mock());
 
     await expect(service.doHandle(context)).rejects.toThrow();
   });

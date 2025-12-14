@@ -10,6 +10,9 @@ export class Account extends DomainModel<IAccount> implements IAccount {
   public readonly note: string | undefined;
   public readonly type: string;
   public readonly deleted: boolean;
+  private _balance: number;
+  private _clearedBalance: number;
+  private _unclearedBalance: number;
 
   private constructor(config: IAccount) {
     super();
@@ -20,22 +23,48 @@ export class Account extends DomainModel<IAccount> implements IAccount {
     this.closed = config.closed;
     this.note = config.note;
     this.deleted = config.deleted;
+    this._balance = config.balance;
+    this._clearedBalance = config.clearedBalance;
+    this._unclearedBalance = config.unclearedBalance;
   }
 
   public delete() {
     this.raiseEvent({ event: "AccountDeleted", data: this });
   }
 
-  public override freezeDry(_config?: { secure: boolean }): {
-    id: string;
-    userId: string;
-    name: string;
-    type: string;
-    closed: boolean;
-    deleted: boolean;
-    note?: string | undefined;
-  } {
+  public updateBalance(config: {
+    balance: number;
+    clearedBalance: number;
+    unclearedBalance: number;
+  }) {
+    const old = Account.reconstitute(this);
+    this._balance = config.balance;
+    this._clearedBalance = config.clearedBalance;
+    this._unclearedBalance = config.unclearedBalance;
+
+    this.raiseEvent({
+      event: "AccountBalanceUpdated",
+      data: { old, new: Account.reconstitute(this) },
+    });
+  }
+
+  public get balance() {
+    return this._balance;
+  }
+
+  public get clearedBalance() {
+    return this._clearedBalance;
+  }
+
+  public get unclearedBalance() {
+    return this._unclearedBalance;
+  }
+
+  public override freezeDry(_config?: { secure: boolean }): IAccount {
     return {
+      balance: this._balance,
+      unclearedBalance: this._unclearedBalance,
+      clearedBalance: this._clearedBalance,
       id: this.id,
       userId: this.userId,
       name: this.name,
