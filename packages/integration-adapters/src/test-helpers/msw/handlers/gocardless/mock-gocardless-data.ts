@@ -4,6 +4,30 @@ export const mockGocardlessData = {
   mockToken: "the-token",
   mockRefreshToken: "the-refresh-token",
   mockRedirectUrl: "http://www.yourwebpage.com",
+  mockAccountDetailsResponses: {
+    foo: {
+      id: "foo",
+      created: "2025-12-14T14:52:54.228Z",
+      last_accessed: "2025-12-14T14:52:54.228Z",
+      iban: "123",
+      bban: "4565",
+      status: "open",
+      institution_id: "monzo",
+      owner_name: "ben",
+      name: "current",
+    },
+    bar: {
+      id: "bar",
+      created: "2025-12-14T14:52:54.228Z",
+      last_accessed: "2025-12-14T14:52:54.228Z",
+      iban: "foo",
+      bban: "bar",
+      status: "open",
+      institution_id: "monzo",
+      owner_name: "ben",
+      name: "flex",
+    },
+  },
   mockAccountId: "foo",
   mockBalancesResponse: {
     balances: [

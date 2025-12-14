@@ -48,6 +48,34 @@ describe("the gocardless client", () => {
     });
   });
 
+  describe("getAccountDetails", () => {
+    it("makes multiple requests and aggregates them", async () => {
+      const client = new GocardlessClient(
+        { value: Promise.resolve(mockGocardlessData.secretId) },
+        { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
+        mock(),
+      );
+      const newToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: mockGocardlessData.mockToken,
+        refreshToken: "string",
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      const result = await client.getAccountDetails(["foo", "bar"], newToken);
+
+      expect(result.length).toEqual(2);
+      expect(result[1]?.name).toEqual(mockGocardlessData.mockAccountDetailsResponses.bar.name);
+      expect(result[0]?.name).toEqual(mockGocardlessData.mockAccountDetailsResponses.foo.name);
+    });
+  });
+
   describe("getLink", () => {
     it("calls the requsitions endpoint with the token and the institution and returns the url and req id", async () => {
       const client = new GocardlessClient(
