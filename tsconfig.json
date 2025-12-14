@@ -27,6 +27,9 @@
       "path": "./packages/data-adapter-tests",
     },
     {
+      "path": "./packages/dynamodb-adapters",
+    },
+    {
       "path": "./packages/integration-adapters",
     },
     {
