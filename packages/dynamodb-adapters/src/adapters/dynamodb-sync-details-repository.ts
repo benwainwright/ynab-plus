@@ -6,7 +6,7 @@ import { inject, Schema } from "@core";
 import { Model, type Entity } from "dynamodb-onetable";
 
 @injectable()
-export class DynamodbSyncDetailsAdapter implements IRepository<SyncDetails> {
+export class DynamoDbSyncDetailsRepository implements IRepository<SyncDetails> {
   public constructor(
     @inject("SingleTableClient")
     private readonly tableClient: DyanamoDbSingleTableClient,

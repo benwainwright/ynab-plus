@@ -1,1 +1,1 @@
-export { DynamodbSyncDetailsAdapter } from "./dynamodb-sync-details-adapter.ts";
+export { DynamoDbSyncDetailsRepository } from "./dynamodb-sync-details-repository.ts";
