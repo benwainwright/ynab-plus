@@ -9,10 +9,8 @@ import type { TypedContainerModule } from "@inversifyjs/strongly-typed";
 
 export const LOG_CONTEXT = { context: "integrations-module" };
 
-export const integrationsModule: TypedContainerModule<
-  IIntegrationPorts & IInternalTypes
-> = typedApplicationModule<IIntegrationPorts & IInternalTypes>(
-  ({ load, logger, bootstrapper }) => {
+export const integrationsModule: TypedContainerModule<IIntegrationPorts & IInternalTypes> =
+  typedApplicationModule<IIntegrationPorts & IInternalTypes>(({ load, logger, bootstrapper }) => {
     logger.info(`Initialising integrations module`, LOG_CONTEXT);
 
     load.bind("AccountsFetcher").to(YnabClient);
@@ -20,6 +18,7 @@ export const integrationsModule: TypedContainerModule<
     load.bind("BankConnectionCreator").to(GocardlessClient);
     load.bind("BankConnectionTokenFetcher").to(GocardlessClient);
     load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
+    load.bind("RequestionAccountFetcher").to(GocardlessClient);
 
     const oauthClientFactory = getOauthClientFactory(bootstrapper);
 
@@ -29,22 +28,15 @@ export const integrationsModule: TypedContainerModule<
 
     load
       .bind("GocardlessRedirectUrlConfigValue")
-      .toConstantValue(
-        bootstrapper.configValue("gocardlessRedirectUrl", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("gocardlessRedirectUrl", z.string()));
 
     load
       .bind("GocardlessClientSecretIdConfigValue")
-      .toConstantValue(
-        bootstrapper.configValue("gocardlessSecretId", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("gocardlessSecretId", z.string()));
 
     load
       .bind("GocardlessClientSecretKeyConfigValue")
-      .toConstantValue(
-        bootstrapper.configValue("gocardlessSecretKey", z.string()),
-      );
+      .toConstantValue(bootstrapper.configValue("gocardlessSecretKey", z.string()));
 
     logger.debug(`Finished initialising integrations module`, LOG_CONTEXT);
-  },
-);
+  });
