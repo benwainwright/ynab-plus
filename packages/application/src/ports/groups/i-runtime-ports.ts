@@ -2,13 +2,13 @@ import type {
   ICurrentUserSetter,
   IEventBus,
   IObjectStorage,
-  IPasswordHasher,
   IPasswordVerifier,
+  IStringHasher,
 } from "@ports";
 
 export interface IRuntimePorts {
   EventBus: IEventBus;
-  PasswordHasher: IPasswordHasher;
+  StringHasher: IStringHasher;
   PasswordVerifier: IPasswordVerifier;
   CurrentUserSetter?: ICurrentUserSetter;
   SessionStoreObjectStore: IObjectStorage;

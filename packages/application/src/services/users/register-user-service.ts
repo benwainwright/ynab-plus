@@ -2,8 +2,8 @@ import {
   type ICurrentUserSetter,
   type IHandleContext,
   type IMultipleRepository,
-  type IPasswordHasher,
   type IRepository,
+  type IStringHasher,
 } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
@@ -16,16 +16,14 @@ export const LOG_CONTEXT = { context: `register-user-service` };
 @injectable()
 export class RegisterUserService extends AbstractApplicationService<"RegisterCommand"> {
   public override readonly commandName = "RegisterCommand";
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "public",
-  ];
+  public override requiredPermissions: ("public" | "user" | "admin")[] = ["public"];
 
   public constructor(
     @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @inject("PasswordHasher")
-    private passwordHasher: IPasswordHasher,
+    @inject("StringHasher")
+    private passwordHasher: IStringHasher,
 
     @inject("Logger")
     logger: ILogger,

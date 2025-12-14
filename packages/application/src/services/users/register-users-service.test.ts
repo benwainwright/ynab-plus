@@ -1,10 +1,5 @@
 import { AppError } from "@errors";
-import type {
-  ICurrentUserSetter,
-  IMultipleRepository,
-  IPasswordHasher,
-  IRepository,
-} from "@ports";
+import type { ICurrentUserSetter, IMultipleRepository, IRepository, IStringHasher } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -20,7 +15,7 @@ describe("register users service", () => {
       email: "a@b.c",
     });
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -28,12 +23,7 @@ describe("register users service", () => {
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 
-    const service = new RegisterUserService(
-      mockRepo,
-      hasher,
-      mock(),
-      mockUserSetter,
-    );
+    const service = new RegisterUserService(mockRepo, hasher, mock(), mockUserSetter);
 
     const result = await service.doHandle(context);
 
@@ -64,7 +54,7 @@ describe("register users service", () => {
       email: "a@b.c",
     });
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -72,12 +62,7 @@ describe("register users service", () => {
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 
-    const service = new RegisterUserService(
-      mockRepo,
-      hasher,
-      mock(),
-      mockUserSetter,
-    );
+    const service = new RegisterUserService(mockRepo, hasher, mock(), mockUserSetter);
 
     const error = new AppError(`whoops`);
 
@@ -114,7 +99,7 @@ describe("register users service", () => {
       email: "a@b.c",
     });
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -122,12 +107,7 @@ describe("register users service", () => {
 
     const mockUserSetter = mock<ICurrentUserSetter>();
 
-    const service = new RegisterUserService(
-      mockRepo,
-      hasher,
-      mock(),
-      mockUserSetter,
-    );
+    const service = new RegisterUserService(mockRepo, hasher, mock(), mockUserSetter);
 
     when(mockRepo.save)
       .calledWith(

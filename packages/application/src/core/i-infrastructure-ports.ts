@@ -8,7 +8,6 @@ import type {
   IBankConnectionCreator,
   IBankConnectionRepository,
   IObjectStorage,
-  IPasswordHasher,
   IPasswordVerifier,
   IRepository,
   ITaskScheduler,
@@ -16,6 +15,7 @@ import type {
   ITransactionRepository,
   NewTokenRequesterFactory,
   IInstitutionAuthPageLinkFetcher,
+  IStringHasher,
 } from "@ports";
 import type { IBootstrapper, ILogger } from "@ynab-plus/bootstrap";
 import type { SyncDetails, User } from "@ynab-plus/domain";
@@ -28,7 +28,7 @@ export interface IInfrastructurePorts {
   bankLinkFetcher: IInstitutionAuthPageLinkFetcher;
   bankConnectionCreator: IBankConnectionCreator;
   bankConnectionRepository: IBankConnectionRepository;
-  passwordHasher: IPasswordHasher;
+  passwordHasher: IStringHasher;
   passwordVerifier: IPasswordVerifier;
   accountsRepository: IAccountRepository;
   sessionStorage: IObjectStorage;

@@ -1,9 +1,7 @@
-import type { IPasswordHasher, IPasswordVerifier } from "@ynab-plus/app";
+import type { IStringHasher, IPasswordVerifier } from "@ynab-plus/app";
 import bcyrpt from "bcrypt";
 
-export class NodePasswordHashValidator
-  implements IPasswordHasher, IPasswordVerifier
-{
+export class NodePasswordHashValidator implements IStringHasher, IPasswordVerifier {
   async hash(password: string): Promise<string> {
     const salt = await bcyrpt.genSalt();
     return await bcyrpt.hash(password, salt);

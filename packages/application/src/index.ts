@@ -27,7 +27,7 @@ export {
   type IOAuthTokenRefresher,
   type IOauthTokenRepository,
   type IObjectStorage,
-  type IPasswordHasher,
+  type IStringHasher,
   type ITransactionFetcher,
   type IPasswordVerifier,
   type IRepository,

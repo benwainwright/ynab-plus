@@ -17,7 +17,7 @@ export { type ICurrentUserSetter } from "./i-current-user-setter.ts";
 export { type IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
 export { type IOauthTokenRepository } from "./i-oauth-token-repository.ts";
 export type { IObjectStorage } from "./i-object-storage.ts";
-export { type IPasswordHasher } from "./i-password-hasher.ts";
+export { type IStringHasher } from "./i-string-hasher.ts";
 export { type ITaskScheduler } from "./i-task-scheduler.ts";
 export { type IPasswordVerifier } from "./i-password-verifier.ts";
 export { type ITransactionRepository } from "./i-transaction-repository.ts";

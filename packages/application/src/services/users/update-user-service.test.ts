@@ -1,5 +1,5 @@
 import { AppError } from "@errors";
-import type { IMultipleRepository, IPasswordHasher, IRepository } from "@ports";
+import type { IMultipleRepository, IRepository, IStringHasher } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -26,7 +26,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
@@ -64,7 +64,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -108,7 +108,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -161,7 +161,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
@@ -202,7 +202,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IPasswordHasher>();
+    const hasher = mock<IStringHasher>();
 
     when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
 
