@@ -1,12 +1,7 @@
 import { HttpError } from "@errors";
 import type { IAccountsFetcher, ITransactionFetcher } from "@ynab-plus/app";
 import { type ILogger } from "@ynab-plus/bootstrap";
-import {
-  Account,
-  SyncDetails,
-  Transaction,
-  type OauthToken,
-} from "@ynab-plus/domain";
+import { Account, SyncDetails, Transaction, type OauthToken } from "@ynab-plus/domain";
 import { injectable } from "inversify";
 import { inject } from "@core";
 
@@ -32,9 +27,10 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     method: "GET" | "POST";
     syncDetails: SyncDetails | undefined;
   }) {
-    const knowledgeString = syncDetails
-      ? `?last_knowledge_of_server=${String(syncDetails.checkpoint)}`
-      : ``;
+    const knowledgeString =
+      syncDetails && syncDetails.checkpoint
+        ? `?last_knowledge_of_server=${String(syncDetails.checkpoint)}`
+        : ``;
 
     const url = `https://api.ynab.com/v1${path}${knowledgeString}`;
 
@@ -50,10 +46,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       headers,
     };
 
-    this.logger.silly(
-      `Sending request to ${url} with ${JSON.stringify(config)}`,
-      LOG_CONTEXT,
-    );
+    this.logger.silly(`Sending request to ${url} with ${JSON.stringify(config)}`, LOG_CONTEXT);
 
     const result = await fetch(url, { method, headers });
 
