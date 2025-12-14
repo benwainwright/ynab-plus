@@ -5,7 +5,7 @@ import { mockGocardlessData } from "./mock-gocardless-data.ts";
 
 export const handlers = [
   http.get<{ accountId: string }>(
-    `${GOCARDLESS_API}/api/v2/accounts/:accountId/`,
+    `${GOCARDLESS_API}/api/v2/accounts/:accountId/details/`,
     ({ request, params }) => {
       const invalidResponse = invalidRequestResponse(request);
 

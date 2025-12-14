@@ -9,3 +9,4 @@ export { NewPasswordInput } from "./new-password-input/index.ts";
 export { Page } from "./page/index.ts";
 export { Currency } from "./currency/index.ts";
 export { BalanceCheckButton } from "./balance-check-button/index.ts";
+export { LinkAccountButton } from "./link-account-button/index.ts";

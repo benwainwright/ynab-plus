@@ -71,8 +71,12 @@ describe("the gocardless client", () => {
       const result = await client.getAccountDetails(["foo", "bar"], newToken);
 
       expect(result.length).toEqual(2);
-      expect(result[1]?.name).toEqual(mockGocardlessData.mockAccountDetailsResponses.bar.name);
-      expect(result[0]?.name).toEqual(mockGocardlessData.mockAccountDetailsResponses.foo.name);
+      expect(result[1]?.name).toEqual(
+        mockGocardlessData.mockAccountDetailsResponses.bar.account.name,
+      );
+      expect(result[0]?.name).toEqual(
+        mockGocardlessData.mockAccountDetailsResponses.foo.account.name,
+      );
     });
   });
 

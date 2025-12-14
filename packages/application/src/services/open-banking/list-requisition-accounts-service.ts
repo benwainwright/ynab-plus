@@ -31,10 +31,8 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
 
   protected override async handle(): Promise<
     {
-      created: Date;
       id: string;
-      name: string;
-      institutionId: string;
+      name: string | undefined;
     }[]
   > {
     const tokenPromise = this.tokenRepository.get(this.currentUser.id, "open-banking");

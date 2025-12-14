@@ -4,10 +4,8 @@ export interface BankConnectionCommands {
   ListRequisitionAccountsCommand: {
     request: undefined;
     response: {
-      created: Date;
-      name: string;
+      name: string | undefined;
       id: string;
-      institutionId: string;
     }[];
   };
   CheckBankConnectionCommand: {

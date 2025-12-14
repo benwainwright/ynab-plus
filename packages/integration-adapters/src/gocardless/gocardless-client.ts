@@ -47,26 +47,24 @@ export class GocardlessClient
   public async getAccountDetails(
     ids: string[],
     token: OauthToken,
-  ): Promise<{ created: Date; id: string; name: string; institutionId: string }[]> {
+  ): Promise<{ id: string; name: string | undefined }[]> {
     return await Promise.all(
       ids.map(async (id) => {
         return await this.client.get({
-          path: `accounts/${id}/`,
+          path: `accounts/${id}/details/`,
           headers: {
             Authorization: `Bearer ${token.use()}`,
           },
           responseSchema: z
             .object({
-              id: z.string(),
-              institution_id: z.string(),
-              name: z.string(),
-              created: z.string().transform((created) => new Date(created)),
+              account: z.object({
+                resourceId: z.string(),
+                name: z.string().optional(),
+              }),
             })
             .transform((response) => ({
-              id: response.id,
-              institutionId: response.institution_id,
-              name: response.name,
-              created: response.created,
+              id,
+              name: response.account.name,
             })),
         });
       }),

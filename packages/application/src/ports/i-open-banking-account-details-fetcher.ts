@@ -6,10 +6,8 @@ export interface IOpenBankingAccountDetailsFetcher {
     token: OauthToken,
   ): Promise<
     {
-      created: Date;
       id: string;
-      name: string;
-      institutionId: string;
+      name: string | undefined;
     }[]
   >;
 }

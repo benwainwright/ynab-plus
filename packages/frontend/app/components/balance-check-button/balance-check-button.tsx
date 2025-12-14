@@ -1,6 +1,7 @@
 import { useLinkedAccount } from "@data";
 import { Button } from "@mantine/core";
 import type { ReactNode } from "react";
+import { LinkAccountButton } from "@components";
 
 interface BalanceCheckButtonProps {
   accountId: string | undefined;
@@ -14,11 +15,7 @@ export const BalanceCheckButton = ({ accountId }: BalanceCheckButtonProps): Reac
   }
 
   if (balanceCheckResult.status === "no_link") {
-    return (
-      <Button variant="light" size="xs">
-        Link Account
-      </Button>
-    );
+    return <LinkAccountButton />;
   }
 
   if (balanceCheckResult.status === "balances_match") {
