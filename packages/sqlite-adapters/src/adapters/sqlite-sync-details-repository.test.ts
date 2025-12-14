@@ -1,35 +1,16 @@
-import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { SqliteDatabase } from "./sqlite-database.ts";
-import { SqliteSyncDetailsRepository } from "./sqlite-sync-details-repository.ts";
-import { testSyncDetailsRepository } from "@ynab-plus/data-adapter-tests";
-import { mock } from "vitest-mock-extended";
-import { type IDomainEventBuffer } from "@ynab-plus/app";
+import { ConfigValue, typedApplicationModule } from "@ynab-plus/bootstrap";
+import { createRepo, testSyncDetailsRepository } from "@ynab-plus/data-adapter-tests";
 
-testSyncDetailsRepository(async () => {
-  const eventBuffer = mock<IDomainEventBuffer>();
-  const database = new SqliteDatabase(
-    {
-      value: Promise.resolve(":memory:"),
-    },
-    eventBuffer,
-  );
+import { sqliteDataAdaptersModule, type IInternalTypes } from "@core";
 
-  const tableName: ConfigValue<string> = {
-    value: Promise.resolve("syncDetails"),
-  };
+const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) => {
+  load.rebindSync("DatabaseFilename").toConstantValue(new ConfigValue(Promise.resolve(":memory:")));
 
-  const repo = new SqliteSyncDetailsRepository(tableName, database, eventBuffer);
-
-  await repo.create();
-
-  return {
-    eventBuffer,
-    repo,
-    begin: async () => {
-      await database.begin();
-    },
-    commit: async () => {
-      await database.commit();
-    },
-  };
+  load
+    .rebindSync("SyncDetailsTableName")
+    .toConstantValue(new ConfigValue(Promise.resolve("syncDetails")));
 });
+
+testSyncDetailsRepository(() =>
+  createRepo("SyncDetailsRepository", sqliteDataAdaptersModule, testOverridesModule),
+);

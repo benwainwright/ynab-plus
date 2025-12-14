@@ -1,4 +1,4 @@
-import type { IDomainEventBuffer, IRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, IRepository, IUnitOfWork } from "@ynab-plus/app";
 import { User } from "@ynab-plus/domain";
 import type { IMultipleRepository } from "../../application/src/ports/i-multiple-repository.ts";
 import type { Mocked } from "vitest";
@@ -7,13 +7,12 @@ export const testUserRepository = (
   create: () => Promise<{
     eventBuffer: Mocked<IDomainEventBuffer>;
     repo: IRepository<User> & IMultipleRepository<User>;
-    begin: () => Promise<void>;
-    commit: () => Promise<void>;
+    unitOfWork: IUnitOfWork;
   }>,
 ) => {
   describe("the user repository", () => {
     it("can delete a user", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
@@ -23,16 +22,16 @@ export const testUserRepository = (
         permissions: ["user", "public"],
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.save(data);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(data);
-      await commit();
+      await unitOfWork.commit();
 
       eventBuffer.stageEvents.mockReset();
-      await begin();
+      await unitOfWork.begin();
       await repo.delete(data);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(data);
-      await commit();
+      await unitOfWork.commit();
 
       const result = await repo.get("ben");
 
@@ -40,7 +39,7 @@ export const testUserRepository = (
     });
 
     it("can update and return a user", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, unitOfWork } = await create();
 
       const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
@@ -50,9 +49,9 @@ export const testUserRepository = (
         permissions: ["user", "public"],
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.save(data);
-      await commit();
+      await unitOfWork.commit();
 
       const user = await repo.get(data.id);
 
@@ -61,7 +60,7 @@ export const testUserRepository = (
 
     describe("getMany", () => {
       it("can return many users", async () => {
-        const { repo, begin, commit } = await create();
+        const { repo, unitOfWork } = await create();
 
         const data = User.reconstitute({
           email: "bwainwright28@gmail.com",
@@ -87,11 +86,11 @@ export const testUserRepository = (
           permissions: ["user"],
         });
 
-        await begin();
+        await unitOfWork.begin();
         await repo.save(data);
         await repo.save(data2);
         await repo.save(data3);
-        await commit();
+        await unitOfWork.commit();
 
         const users = await repo.getMany();
 

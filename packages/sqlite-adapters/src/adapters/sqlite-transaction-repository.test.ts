@@ -1,35 +1,16 @@
-import { testTransactionRepository } from "@ynab-plus/data-adapter-tests";
-import { SqliteDatabase } from "./sqlite-database.ts";
-import { SqliteTransactionRepository } from "./sqlite-transaction-repository.ts";
-import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { mock } from "vitest-mock-extended";
-import { type IDomainEventBuffer } from "@ynab-plus/app";
+import { ConfigValue, typedApplicationModule } from "@ynab-plus/bootstrap";
+import { createRepo, testTransactionRepository } from "@ynab-plus/data-adapter-tests";
 
-testTransactionRepository(async () => {
-  const eventBuffer = mock<IDomainEventBuffer>();
-  const database = new SqliteDatabase(
-    {
-      value: Promise.resolve(":memory:"),
-    },
-    eventBuffer,
-  );
+import { sqliteDataAdaptersModule, type IInternalTypes } from "@core";
 
-  const tableName: ConfigValue<string> = {
-    value: Promise.resolve("transactions"),
-  };
+const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) => {
+  load.rebindSync("DatabaseFilename").toConstantValue(new ConfigValue(Promise.resolve(":memory:")));
 
-  const repo = new SqliteTransactionRepository(tableName, database, eventBuffer);
-
-  await repo.create();
-
-  return {
-    repo,
-    eventBuffer,
-    begin: async () => {
-      await database.begin();
-    },
-    commit: async () => {
-      await database.commit();
-    },
-  };
+  load
+    .rebindSync("TransactionsTableName")
+    .toConstantValue(new ConfigValue(Promise.resolve("transactions")));
 });
+
+testTransactionRepository(() =>
+  createRepo("TransactionRepository", sqliteDataAdaptersModule, testOverridesModule),
+);

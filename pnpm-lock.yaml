@@ -150,9 +150,15 @@ importers:
       '@ynab-plus/app':
         specifier: workspace:*
         version: link:../application
+      '@ynab-plus/bootstrap':
+        specifier: workspace:*
+        version: link:../bootstrap
       '@ynab-plus/domain':
         specifier: workspace:*
         version: link:../domain
+      inversify:
+        specifier: 7.10.4
+        version: 7.10.4(reflect-metadata@0.2.2)
       zod:
         specifier: 4.1.12
         version: 4.1.12

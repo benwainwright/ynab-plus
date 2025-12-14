@@ -1,36 +1,14 @@
-import type { ConfigValue } from "@ynab-plus/bootstrap";
+import { ConfigValue, typedApplicationModule } from "@ynab-plus/bootstrap";
+import { createRepo, testUserRepository } from "@ynab-plus/data-adapter-tests";
 
-import { SqliteDatabase } from "./sqlite-database.ts";
-import { SqliteUserRepository } from "./sqlite-user-repository.ts";
-import { testUserRepository } from "@ynab-plus/data-adapter-tests";
-import { mock } from "vitest-mock-extended";
-import type { IDomainEventBuffer } from "@ynab-plus/app";
+import { sqliteDataAdaptersModule, type IInternalTypes } from "@core";
 
-testUserRepository(async () => {
-  const eventBuffer = mock<IDomainEventBuffer>();
-  const database = new SqliteDatabase(
-    {
-      value: Promise.resolve(":memory:"),
-    },
-    eventBuffer,
-  );
+const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) => {
+  load.rebindSync("DatabaseFilename").toConstantValue(new ConfigValue(Promise.resolve(":memory:")));
 
-  const tableName: ConfigValue<string> = {
-    value: Promise.resolve("user"),
-  };
-
-  const repo = new SqliteUserRepository(tableName, database, eventBuffer);
-
-  await repo.create();
-
-  return {
-    repo,
-    eventBuffer,
-    begin: async () => {
-      await database.begin();
-    },
-    commit: async () => {
-      await database.commit();
-    },
-  };
+  load.rebindSync("UsersTableName").toConstantValue(new ConfigValue(Promise.resolve("users")));
 });
+
+testUserRepository(() =>
+  createRepo("UserRepository", sqliteDataAdaptersModule, testOverridesModule),
+);

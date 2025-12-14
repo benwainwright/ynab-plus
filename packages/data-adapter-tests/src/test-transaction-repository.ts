@@ -1,18 +1,17 @@
-import type { IDomainEventBuffer, ITransactionRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, ITransactionRepository, IUnitOfWork } from "@ynab-plus/app";
 import { Transaction } from "@ynab-plus/domain";
 import type { Mocked } from "vitest";
 
 export const testTransactionRepository = (
   create: () => Promise<{
     repo: ITransactionRepository;
-    begin: () => Promise<void>;
-    commit: () => Promise<void>;
+    unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
   }>,
 ) => {
   describe("The transaction repository", () => {
     it("allows you to save and retrieve individual transactions", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const transaction1 = Transaction.reconstitute({
         userId: "ben",
@@ -38,12 +37,12 @@ export const testTransactionRepository = (
         memo: "foo",
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.saveTransaction(transaction1);
       await repo.saveTransaction(transaction2);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(transaction1);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(transaction2);
-      await commit();
+      await unitOfWork.commit();
 
       const result = await repo.getTransaction("foo");
 
@@ -51,7 +50,7 @@ export const testTransactionRepository = (
     });
 
     it("allows you to save and retrieve transacions by account", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const fredTransaction = Transaction.reconstitute({
         id: "bing",
@@ -101,7 +100,7 @@ export const testTransactionRepository = (
         }),
       ];
 
-      await begin();
+      await unitOfWork.begin();
       await repo.saveTransactions([...accountTransactions, fredTransaction]);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountTransactions[0]);
 
@@ -145,7 +144,7 @@ export const testTransactionRepository = (
         }),
       ]);
 
-      await commit();
+      await unitOfWork.commit();
       const result = await repo.getAccountTransactions("ben", "bar", 0, 30);
       expect(result).toHaveLength(4);
 
@@ -157,7 +156,7 @@ export const testTransactionRepository = (
     });
 
     it("allows you to retrieve a total count of txs in a given account", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, unitOfWork } = await create();
 
       const accountTransactions = [
         Transaction.reconstitute({
@@ -206,7 +205,7 @@ export const testTransactionRepository = (
         }),
       ];
 
-      await begin();
+      await unitOfWork.begin();
       await repo.saveTransactions(accountTransactions);
 
       const separateAccountTransaction = Transaction.reconstitute({
@@ -249,7 +248,7 @@ export const testTransactionRepository = (
         }),
       ]);
 
-      await commit();
+      await unitOfWork.commit();
       const result = await repo.getAccountTransactionCount("ben", "bar");
       expect(result).toEqual(4);
     });

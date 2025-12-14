@@ -1,18 +1,17 @@
 import { SyncDetails, type ISyncDetails } from "@ynab-plus/domain";
-import type { IDomainEventBuffer, IRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, IRepository, IUnitOfWork } from "@ynab-plus/app";
 import type { Mocked } from "vitest";
 
 export const testSyncDetailsRepository = (
   create: () => Promise<{
     repo: IRepository<ISyncDetails>;
-    begin: () => Promise<void>;
-    commit: () => Promise<void>;
+    unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
   }>,
 ) => {
   describe("sqlite sync details adapter", () => {
     it("can save and get sync details by id", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
@@ -28,14 +27,14 @@ export const testSyncDetailsRepository = (
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
-      await begin();
+      await unitOfWork.begin();
 
       await repo.save(newDetails1);
       await repo.save(newDetails2);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(newDetails1);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(newDetails2);
 
-      await commit();
+      await unitOfWork.commit();
 
       const receivedDetails = await repo.get("foo-bar-1");
 
@@ -43,7 +42,7 @@ export const testSyncDetailsRepository = (
     });
 
     it("allows you to delete sync details", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const newDetails1 = SyncDetails.reconstitute({
         id: "foo-bar-1",
@@ -59,17 +58,17 @@ export const testSyncDetailsRepository = (
         lastSync: new Date("2025-12-10T20:39:37.823Z"),
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.save(newDetails1);
       await repo.save(newDetails2);
-      await commit();
-      await begin();
+      await unitOfWork.commit();
+      await unitOfWork.begin();
       eventBuffer.stageEvents.mockReset();
       await repo.delete(newDetails1);
 
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(newDetails1);
 
-      await commit();
+      await unitOfWork.commit();
 
       const receivedDetails = await repo.get("foo-bar-1");
 

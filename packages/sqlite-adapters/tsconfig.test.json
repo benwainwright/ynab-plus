@@ -7,15 +7,18 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "vitest/globals"],
-    "paths": {}
+    "paths": {
+      "@adapters": ["./src/adapters/index.ts"],
+      "@core": ["./src/core/index.ts"],
+    },
   },
   "include": ["src/**/*.test.ts"],
   "references": [
     {
-      "path": "./tsconfig.lib.json"
+      "path": "./tsconfig.lib.json",
     },
     {
-      "path": "../data-adapter-tests"
-    }
-  ]
+      "path": "../data-adapter-tests",
+    },
+  ],
 }

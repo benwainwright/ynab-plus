@@ -1,35 +1,15 @@
-import { testBankConnectionRepository } from "@ynab-plus/data-adapter-tests";
-import { SqliteBankConnectionRepository } from "./sqlite-bank-connection-repository.ts";
-import { SqliteDatabase } from "./sqlite-database.ts";
-import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { mock } from "vitest-mock-extended";
-import { type IDomainEventBuffer } from "@ynab-plus/app";
+import { createRepo, testBankConnectionRepository } from "@ynab-plus/data-adapter-tests";
+import { ConfigValue, typedApplicationModule } from "@ynab-plus/bootstrap";
+import { sqliteDataAdaptersModule, type IInternalTypes } from "@core";
 
-testBankConnectionRepository(async () => {
-  const eventBuffer = mock<IDomainEventBuffer>();
-  const database = new SqliteDatabase(
-    {
-      value: Promise.resolve(":memory:"),
-    },
-    eventBuffer,
-  );
+const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) => {
+  load.rebindSync("DatabaseFilename").toConstantValue(new ConfigValue(Promise.resolve(":memory:")));
 
-  const tableName: ConfigValue<string> = {
-    value: Promise.resolve("tokens"),
-  };
-
-  const repo = new SqliteBankConnectionRepository(tableName, database, eventBuffer);
-
-  await repo.create();
-
-  return {
-    repo,
-    eventBuffer,
-    begin: async () => {
-      await database.begin();
-    },
-    commit: async () => {
-      await database.commit();
-    },
-  };
+  load
+    .rebindSync("BankConnectionTableName")
+    .toConstantValue(new ConfigValue(Promise.resolve("bankConnections")));
 });
+
+testBankConnectionRepository(() =>
+  createRepo("BankConnectionRepository", sqliteDataAdaptersModule, testOverridesModule),
+);

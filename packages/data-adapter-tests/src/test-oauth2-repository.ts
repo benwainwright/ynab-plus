@@ -1,4 +1,4 @@
-import type { IDomainEventBuffer, IOauthTokenRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, IOauthTokenRepository, IUnitOfWork } from "@ynab-plus/app";
 import { OauthToken } from "@ynab-plus/domain";
 import type { Mocked } from "vitest";
 
@@ -6,13 +6,12 @@ export const testOauthRepository = (
   create: () => Promise<{
     eventBuffer: Mocked<IDomainEventBuffer>;
     repo: IOauthTokenRepository;
-    begin: () => Promise<void>;
-    commit: () => Promise<void>;
+    unitOfWork: IUnitOfWork;
   }>,
 ) => {
   describe("the token repository", () => {
     it("can update and return a token", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const tokenOne = OauthToken.reconstitute({
         refreshExpiry: undefined,
@@ -38,12 +37,12 @@ export const testOauthRepository = (
         created: new Date("2025-11-10T20:39:37.823Z"),
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.save(tokenTwo);
       await repo.save(tokenOne);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(tokenOne);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(tokenTwo);
-      await commit();
+      await unitOfWork.commit();
 
       const token = await repo.get("ben", "monzo");
 
@@ -51,7 +50,7 @@ export const testOauthRepository = (
     });
 
     it("can delete a token", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const tokenOne = OauthToken.reconstitute({
         refreshExpiry: undefined,
@@ -77,16 +76,16 @@ export const testOauthRepository = (
         created: new Date("2025-11-10T20:39:37.823Z"),
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.save(tokenTwo);
       await repo.save(tokenOne);
-      await commit();
+      await unitOfWork.commit();
 
       eventBuffer.stageEvents.mockReset();
 
-      await begin();
+      await unitOfWork.begin();
       await repo.delete(tokenTwo);
-      await commit();
+      await unitOfWork.commit();
       const token = await repo.get("ben", "monzo");
       const isPresentToken = await repo.get("ben", "ynab");
 

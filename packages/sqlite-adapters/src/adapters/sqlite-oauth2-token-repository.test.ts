@@ -1,36 +1,16 @@
-import type { ConfigValue } from "@ynab-plus/bootstrap";
-import { testOauthRepository } from "@ynab-plus/data-adapter-tests";
-import { mock } from "vitest-mock-extended";
+import { ConfigValue, typedApplicationModule } from "@ynab-plus/bootstrap";
+import { createRepo, testOauthRepository } from "@ynab-plus/data-adapter-tests";
 
-import { SqliteDatabase } from "./sqlite-database.ts";
-import { SqliteOauth2TokenRepsoitory } from "./sqlite-oauth2-token-repository.ts";
-import type { IDomainEventBuffer } from "@ynab-plus/app";
+import { sqliteDataAdaptersModule, type IInternalTypes } from "@core";
 
-testOauthRepository(async () => {
-  const eventBuffer = mock<IDomainEventBuffer>();
-  const database = new SqliteDatabase(
-    {
-      value: Promise.resolve(":memory:"),
-    },
-    eventBuffer,
-  );
+const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) => {
+  load.rebindSync("DatabaseFilename").toConstantValue(new ConfigValue(Promise.resolve(":memory:")));
 
-  const tableName: ConfigValue<string> = {
-    value: Promise.resolve("tokens"),
-  };
-
-  const repo = new SqliteOauth2TokenRepsoitory(tableName, database, eventBuffer);
-
-  await repo.create();
-
-  return {
-    eventBuffer,
-    repo,
-    begin: async () => {
-      await database.begin();
-    },
-    commit: async () => {
-      await database.commit();
-    },
-  };
+  load
+    .rebindSync("OauthTokenTableName")
+    .toConstantValue(new ConfigValue(Promise.resolve("tokens")));
 });
+
+testOauthRepository(() =>
+  createRepo("OauthTokenRepository", sqliteDataAdaptersModule, testOverridesModule),
+);

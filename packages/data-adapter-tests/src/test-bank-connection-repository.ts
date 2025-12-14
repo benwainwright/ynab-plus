@@ -1,4 +1,4 @@
-import type { IBankConnectionRepository, IDomainEventBuffer } from "@ynab-plus/app";
+import type { IBankConnectionRepository, IDomainEventBuffer, IUnitOfWork } from "@ynab-plus/app";
 import { BankConnection } from "@ynab-plus/domain";
 import type { Mocked } from "vitest";
 
@@ -6,15 +6,14 @@ export const testBankConnectionRepository = (
   create: () => Promise<{
     repo: IBankConnectionRepository;
     eventBuffer: Mocked<IDomainEventBuffer>;
-    begin: () => Promise<void>;
-    commit: () => Promise<void>;
+    unitOfWork: IUnitOfWork;
   }>,
 ) => {
   describe("the connection repository", () => {
     it("can update and return a connection", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
-      await begin();
+      await unitOfWork.begin();
 
       const connectionOne = BankConnection.reconstite({
         bankName: "foo",
@@ -38,7 +37,7 @@ export const testBankConnectionRepository = (
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionOne);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionTwo);
 
-      await commit();
+      await unitOfWork.commit();
 
       const recieved = await repo.getConnection("ben");
 
@@ -46,7 +45,7 @@ export const testBankConnectionRepository = (
     });
 
     it("can delete a token", async () => {
-      const { repo, begin, commit, eventBuffer } = await create();
+      const { repo, unitOfWork, eventBuffer } = await create();
 
       const connectionOne = BankConnection.reconstite({
         bankName: "foo",
@@ -64,17 +63,17 @@ export const testBankConnectionRepository = (
         requisitionId: "baz",
       });
 
-      await begin();
+      await unitOfWork.begin();
       await repo.saveConnection(connectionOne);
       await repo.saveConnection(connectionTwo);
-      await commit();
+      await unitOfWork.commit();
 
       eventBuffer.stageEvents.mockReset();
 
-      await begin();
+      await unitOfWork.begin();
       await repo.deleteConnection(connectionOne);
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionOne);
-      await commit();
+      await unitOfWork.commit();
 
       const empty = await repo.getConnection("ben");
 
