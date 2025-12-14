@@ -3,6 +3,7 @@ import { HttpClient } from "@http-client";
 import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
+  type IOpenBankingAccountBalanceFetcher,
   type IOpenBankingTokenFetcher,
   type IRequesitionAccountFetcher,
 } from "@ynab-plus/app";
@@ -17,6 +18,7 @@ export class GocardlessClient
     IBankConnectionCreator,
     IInstitutionAuthPageLinkFetcher,
     IOpenBankingTokenFetcher,
+    IOpenBankingAccountBalanceFetcher,
     IRequesitionAccountFetcher
 {
   private client: HttpClient;
@@ -38,6 +40,35 @@ export class GocardlessClient
       accept: "application/json",
       "content-type": "application/json",
     });
+  }
+  public async getAccountBalance(id: string, token: OauthToken): Promise<number> {
+    const { balances } = await this.client.get({
+      path: `accounts/${id}/balances/`,
+      headers: {
+        Authorization: `Bearer ${token.use()}`,
+      },
+      responseSchema: z.object({
+        balances: z.array(
+          z.object({
+            referenceDate: z.string(),
+            balanceAmount: z.object({
+              amount: z.string().transform((amount) => Number.parseFloat(amount) * 100),
+              currency: z.string(),
+            }),
+          }),
+        ),
+      }),
+    });
+
+    const [first] = balances.toSorted((a, b) =>
+      new Date(a.referenceDate) > new Date(b.referenceDate) ? -1 : 1,
+    );
+
+    if (!first) {
+      throw new Error(`No balance returned!`);
+    }
+
+    return first.balanceAmount.amount;
   }
 
   public async getAccountIds(bankConnection: BankConnection, token: OauthToken): Promise<string[]> {

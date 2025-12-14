@@ -21,6 +21,33 @@ afterEach(() => {
 });
 
 describe("the gocardless client", () => {
+  describe("getAccountBalance", () => {
+    it("returns the value of the most recent balance entry", async () => {
+      const client = new GocardlessClient(
+        { value: Promise.resolve(mockGocardlessData.secretId) },
+        { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
+        mock(),
+      );
+      const newToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: mockGocardlessData.mockToken,
+        refreshToken: "string",
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      const result = await client.getAccountBalance(mockGocardlessData.mockAccountId, newToken);
+
+      expect(typeof result).toEqual("number");
+      expect(result).toEqual(65749);
+    });
+  });
+
   describe("getLink", () => {
     it("calls the requsitions endpoint with the token and the institution and returns the url and req id", async () => {
       const client = new GocardlessClient(
@@ -52,12 +79,8 @@ describe("the gocardless client", () => {
 
       const result = await client.getLink(connection, token);
 
-      expect(result.url).toEqual(
-        mockGocardlessData.mockRequisitionResponse.link,
-      );
-      expect(result.requsitionId).toEqual(
-        mockGocardlessData.mockRequisitionResponse.id,
-      );
+      expect(result.url).toEqual(mockGocardlessData.mockRequisitionResponse.link);
+      expect(result.requsitionId).toEqual(mockGocardlessData.mockRequisitionResponse.id);
     });
   });
 

@@ -4,6 +4,27 @@ export const mockGocardlessData = {
   mockToken: "the-token",
   mockRefreshToken: "the-refresh-token",
   mockRedirectUrl: "http://www.yourwebpage.com",
+  mockAccountId: "foo",
+  mockBalancesResponse: {
+    balances: [
+      {
+        balanceAmount: {
+          amount: "657.49",
+          currency: "string",
+        },
+        balanceType: "string",
+        referenceDate: "2021-11-22",
+      },
+      {
+        balanceAmount: {
+          amount: "185.67",
+          currency: "string",
+        },
+        balanceType: "string",
+        referenceDate: "2021-11-19",
+      },
+    ],
+  },
   mockRequisitionResponse: {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     created: "2025-05-14T11:05:56.276Z",

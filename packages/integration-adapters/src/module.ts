@@ -19,6 +19,7 @@ export const integrationsModule: TypedContainerModule<IIntegrationPorts & IInter
     load.bind("BankConnectionTokenFetcher").to(GocardlessClient);
     load.bind("InstitutionAuthPageLinkFetcher").to(GocardlessClient);
     load.bind("RequestionAccountFetcher").to(GocardlessClient);
+    load.bind("OpenBankingAccountBalanceFetcher").to(GocardlessClient);
 
     const oauthClientFactory = getOauthClientFactory(bootstrapper);
 

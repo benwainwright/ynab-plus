@@ -13,6 +13,7 @@ export {
   type IRequesitionAccountFetcher,
   type IOpenBankingTokenFetcher,
   type IMultipleRepository,
+  type IOpenBankingAccountBalanceFetcher,
   type IAccountRepository,
   type IDomainEventBuffer,
   type IEventBus,
