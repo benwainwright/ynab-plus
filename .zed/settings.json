@@ -15,13 +15,13 @@
   },
   "languages": {
     "TSX": {
-      "language_servers": ["tsgo", "vtsls", "oxc"]
+      "language_servers": ["vtsls", "oxc"]
     },
     "TypeScript": {
-      "language_servers": ["tsgo", "vtsls", "oxc"]
+      "language_servers": ["vtsls", "oxc"]
     },
     "JavaScript": {
-      "language_servers": ["tsgo", "vtsls", "oxc"]
+      "language_servers": ["vtsls", "oxc"]
     }
   }
 }

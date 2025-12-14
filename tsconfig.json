@@ -4,46 +4,45 @@
   "files": [
     "./vitest.config.ts",
     "./lint-staged.config.js",
-    "./eslint.config.mjs",
     "./playwright.config.ts",
-    "./vitest.workspace.ts"
+    "./vitest.workspace.ts",
   ],
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
   },
   "references": [
     {
-      "path": "./packages/application"
+      "path": "./packages/application",
     },
     {
-      "path": "./packages/bootstrap"
+      "path": "./packages/bootstrap",
     },
     {
-      "path": "./packages/socket-adapter"
+      "path": "./packages/socket-adapter",
     },
     {
-      "path": "./packages/sqlite-adapters"
+      "path": "./packages/sqlite-adapters",
     },
     {
-      "path": "./packages/data-adapter-tests"
+      "path": "./packages/data-adapter-tests",
     },
     {
-      "path": "./packages/integration-adapters"
+      "path": "./packages/integration-adapters",
     },
     {
-      "path": "./packages/node-adapters"
+      "path": "./packages/node-adapters",
     },
     {
-      "path": "./packages/domain"
+      "path": "./packages/domain",
     },
     {
-      "path": "./packages/server"
+      "path": "./packages/server",
     },
     {
-      "path": "./packages/frontend"
+      "path": "./packages/frontend",
     },
     {
-      "path": "./packages/test-helpers"
-    }
-  ]
+      "path": "./packages/test-helpers",
+    },
+  ],
 }

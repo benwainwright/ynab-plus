@@ -1,4 +1,4 @@
-import type { IAccountRepository } from "@ynab-plus/app";
+import type { IAccountRepository, IDomainEventBuffer } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { Account } from "@ynab-plus/domain";
 
@@ -24,9 +24,13 @@ export class Sqlite3AccountRepository implements IAccountRepository {
 
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private domainEventStore: IDomainEventBuffer,
   ) {}
 
   public async deleteAccount(account: Account): Promise<void> {
+    this.domainEventStore.stageEvents(account);
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
@@ -86,6 +90,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
   }
 
   public async saveAccount(thing: Account): Promise<Account> {
+    this.domainEventStore.stageEvents(thing);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, name, type, closed, note, deleted)
         VALUES (?, ?, ?, ?, ?, ?, ?)

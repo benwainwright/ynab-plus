@@ -1,4 +1,4 @@
-import type { IRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, IRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { SyncDetails } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
@@ -21,9 +21,13 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
 
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private eventBuffer: IDomainEventBuffer,
   ) {}
 
   public async delete(syncDetails: SyncDetails): Promise<void> {
+    this.eventBuffer.stageEvents(syncDetails);
     await this.database.runQuery(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
@@ -67,6 +71,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
   }
 
   public async save(thing: SyncDetails): Promise<SyncDetails> {
+    this.eventBuffer.stageEvents(thing);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, provider, checkpoint, lastSync)
         VALUES (?, ?, ?, ?)

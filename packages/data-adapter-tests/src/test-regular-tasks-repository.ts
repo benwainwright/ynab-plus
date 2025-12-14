@@ -1,11 +1,13 @@
-import type { ITaskScheduler } from "@ynab-plus/app";
+import type { IDomainEventBuffer, ITaskScheduler } from "@ynab-plus/app";
 import { RegularTask } from "@ynab-plus/domain";
+import type { Mocked } from "vitest";
 
 export const testRegularTasksRepository = (
   create: () => Promise<{
     repo: ITaskScheduler;
     begin: () => Promise<void>;
     commit: () => Promise<void>;
+    eventBuffer: Mocked<IDomainEventBuffer>;
   }>,
 ) => {
   describe("the regular  repository", () => {
@@ -29,7 +31,7 @@ export const testRegularTasksRepository = (
     });
     describe("schedule task", () => {
       it("results in a task being persisted", async () => {
-        const { repo, begin, commit } = await create();
+        const { repo, begin, commit, eventBuffer } = await create();
 
         const task = RegularTask.reconstitute({
           id: "foo",
@@ -50,6 +52,7 @@ export const testRegularTasksRepository = (
 
         await begin();
         await repo.scheduleTask(task);
+        expect(eventBuffer.stageEvents).toHaveBeenCalledWith(task);
         await commit();
 
         const returnedTask = await repo.getTask("foo");
@@ -59,7 +62,7 @@ export const testRegularTasksRepository = (
 
     describe("get all tasks", () => {
       it("gets all the tasks in the database if you dont supply a limit", async () => {
-        const { repo, begin, commit } = await create();
+        const { repo, begin, commit, eventBuffer } = await create();
         const task = RegularTask.reconstitute({
           triggerImmediately: false,
           id: "foo",
@@ -116,6 +119,9 @@ export const testRegularTasksRepository = (
           command: "SyncAccountsCommand",
         });
         await repo.scheduleTask(johns);
+        expect(eventBuffer.stageEvents).toHaveBeenCalledWith(task);
+        expect(eventBuffer.stageEvents).toHaveBeenCalledWith(johns);
+        expect(eventBuffer.stageEvents).toHaveBeenCalledWith(task2);
 
         await commit();
 
@@ -192,7 +198,7 @@ export const testRegularTasksRepository = (
 
     describe("delete task", () => {
       it("deletes a task", async () => {
-        const { repo, begin, commit } = await create();
+        const { repo, begin, commit, eventBuffer } = await create();
 
         const task = RegularTask.reconstitute({
           triggerImmediately: true,
@@ -233,8 +239,11 @@ export const testRegularTasksRepository = (
         await repo.scheduleTask(task2);
         await commit();
 
+        eventBuffer.stageEvents.mockReset();
+
         await begin();
         await repo.deleteTask(task2);
+        expect(eventBuffer.stageEvents).toHaveBeenCalledWith(task2);
         await commit();
 
         const returnedTask = await repo.getTask("foo");
@@ -251,7 +260,7 @@ export const testRegularTasksRepository = (
 
       describe("update task", () => {
         it("can update an existing task", async () => {
-          const { repo, begin, commit } = await create();
+          const { repo, begin, commit, eventBuffer } = await create();
           const task = RegularTask.reconstitute({
             triggerImmediately: true,
             id: "foo",
@@ -290,7 +299,10 @@ export const testRegularTasksRepository = (
             description: "A task to do my shopping",
             command: "SyncAccountsCommand",
           });
+
+          eventBuffer.stageEvents.mockReset();
           await repo.updateTask(updated);
+          expect(eventBuffer.stageEvents).toHaveBeenCalledWith(updated);
           await commit();
 
           const returnedTask = await repo.getTask("foo");

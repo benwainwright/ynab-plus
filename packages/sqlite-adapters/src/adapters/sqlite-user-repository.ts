@@ -1,4 +1,8 @@
-import { type IRepository, type IMultipleRepository } from "@ynab-plus/app";
+import {
+  type IRepository,
+  type IMultipleRepository,
+  type IDomainEventBuffer,
+} from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 
 import { type Permission, User } from "@ynab-plus/domain";
@@ -22,9 +26,13 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
 
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private domainEventStore: IDomainEventBuffer,
   ) {}
 
   public async delete(user: User): Promise<void> {
+    this.domainEventStore.stageEvents(user);
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
@@ -77,6 +85,7 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
   }
 
   public async save(thing: User): Promise<User> {
+    this.domainEventStore.stageEvents(thing);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, email, passwordHash, permissions)
         VALUES (?, ?, ?, ?)

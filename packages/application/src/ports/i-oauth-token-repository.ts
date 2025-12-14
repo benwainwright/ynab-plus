@@ -4,5 +4,5 @@ import type { ICreatable } from "./i-creatable.ts";
 export interface IOauthTokenRepository extends ICreatable {
   get(userId: string, provider: string): Promise<OauthToken | undefined>;
   save(token: OauthToken): Promise<OauthToken>;
-  delete(userId: string, provider: string): Promise<void>;
+  delete(token: OauthToken): Promise<void>;
 }

@@ -1,16 +1,18 @@
-import type { ITransactionRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, ITransactionRepository } from "@ynab-plus/app";
 import { Transaction } from "@ynab-plus/domain";
+import type { Mocked } from "vitest";
 
 export const testTransactionRepository = (
   create: () => Promise<{
     repo: ITransactionRepository;
     begin: () => Promise<void>;
     commit: () => Promise<void>;
+    eventBuffer: Mocked<IDomainEventBuffer>;
   }>,
 ) => {
   describe("The transaction repository", () => {
     it("allows you to save and retrieve individual transactions", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
       const transaction1 = Transaction.reconstitute({
         userId: "ben",
@@ -39,6 +41,8 @@ export const testTransactionRepository = (
       await begin();
       await repo.saveTransaction(transaction1);
       await repo.saveTransaction(transaction2);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(transaction1);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(transaction2);
       await commit();
 
       const result = await repo.getTransaction("foo");
@@ -47,7 +51,7 @@ export const testTransactionRepository = (
     });
 
     it("allows you to save and retrieve transacions by account", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
       const fredTransaction = Transaction.reconstitute({
         id: "bing",
@@ -99,6 +103,7 @@ export const testTransactionRepository = (
 
       await begin();
       await repo.saveTransactions([...accountTransactions, fredTransaction]);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountTransactions[0]);
 
       const separateAccountTransaction = Transaction.reconstitute({
         id: "barp2",

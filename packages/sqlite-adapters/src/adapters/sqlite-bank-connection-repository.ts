@@ -1,4 +1,4 @@
-import type { IBankConnectionRepository } from "@ynab-plus/app";
+import type { IBankConnectionRepository, IDomainEventBuffer } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { BankConnection } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
@@ -22,8 +22,12 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
   public constructor(
     @inject("BankConnectionTableName")
     private tableName: ConfigValue<string>,
+
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private domainEventStore: IDomainEventBuffer,
   ) {}
 
   public mapRaw(raw: RawBankConnection): BankConnection {
@@ -60,6 +64,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
   }
 
   public async saveConnection(connection: BankConnection): Promise<BankConnection> {
+    this.domainEventStore.stageEvents(connection);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId)
         VALUES (?, ?, ?, ?, ?)
@@ -77,6 +82,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
   }
 
   public async deleteConnection(connection: BankConnection): Promise<void> {
+    this.domainEventStore.stageEvents(connection);
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE userId = ?`,

@@ -1,9 +1,4 @@
-export {
-  type IInfrastructurePorts,
-  type AllEvents,
-  inject,
-  multiInject,
-} from "@core";
+export { type IInfrastructurePorts, type AllEvents, inject, multiInject } from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";
 
@@ -18,6 +13,7 @@ export {
   type IOpenBankingTokenFetcher,
   type IMultipleRepository,
   type IAccountRepository,
+  type IDomainEventBuffer,
   type IEventBus,
   type IEventListener,
   type IEventEmitter,

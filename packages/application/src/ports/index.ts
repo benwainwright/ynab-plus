@@ -2,15 +2,13 @@ export { type IAccountRepository } from "./i-account-repository.ts";
 export { type IAccountsFetcher } from "./i-accounts-fetcher.ts";
 export { type IEventBus } from "./i-event-bus.ts";
 
-export {
-  type IEventListener,
-  type IEventPacket,
-  type IListener,
-} from "./i-event-listener.ts";
+export { type IEventListener, type IEventPacket, type IListener } from "./i-event-listener.ts";
 export type { IEventEmitter } from "./i-event-emitter.ts";
 export type { IHandleContext } from "./i-handle-context.ts";
 export { type IOauthCheckerFactory } from "./i-oauth-checker-factory.ts";
 export { type IOauthNewTokenRequester } from "./i-oauth-new-token-requester.ts";
+export { type IDomainEventStore } from "./i-domain-event-store.ts";
+export { type IDomainEventBuffer } from "./i-domain-event-buffer.ts";
 export { type IUnitOfWork } from "./i-unit-of-work.ts";
 export type { IMultipleRepository } from "./i-multiple-repository.ts";
 export { type ITransactionFetcher } from "./i-transaction-fetcher.ts";

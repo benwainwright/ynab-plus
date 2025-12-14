@@ -1,9 +1,11 @@
-import type { IRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, IRepository } from "@ynab-plus/app";
 import { User } from "@ynab-plus/domain";
 import type { IMultipleRepository } from "../../application/src/ports/i-multiple-repository.ts";
+import type { Mocked } from "vitest";
 
 export const testUserRepository = (
   create: () => Promise<{
+    eventBuffer: Mocked<IDomainEventBuffer>;
     repo: IRepository<User> & IMultipleRepository<User>;
     begin: () => Promise<void>;
     commit: () => Promise<void>;
@@ -11,7 +13,7 @@ export const testUserRepository = (
 ) => {
   describe("the user repository", () => {
     it("can delete a user", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
       const data = User.reconstitute({
         email: "bwainwright28@gmail.com",
@@ -23,10 +25,13 @@ export const testUserRepository = (
 
       await begin();
       await repo.save(data);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(data);
       await commit();
 
+      eventBuffer.stageEvents.mockReset();
       await begin();
       await repo.delete(data);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(data);
       await commit();
 
       const result = await repo.get("ben");

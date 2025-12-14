@@ -1,4 +1,4 @@
-import { type IOauthTokenRepository } from "@ynab-plus/app";
+import { type IDomainEventBuffer, type IOauthTokenRepository } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
 
@@ -26,13 +26,17 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
 
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private domainEventStore: IDomainEventBuffer,
   ) {}
 
-  public async delete(userId: string, provider: string): Promise<void> {
+  public async delete(token: OauthToken): Promise<void> {
+    this.domainEventStore.stageEvents(token);
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
        WHERE userId = ? AND provider = ?`,
-      [userId, provider],
+      [token.userId, token.provider],
     );
   }
 
@@ -75,6 +79,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
   }
 
   public async save(token: OauthToken): Promise<OauthToken> {
+    this.domainEventStore.stageEvents(token);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)

@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 
 import type { ConfigValue } from "@ynab-plus/bootstrap";
-import type { ITransactionRepository } from "@ynab-plus/app";
+import type { IDomainEventBuffer, ITransactionRepository } from "@ynab-plus/app";
 import { Transaction, transactionSchema } from "@ynab-plus/domain";
 import { inject } from "@core";
 import { SqliteDatabase } from "./sqlite-database.ts";
@@ -22,8 +22,12 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   public constructor(
     @inject("TransactionsTableName")
     private tableName: ConfigValue<string>,
+
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private eventBuffer: IDomainEventBuffer,
   ) {}
 
   public async getAccountTransactionCount(userId: string, accountId: string): Promise<number> {
@@ -82,6 +86,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
   }
 
   public async saveTransaction(transaction: Transaction): Promise<Transaction> {
+    this.eventBuffer.stageEvents(transaction);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, accountId, date, amount, cleared, memo, payee, approved)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)

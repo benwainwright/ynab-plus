@@ -1,4 +1,4 @@
-import type { ITaskScheduler } from "@ynab-plus/app";
+import type { IDomainEventBuffer, ITaskScheduler } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { RegularTask, schedulableTasksSchema } from "@ynab-plus/domain";
 import { SqliteDatabase } from "./sqlite-database.ts";
@@ -30,9 +30,13 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
 
     @inject("SqliteDatabase")
     private database: SqliteDatabase,
+
+    @inject("DomainEventBuffer")
+    private eventBuffer: IDomainEventBuffer,
   ) {}
 
   public async updateTask(task: RegularTask): Promise<RegularTask> {
+    this.eventBuffer.stageEvents(task);
     await this.database.deferQueryToTransaction(
       `UPDATE ${await this.tableName.value}
         SET onBehalfOf = ?,
@@ -104,6 +108,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
   }
 
   public async scheduleTask(task: RegularTask): Promise<RegularTask> {
+    this.eventBuffer.stageEvents(task);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -129,6 +134,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
   }
 
   public async deleteTask(task: RegularTask): Promise<void> {
+    this.eventBuffer.stageEvents(task);
     await this.database.runQuery(
       `DELETE FROM ${await this.tableName.value}
       where id = ?`,

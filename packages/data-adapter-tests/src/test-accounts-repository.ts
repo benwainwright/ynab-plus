@@ -1,19 +1,20 @@
-import { type IAccountRepository } from "@ynab-plus/app";
+import { type IAccountRepository, type IDomainEventBuffer } from "@ynab-plus/app";
 import { Account } from "@ynab-plus/domain";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, type Mocked } from "vitest";
 
 export const testAccountsRepository = (
   create: () => Promise<{
     repo: IAccountRepository;
+    eventBuffer: Mocked<IDomainEventBuffer>;
     begin: () => Promise<void>;
     commit: () => Promise<void>;
   }>,
 ) => {
   describe("the account repository", () => {
     it("can delete accounts", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
-      const accountOne = Account.reconstitute({
+      const accountOne = Account.create({
         id: "one",
         userId: "ben",
         name: "hello",
@@ -23,7 +24,7 @@ export const testAccountsRepository = (
         deleted: false,
       });
 
-      const accountTwo = Account.reconstitute({
+      const accountTwo = Account.create({
         id: "two",
         userId: "ben",
         name: "hello",
@@ -35,10 +36,16 @@ export const testAccountsRepository = (
 
       await begin();
       await repo.saveAccounts([accountOne, accountTwo]);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountOne);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountTwo);
+
       await commit();
+
+      eventBuffer.stageEvents.mockReset();
 
       await begin();
       await repo.deleteAccount(accountOne);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountOne);
       await commit();
 
       const result = await repo.getAccounts("one");

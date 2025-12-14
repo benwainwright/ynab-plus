@@ -1,16 +1,18 @@
-import type { IBankConnectionRepository } from "@ynab-plus/app";
+import type { IBankConnectionRepository, IDomainEventBuffer } from "@ynab-plus/app";
 import { BankConnection } from "@ynab-plus/domain";
+import type { Mocked } from "vitest";
 
 export const testBankConnectionRepository = (
   create: () => Promise<{
     repo: IBankConnectionRepository;
+    eventBuffer: Mocked<IDomainEventBuffer>;
     begin: () => Promise<void>;
     commit: () => Promise<void>;
   }>,
 ) => {
   describe("the connection repository", () => {
     it("can update and return a connection", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
       await begin();
 
@@ -32,6 +34,8 @@ export const testBankConnectionRepository = (
 
       await repo.saveConnection(connectionOne);
       await repo.saveConnection(connectionTwo);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionOne);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionTwo);
 
       await commit();
 
@@ -41,7 +45,7 @@ export const testBankConnectionRepository = (
     });
 
     it("can delete a token", async () => {
-      const { repo, begin, commit } = await create();
+      const { repo, begin, commit, eventBuffer } = await create();
 
       const connectionOne = BankConnection.reconstite({
         bankName: "foo",
@@ -64,8 +68,11 @@ export const testBankConnectionRepository = (
       await repo.saveConnection(connectionTwo);
       await commit();
 
+      eventBuffer.stageEvents.mockReset();
+
       await begin();
       await repo.deleteConnection(connectionOne);
+      expect(eventBuffer.stageEvents).toHaveBeenCalledWith(connectionOne);
       await commit();
 
       const empty = await repo.getConnection("ben");
