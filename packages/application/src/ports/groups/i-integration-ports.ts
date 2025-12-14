@@ -6,6 +6,7 @@ import type {
   IOauthRedirectUrlGenerator,
   IOAuthTokenRefresher,
   IOpenBankingAccountBalanceFetcher,
+  IOpenBankingAccountDetailsFetcher,
   IOpenBankingTokenFetcher,
   IRequesitionAccountFetcher,
   ITransactionFetcher,
@@ -14,6 +15,7 @@ import type { Factory } from "inversify";
 
 export interface IIntegrationPorts {
   AccountsFetcher: IAccountsFetcher;
+  OpenBankingAccountDetailsFetcher: IOpenBankingAccountDetailsFetcher;
   TransactionFetcher: ITransactionFetcher;
   BankConnectionTokenFetcher: IOpenBankingTokenFetcher;
   OpenBankingAccountBalanceFetcher: IOpenBankingAccountBalanceFetcher;

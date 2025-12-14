@@ -23,6 +23,7 @@ export { type ITaskScheduler } from "./i-task-scheduler.ts";
 export { type IPasswordVerifier } from "./i-password-verifier.ts";
 export { type ITransactionRepository } from "./i-transaction-repository.ts";
 export type { IRepository } from "./i-repository.ts";
+export type { IOpenBankingAccountDetailsFetcher } from "./i-open-banking-account-details-fetcher.ts";
 export { type IServiceBus } from "./i-service-bus.ts";
 export { type ISessionIdRequester } from "./i-session-id-requester.ts";
 export type { ISingleItemStore } from "./i-single-item-store.ts";

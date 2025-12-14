@@ -2,6 +2,7 @@ export { command } from "./command.ts";
 export { getCurrentUser } from "./get-current-user.ts";
 export { getOpenSocket } from "./get-open-socket.ts";
 export { useAccounts } from "./use-accounts.ts";
+export { useLinkedAccount } from "./use-linked-account.ts";
 export { useCurrentUser } from "./use-current-user.ts";
 export { useEvent } from "./use-event.ts";
 export { useEvents } from "./use-events.ts";

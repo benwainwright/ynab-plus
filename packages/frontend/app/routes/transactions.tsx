@@ -1,8 +1,8 @@
-import { Page, Loader, Currency } from "@components";
+import { Page, Loader, Currency, BalanceCheckButton } from "@components";
 import { useTransactions } from "@data";
 import { Loader as MantineLoader, Button, Pagination, Table } from "@mantine/core";
 import { DateTime } from "luxon";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useParams } from "react-router";
 
 const dateFormat = {
@@ -15,13 +15,17 @@ export const Transactions = (): ReactNode => {
   const { accountId } = useParams<{ accountId: string }>();
   const { isPending, transactions, page, setPage, totalPages, syncing, sync } =
     useTransactions(accountId);
+
   return (
     <Page
       routeName="transactions"
       headerActions={
-        <Button variant="light" size="xs" onClick={() => void sync()}>
-          {syncing ? <MantineLoader color="blue" size={15} /> : "Sync"}
-        </Button>
+        <>
+          <Button variant="light" size="xs" onClick={() => void sync()}>
+            {syncing ? <MantineLoader color="blue" size={15} /> : "Sync"}
+          </Button>
+          <BalanceCheckButton accountId={accountId} />
+        </>
       }
     >
       <Loader isPending={isPending} data={transactions}>

@@ -1,0 +1,58 @@
+import { AbstractApplicationService, inject } from "@core";
+import { AppError } from "@errors";
+import type {
+  IBankConnectionRepository,
+  IOauthTokenRepository,
+  IOpenBankingAccountDetailsFetcher,
+} from "@ports";
+import type { ILogger } from "@ynab-plus/bootstrap";
+import type { Permission } from "@ynab-plus/domain";
+
+export class ListRequisitionAccountsService extends AbstractApplicationService<"ListRequisitionAccountsCommand"> {
+  public override readonly commandName = "ListRequisitionAccountsCommand";
+
+  public override requiredPermissions: Permission[] = ["user", "admin"];
+
+  public constructor(
+    @inject("OpenBankingAccountDetailsFetcher")
+    private readonly accountDetailsFetcher: IOpenBankingAccountDetailsFetcher,
+
+    @inject("BankConnectionRepository")
+    private readonly bankConnectionRepo: IBankConnectionRepository,
+
+    @inject("OauthTokenRepository")
+    private readonly tokenRepository: IOauthTokenRepository,
+
+    @inject("Logger")
+    logger: ILogger,
+  ) {
+    super(logger);
+  }
+
+  protected override async handle(): Promise<
+    {
+      created: Date;
+      id: string;
+      name: string;
+      institutionId: string;
+    }[]
+  > {
+    const tokenPromise = this.tokenRepository.get(this.currentUser.id, "open-banking");
+
+    const connectionPromise = this.bankConnectionRepo.getConnection(this.currentUser.id);
+
+    const token = await tokenPromise;
+
+    if (!token) {
+      throw new AppError("Tried to call service without a token");
+    }
+
+    const connection = await connectionPromise;
+
+    if (!connection || !connection.accounts) {
+      throw new AppError("Not connected to bank");
+    }
+
+    return await this.accountDetailsFetcher.getAccountDetails(connection.accounts, token);
+  }
+}

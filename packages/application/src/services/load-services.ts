@@ -19,10 +19,10 @@ import { UpdateUserService } from "./users/update-user-service.ts";
 import { SyncAccountsService } from "./accounts/sync-accounts-service.ts";
 import type { TypedContainerModuleLoadOptions } from "@inversifyjs/strongly-typed";
 import type { IApplicationDependencies } from "@ports/groups";
+import { CompareBalanceService } from "./accounts/compare-balance-service.ts";
+import { ListRequisitionAccountsService } from "./open-banking/list-requisition-accounts-service.ts";
 
-export const loadServices = (
-  load: TypedContainerModuleLoadOptions<IApplicationDependencies>,
-) => {
+export const loadServices = (load: TypedContainerModuleLoadOptions<IApplicationDependencies>) => {
   if (load.isBound("CurrentUserSetter")) {
     load.bind("Service").to(LoginService);
     load.bind("Service").to(LogoutService);
@@ -45,4 +45,6 @@ export const loadServices = (
   load.bind("Service").to(CheckOauthIntegrationStatusService);
   load.bind("Service").to(DisconnectOauthIntegrationService);
   load.bind("Service").to(GenerateNewOauthTokenService);
+  load.bind("Service").to(ListRequisitionAccountsService);
+  load.bind("Service").to(CompareBalanceService);
 };
