@@ -22,6 +22,7 @@ export const testBankConnectionRepository = (
         userId: "ben",
         logo: "bar",
         requisitionId: "baz",
+        accounts: ["foo", "bar"],
       });
 
       const connectionTwo = BankConnection.reconstite({

@@ -6,6 +6,7 @@ export const bankConnectionSchema = z.object({
   bankName: z.string(),
   logo: z.string(),
   requisitionId: z.string().optional(),
+  accounts: z.array(z.string()).optional(),
 });
 
 export type IBankConnection = z.output<typeof bankConnectionSchema>;

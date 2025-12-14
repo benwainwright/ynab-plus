@@ -5,6 +5,7 @@ import {
   type IBankConnectionRepository,
   type IOauthTokenRepository,
   type IOpenBankingTokenFetcher,
+  type IRequesitionAccountFetcher,
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -28,6 +29,9 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
     @inject("OauthTokenRepository")
     private oauthTokenRepository: IOauthTokenRepository,
 
+    @inject("RequestionAccountFetcher")
+    private requestionAccountFetcher: IRequesitionAccountFetcher,
+
     @inject("Logger")
     logger: ILogger,
   ) {
@@ -39,10 +43,7 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
   public override requiredPermissions: Permission[] = ["admin", "user"];
 
   private async getToken() {
-    const token = await this.oauthTokenRepository.get(
-      this.currentUser.id,
-      "open-banking",
-    );
+    const token = await this.oauthTokenRepository.get(this.currentUser.id, "open-banking");
 
     if (token) {
       return token;
@@ -56,9 +57,7 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
       token: tokenResponse.token,
       refreshToken: tokenResponse.refreshToken,
       expiry: new Date(Date.now() + tokenResponse.tokenExpiresIn * 1000),
-      refreshExpiry: new Date(
-        Date.now() + tokenResponse.refreshTokenExpiresIn * 1000,
-      ),
+      refreshExpiry: new Date(Date.now() + tokenResponse.refreshTokenExpiresIn * 1000),
     });
 
     await this.oauthTokenRepository.save(newToken);
@@ -66,14 +65,18 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
   }
 
   protected override async handle(): Promise<
-    | { status: "new"; potentialInstitutions: BankConnection[] }
-    | { status: "connected" }
+    { status: "new"; potentialInstitutions: BankConnection[] } | { status: "connected" }
   > {
-    const connection = await this.bankConnectionRepo.getConnection(
-      this.currentUser.id,
-    );
+    const connection = await this.bankConnectionRepo.getConnection(this.currentUser.id);
 
-    if (!connection) {
+    if (connection) {
+      if (!connection.accounts) {
+        const ids = await this.requestionAccountFetcher.getAccountIds(connection);
+        connection.saveAccounts(ids);
+        await this.bankConnectionRepo.saveConnection(connection);
+      }
+      return { status: "connected" };
+    } else {
       const token = await this.getToken();
 
       return {
@@ -84,7 +87,5 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
         ),
       };
     }
-
-    return { status: "connected" };
   }
 }

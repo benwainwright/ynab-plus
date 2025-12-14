@@ -1,15 +1,13 @@
 import { DomainModel } from "@core";
 import type { IBankConnection } from "./i-bank-connection.ts";
 
-export class BankConnection
-  extends DomainModel<IBankConnection>
-  implements IBankConnection
-{
+export class BankConnection extends DomainModel<IBankConnection> implements IBankConnection {
   public readonly id: string;
   public readonly userId: string;
   public readonly bankName: string;
   public readonly logo: string;
   private _requisitionId: string | undefined;
+  private _accounts: string[] | undefined;
 
   private constructor(config: IBankConnection) {
     super();
@@ -18,6 +16,7 @@ export class BankConnection
     this.bankName = config.bankName;
     this.logo = config.logo;
     this._requisitionId = config.requisitionId;
+    this._accounts = config.accounts;
   }
 
   public override freezeDry(_config?: { secure: boolean }): IBankConnection {
@@ -27,6 +26,7 @@ export class BankConnection
       logo: this.logo,
       bankName: this.bankName,
       requisitionId: this._requisitionId,
+      accounts: this._accounts,
     };
   }
 
@@ -39,6 +39,23 @@ export class BankConnection
     });
 
     return connection;
+  }
+
+  public saveAccounts(ids: string[]) {
+    const old = BankConnection.reconstite(this.freezeDry({ secure: true }));
+    this._accounts = ids;
+    this.raiseEvent({
+      event: "BankAccountIdsSaved",
+      data: { old, new: this },
+    });
+  }
+
+  public get accounts() {
+    return this._accounts;
+  }
+
+  public get requisitionId() {
+    return this._requisitionId;
   }
 
   public static reconstite(config: IBankConnection) {

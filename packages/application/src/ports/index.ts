@@ -18,6 +18,7 @@ export { type IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
 export { type IOauthTokenRepository } from "./i-oauth-token-repository.ts";
 export type { IObjectStorage } from "./i-object-storage.ts";
 export { type IStringHasher } from "./i-string-hasher.ts";
+export type { IRequesitionAccountFetcher } from "./i-requisition-account-fetcher.ts";
 export { type ITaskScheduler } from "./i-task-scheduler.ts";
 export { type IPasswordVerifier } from "./i-password-verifier.ts";
 export { type ITransactionRepository } from "./i-transaction-repository.ts";

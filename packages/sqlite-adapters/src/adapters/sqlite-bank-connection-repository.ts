@@ -15,6 +15,7 @@ interface RawBankConnection {
   tokenExpiry: string | null;
   refreshToken: string | null;
   refreshTokenExpiry: string | null;
+  accounts: string | null;
 }
 
 @injectable()
@@ -34,6 +35,8 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
     return BankConnection.reconstite({
       ...raw,
       requisitionId: raw.requisitionId ?? undefined,
+      // oxlint-disable eslint/no-unsafe-assignment
+      accounts: raw.accounts ? JSON.parse(raw.accounts) : undefined,
     });
   }
 
@@ -44,14 +47,15 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
           userId TEXT PRIMARY KEY,
           bankName TEXT NOT NULL,
           logo TEXT NOT NULL,
-          requisitionId TEXT
+          requisitionId TEXT,
+          accounts TEXT
       );`,
     );
   }
 
   public async getConnection(userId: string): Promise<BankConnection | undefined> {
     const result = await this.database.getFromDb<RawBankConnection | undefined>(
-      `SELECT id, userId, bankName, logo, requisitionId
+      `SELECT id, userId, bankName, logo, requisitionId, accounts
         FROM ${await this.tableName.value} WHERE userId = ?`,
       [userId],
     );
@@ -66,15 +70,15 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
   public async saveConnection(connection: BankConnection): Promise<BankConnection> {
     this.domainEventStore.stageEvents(connection);
     await this.database.deferQueryToTransaction(
-      `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId)
-        VALUES (?, ?, ?, ?, ?)
-        RETURNING id, userId, bankName, logo, requisitionId`,
+      `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId, accounts)
+      VALUES (?, ?, ?, ?, ?, ?)`,
       [
         connection.id,
         connection.userId,
         connection.bankName,
         connection.logo,
         connection.freezeDry().requisitionId ?? null,
+        connection.freezeDry().accounts ? JSON.stringify(connection.freezeDry().accounts) : null,
       ],
     );
 

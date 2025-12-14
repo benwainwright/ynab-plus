@@ -7,6 +7,7 @@ import {
   type IBankConnectionCreator,
   type IOauthTokenRepository,
   type IOpenBankingTokenFetcher,
+  type IRequesitionAccountFetcher,
 } from "@ports";
 import { when } from "vitest-when";
 import { BankConnection, OauthToken } from "@ynab-plus/domain";
@@ -22,11 +23,7 @@ afterEach(() => {
 
 describe("check bank connection service", () => {
   it("returns the institution list if no connection is found", async () => {
-    const context = createMockServiceContext(
-      "CheckBankConnectionCommand",
-      undefined,
-      "ben",
-    );
+    const context = createMockServiceContext("CheckBankConnectionCommand", undefined, "ben");
 
     const connectionRepo = mock<IBankConnectionRepository>();
     const bankConnectionCreator = mock<IBankConnectionCreator>();
@@ -34,9 +31,7 @@ describe("check bank connection service", () => {
 
     const mockToken = mock<OauthToken>();
 
-    when(tokenRepo.get)
-      .calledWith("ben", "open-banking")
-      .thenResolve(mockToken);
+    when(tokenRepo.get).calledWith("ben", "open-banking").thenResolve(mockToken);
 
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(undefined);
     const connections = [
@@ -66,6 +61,7 @@ describe("check bank connection service", () => {
       tokenFetcher,
       tokenRepo,
       mock(),
+      mock(),
     );
 
     const result = await service.doHandle(context);
@@ -76,15 +72,63 @@ describe("check bank connection service", () => {
     }
   });
 
+  it("gets the list of accounts if they aren't saved in the connection", async () => {
+    const today = new Date("2025-11-23T19:14:37.986Z");
+    vi.setSystemTime(today);
+
+    const context = createMockServiceContext("CheckBankConnectionCommand", undefined, "ben");
+
+    const tokenRepo = mock<IOauthTokenRepository>();
+    const connectionRepo = mock<IBankConnectionRepository>();
+    const requestionAccountFetcher = mock<IRequesitionAccountFetcher>();
+
+    const mockToken = mock<OauthToken>();
+
+    when(tokenRepo.get).calledWith("ben", "open-banking").thenResolve(mockToken);
+
+    const mockConnection = BankConnection.reconstite({
+      id: "foo",
+      accounts: undefined,
+      bankName: "monzo",
+      requisitionId: "id",
+      userId: "ben",
+      logo: "foo",
+    });
+
+    when(connectionRepo.getConnection).calledWith("ben").thenResolve(mockConnection);
+
+    when(requestionAccountFetcher.getAccountIds)
+      .calledWith(mockConnection)
+      .thenResolve(["foo", "bar"]);
+
+    const service = new CheckBankConnectionService(
+      connectionRepo,
+      mock(),
+      mock(),
+      tokenRepo,
+      requestionAccountFetcher,
+      mock(),
+    );
+
+    await service.doHandle(context);
+
+    expect(connectionRepo.saveConnection).toHaveBeenCalledWith(
+      BankConnection.reconstite({
+        id: "foo",
+        accounts: ["foo", "bar"],
+        bankName: "monzo",
+        requisitionId: "id",
+        userId: "ben",
+        logo: "foo",
+      }),
+    );
+  });
+
   it("gets and saves a new token if no token is found", async () => {
     const today = new Date("2025-11-23T19:14:37.986Z");
     vi.setSystemTime(today);
 
-    const context = createMockServiceContext(
-      "CheckBankConnectionCommand",
-      undefined,
-      "ben",
-    );
+    const context = createMockServiceContext("CheckBankConnectionCommand", undefined, "ben");
 
     const connectionRepo = mock<IBankConnectionRepository>();
     const bankConnectionCreator = mock<IBankConnectionCreator>();
@@ -93,9 +137,7 @@ describe("check bank connection service", () => {
 
     const mockToken = mock<OauthToken>();
 
-    when(tokenRepo.get)
-      .calledWith("ben", "open-banking")
-      .thenResolve(undefined);
+    when(tokenRepo.get).calledWith("ben", "open-banking").thenResolve(undefined);
 
     when(tokenFetcher.getNewToken).calledWith().thenResolve({
       token: "token",
@@ -129,6 +171,7 @@ describe("check bank connection service", () => {
       bankConnectionCreator,
       tokenFetcher,
       tokenRepo,
+      mock(),
       mock(),
     );
 
