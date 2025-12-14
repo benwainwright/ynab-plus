@@ -98,7 +98,7 @@ describe("check bank connection service", () => {
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(mockConnection);
 
     when(requestionAccountFetcher.getAccountIds)
-      .calledWith(mockConnection)
+      .calledWith(mockConnection, mockToken)
       .thenResolve(["foo", "bar"]);
 
     const service = new CheckBankConnectionService(

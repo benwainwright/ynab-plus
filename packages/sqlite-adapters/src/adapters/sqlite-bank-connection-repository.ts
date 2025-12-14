@@ -71,7 +71,13 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
     this.domainEventStore.stageEvents(connection);
     await this.database.deferQueryToTransaction(
       `INSERT INTO ${await this.tableName.value} (id, userId, bankName, logo, requisitionId, accounts)
-      VALUES (?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(userId) DO UPDATE SET
+        id = excluded.id,
+        bankName = excluded.bankName,
+        logo = excluded.logo,
+        requisitionId = excluded.requisitionId,
+        accounts = excluded.accounts`,
       [
         connection.id,
         connection.userId,

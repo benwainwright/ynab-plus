@@ -69,16 +69,15 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
   > {
     const connection = await this.bankConnectionRepo.getConnection(this.currentUser.id);
 
+    const token = await this.getToken();
     if (connection) {
       if (!connection.accounts) {
-        const ids = await this.requestionAccountFetcher.getAccountIds(connection);
+        const ids = await this.requestionAccountFetcher.getAccountIds(connection, token);
         connection.saveAccounts(ids);
         await this.bankConnectionRepo.saveConnection(connection);
       }
       return { status: "connected" };
     } else {
-      const token = await this.getToken();
-
       return {
         status: "new",
         potentialInstitutions: await this.institutionListFetcher.getConnections(

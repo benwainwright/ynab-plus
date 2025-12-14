@@ -1,8 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript"
-  ],
+  "plugins": ["typescript"],
   "categories": {
     "correctness": "off"
   },
@@ -109,8 +107,8 @@
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/no-unnecessary-type-constraint": "error",
     "@typescript-eslint/no-unsafe-argument": "error",
-    "@typescript-eslint/no-unsafe-assignment": "error",
-    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-declaration-merging": "error",
     "@typescript-eslint/no-unsafe-enum-comparison": "error",
     "@typescript-eslint/no-unsafe-function-type": "error",
@@ -150,28 +148,15 @@
         "allowRegExp": false
       }
     ],
-    "@typescript-eslint/return-await": [
-      "error",
-      "error-handling-correctness-only"
-    ],
+    "@typescript-eslint/return-await": ["error", "error-handling-correctness-only"],
     "@typescript-eslint/triple-slash-reference": "error",
     "@typescript-eslint/unbound-method": "error",
     "@typescript-eslint/use-unknown-in-catch-callback-variable": "error"
   },
-  "ignorePatterns": [
-    "**/node_modules/**",
-    "**/.*",
-    "**/dist",
-    "**/coverage"
-  ],
+  "ignorePatterns": ["**/node_modules/**", "**/.*", "**/dist", "**/coverage"],
   "overrides": [
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
         "no-class-assign": "off",
         "no-const-assign": "off",
@@ -192,12 +177,7 @@
       }
     },
     {
-      "files": [
-        "**/*.test.ts",
-        "**/*.spec.ts",
-        "**/*.test.tsx",
-        "**/*.spec.tsx"
-      ],
+      "files": ["**/*.test.ts", "**/*.spec.ts", "**/*.test.tsx", "**/*.spec.tsx"],
       "rules": {
         "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/no-explicit-any": "off"

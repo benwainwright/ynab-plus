@@ -10,6 +10,7 @@ export {
 } from "@ports/groups";
 
 export {
+  type IRequesitionAccountFetcher,
   type IOpenBankingTokenFetcher,
   type IMultipleRepository,
   type IAccountRepository,

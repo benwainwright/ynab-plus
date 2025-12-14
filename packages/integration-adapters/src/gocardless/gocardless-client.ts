@@ -4,6 +4,7 @@ import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
   type IOpenBankingTokenFetcher,
+  type IRequesitionAccountFetcher,
 } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import { BankConnection, OauthToken } from "@ynab-plus/domain";
@@ -15,7 +16,8 @@ export class GocardlessClient
   implements
     IBankConnectionCreator,
     IInstitutionAuthPageLinkFetcher,
-    IOpenBankingTokenFetcher
+    IOpenBankingTokenFetcher,
+    IRequesitionAccountFetcher
 {
   private client: HttpClient;
 
@@ -32,15 +34,29 @@ export class GocardlessClient
     @inject("Logger")
     logger: ILogger,
   ) {
-    this.client = new HttpClient(
-      `https://bankaccountdata.gocardless.com/api/v2`,
-      logger,
-      {
-        accept: "application/json",
-        "content-type": "application/json",
-      },
-    );
+    this.client = new HttpClient(`https://bankaccountdata.gocardless.com/api/v2`, logger, {
+      accept: "application/json",
+      "content-type": "application/json",
+    });
   }
+
+  public async getAccountIds(bankConnection: BankConnection, token: OauthToken): Promise<string[]> {
+    const { accounts } = await this.client.get({
+      path: `requisitions/${String(bankConnection.requisitionId)}/`,
+      headers: {
+        Authorization: `Bearer ${token.use()}`,
+      },
+      responseSchema: z.object({
+        id: z.string(),
+        status: z.string(),
+        agreements: z.string().optional(),
+        accounts: z.array(z.string()),
+        reference: z.string(),
+      }),
+    });
+    return accounts;
+  }
+
   public async getLink(
     connection: BankConnection,
     token: OauthToken,
@@ -95,10 +111,7 @@ export class GocardlessClient
     });
   }
 
-  public async getConnections(
-    userId: string,
-    token: OauthToken,
-  ): Promise<BankConnection[]> {
+  public async getConnections(userId: string, token: OauthToken): Promise<BankConnection[]> {
     return await this.client.get({
       path: "institutions",
       queryString: {
