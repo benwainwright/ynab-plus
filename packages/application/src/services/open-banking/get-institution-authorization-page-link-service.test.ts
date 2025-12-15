@@ -22,17 +22,12 @@ describe("get institution link service", () => {
       tokenManager,
       mockLogger,
     );
-    const newToken = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      provider: "ynab",
-      token: "token",
-      refreshToken: "string",
-      expiry: new Date(),
-      lastUse: undefined,
-      created: new Date(),
-      refreshed: undefined,
-      userId: "user",
-    });
+
+    const newToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
 
     when(tokenManager.getToken).calledWith("ben").thenResolve(newToken);
 

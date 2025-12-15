@@ -25,7 +25,17 @@ export class OpenBankingTokenManager {
     private logger: ILogger,
   ) {}
 
-  public async getToken(currentUserId: string): Promise<OauthToken> {
+  private returnDisposable(token: OauthToken) {
+    return Object.assign(token, {
+      [Symbol.asyncDispose]: async () => {
+        if (token.hasEvents()) {
+          await this.oauthTokenRepository.save(token);
+        }
+      },
+    });
+  }
+
+  public async getToken(currentUserId: string) {
     this.logger.debug(`Fetching token for ${currentUserId}`, LOG_CONTEXT);
     const token = await this.oauthTokenRepository.get(currentUserId, "open-banking");
 
@@ -42,9 +52,9 @@ export class OpenBankingTokenManager {
         );
 
         await this.oauthTokenRepository.save(token);
-        return token;
+        return this.returnDisposable(token);
       }
-      return token;
+      return this.returnDisposable(token);
     }
 
     this.logger.debug(`No token found, creating a new one`, LOG_CONTEXT);
@@ -60,6 +70,6 @@ export class OpenBankingTokenManager {
     });
 
     await this.oauthTokenRepository.save(newToken);
-    return newToken;
+    return this.returnDisposable(newToken);
   }
 }

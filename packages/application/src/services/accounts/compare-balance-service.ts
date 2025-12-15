@@ -48,7 +48,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
 
     const accountPromise = this.accountRepository.getAccounts(id);
 
-    const tokenPromise = this.tokenRepo.getToken(this.currentUser.id);
+    await using token = await this.tokenRepo.getToken(this.currentUser.id);
 
     if (!(await connectionPromise)) {
       return { status: "no_bank_connection" };
@@ -66,7 +66,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
 
     const bankBalance = await this.balanceFetcher.getAccountBalance(
       account.linkedOpenBankingAccount,
-      await tokenPromise,
+      token,
     );
 
     if (bankBalance === account.clearedBalance) {

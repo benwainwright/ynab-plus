@@ -43,7 +43,7 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
   > {
     const connection = await this.bankConnectionRepo.getConnection(this.currentUser.id);
 
-    const token = await this.tokenManager.getToken(this.currentUser.id);
+    await using token = await this.tokenManager.getToken(this.currentUser.id);
 
     if (connection) {
       if (!connection.accounts) {

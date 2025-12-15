@@ -58,7 +58,11 @@ describe("compare balance service", () => {
         }),
       );
 
-    const mockToken = mock<OauthToken>();
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
     when(mockTokenRepo.getToken).calledWith("ben").thenResolve(mockToken);
 
     when(mockBalanceFetcher.getAccountBalance).calledWith("foo", mockToken).thenResolve(10_000);
@@ -125,7 +129,12 @@ describe("compare balance service", () => {
         }),
       );
 
-    const mockToken = mock<OauthToken>();
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
+
     when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
 
     when(mockBalanceFetcher.getAccountBalance).calledWith("foo", mockToken).thenResolve(10_000);

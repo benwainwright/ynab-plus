@@ -32,11 +32,10 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
       name: string | undefined;
     }[]
   > {
-    const tokenPromise = this.tokenManager.getToken(this.currentUser.id);
+    await using token = await this.tokenManager.getToken(this.currentUser.id);
 
     const connectionPromise = this.bankConnectionRepo.getConnection(this.currentUser.id);
 
-    const token = await tokenPromise;
     const connection = await connectionPromise;
 
     if (!connection || !connection.accounts) {

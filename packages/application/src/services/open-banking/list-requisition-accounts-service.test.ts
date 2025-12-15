@@ -29,7 +29,11 @@ describe("list requisition accounts service", () => {
           logo: "foo",
         }),
       );
-    const mockToken = mock<OauthToken>();
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
 
     when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
 
@@ -73,7 +77,13 @@ describe("list requisition accounts service", () => {
 
     when(bankConnectionRepo.getConnection).calledWith("ben").thenResolve(undefined);
 
-    when(tokenManager.getToken).calledWith("ben").thenResolve(mock<OauthToken>());
+    when(tokenManager.getToken).calledWith("ben").thenResolve(
+      mock<
+        OauthToken & {
+          [Symbol.asyncDispose]: () => Promise<void>;
+        }
+      >(),
+    );
 
     const service = new ListRequisitionAccountsService(
       accountDetailsFetcher,

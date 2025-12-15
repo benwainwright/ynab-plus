@@ -39,7 +39,7 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
   }: IHandleContext<"GetInstitutionAuthorizationPageLinkCommand", TRole>): Promise<{
     url: string;
   }> {
-    const token = await this.tokenManager.getToken(this.currentUser.id);
+    await using token = await this.tokenManager.getToken(this.currentUser.id);
     const result = await this.authLinkFetcher.getLink(data, token);
     data.saveRequisitionId(result.requsitionId);
     await this.bankConnectionRepository.saveConnection(data);

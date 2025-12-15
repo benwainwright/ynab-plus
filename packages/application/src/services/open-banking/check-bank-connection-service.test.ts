@@ -28,7 +28,12 @@ describe("check bank connection service", () => {
     const bankConnectionCreator = mock<IBankConnectionCreator>();
     const tokenManager = mock<OpenBankingTokenManager>();
 
-    const mockToken = mock<OauthToken>();
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
+
     when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
 
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(undefined);
@@ -76,7 +81,13 @@ describe("check bank connection service", () => {
     const connectionRepo = mock<IBankConnectionRepository>();
     const requestionAccountFetcher = mock<IRequesitionAccountFetcher>();
     const tokenManager = mock<OpenBankingTokenManager>();
-    const mockToken = mock<OauthToken>();
+
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
+
     when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
 
     const mockConnection = BankConnection.reconstite({
