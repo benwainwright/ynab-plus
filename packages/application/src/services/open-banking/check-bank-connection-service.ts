@@ -3,16 +3,15 @@ import { inject, AbstractApplicationService } from "@core";
 import {
   type IBankConnectionCreator,
   type IBankConnectionRepository,
-  type IOauthTokenRepository,
-  type IOpenBankingTokenFetcher,
   type IRequesitionAccountFetcher,
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
 
-import { BankConnection, OauthToken, type Permission } from "@ynab-plus/domain";
+import { BankConnection, type Permission } from "@ynab-plus/domain";
 
 import { injectable } from "inversify";
+import type { OpenBankingTokenManager } from "./open-banking-token-manager.ts";
 
 @injectable()
 export class CheckBankConnectionService extends AbstractApplicationService<"CheckBankConnectionCommand"> {
@@ -23,14 +22,11 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
     @inject("BankConnectionCreator")
     private institutionListFetcher: IBankConnectionCreator,
 
-    @inject("BankConnectionTokenFetcher")
-    private bankingTokenFetcher: IOpenBankingTokenFetcher,
-
-    @inject("OauthTokenRepository")
-    private oauthTokenRepository: IOauthTokenRepository,
-
     @inject("RequestionAccountFetcher")
     private requestionAccountFetcher: IRequesitionAccountFetcher,
+
+    @inject("OpenBankingTokenManager")
+    private tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
     logger: ILogger,
@@ -42,34 +38,13 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
 
   public override requiredPermissions: Permission[] = ["admin", "user"];
 
-  private async getToken() {
-    const token = await this.oauthTokenRepository.get(this.currentUser.id, "open-banking");
-
-    if (token) {
-      return token;
-    }
-
-    const tokenResponse = await this.bankingTokenFetcher.getNewToken();
-
-    const newToken = OauthToken.create({
-      provider: "open-banking",
-      userId: this.currentUser.id,
-      token: tokenResponse.token,
-      refreshToken: tokenResponse.refreshToken,
-      expiry: new Date(Date.now() + tokenResponse.tokenExpiresIn * 1000),
-      refreshExpiry: new Date(Date.now() + tokenResponse.refreshTokenExpiresIn * 1000),
-    });
-
-    await this.oauthTokenRepository.save(newToken);
-    return newToken;
-  }
-
   protected override async handle(): Promise<
     { status: "new"; potentialInstitutions: BankConnection[] } | { status: "connected" }
   > {
     const connection = await this.bankConnectionRepo.getConnection(this.currentUser.id);
 
-    const token = await this.getToken();
+    const token = await this.tokenManager.getToken(this.currentUser.id);
+
     if (connection) {
       if (!connection.accounts) {
         const ids = await this.requestionAccountFetcher.getAccountIds(connection, token);

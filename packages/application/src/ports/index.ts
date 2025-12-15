@@ -15,6 +15,7 @@ export { type ITransactionFetcher } from "./i-transaction-fetcher.ts";
 export { type IOauthRedirectUrlGenerator } from "./i-oauth-redirect-url-generator.ts";
 export { type ICurrentUserSetter } from "./i-current-user-setter.ts";
 export { type IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
+export { type IOpenBankingTokenRefresher } from "./i-open-banking-token-refresher.ts";
 export { type IOauthTokenRepository } from "./i-oauth-token-repository.ts";
 export type { IObjectStorage } from "./i-object-storage.ts";
 export { type IStringHasher } from "./i-string-hasher.ts";

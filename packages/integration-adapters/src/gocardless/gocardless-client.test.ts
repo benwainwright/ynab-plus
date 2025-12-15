@@ -142,6 +142,39 @@ describe("the gocardless client", () => {
     });
   });
 
+  describe("refreshToken", () => {
+    it("correctly refreshes the token and returns the resulting refreshed token", async () => {
+      const today = new Date("2025-11-23T19:14:37.986Z");
+      vi.setSystemTime(today);
+      const client = new GocardlessClient(
+        { value: Promise.resolve(mockGocardlessData.secretId) },
+        { value: Promise.resolve(mockGocardlessData.secretKey) },
+        { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
+        new Map(),
+        mock(),
+      );
+
+      const token = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: mockGocardlessData.mockToken,
+        refreshToken: mockGocardlessData.mockRefreshToken,
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      const refreshed = await client.refreshToken(token);
+
+      expect(refreshed).toEqual({
+        token: mockGocardlessData.mockRefreshedToken,
+        tokenExpiresIn: 86400,
+      });
+    });
+  });
+
   describe("getconnections", () => {
     it("gets a token, then makes a request to the institutions endpoint and returns a list of bankconnectionsl", async () => {
       const today = new Date("2025-11-23T19:14:37.986Z");

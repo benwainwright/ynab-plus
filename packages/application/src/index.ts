@@ -17,6 +17,7 @@ export {
   type IOpenBankingAccountDetailsFetcher,
   type IAccountRepository,
   type IDomainEventBuffer,
+  type IOpenBankingTokenRefresher,
   type IEventBus,
   type IEventListener,
   type IEventEmitter,

@@ -6,6 +6,7 @@ import {
   type IOpenBankingAccountBalanceFetcher,
   type IOpenBankingAccountDetailsFetcher,
   type IOpenBankingTokenFetcher,
+  type IOpenBankingTokenRefresher,
   type IRequesitionAccountFetcher,
 } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
@@ -20,6 +21,7 @@ export class GocardlessClient
     IInstitutionAuthPageLinkFetcher,
     IOpenBankingTokenFetcher,
     IOpenBankingAccountBalanceFetcher,
+    IOpenBankingTokenRefresher,
     IRequesitionAccountFetcher,
     IOpenBankingAccountDetailsFetcher
 {
@@ -158,6 +160,27 @@ export class GocardlessClient
       url: result.link,
       requsitionId: result.id,
     };
+  }
+
+  public async refreshToken(token: OauthToken): Promise<{
+    token: string;
+    tokenExpiresIn: number;
+  }> {
+    const response = await this.client.post({
+      body: {
+        refresh: token.refreshToken,
+      },
+      path: `token/refresh/`,
+      headers: {
+        Authorization: `Bearer ${token.use()}`,
+      },
+      responseSchema: z.object({
+        access: z.string(),
+        access_expires: z.number(),
+      }),
+    });
+
+    return { token: response.access, tokenExpiresIn: response.access_expires };
   }
 
   public async getNewToken() {

@@ -1,12 +1,9 @@
 import { AbstractApplicationService, inject } from "@core";
 import { AppError } from "@errors";
-import type {
-  IBankConnectionRepository,
-  IOauthTokenRepository,
-  IOpenBankingAccountDetailsFetcher,
-} from "@ports";
+import type { IBankConnectionRepository, IOpenBankingAccountDetailsFetcher } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { Permission } from "@ynab-plus/domain";
+import type { OpenBankingTokenManager } from "./open-banking-token-manager.ts";
 
 export class ListRequisitionAccountsService extends AbstractApplicationService<"ListRequisitionAccountsCommand"> {
   public override readonly commandName = "ListRequisitionAccountsCommand";
@@ -20,8 +17,8 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
     @inject("BankConnectionRepository")
     private readonly bankConnectionRepo: IBankConnectionRepository,
 
-    @inject("OauthTokenRepository")
-    private readonly tokenRepository: IOauthTokenRepository,
+    @inject("OpenBankingTokenManager")
+    private readonly tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
     logger: ILogger,
@@ -35,16 +32,11 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
       name: string | undefined;
     }[]
   > {
-    const tokenPromise = this.tokenRepository.get(this.currentUser.id, "open-banking");
+    const tokenPromise = this.tokenManager.getToken(this.currentUser.id);
 
     const connectionPromise = this.bankConnectionRepo.getConnection(this.currentUser.id);
 
     const token = await tokenPromise;
-
-    if (!token) {
-      throw new AppError("Tried to call service without a token");
-    }
-
     const connection = await connectionPromise;
 
     if (!connection || !connection.accounts) {

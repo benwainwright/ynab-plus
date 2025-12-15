@@ -1,14 +1,13 @@
 import { inject, AbstractApplicationService } from "@core";
-import { AppError } from "@errors";
 import {
   type IBankConnectionRepository,
   type IHandleContext,
   type IInstitutionAuthPageLinkFetcher,
-  type IOauthTokenRepository,
 } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
 import { injectable } from "inversify";
+import type { OpenBankingTokenManager } from "./open-banking-token-manager.ts";
 
 @injectable()
 export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicationService<"GetInstitutionAuthorizationPageLinkCommand"> {
@@ -19,8 +18,8 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
     @inject("BankConnectionRepository")
     private bankConnectionRepository: IBankConnectionRepository,
 
-    @inject("OauthTokenRepository")
-    private oauthTokenRepository: IOauthTokenRepository,
+    @inject("OpenBankingTokenManager")
+    private tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
     logger: ILogger,
@@ -28,35 +27,21 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
     super(logger);
   }
 
-  public override readonly commandName =
-    "GetInstitutionAuthorizationPageLinkCommand";
+  public override readonly commandName = "GetInstitutionAuthorizationPageLinkCommand";
 
-  public override requiredPermissions: (
-    | "public"
-    | "user"
-    | "admin"
-    | "system"
-  )[] = ["user", "admin"];
+  public override requiredPermissions: ("public" | "user" | "admin" | "system")[] = [
+    "user",
+    "admin",
+  ];
 
   protected override async handle<TRole extends IRole = User>({
     command: { data },
-  }: IHandleContext<
-    "GetInstitutionAuthorizationPageLinkCommand",
-    TRole
-  >): Promise<{ url: string }> {
-    const token = await this.oauthTokenRepository.get(
-      this.currentUser.id,
-      "open-banking",
-    );
-
-    if (!token) {
-      throw new AppError("No bank token found");
-    }
-
+  }: IHandleContext<"GetInstitutionAuthorizationPageLinkCommand", TRole>): Promise<{
+    url: string;
+  }> {
+    const token = await this.tokenManager.getToken(this.currentUser.id);
     const result = await this.authLinkFetcher.getLink(data, token);
-
     data.saveRequisitionId(result.requsitionId);
-
     await this.bankConnectionRepository.saveConnection(data);
 
     return { url: result.url };

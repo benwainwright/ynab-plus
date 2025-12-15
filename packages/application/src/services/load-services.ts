@@ -18,11 +18,14 @@ import { RegisterUserService } from "./users/register-user-service.ts";
 import { UpdateUserService } from "./users/update-user-service.ts";
 import { SyncAccountsService } from "./accounts/sync-accounts-service.ts";
 import type { TypedContainerModuleLoadOptions } from "@inversifyjs/strongly-typed";
-import type { IApplicationDependencies } from "@ports/groups";
+import type { IApplicationDependencies, IInternalTypes } from "@ports/groups";
 import { CompareBalanceService } from "./accounts/compare-balance-service.ts";
 import { ListRequisitionAccountsService } from "./open-banking/list-requisition-accounts-service.ts";
+import { OpenBankingTokenManager } from "./open-banking/open-banking-token-manager.ts";
 
-export const loadServices = (load: TypedContainerModuleLoadOptions<IApplicationDependencies>) => {
+export const loadServices = (
+  load: TypedContainerModuleLoadOptions<IApplicationDependencies & IInternalTypes>,
+) => {
   if (load.isBound("CurrentUserSetter")) {
     load.bind("Service").to(LoginService);
     load.bind("Service").to(LogoutService);
@@ -32,8 +35,11 @@ export const loadServices = (load: TypedContainerModuleLoadOptions<IApplicationD
   load.bind("Service").to(ListTransactionsService);
   load.bind("Service").to(SyncAccountService);
   load.bind("Service").to(SyncAccountsService);
+
   load.bind("Service").to(CheckBankConnectionService);
+  load.bind("OpenBankingTokenManager").to(OpenBankingTokenManager);
   load.bind("Service").to(GetInstitutionAuthorizationPageLinkService);
+
   load.bind("Service").to(GetCurrentUserService);
   load.bind("Service").to(GetUserService);
   load.bind("Service").to(GetUsersService);

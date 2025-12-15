@@ -112,6 +112,33 @@ export const handlers = [
     },
   ),
 
+  http.post<object, { refresh: string }>(
+    `${GOCARDLESS_API}/api/v2/token/refresh/`,
+    async ({ request }) => {
+      const invalidResponse = invalidRequestResponse(request, true);
+
+      if (invalidResponse) {
+        return invalidResponse;
+      }
+
+      const data = await request.json();
+
+      const { refresh } = data;
+
+      if (refresh !== mockGocardlessData.mockRefreshToken) {
+        return HttpResponse.json({
+          summary: "Authentication failed",
+          detail: "No active account found with the given credentials!",
+          status_code: 401,
+        });
+      }
+      return HttpResponse.json({
+        access: mockGocardlessData.mockRefreshedToken,
+        access_expires: 86400,
+      });
+    },
+  ),
+
   http.post<object, { secret_id: string; secret_key: string }>(
     `${GOCARDLESS_API}/api/v2/token/new/`,
     async ({ request }) => {

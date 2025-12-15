@@ -2,6 +2,7 @@ export const mockGocardlessData = {
   secretId: "secret-id",
   secretKey: "secret-key",
   mockToken: "the-token",
+  mockRefreshedToken: "the-refreshed-token",
   mockRefreshToken: "the-refresh-token",
   mockRedirectUrl: "http://www.yourwebpage.com",
   mockAccountDetailsResponses: {
