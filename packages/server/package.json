@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite-node src/start-server.ts",
+    "build": "vite build",
     "type-check": "tsgo --build",
     "lint": "oxlint --type-aware",
     "test": "vitest"

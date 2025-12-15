@@ -1,4 +1,4 @@
-import { EventEmitter } from "node:stream";
+import { EventEmitter } from "events";
 import { type IRuntimePorts } from "@ynab-plus/app";
 import { FlatFileObjectStore, NodePasswordHashValidator, NodeEventBus } from "@adapters";
 
