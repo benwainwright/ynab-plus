@@ -46,58 +46,63 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
       data: { force },
     },
   }: IHandleContext<"SyncAccountsCommand", TRole>) {
-    this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
+    eventBus.emit("AccountsSyncStarted", undefined);
+    try {
+      this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
-    this.logger.debug(`Getting token from repo`, LOG_CONTEXT);
-    await using token = await this.tokenManager.getToken(this.currentUser.id, "ynab");
+      this.logger.debug(`Getting token from repo`, LOG_CONTEXT);
+      await using token = await this.tokenManager.getToken(this.currentUser.id, "ynab");
 
-    if (token.lastUse && Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
-      this.logger.debug(
-        `Token was used recently or force wasn't passed. Skipping sync`,
-        LOG_CONTEXT,
+      if (token.lastUse && Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
+        this.logger.debug(
+          `Token was used recently or force wasn't passed. Skipping sync`,
+          LOG_CONTEXT,
+        );
+        return { synced: false };
+      }
+
+      this.logger.debug(`Fetching accounts`, LOG_CONTEXT);
+      const storedAccountsPromise = this.accountsRepo.getUserAccounts(this.currentUser.id);
+      const fetchedAccountsPromise = this.accountsFetcher.getAccounts(token);
+
+      const [storedAccounts, fetchedAccounts] = await Promise.all([
+        storedAccountsPromise,
+        fetchedAccountsPromise,
+      ]);
+
+      await Promise.all(
+        fetchedAccounts.map(async (theFetchedAccount) => {
+          const foundStored = storedAccounts.find((account) => account.id === theFetchedAccount.id);
+
+          if (!foundStored) {
+            const downloadTask = RegularTask.create({
+              id: `${this.currentUser.id}-${theFetchedAccount.id}-tx-sync`,
+              onBehalfOf: this.currentUser.id,
+              triggerImmediately: true,
+              lastExecution: undefined,
+              minute: "*/10",
+              hour: "*",
+              data: `{ "id":"${theFetchedAccount.id}" }`,
+              day: "*",
+              month: "*",
+              weekDay: "*",
+              name: "Download transactions",
+              description: "Keeps account transactions in sync",
+              command: "SyncAccountCommand",
+            });
+
+            await this.taskScheduler.scheduleTask(downloadTask);
+          }
+        }),
       );
-      return { synced: false };
+
+      this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
+      await this.accountsRepo.saveAccounts(fetchedAccounts);
+      eventBus.emit("AccountsSynced", fetchedAccounts);
+
+      return { synced: true };
+    } finally {
+      eventBus.emit("AccountsSyncFinished", undefined);
     }
-
-    this.logger.debug(`Fetching accounts`, LOG_CONTEXT);
-    const storedAccountsPromise = this.accountsRepo.getUserAccounts(this.currentUser.id);
-    const fetchedAccountsPromise = this.accountsFetcher.getAccounts(token);
-
-    const [storedAccounts, fetchedAccounts] = await Promise.all([
-      storedAccountsPromise,
-      fetchedAccountsPromise,
-    ]);
-
-    await Promise.all(
-      fetchedAccounts.map(async (theFetchedAccount) => {
-        const foundStored = storedAccounts.find((account) => account.id === theFetchedAccount.id);
-
-        if (!foundStored) {
-          const downloadTask = RegularTask.create({
-            id: `${this.currentUser.id}-${theFetchedAccount.id}-tx-sync`,
-            onBehalfOf: this.currentUser.id,
-            triggerImmediately: true,
-            lastExecution: undefined,
-            minute: "*/10",
-            hour: "*",
-            data: `{ "id":"${theFetchedAccount.id}" }`,
-            day: "*",
-            month: "*",
-            weekDay: "*",
-            name: "Download transactions",
-            description: "Keeps account transactions in sync",
-            command: "SyncAccountCommand",
-          });
-
-          await this.taskScheduler.scheduleTask(downloadTask);
-        }
-      }),
-    );
-
-    this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
-    await this.accountsRepo.saveAccounts(fetchedAccounts);
-    eventBus.emit("AccountsSynced", fetchedAccounts);
-
-    return { synced: true };
   }
 }

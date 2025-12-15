@@ -1,13 +1,20 @@
 import { Currency, Loader, Page } from "@components";
 import { useAccounts } from "@data";
-import { Table } from "@mantine/core";
+import { Button, Table, Loader as MantineLoader } from "@mantine/core";
 import { Link } from "react-router";
 import { type ReactNode } from "react";
 
 export const Transactions = (): ReactNode => {
-  const { isPending, accounts } = useAccounts();
+  const { isPending, accounts, sync, syncing } = useAccounts();
   return (
-    <Page routeName="accounts">
+    <Page
+      routeName="accounts"
+      headerActions={
+        <Button variant="light" size="xs" onClick={() => void sync()}>
+          {syncing ? <MantineLoader color="blue" size={15} /> : "Sync"}
+        </Button>
+      }
+    >
       <Loader isPending={isPending} data={accounts}>
         {(data) => (
           <Table>
