@@ -4,9 +4,9 @@ import type {
   IAccountRepository,
   IBankConnectionRepository,
   IHandleContext,
-  IOauthTokenRepository,
   IOpenBankingAccountBalanceFetcher,
 } from "@ports";
+import type { OpenBankingTokenManager } from "@services/open-banking";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission, User } from "@ynab-plus/domain";
 
@@ -25,8 +25,8 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
     @inject("OpenBankingAccountBalanceFetcher")
     private balanceFetcher: IOpenBankingAccountBalanceFetcher,
 
-    @inject("OauthTokenRepository")
-    private tokenRepo: IOauthTokenRepository,
+    @inject("OpenBankingTokenManager")
+    private tokenRepo: OpenBankingTokenManager,
 
     @inject("Logger")
     logger: ILogger,
@@ -48,7 +48,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
 
     const accountPromise = this.accountRepository.getAccounts(id);
 
-    const tokenPromise = this.tokenRepo.get(this.currentUser.id, "open-banking");
+    const tokenPromise = this.tokenRepo.getToken(this.currentUser.id);
 
     if (!(await connectionPromise)) {
       return { status: "no_bank_connection" };
@@ -64,15 +64,9 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
       return { status: "no_link" };
     }
 
-    const token = await tokenPromise;
-
-    if (!token) {
-      throw new AppError("Service was called without an active open banking token");
-    }
-
     const bankBalance = await this.balanceFetcher.getAccountBalance(
       account.linkedOpenBankingAccount,
-      token,
+      await tokenPromise,
     );
 
     if (bankBalance === account.clearedBalance) {

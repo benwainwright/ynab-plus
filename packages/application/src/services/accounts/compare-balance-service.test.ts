@@ -1,7 +1,6 @@
 import {
   type IAccountRepository,
   type IBankConnectionRepository,
-  type IOauthTokenRepository,
   type IOpenBankingAccountBalanceFetcher,
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
@@ -10,13 +9,14 @@ import { mock } from "vitest-mock-extended";
 import { CompareBalanceService } from "./compare-balance-service.ts";
 import { when } from "vitest-when";
 import { Account, BankConnection, OauthToken } from "@ynab-plus/domain";
+import type { OpenBankingTokenManager } from "@services/open-banking";
 
 describe("compare balance service", () => {
   it("returns balances match if the account cleared balance is the same as the fetcher balance", async () => {
     const mockConnectionRepo = mock<IBankConnectionRepository>();
     const mockAccountRepo = mock<IAccountRepository>();
     const mockBalanceFetcher = mock<IOpenBankingAccountBalanceFetcher>();
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenRepo = mock<OpenBankingTokenManager>();
     const mockLogger = mock<ILogger>();
 
     const context = createMockServiceContext(
@@ -59,7 +59,7 @@ describe("compare balance service", () => {
       );
 
     const mockToken = mock<OauthToken>();
-    when(mockTokenRepo.get).calledWith("ben", "open-banking").thenResolve(mockToken);
+    when(mockTokenRepo.getToken).calledWith("ben").thenResolve(mockToken);
 
     when(mockBalanceFetcher.getAccountBalance).calledWith("foo", mockToken).thenResolve(10_000);
 
@@ -83,7 +83,7 @@ describe("compare balance service", () => {
     const mockConnectionRepo = mock<IBankConnectionRepository>();
     const mockAccountRepo = mock<IAccountRepository>();
     const mockBalanceFetcher = mock<IOpenBankingAccountBalanceFetcher>();
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const tokenManager = mock<OpenBankingTokenManager>();
     const mockLogger = mock<ILogger>();
 
     const context = createMockServiceContext(
@@ -126,7 +126,7 @@ describe("compare balance service", () => {
       );
 
     const mockToken = mock<OauthToken>();
-    when(mockTokenRepo.get).calledWith("ben", "open-banking").thenResolve(mockToken);
+    when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
 
     when(mockBalanceFetcher.getAccountBalance).calledWith("foo", mockToken).thenResolve(10_000);
 
@@ -134,7 +134,7 @@ describe("compare balance service", () => {
       mockConnectionRepo,
       mockAccountRepo,
       mockBalanceFetcher,
-      mockTokenRepo,
+      tokenManager,
       mockLogger,
     );
 
