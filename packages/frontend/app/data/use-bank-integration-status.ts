@@ -5,6 +5,11 @@ import type { BankConnection } from "@ynab-plus/domain";
 
 export type BankConnectionConnected = {
   status: "connected";
+  logo: string;
+  bankName: string;
+  connected: Date;
+  refreshed: Date | undefined;
+  expires: Date;
 };
 
 export type BankConnectionNeedsToSelectInstitution = {

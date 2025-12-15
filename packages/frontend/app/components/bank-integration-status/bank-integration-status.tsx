@@ -3,6 +3,7 @@ import { Card, Group, LoadingOverlay, Title } from "@mantine/core";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { SelectInstitutionButton } from "./select-institution-button.tsx";
 import type { ReactNode } from "react";
+import { BankConnectedIntegrationStatusBody } from "./bank-connected-integration-status-body.tsx";
 
 export const BankIntegrationStatus = (): ReactNode => {
   const { status } = useBankIntegrationStatus();
@@ -20,16 +21,14 @@ export const BankIntegrationStatus = (): ReactNode => {
           {status.status === "connected" ? (
             <IconCircleCheckFilled size={30} color={"green"} />
           ) : status.status !== "loading" ? (
-            <SelectInstitutionButton
-              institutions={status.potentialInstitutions}
-            />
+            <SelectInstitutionButton institutions={status.potentialInstitutions} />
           ) : null}
         </Group>
       </Card.Section>
 
       {status.status === "connected" && (
         <Card.Section py="xs" ml="xs" mt="x">
-          Connected
+          <BankConnectedIntegrationStatusBody status={status} />
         </Card.Section>
       )}
     </Card>

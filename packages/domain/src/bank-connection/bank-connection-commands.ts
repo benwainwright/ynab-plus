@@ -17,6 +17,11 @@ export interface BankConnectionCommands {
         }
       | {
           status: "connected";
+          logo: string;
+          bankName: string;
+          connected: Date;
+          refreshed: Date | undefined;
+          expires: Date;
         };
   };
   GetInstitutionAuthorizationPageLinkCommand: {

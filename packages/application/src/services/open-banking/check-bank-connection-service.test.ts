@@ -21,6 +21,59 @@ afterEach(() => {
 });
 
 describe("check bank connection service", () => {
+  it("returns connection details if correctly connected", async () => {
+    const today = new Date("2025-11-23T19:14:37.986Z");
+    vi.setSystemTime(today);
+
+    const context = createMockServiceContext("CheckBankConnectionCommand", undefined, "ben");
+
+    const connectionRepo = mock<IBankConnectionRepository>();
+    const requestionAccountFetcher = mock<IRequesitionAccountFetcher>();
+    const tokenManager = mock<OpenBankingTokenManager>();
+
+    const createdDate = new Date(Date.now());
+    const refreshedDate = new Date(Date.now() + 1);
+    const expires = new Date(Date.now() + 2);
+
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({
+      created: createdDate,
+      refreshed: refreshedDate,
+      expiry: expires,
+    });
+
+    when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
+
+    const mockConnection = BankConnection.reconstite({
+      id: "foo",
+      accounts: ["foo"],
+      bankName: "monzo",
+      requisitionId: "id",
+      userId: "ben",
+      logo: "foo",
+    });
+
+    when(connectionRepo.getConnection).calledWith("ben").thenResolve(mockConnection);
+
+    const service = new CheckBankConnectionService(
+      connectionRepo,
+      mock(),
+      requestionAccountFetcher,
+      tokenManager,
+      mock(),
+    );
+
+    const result = await service.doHandle(context);
+    expect(result.status).toEqual("connected");
+    if (result.status === "connected") {
+      expect(result.bankName).toEqual("monzo");
+      expect(result.logo).toEqual("foo");
+    }
+  });
+
   it("returns the institution list if no connection is found", async () => {
     const context = createMockServiceContext("CheckBankConnectionCommand", undefined, "ben");
 

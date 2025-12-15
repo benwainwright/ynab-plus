@@ -39,7 +39,15 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
   public override requiredPermissions: Permission[] = ["admin", "user"];
 
   protected override async handle(): Promise<
-    { status: "new"; potentialInstitutions: BankConnection[] } | { status: "connected" }
+    | { status: "new"; potentialInstitutions: BankConnection[] }
+    | {
+        status: "connected";
+        logo: string;
+        bankName: string;
+        connected: Date;
+        refreshed: Date | undefined;
+        expires: Date;
+      }
   > {
     const connection = await this.bankConnectionRepo.getConnection(this.currentUser.id);
 
@@ -51,7 +59,14 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
         connection.saveAccounts(ids);
         await this.bankConnectionRepo.saveConnection(connection);
       }
-      return { status: "connected" };
+      return {
+        status: "connected",
+        logo: connection.logo,
+        bankName: connection.bankName,
+        connected: token.created,
+        refreshed: token.refreshed,
+        expires: token.expiry,
+      };
     } else {
       return {
         status: "new",
