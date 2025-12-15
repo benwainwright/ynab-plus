@@ -1,8 +1,17 @@
 import { injectable } from "inversify";
 import type { IResponseCache } from "./i-response-cache.ts";
+import type { ILogger } from "@ynab-plus/bootstrap";
+import { inject } from "@ynab-plus/app";
+
+const LOG_CONTEXT = { context: "response-cache" };
 
 @injectable()
 export class ResponseCache<T> implements IResponseCache<T> {
+  public constructor(
+    @inject("Logger")
+    private readonly logger: ILogger,
+  ) {}
+
   private data = new Map<string, { data: T; timeout: NodeJS.Timeout | undefined }>();
 
   public delete(key: string) {
@@ -14,6 +23,7 @@ export class ResponseCache<T> implements IResponseCache<T> {
   }
 
   public set(key: string, thing: T, ttl?: number) {
+    this.logger.silly(`Caching value for key'${key}'`, LOG_CONTEXT);
     const existing = this.data.get(key);
 
     if (existing) {
@@ -36,6 +46,8 @@ export class ResponseCache<T> implements IResponseCache<T> {
     if (!result) {
       return undefined;
     }
+
+    this.logger.silly(`Cache hit for key '${key}'`, LOG_CONTEXT);
 
     return result.data;
   }

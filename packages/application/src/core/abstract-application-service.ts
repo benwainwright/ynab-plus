@@ -12,9 +12,7 @@ import {
 
 export const LOG_CONTEXT = { context: "abstract-application-service" };
 
-export abstract class AbstractApplicationService<
-  TKey extends keyof Commands = keyof Commands,
-> {
+export abstract class AbstractApplicationService<TKey extends keyof Commands = keyof Commands> {
   public constructor(protected logger: ILogger) {}
 
   public abstract readonly commandName: TKey;
@@ -56,31 +54,22 @@ export abstract class AbstractApplicationService<
 
   protected get currentUser(): User {
     if (!this._user) {
-      throw new AppError(
-        `Service cannot be executed without a user based context`,
-      );
+      throw new AppError(`Service cannot be executed without a user based context`);
     }
     return this._user;
   }
 
-  private checkIsAuthorised<TRole extends IRole>(
-    context: IHandleContext<TKey, TRole>,
-  ) {
+  private checkIsAuthorised<TRole extends IRole>(context: IHandleContext<TKey, TRole>) {
     const { command } = context;
     const permissions = this.currentRolePermissions(command.role);
     this._user = this.getUserFromRole(command.role);
 
     const hasValidPermission = Boolean(
-      permissions.find((permission) =>
-        this.requiredPermissions.includes(permission),
-      ),
+      permissions.find((permission) => this.requiredPermissions.includes(permission)),
     );
 
     if (hasValidPermission) {
-      this.logger.silly(
-        `Permissions are valid, proceeding to handle`,
-        LOG_CONTEXT,
-      );
+      this.logger.silly(`Permissions are valid, proceeding to handle`, LOG_CONTEXT);
       return;
     }
 
@@ -103,7 +92,7 @@ export abstract class AbstractApplicationService<
 
     this.logger.debug(`Attempting to handle command`, {
       ...LOG_CONTEXT,
-      command,
+      command: command.key,
     });
 
     this.checkIsAuthorised(context);

@@ -26,13 +26,12 @@ export class ServiceBus implements IServiceBus {
     });
   }
 
-  public async execute<
-    TKey extends keyof Commands = keyof Commands,
-    TRole extends IRole = User,
-  >(command: Command<TKey, TRole>): Promise<Commands[TKey]["response"]> {
+  public async execute<TKey extends keyof Commands = keyof Commands, TRole extends IRole = User>(
+    command: Command<TKey, TRole>,
+  ): Promise<Commands[TKey]["response"]> {
     this.logger.debug(`Command receieved, locating service`, {
       ...LOG_CONTEXT,
-      command,
+      command: command.key,
     });
 
     const service = this.services.find((handler) => handler.canHandle(command));
@@ -51,13 +50,10 @@ export class ServiceBus implements IServiceBus {
       eventBus: this.eventBus,
     });
 
-    this.logger.debug(
-      `Service ${service.commandName} returned response, ${inspect(response)}`,
-      {
-        ...LOG_CONTEXT,
-        service: service.commandName,
-      },
-    );
+    this.logger.debug(`Service ${service.commandName} returned response, ${inspect(response)}`, {
+      ...LOG_CONTEXT,
+      service: service.commandName,
+    });
 
     return response;
   }
