@@ -6,6 +6,7 @@ import z from "zod";
 import { getOauthClientFactory } from "./get-oauth-client-factory.ts";
 import type { IInternalTypes } from "@core";
 import type { TypedContainerModule } from "@inversifyjs/strongly-typed";
+import { ResponseCache } from "@http-client";
 
 export const LOG_CONTEXT = { context: "integrations-module" };
 
@@ -21,6 +22,7 @@ export const integrationsModule: TypedContainerModule<IIntegrationPorts & IInter
     load.bind("RequestionAccountFetcher").to(GocardlessClient);
     load.bind("OpenBankingAccountBalanceFetcher").to(GocardlessClient);
     load.bind("OpenBankingAccountDetailsFetcher").to(GocardlessClient);
+    load.bind("ResponseCache").to(ResponseCache);
 
     const oauthClientFactory = getOauthClientFactory(bootstrapper);
 

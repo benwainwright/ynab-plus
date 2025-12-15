@@ -1,5 +1,5 @@
 import { inject } from "@core";
-import { HttpClient } from "@http-client";
+import { HttpClient, type IResponseCache } from "@http-client";
 import {
   type IBankConnectionCreator,
   type IInstitutionAuthPageLinkFetcher,
@@ -35,12 +35,21 @@ export class GocardlessClient
     @inject("GocardlessRedirectUrlConfigValue")
     private redirectUrl: ConfigValue<string>,
 
+    @inject("ResponseCache")
+    responseCache: IResponseCache<unknown>,
+
     @inject("Logger")
     logger: ILogger,
   ) {
-    this.client = new HttpClient(`https://bankaccountdata.gocardless.com/api/v2`, logger, {
-      accept: "application/json",
-      "content-type": "application/json",
+    this.client = new HttpClient({
+      baseUrl: `https://bankaccountdata.gocardless.com/api/v2`,
+      logger,
+      responseCache,
+      defaultTtl: 1000 * 60,
+      defaultHeaders: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
     });
   }
 
@@ -51,6 +60,7 @@ export class GocardlessClient
     return await Promise.all(
       ids.map(async (id) => {
         return await this.client.get({
+          ttl: 1000 * 60 * 60,
           path: `accounts/${id}/details/`,
           headers: {
             Authorization: `Bearer ${token.use()}`,
@@ -74,6 +84,7 @@ export class GocardlessClient
   public async getAccountBalance(id: string, token: OauthToken): Promise<number> {
     const { balances } = await this.client.get({
       path: `accounts/${id}/balances/`,
+      ttl: 1000 * 30,
       headers: {
         Authorization: `Bearer ${token.use()}`,
       },

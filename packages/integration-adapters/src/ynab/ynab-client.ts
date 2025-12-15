@@ -1,4 +1,3 @@
-import { HttpError } from "@errors";
 import type { IAccountsFetcher, ITransactionFetcher } from "@ynab-plus/app";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { Account, SyncDetails, Transaction, type OauthToken } from "@ynab-plus/domain";
@@ -6,56 +5,29 @@ import { injectable } from "inversify";
 import { inject } from "@core";
 
 import z from "zod";
-
-const LOG_CONTEXT = { context: "ynab-client" };
+import { HttpClient, type IResponseCache } from "@http-client";
 
 @injectable()
 export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
+  private client: HttpClient;
+
   public constructor(
+    @inject("ResponseCache")
+    private responseCache: IResponseCache<unknown>,
+
     @inject("Logger")
     private logger: ILogger,
-  ) {}
-
-  private async request({
-    path,
-    token,
-    method,
-    syncDetails,
-  }: {
-    path: string;
-    token: OauthToken;
-    method: "GET" | "POST";
-    syncDetails: SyncDetails | undefined;
-  }) {
-    const knowledgeString =
-      syncDetails && syncDetails.checkpoint
-        ? `?last_knowledge_of_server=${String(syncDetails.checkpoint)}`
-        : ``;
-
-    const url = `https://api.ynab.com/v1${path}${knowledgeString}`;
-
-    token.lastUse = new Date();
-
-    const headers = {
-      Authorization: `Bearer ${token.use()}`,
-      accept: "application/json",
-    };
-
-    const config = {
-      method,
-      headers,
-    };
-
-    this.logger.silly(`Sending request to ${url} with ${JSON.stringify(config)}`, LOG_CONTEXT);
-
-    const result = await fetch(url, { method, headers });
-
-    if (!result.ok) {
-      const text = await result.text();
-      throw new HttpError(`Request failed: ${text}`, result.status, text);
-    }
-
-    return (await result.json()) as unknown;
+  ) {
+    this.client = new HttpClient({
+      baseUrl: `https://api.ynab.com/v1`,
+      logger,
+      defaultTtl: 1000 * 20,
+      responseCache,
+      defaultHeaders: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+    });
   }
 
   public async getAccountTransactions(
@@ -63,17 +35,19 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     accountId: string,
     syncDetails: SyncDetails,
   ): Promise<Transaction[]> {
-    const path = `/budgets/default/accounts/${accountId}/transactions`;
+    const queryString =
+      syncDetails && syncDetails.checkpoint
+        ? { last_knowledge_of_server: syncDetails.checkpoint }
+        : {};
 
-    const result = await this.request({
-      token,
-      method: "GET",
-      path,
-      syncDetails,
-    });
-
-    const parsedResult = z
-      .object({
+    const result = await this.client.get({
+      path: `/budgets/default/accounts/${accountId}/transactions`,
+      queryString,
+      ttl: 1000 * 5,
+      headers: {
+        Authorization: `Bearer ${token.use()}`,
+      },
+      responseSchema: z.object({
         data: z.object({
           transactions: z.array(
             z
@@ -117,49 +91,54 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
           ),
           server_knowledge: z.number(),
         }),
-      })
-      .parse(result);
+      }),
+    });
 
-    syncDetails.checkpoint = String(parsedResult.data.server_knowledge);
-
-    return parsedResult.data.transactions;
+    syncDetails.checkpoint = String(result.data.server_knowledge);
+    return result.data.transactions;
   }
 
   async getAccounts(token: OauthToken, syncDetails?: SyncDetails) {
-    const result = await this.request({
-      method: "GET",
-      path: "/budgets/default/accounts",
-      token,
-      syncDetails,
-    });
+    const queryString =
+      syncDetails && syncDetails.checkpoint
+        ? { last_knowledge_of_server: syncDetails.checkpoint }
+        : {};
 
-    const parsed = z
-      .object({
+    const result = await this.client.get({
+      path: "/budgets/default/accounts",
+      ttl: 1000 * 60 * 5,
+      headers: {
+        Authorization: `Bearer ${token.use()}`,
+      },
+      queryString,
+      responseSchema: z.object({
         data: z.object({
           accounts: z.array(
-            z.object({
-              id: z.string(),
-              name: z.string(),
-              type: z.string(),
-              closed: z.boolean(),
-              note: z.union([z.string(), z.null()]),
-              deleted: z.boolean(),
-              balance: z.number(),
-              cleared_balance: z.number(),
-              uncleared_balance: z.number(),
-            }),
+            z
+              .object({
+                id: z.string(),
+                name: z.string(),
+                type: z.string(),
+                closed: z.boolean(),
+                note: z.union([z.string(), z.null()]),
+                deleted: z.boolean(),
+                balance: z.number(),
+                cleared_balance: z.number(),
+                uncleared_balance: z.number(),
+              })
+              .transform((account) => {
+                return Account.reconstitute({
+                  ...account,
+                  userId: token.userId,
+                  clearedBalance: account.cleared_balance,
+                  unclearedBalance: account.uncleared_balance,
+                });
+              }),
           ),
         }),
-      })
-      .parse(result);
-
-    return parsed.data.accounts.map((account) =>
-      Account.reconstitute({
-        ...account,
-        userId: token.userId,
-        clearedBalance: account.cleared_balance,
-        unclearedBalance: account.uncleared_balance,
       }),
-    );
+    });
+
+    return result.data.accounts;
   }
 }

@@ -6,14 +6,11 @@ import type { IInternalTypes } from "./i-internal-types.ts";
 
 const LOG_CONTEXT = { context: "bootstrap-module" };
 
-export const bootstrapModule = new TypedContainerModule<
-  BootstrapTypes & IInternalTypes
->((load) => {
+export const bootstrapModule = new TypedContainerModule<BootstrapTypes & IInternalTypes>((load) => {
   const logger = getWinstonLogger();
   logger.info(`Starting application`, LOG_CONTEXT);
-  load
-    .bind("ConfigFile")
-    .toConstantValue("ynab-plus.config.websocket-server.json");
+
+  load.bind("ConfigFile").toConstantValue("ynab-plus.config.websocket-server.json");
 
   logger.info(`Initialising bootstrap module`, LOG_CONTEXT);
 
