@@ -171,9 +171,6 @@ export class GocardlessClient
         refresh: token.refreshToken,
       },
       path: `token/refresh/`,
-      headers: {
-        Authorization: `Bearer ${token.use()}`,
-      },
       responseSchema: z.object({
         access: z.string(),
         access_expires: z.number(),

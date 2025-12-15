@@ -2,19 +2,14 @@ import { inject, AbstractApplicationService } from "@core";
 
 import {
   type IHandleContext,
-  type IOauthTokenRepository,
   type IRepository,
   type ITransactionFetcher,
   type ITransactionRepository,
 } from "@ports";
+import { TokenWasNotFoundError, type OauthTokenManager } from "@services/oauth";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
-import {
-  SyncDetails,
-  type IRole,
-  type Permission,
-  type User,
-} from "@ynab-plus/domain";
+import { SyncDetails, type IRole, type Permission, type User } from "@ynab-plus/domain";
 import { injectable } from "inversify";
 
 export const LOG_CONTEXT = { context: "sync-account-service" };
@@ -27,8 +22,8 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     @inject("SyncDetailsRepository")
     private syncDetailsRepo: IRepository<SyncDetails>,
 
-    @inject("OauthTokenRepository")
-    private oauthTokenRepository: IOauthTokenRepository,
+    @inject("OauthManager")
+    private tokenManager: OauthTokenManager,
 
     @inject("TransactionFetcher")
     private transactionFetcher: ITransactionFetcher,
@@ -42,11 +37,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     super(logger);
   }
 
-  public override requiredPermissions: Permission[] = [
-    "system",
-    "user",
-    "admin",
-  ];
+  public override requiredPermissions: Permission[] = ["system", "user", "admin"];
 
   protected override async handle<TRole extends IRole = User>({
     eventBus,
@@ -59,19 +50,9 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     eventBus.emit("AccountSyncStarted", { accountId: id });
     try {
       this.logger.silly(`Starting get accounts service`, LOG_CONTEXT);
-      const tokenPromise = this.oauthTokenRepository.get(
-        this.currentUser.id,
-        "ynab",
-      );
+      await using token = await this.tokenManager.getToken(this.currentUser.id, "ynab");
 
-      const syncDetailsPromise = this.syncDetailsRepo.get(
-        `ynab-account-sync-${id}`,
-      );
-
-      const [token, syncDetails] = await Promise.all([
-        tokenPromise,
-        syncDetailsPromise,
-      ]);
+      const syncDetails = await this.syncDetailsRepo.get(`ynab-account-sync-${id}`);
 
       const theSyncDetails =
         syncDetails ??
@@ -80,13 +61,6 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
           id: `ynab-account-sync-${id}`,
         });
 
-      if (!token) {
-        return {
-          success: false,
-          reason: `Token for ynab could not be found`,
-        } as const;
-      }
-
       this.logger.silly(`Fetching transactions`, LOG_CONTEXT);
 
       const transactions = await this.transactionFetcher.getAccountTransactions(
@@ -94,15 +68,20 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
         id,
         theSyncDetails,
       );
-      this.logger.silly(
-        `Fetched ${String(transactions.length)} transactions!`,
-        LOG_CONTEXT,
-      );
+      this.logger.silly(`Fetched ${String(transactions.length)} transactions!`, LOG_CONTEXT);
 
       await this.transactionRepository.saveTransactions(transactions);
 
       await this.syncDetailsRepo.save(theSyncDetails);
       return { success: true } as const;
+    } catch (error) {
+      if (error instanceof TokenWasNotFoundError) {
+        return {
+          success: false,
+          reason: `Token for ynab could not be found`,
+        } as const;
+      }
+      throw error;
     } finally {
       eventBus.emit("AccountSyncFinished", { accountId: id });
     }

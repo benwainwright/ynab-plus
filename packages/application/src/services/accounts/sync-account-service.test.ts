@@ -1,35 +1,19 @@
 import { mock } from "vitest-mock-extended";
 import { SyncAccountService } from "./sync-account-service.ts";
-import {
-  type ITransactionFetcher,
-  type IOauthTokenRepository,
-  type IRepository,
-  type ITransactionRepository,
-} from "@ports";
-import {
-  OauthToken,
-  SyncDetails,
-  SystemContext,
-  Transaction,
-  User,
-} from "@ynab-plus/domain";
+import { type ITransactionFetcher, type IRepository, type ITransactionRepository } from "@ports";
+import { OauthToken, SyncDetails, SystemContext, Transaction, User } from "@ynab-plus/domain";
 import { createMockServiceContext } from "@test-helpers";
 import { when } from "vitest-when";
+import { TokenWasNotFoundError, type OauthTokenManager } from "@services/oauth";
 
 describe("sync account service", () => {
   it("returns false if there is no token", async () => {
     const syncDetailsRepo = mock<IRepository<SyncDetails>>();
-    const tokenRepo = mock<IOauthTokenRepository>();
+    const tokenRepo = mock<OauthTokenManager>();
     const fetcher = mock<ITransactionFetcher>();
     const txRepo = mock<ITransactionRepository>();
 
-    const service = new SyncAccountService(
-      syncDetailsRepo,
-      tokenRepo,
-      fetcher,
-      txRepo,
-      mock(),
-    );
+    const service = new SyncAccountService(syncDetailsRepo, tokenRepo, fetcher, txRepo, mock());
 
     const user = User.reconstitute({
       email: "bwainwright28@gmail.com",
@@ -54,11 +38,11 @@ describe("sync account service", () => {
       lastSync: new Date("2025-12-10T20:39:37.823Z"),
     });
 
-    when(syncDetailsRepo.get)
-      .calledWith(`ynab-account-sync-the-id`)
-      .thenResolve(newDetails);
+    when(syncDetailsRepo.get).calledWith(`ynab-account-sync-the-id`).thenResolve(newDetails);
 
-    when(tokenRepo.get).calledWith(`ben`, `ynab`).thenResolve(undefined);
+    when(tokenRepo.getToken)
+      .calledWith(`ben`, `ynab`)
+      .thenReject(new TokenWasNotFoundError(`Whoops!`));
 
     const result = await service.doHandle(context);
     expect(result.success).toEqual(false);
@@ -66,17 +50,11 @@ describe("sync account service", () => {
 
   it("gets the sync details and token from repos, passes them to the fetcher, gets back transactions and saves them in the tx repo, then saves the sync details", async () => {
     const syncDetailsRepo = mock<IRepository<SyncDetails>>();
-    const tokenRepo = mock<IOauthTokenRepository>();
+    const tokenManager = mock<OauthTokenManager>();
     const fetcher = mock<ITransactionFetcher>();
     const txRepo = mock<ITransactionRepository>();
 
-    const service = new SyncAccountService(
-      syncDetailsRepo,
-      tokenRepo,
-      fetcher,
-      txRepo,
-      mock(),
-    );
+    const service = new SyncAccountService(syncDetailsRepo, tokenManager, fetcher, txRepo, mock());
 
     const user = User.reconstitute({
       email: "bwainwright28@gmail.com",
@@ -101,23 +79,15 @@ describe("sync account service", () => {
       lastSync: new Date("2025-12-10T20:39:37.823Z"),
     });
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      provider: "ynab",
-      expiry: new Date("2025-12-11T20:39:37.823Z"),
-      token: "foo",
-      userId: "ben",
-      refreshToken: "bar",
-      lastUse: new Date("2025-12-10T20:39:37.823Z"),
-      refreshed: new Date("2025-07-10T20:39:37.823Z"),
-      created: new Date("2025-05-10T20:39:37.823Z"),
-    });
+    const mockToken = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >();
 
-    when(syncDetailsRepo.get)
-      .calledWith(`ynab-account-sync-the-id`)
-      .thenResolve(newDetails);
+    when(syncDetailsRepo.get).calledWith(`ynab-account-sync-the-id`).thenResolve(newDetails);
 
-    when(tokenRepo.get).calledWith(`ben`, `ynab`).thenResolve(token);
+    when(tokenManager.getToken).calledWith(`ben`, `ynab`).thenResolve(mockToken);
 
     const dummyTransactions = [
       Transaction.reconstitute({
@@ -178,7 +148,7 @@ describe("sync account service", () => {
     ];
 
     when(fetcher.getAccountTransactions)
-      .calledWith(token, "the-id", newDetails)
+      .calledWith(mockToken, "the-id", newDetails)
       .thenResolve(dummyTransactions);
 
     const result = await service.doHandle(context);

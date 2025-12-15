@@ -1,8 +1,4 @@
-import {
-  type IHandleContext,
-  type IOauthCheckerFactory,
-  type IOauthTokenRepository,
-} from "@ports";
+import { type IHandleContext, type IOauthCheckerFactory } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission } from "@ynab-plus/domain";
 
@@ -12,12 +8,14 @@ export const LOG_CONTEXT = {
 
 import { inject, AbstractApplicationService } from "@core";
 import { injectable } from "inversify";
+import type { OauthTokenManager } from "./oauth-token-manager.ts";
+import { TokenWasNotFoundError } from "./no-token-found-error.ts";
 
 @injectable()
 export class CheckOauthIntegrationStatusService extends AbstractApplicationService<"CheckOauthIntegrationStatusCommand"> {
   public constructor(
-    @inject("OauthTokenRepository")
-    private tokenRepository: IOauthTokenRepository,
+    @inject("OauthManager")
+    private tokenManager: OauthTokenManager,
 
     @inject("OauthCheckerFactory")
     private oauthClientFactory: IOauthCheckerFactory,
@@ -30,11 +28,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
 
   public override readonly commandName = "CheckOauthIntegrationStatusCommand";
 
-  public override requiredPermissions: Permission[] = [
-    "user",
-    "admin",
-    "system",
-  ];
+  public override requiredPermissions: Permission[] = ["user", "admin", "system"];
 
   protected override async handle<TRole extends IRole>({
     command,
@@ -53,30 +47,25 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
       data: { provider },
     } = command;
 
-    const token = await this.tokenRepository.get(this.currentUser.id, provider);
-
     const oauthClient = this.oauthClientFactory(provider);
 
-    if (!token) {
-      this.logger.debug(`A token was not found in the repository`, LOG_CONTEXT);
+    try {
+      await using token = await this.tokenManager.getToken(this.currentUser.id, provider);
+
       return {
-        status: "not_connected",
-        redirectUrl: await oauthClient.generateRedirectUrl(),
+        status: "connected",
+        refreshed: token.refreshed,
+        expiry: token.expiry,
+        created: token.created,
       };
+    } catch (error: unknown) {
+      if (error instanceof TokenWasNotFoundError) {
+        return {
+          redirectUrl: await oauthClient.generateRedirectUrl(),
+          status: "not_connected",
+        };
+      }
+      throw error;
     }
-    this.logger.debug(`A token was found in the repository`, LOG_CONTEXT);
-
-    if (token.expiry < new Date()) {
-      this.logger.debug(`The token is out of date. Refreshing!`, LOG_CONTEXT);
-      const newToken = await oauthClient.refreshToken(token);
-      await this.tokenRepository.save(newToken);
-    }
-
-    return {
-      status: "connected",
-      refreshed: token.refreshed,
-      expiry: token.expiry,
-      created: token.created,
-    };
   }
 }

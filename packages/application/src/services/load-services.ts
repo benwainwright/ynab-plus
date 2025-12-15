@@ -22,6 +22,7 @@ import type { IApplicationDependencies, IInternalTypes } from "@ports/groups";
 import { CompareBalanceService } from "./accounts/compare-balance-service.ts";
 import { ListRequisitionAccountsService } from "./open-banking/list-requisition-accounts-service.ts";
 import { OpenBankingTokenManager } from "./open-banking/open-banking-token-manager.ts";
+import { OauthTokenManager } from "@services/oauth";
 
 export const loadServices = (
   load: TypedContainerModuleLoadOptions<IApplicationDependencies & IInternalTypes>,
@@ -38,6 +39,7 @@ export const loadServices = (
 
   load.bind("Service").to(CheckBankConnectionService);
   load.bind("OpenBankingTokenManager").to(OpenBankingTokenManager);
+  load.bind("OauthManager").to(OauthTokenManager);
   load.bind("Service").to(GetInstitutionAuthorizationPageLinkService);
 
   load.bind("Service").to(GetCurrentUserService);

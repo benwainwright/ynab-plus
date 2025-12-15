@@ -1,12 +1,11 @@
 import { inject, AbstractApplicationService } from "@core";
-import { AppError } from "@errors";
 import {
   type IAccountRepository,
   type IAccountsFetcher,
   type IHandleContext,
-  type IOauthTokenRepository,
   type ITaskScheduler,
 } from "@ports";
+import type { OauthTokenManager } from "@services/oauth";
 import { type ILogger } from "@ynab-plus/bootstrap";
 
 import { RegularTask, type IRole } from "@ynab-plus/domain";
@@ -19,8 +18,8 @@ const LOG_CONTEXT = { context: "download-accounts-service" };
 @injectable()
 export class SyncAccountsService extends AbstractApplicationService<"SyncAccountsCommand"> {
   public constructor(
-    @inject("OauthTokenRepository")
-    private tokenRepository: IOauthTokenRepository,
+    @inject("OauthManager")
+    private tokenManager: OauthTokenManager,
 
     @inject("AccountsFetcher")
     private accountsFetcher: IAccountsFetcher,
@@ -39,10 +38,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
 
   public override readonly commandName = "SyncAccountsCommand";
 
-  public override requiredPermissions: ("public" | "user" | "admin")[] = [
-    "admin",
-    "user",
-  ];
+  public override requiredPermissions: ("public" | "user" | "admin")[] = ["admin", "user"];
 
   protected override async handle<TRole extends IRole>({
     eventBus,
@@ -53,17 +49,9 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     this.logger.debug(`Initiating accounts download`, LOG_CONTEXT);
 
     this.logger.debug(`Getting token from repo`, LOG_CONTEXT);
-    const token = await this.tokenRepository.get(this.currentUser.id, "ynab");
+    await using token = await this.tokenManager.getToken(this.currentUser.id, "ynab");
 
-    if (!token) {
-      throw new AppError(`No token found for ynab`);
-    }
-
-    if (
-      token.lastUse &&
-      Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW &&
-      !force
-    ) {
+    if (token.lastUse && Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
       this.logger.debug(
         `Token was used recently or force wasn't passed. Skipping sync`,
         LOG_CONTEXT,
@@ -72,9 +60,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     }
 
     this.logger.debug(`Fetching accounts`, LOG_CONTEXT);
-    const storedAccountsPromise = this.accountsRepo.getUserAccounts(
-      this.currentUser.id,
-    );
+    const storedAccountsPromise = this.accountsRepo.getUserAccounts(this.currentUser.id);
     const fetchedAccountsPromise = this.accountsFetcher.getAccounts(token);
 
     const [storedAccounts, fetchedAccounts] = await Promise.all([
@@ -84,9 +70,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
 
     await Promise.all(
       fetchedAccounts.map(async (theFetchedAccount) => {
-        const foundStored = storedAccounts.find(
-          (account) => account.id === theFetchedAccount.id,
-        );
+        const foundStored = storedAccounts.find((account) => account.id === theFetchedAccount.id);
 
         if (!foundStored) {
           const downloadTask = RegularTask.create({
@@ -112,7 +96,6 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
 
     this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);
     await this.accountsRepo.saveAccounts(fetchedAccounts);
-    await this.tokenRepository.save(token);
     eventBus.emit("AccountsSynced", fetchedAccounts);
 
     return { synced: true };

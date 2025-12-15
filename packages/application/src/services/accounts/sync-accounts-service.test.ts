@@ -1,17 +1,13 @@
 import { AppError } from "@errors";
 import { expect } from "vitest";
-import {
-  type ITaskScheduler,
-  type IAccountRepository,
-  type IAccountsFetcher,
-  type IOauthTokenRepository,
-} from "@ports";
+import { type ITaskScheduler, type IAccountRepository, type IAccountsFetcher } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { Account, OauthToken, RegularTask, SystemContext, User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
 import { when } from "vitest-when";
 
 import { SyncAccountsService } from "./sync-accounts-service.ts";
+import type { OauthTokenManager } from "@services/oauth";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -46,21 +42,17 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({
       lastUse,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
     });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenRepo = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(mockTokenRepo.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -131,21 +123,17 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({
       lastUse,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
     });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenRepo = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(mockTokenRepo.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -299,21 +287,15 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
-      lastUse,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
-    });
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({ lastUse });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenManager = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(mockTokenManager.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -351,7 +333,7 @@ describe("download-accounts service", () => {
     when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
-      mockTokenRepo,
+      mockTokenManager,
       mockFetcher,
       mockAccountsRepo,
       mock(),
@@ -378,21 +360,15 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
-      lastUse,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
-    });
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({ lastUse });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenRepo = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(mockTokenRepo.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -429,21 +405,15 @@ describe("download-accounts service", () => {
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
-      lastUse,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
-    });
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({ lastUse });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const oauthTokenManager = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(oauthTokenManager.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -481,7 +451,7 @@ describe("download-accounts service", () => {
     when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
-      mockTokenRepo,
+      oauthTokenManager,
       mockFetcher,
       mockAccountsRepo,
       mock(),
@@ -496,7 +466,6 @@ describe("download-accounts service", () => {
 
     expect(mockAccountsRepo.saveAccounts).toHaveBeenCalledWith(accounts);
     expect(result.synced).toEqual(true);
-    expect(mockTokenRepo.save).toHaveBeenCalledWith(token);
   });
 
   it("downloads accounts from the fetcher and stores them in the repo using the current users ynab token if its not been used and force is off", async () => {
@@ -509,21 +478,15 @@ describe("download-accounts service", () => {
       permissions: ["admin"],
     });
 
-    const token = OauthToken.reconstitute({
-      refreshExpiry: undefined,
-      expiry: new Date(),
-      created: new Date(),
-      refreshed: new Date(),
-      lastUse: undefined,
-      token: "token",
-      refreshToken: "refresh",
-      provider: "ynab",
-      userId: "ben",
-    });
+    const token = mock<
+      OauthToken & {
+        [Symbol.asyncDispose]: () => Promise<void>;
+      }
+    >({ lastUse: undefined });
 
-    const mockTokenRepo = mock<IOauthTokenRepository>();
+    const mockTokenManager = mock<OauthTokenManager>();
 
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(token);
+    when(mockTokenManager.getToken).calledWith("ben", "ynab").thenResolve(token);
 
     const mockFetcher = mock<IAccountsFetcher>();
 
@@ -561,7 +524,7 @@ describe("download-accounts service", () => {
     when(mockAccountsRepo.getUserAccounts).calledWith("ben").thenResolve(accounts);
 
     const service = new SyncAccountsService(
-      mockTokenRepo,
+      mockTokenManager,
       mockFetcher,
       mockAccountsRepo,
       mock(),
@@ -578,36 +541,6 @@ describe("download-accounts service", () => {
 
     expect(mockAccountsRepo.saveAccounts).toHaveBeenCalledWith(accounts);
     expect(result.synced).toEqual(true);
-    expect(mockTokenRepo.save).toHaveBeenCalledWith(token);
     expect(eventBus.emit).toHaveBeenCalledWith("AccountsSynced", accounts);
-  });
-
-  it("throws an error if there is no token", async () => {
-    const user = User.reconstitute({
-      id: "ben",
-      email: "a@b.c",
-      passwordHash: "foo",
-      permissions: ["admin"],
-    });
-
-    const mockTokenRepo = mock<IOauthTokenRepository>();
-
-    when(mockTokenRepo.get).calledWith("ben", "ynab").thenResolve(undefined);
-
-    const mockFetcher = mock<IAccountsFetcher>();
-
-    const mockAccountsRepo = mock<IAccountRepository>();
-
-    const service = new SyncAccountsService(
-      mockTokenRepo,
-      mockFetcher,
-      mockAccountsRepo,
-      mock(),
-      mock(),
-    );
-
-    const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
-
-    await expect(service.doHandle(context)).rejects.toThrow(AppError);
   });
 });
