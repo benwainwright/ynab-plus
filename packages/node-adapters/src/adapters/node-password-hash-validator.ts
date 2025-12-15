@@ -1,5 +1,5 @@
 import type { IStringHasher, IPasswordVerifier } from "@ynab-plus/app";
-import bcyrpt from "bcrypt";
+import bcyrpt from "bcryptjs";
 
 export class NodePasswordHashValidator implements IStringHasher, IPasswordVerifier {
   async hash(password: string): Promise<string> {
