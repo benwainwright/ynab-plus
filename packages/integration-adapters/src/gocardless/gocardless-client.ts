@@ -67,7 +67,7 @@ export class GocardlessClient
     return await Promise.all(
       ids.map(async (id) => {
         return await this.client.get({
-          ttl: 1000 * 60 * 60,
+          ttl: 1000 * 60 * 60 * 6,
           path: `accounts/${id}/details/`,
           headers: {
             Authorization: `Bearer ${token.use()}`,

@@ -8,16 +8,10 @@ export const useAccounts = () => {
   const [syncing, setSyncing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [accounts, setAccounts] = useState<IAccount[]>([]);
+  const [dirty, setDirty] = useState(true);
 
   useEvent("AccountsSyncStarted", () => {
     setSyncing(true);
-  });
-
-  useEvent("AccountsSyncFinished", () => {
-    startTransition(async () => {
-      setAccounts(await command("ListAccountsCommand", undefined));
-      setSyncing(false);
-    });
   });
 
   const triggerSync = async () => {
@@ -28,10 +22,17 @@ export const useAccounts = () => {
     void (async () => {
       await command("SyncAccountsCommand", { force: false });
     })();
-  }, []);
 
-  useEvent("AccountsSynced", (data) => {
-    setAccounts(data);
+    if (dirty) {
+      startTransition(async () => {
+        setAccounts(await command("ListAccountsCommand", undefined));
+        setDirty(false);
+      });
+    }
+  }, [dirty]);
+
+  useEvent("AccountsSyncFinished", () => {
+    setSyncing(false);
   });
 
   return { isPending, accounts, sync: triggerSync, syncing };
