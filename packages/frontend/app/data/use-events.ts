@@ -1,4 +1,4 @@
-import type { IListener } from "@ynab-plus/app";
+import type { AllEvents, IListener } from "@ynab-plus/app";
 import { useEffect, useState } from "react";
 
 import { SocketEventListener } from "./socket-event-listener.ts";
@@ -9,8 +9,7 @@ export const useEvents =
     ? (callback: IListener) => {
         const socket = useSocket();
 
-        const [listener, setSocketEventListener] =
-          useState<SocketEventListener>();
+        const [listener, setSocketEventListener] = useState<SocketEventListener>();
 
         useEffect(() => {
           if (socket) {

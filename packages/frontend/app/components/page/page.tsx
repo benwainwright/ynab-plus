@@ -4,7 +4,7 @@ import { Navigate } from "react-router";
 
 import { canAccess } from "@utils";
 import { routesList } from "@config";
-import { Flex, Title } from "@mantine/core";
+import { Box, Flex, Title } from "@mantine/core";
 
 interface PageProps {
   routeName: keyof typeof routesList;
@@ -12,11 +12,7 @@ interface PageProps {
   headerActions?: ReactNode;
 }
 
-export const Page = ({
-  children,
-  routeName,
-  headerActions,
-}: PageProps): ReactNode => {
+export const Page = ({ children, routeName, headerActions }: PageProps): ReactNode => {
   const { currentUser, initialLoadComplete } = useContext(CurrentUserContext);
   const routeConfig = routesList[routeName];
   if (!routeConfig) {
@@ -31,22 +27,18 @@ export const Page = ({
       routeTags: routeConfig.permissionsRequired,
     })
   ) {
-    return initialLoadComplete ? (
-      <Navigate to={routeConfig.authFailRedirect} />
-    ) : (
-      loading
-    );
+    return initialLoadComplete ? <Navigate to={routeConfig.authFailRedirect} /> : loading;
   }
 
   return initialLoadComplete ? (
     <>
-      <Title order={2} mb="lg">
+      <Title order={2} mb="xl">
         <Flex gap="1rem" align="center">
           {capitalisedHeader}
           {headerActions}
         </Flex>
       </Title>
-      {children}
+      <Box mt="xl">{children}</Box>
     </>
   ) : (
     loading

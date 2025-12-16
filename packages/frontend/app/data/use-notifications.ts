@@ -4,6 +4,13 @@ import { useEvents } from "./use-events.ts";
 export const useNotifications = () => {
   useEvents((event) => {
     switch (event.key) {
+      case "HttpError":
+        showNotification({
+          type: "error",
+          message: event.data.body,
+        });
+        break;
+
       case "ApplicationError":
         showNotification({
           type: "error",

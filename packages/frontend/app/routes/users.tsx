@@ -5,10 +5,10 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 
 export const Users = (): ReactNode => {
-  const { users, isPending } = useUsers(0, 30);
+  const { users } = useUsers(0, 30);
   return (
     <Page routeName="users">
-      <Loader isPending={isPending} data={users}>
+      <Loader data={users}>
         {(data) => (
           <Table>
             <Table.Thead>

@@ -9,16 +9,22 @@ export const LinkAccountButton = (): ReactNode => {
     useState<Commands["ListRequisitionAccountsCommand"]["response"]>();
 
   const combobox = useCombobox({
-    onDropdownClose: () =>{  combobox.resetSelectedOption(); },
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+    },
   });
 
   const [value, setValue] = useState<string | null>(null);
 
   useEffect(() => {
     void (async () => {
-      if (isLinking) {
-        const result = await command("ListRequisitionAccountsCommand", undefined);
-        setRequisitionAccounts(result);
+      try {
+        if (isLinking) {
+          const result = await command("ListRequisitionAccountsCommand", undefined);
+          setRequisitionAccounts(result);
+        }
+      } finally {
+        setIsLinking(false);
       }
     })();
   }, [isLinking]);
@@ -45,7 +51,9 @@ export const LinkAccountButton = (): ReactNode => {
             pointer
             rightSection={<Combobox.Chevron />}
             rightSectionPointerEvents="none"
-            onClick={() =>{  combobox.toggleDropdown(); }}
+            onClick={() => {
+              combobox.toggleDropdown();
+            }}
           >
             {value || <Input.Placeholder>Pick value</Input.Placeholder>}
           </InputBase>
@@ -58,7 +66,13 @@ export const LinkAccountButton = (): ReactNode => {
   }
 
   return (
-    <Button variant="light" size="xs" onClick={() =>{  setIsLinking(true); }}>
+    <Button
+      variant="light"
+      size="xs"
+      onClick={() => {
+        setIsLinking(true);
+      }}
+    >
       Link Account
     </Button>
   );

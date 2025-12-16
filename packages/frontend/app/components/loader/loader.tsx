@@ -1,17 +1,12 @@
 import type { ReactNode } from "react";
 
 interface LoaderProps<TData> {
-  isPending: boolean;
   data: TData | undefined;
   children: (data: TData) => ReactNode;
 }
 
-export const Loader = <TData,>({
-  isPending,
-  data,
-  children,
-}: LoaderProps<TData>): ReactNode => {
-  if (isPending || data === undefined) {
+export const Loader = <TData,>({ data, children }: LoaderProps<TData>): ReactNode => {
+  if (data === undefined) {
     return <div aria-busy />;
   }
 

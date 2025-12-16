@@ -12,6 +12,10 @@ export interface CoreEvents {
     handler: string;
     requiredPermissions: Permission[];
   };
+  HttpError: {
+    statusCode: number;
+    body: string;
+  };
   ApplicationError: {
     stack: {
       file: string;

@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import { type ReactNode } from "react";
 
 export const Transactions = (): ReactNode => {
-  const { isPending, accounts, sync, syncing } = useAccounts();
+  const { accounts, sync, syncing } = useAccounts();
   return (
     <Page
       routeName="accounts"
@@ -15,7 +15,7 @@ export const Transactions = (): ReactNode => {
         </Button>
       }
     >
-      <Loader isPending={isPending} data={accounts}>
+      <Loader data={accounts}>
         {(data) => (
           <Table>
             <Table.Thead>
