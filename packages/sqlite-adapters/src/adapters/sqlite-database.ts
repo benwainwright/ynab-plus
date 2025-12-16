@@ -1,5 +1,5 @@
 import { inject } from "@core";
-import type { IDomainEventBuffer, IUnitOfWork } from "@ynab-plus/app";
+import type { IUnitOfWork } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 
 import BetterSqlite3 from "better-sqlite3";
@@ -18,9 +18,6 @@ export class SqliteDatabase implements IUnitOfWork {
   public constructor(
     @inject("DatabaseFilename")
     private readonly databaseName: ConfigValue<string>,
-
-    @inject("DomainEventBuffer")
-    private readonly domainEventStore: IDomainEventBuffer,
   ) {}
 
   public async begin(): Promise<void> {
