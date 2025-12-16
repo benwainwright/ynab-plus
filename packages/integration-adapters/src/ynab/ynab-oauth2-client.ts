@@ -10,10 +10,7 @@ import z from "zod";
 const tokenCache = new Map<string, OauthToken>();
 
 export class YnabOauth2Client
-  implements
-    IOauthRedirectUrlGenerator,
-    IOauthNewTokenRequester,
-    IOAuthTokenRefresher
+  implements IOauthRedirectUrlGenerator, IOauthNewTokenRequester, IOAuthTokenRefresher
 {
   public constructor(
     private clientId: ConfigValue<string>,
@@ -40,7 +37,9 @@ export class YnabOauth2Client
     });
 
     if (!response.ok) {
-      throw new Error(`Status code ${String(response.status)} was returned`);
+      throw new Error(
+        `Status code ${String(response.status)} was returned with message ${String(response.statusText)} - ${String(await response.text())}`,
+      );
     }
 
     const json = this.parseTokenResponse(await response.json());

@@ -17,6 +17,10 @@ export const applicationServicesModule = typedApplicationModule<
   const adminEmail = bootstrapper.configValue("adminEmail", z.string());
   const adminPassword = bootstrapper.configValue("adminPassword", z.string());
 
+  container.bind("DomainEventBuffer").to(DomainEventStore).inRequestScope();
+
+  container.bind("DomainEventEmitter").toService("DomainEventBuffer");
+
   bootstrapper.addInitStep(async () => {
     const userRepo = await container.getAsync("UserRepository");
     const passwordHasher = await container.getAsync("PasswordHasher");
@@ -29,8 +33,6 @@ export const applicationServicesModule = typedApplicationModule<
     await userRepo.save(bootstrapAdmin);
   });
 
-  load.bind("DomainEventBuffer").to(DomainEventStore).inSingletonScope();
-  load.bind("DomainEventEmitter").toService("DomainEventBuffer");
   load.bind("RootServiceBus").to(ServiceBus).inRequestScope();
   load.bind("ServiceBus").to(TransactionalServiceBus).inRequestScope();
 
@@ -50,6 +52,7 @@ export const applicationServicesModule = typedApplicationModule<
       );
 
       requestContainer.bind("CurrentUserSetter").to(SessionStorage).inRequestScope();
+
       requestContainer.bind("SessionStore").to(SessionStorage).inRequestScope();
       requestContainer.bind("SessionIdRequester").toConstantValue(sessionIdRequester);
       const hasher = await container.getAsync("PasswordHasher");
