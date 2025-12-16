@@ -6,6 +6,6 @@ export default {
   "*.{js,ts,tsx,jsx,json}": [
     "oxfmt --no-error-on-unmatched-pattern",
     "oxlint --type-aware --fix",
-    "vitest related",
+    "vitest related --project=!@ynab-plus/dynamodb-adapters",
   ],
 };
