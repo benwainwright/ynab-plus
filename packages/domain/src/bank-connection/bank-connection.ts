@@ -58,6 +58,13 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
     return this._requisitionId;
   }
 
+  public delete() {
+    this.raiseEvent({
+      event: "BankConnectionDeleted",
+      data: this,
+    });
+  }
+
   public static reconstite(config: IBankConnection) {
     return new BankConnection(config);
   }

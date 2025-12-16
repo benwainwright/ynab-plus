@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { command } from "./command.ts";
 import type { BankConnection } from "@ynab-plus/domain";
+import { useEvent } from "./use-event.ts";
 
 export type BankConnectionConnected = {
   status: "connected";
@@ -27,15 +28,23 @@ export type BankConnectionStatus =
   | BankConnectionLoading;
 
 export const useBankIntegrationStatus = () => {
+  const [dirty, setDirty] = useState(true);
+
   const [status, setStatus] = useState<BankConnectionStatus>({
     status: "loading",
   });
 
+  useEvent("BankConnectionDeleted", () => {
+    setDirty(true);
+  });
+
   useEffect(() => {
-    void (async () => {
-      setStatus(await command("CheckBankConnectionCommand", undefined));
-    })();
-  }, []);
+    if (dirty) {
+      void (async () => {
+        setStatus(await command("CheckBankConnectionCommand", undefined));
+      })();
+    }
+  }, [dirty]);
 
   return { status };
 };

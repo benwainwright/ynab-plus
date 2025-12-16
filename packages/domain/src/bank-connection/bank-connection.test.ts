@@ -9,6 +9,27 @@ afterEach(() => {
 });
 
 describe("the bank connection", () => {
+  describe("delete", () => {
+    it("emits a delete event", () => {
+      const connection = BankConnection.reconstite({
+        bankName: "foo",
+        id: "foo",
+        userId: "ben",
+        logo: "bar",
+        requisitionId: "baz",
+      });
+
+      connection.delete();
+
+      expect(connection.pullEvents()).toEqual([
+        {
+          event: "BankConnectionDeleted",
+          data: connection,
+        },
+      ]);
+    });
+  });
+
   describe("reconstitute", () => {
     it("creates a hydrated bank connection without emitting any events", () => {
       const connection = BankConnection.reconstite({

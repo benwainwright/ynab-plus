@@ -11,6 +11,13 @@ export const useNotifications = () => {
         });
         break;
 
+      case "BankConnectionDeleted":
+        showNotification({
+          type: "success",
+          message: "Bank connection disconnected",
+        });
+        break;
+
       case "LoginSuccess":
         showNotification({
           type: "success",

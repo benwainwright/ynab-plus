@@ -9,6 +9,31 @@ afterEach(() => {
 });
 
 describe("the oauth token", () => {
+  describe("delete", () => {
+    it("emits a delete event", () => {
+      const newToken = OauthToken.reconstitute({
+        refreshExpiry: undefined,
+        provider: "ynab",
+        token: "token",
+        refreshToken: "string",
+        expiry: new Date(),
+        lastUse: undefined,
+        created: new Date(),
+        refreshed: undefined,
+        userId: "user",
+      });
+
+      newToken.delete();
+
+      expect(newToken.pullEvents()).toEqual([
+        {
+          event: "OauthTokenDeleted",
+          data: newToken,
+        },
+      ]);
+    });
+  });
+
   it("emits a domain event on create", () => {
     const today = new Date("2025-11-21T13:18:27.377Z");
     vi.setSystemTime(today);

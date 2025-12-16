@@ -1,4 +1,5 @@
-import { SimpleGrid, Text } from "@mantine/core";
+import { command } from "@data";
+import { Button, Group, SimpleGrid, Text } from "@mantine/core";
 import { DateTime } from "luxon";
 import type { ReactNode } from "react";
 
@@ -26,6 +27,10 @@ interface BankConnectedIntegrationStatusBodyProps {
 export const BankConnectedIntegrationStatusBody = ({
   status,
 }: BankConnectedIntegrationStatusBodyProps): ReactNode => {
+  const disconnect = async () => {
+    await command("DisconnectBankCoonnectionCommand", undefined);
+  };
+
   return (
     <>
       <SimpleGrid cols={2}>
@@ -46,6 +51,21 @@ export const BankConnectedIntegrationStatusBody = ({
           {DateTime.fromJSDate(new Date(status.expires)).toLocaleString(dateFormat)}
         </div>
       </SimpleGrid>
+      <Group justify="flex-end">
+        <Button
+          mt="lg"
+          color="red"
+          size="sm"
+          mr="lg"
+          onClick={() => {
+            disconnect().catch((error: unknown) => {
+              console.log(error);
+            });
+          }}
+        >
+          Disconnect
+        </Button>
+      </Group>
     </>
   );
 };

@@ -5,4 +5,5 @@ export interface BankConnectionEvents {
   BankConnectionRequisitionSaved: { old: BankConnection; new: BankConnection };
   BankAccountIdsSaved: { old: BankConnection; new: BankConnection };
   BankConnectionRefreshed: { old: BankConnection; new: BankConnection };
+  BankConnectionDeleted: BankConnection;
 }

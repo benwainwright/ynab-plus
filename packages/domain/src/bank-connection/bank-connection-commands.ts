@@ -1,6 +1,10 @@
 import type { BankConnection } from "./bank-connection.ts";
 
 export interface BankConnectionCommands {
+  DisconnectBankCoonnectionCommand: {
+    request: undefined;
+    response: void;
+  };
   ListRequisitionAccountsCommand: {
     request: undefined;
     response: {

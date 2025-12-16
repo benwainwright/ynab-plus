@@ -2,10 +2,7 @@ import { DomainModel } from "@core";
 import { oAuthTokenSchema, type IOauthToken } from "./i-outh-token.ts";
 import { TokenExpiredError } from "@errors";
 
-export class OauthToken
-  extends DomainModel<IOauthToken>
-  implements IOauthToken
-{
+export class OauthToken extends DomainModel<IOauthToken> implements IOauthToken {
   public override freezeDry(config?: { secure: boolean }): IOauthToken {
     return {
       provider: this.provider,
@@ -42,9 +39,7 @@ export class OauthToken
     this.created = config.created;
   }
 
-  public static create(
-    config: Omit<IOauthToken, "created" | "lastUse" | "refreshed">,
-  ) {
+  public static create(config: Omit<IOauthToken, "created" | "lastUse" | "refreshed">) {
     const theToken = new OauthToken({
       ...config,
       created: new Date(),
@@ -60,12 +55,11 @@ export class OauthToken
     return new OauthToken(oAuthTokenSchema.parse(config));
   }
 
-  public refresh(
-    newToken: string,
-    newRefreshToken: string,
-    expiry: Date,
-    refreshExpiry?: Date,
-  ) {
+  public delete() {
+    this.raiseEvent({ event: "OauthTokenDeleted", data: this });
+  }
+
+  public refresh(newToken: string, newRefreshToken: string, expiry: Date, refreshExpiry?: Date) {
     const old = OauthToken.reconstitute(this.freezeDry({ secure: true }));
 
     this.token = newToken;
@@ -83,10 +77,7 @@ export class OauthToken
 
   public use(): string {
     if (this.isOutOfDate()) {
-      throw new TokenExpiredError(
-        `Token for provider ${this.provider} has expired`,
-        this.provider,
-      );
+      throw new TokenExpiredError(`Token for provider ${this.provider} has expired`, this.provider);
     }
     const token = this.token;
     this.lastUse = new Date();
