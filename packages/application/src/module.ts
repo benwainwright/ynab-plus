@@ -19,11 +19,11 @@ export const applicationServicesModule = typedApplicationModule<
 
   bootstrapper.addInitStep(async () => {
     const userRepo = await container.getAsync("UserRepository");
-    const passwordHasher = await container.getAsync("StringHasher");
+    const passwordHasher = await container.getAsync("PasswordHasher");
     const bootstrapAdmin = User.reconstitute({
       id: "admin",
       email: await adminEmail.value,
-      passwordHash: await passwordHasher.hash(await adminPassword.value),
+      passwordHash: await passwordHasher.hashPassword(await adminPassword.value),
       permissions: ["user", "admin"],
     });
     await userRepo.save(bootstrapAdmin);
@@ -52,13 +52,13 @@ export const applicationServicesModule = typedApplicationModule<
       requestContainer.bind("CurrentUserSetter").to(SessionStorage).inRequestScope();
       requestContainer.bind("SessionStore").to(SessionStorage).inRequestScope();
       requestContainer.bind("SessionIdRequester").toConstantValue(sessionIdRequester);
-      const hasher = await container.getAsync("StringHasher");
+      const hasher = await container.getAsync("PasswordHasher");
       const logger = await container.getAsync("Logger");
       const sessionId = await sessionIdRequester.getSessionId();
 
       requestContainer.bind("Logger").toConstantValue(
         logger.child({
-          session: hasher.hash(sessionId),
+          session: hasher.hashPassword(sessionId),
         }),
       );
 

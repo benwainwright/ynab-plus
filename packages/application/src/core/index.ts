@@ -1,5 +1,4 @@
 export { AbstractApplicationService } from "./abstract-application-service.ts";
-export type { IInfrastructurePorts } from "./i-infrastructure-ports.ts";
 export { DomainEventStore } from "./domain-event-store.ts";
 export { ServiceBus } from "./service-bus.ts";
 export { SessionStorage } from "./session-storage.ts";

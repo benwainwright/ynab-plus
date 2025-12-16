@@ -1,10 +1,6 @@
 import { inject } from "./typed-inject.ts";
 import { AppError } from "@errors";
-import {
-  type IObjectStorage,
-  type ISessionIdRequester,
-  type ISingleItemStore,
-} from "@ports";
+import { type IObjectStorage, type ISessionIdRequester, type ISingleItemStore } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { User } from "@ynab-plus/domain";
 import { Serialiser } from "@ynab-plus/serialiser";
@@ -15,7 +11,7 @@ export const LOG_CONTEXT = { context: "session-storage" };
 @injectable()
 export class SessionStorage implements ISingleItemStore<User> {
   public constructor(
-    @inject("SessionStoreObjectStore")
+    @inject("ObjectStore")
     private storage: IObjectStorage,
 
     @inject("SessionIdRequester")
@@ -42,11 +38,8 @@ export class SessionStorage implements ISingleItemStore<User> {
     const key = `${sessionId}-session-key`;
 
     this.logger.silly(`Received session key: ${key}`, LOG_CONTEXT);
-    const sessionData = await this.storage.get(key);
-    this.logger.silly(
-      `Received session data: ${JSON.stringify(sessionData)}`,
-      LOG_CONTEXT,
-    );
+    const sessionData = await this.storage.get("sessions", key);
+    this.logger.silly(`Received session data: ${JSON.stringify(sessionData)}`, LOG_CONTEXT);
 
     const serialiser = new Serialiser();
     if (!sessionData) {
@@ -63,14 +56,12 @@ export class SessionStorage implements ISingleItemStore<User> {
   async set(thing: User | undefined): Promise<void> {
     const sessionId = await this.sessionIdRequester.getSessionId();
 
-    this.logger.silly(
-      `Saving session data: ${JSON.stringify(thing)}`,
-      LOG_CONTEXT,
-    );
+    this.logger.silly(`Saving session data: ${JSON.stringify(thing)}`, LOG_CONTEXT);
 
     const serialiser = new Serialiser();
 
     await this.storage.set(
+      "sessions",
       `${sessionId}-session-key`,
       thing ? serialiser.serialise(thing) : undefined,
     );

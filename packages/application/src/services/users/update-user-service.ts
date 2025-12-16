@@ -2,7 +2,7 @@ import {
   type IHandleContext,
   type IMultipleRepository,
   type IRepository,
-  type IStringHasher,
+  type IPasswordHasher,
 } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
@@ -21,8 +21,8 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
     @inject("UserRepository")
     private users: IRepository<User> & IMultipleRepository<User>,
 
-    @inject("StringHasher")
-    private passwordHasher: IStringHasher,
+    @inject("PasswordHasher")
+    private passwordHasher: IPasswordHasher,
 
     @inject("Logger")
     logger: ILogger,
@@ -46,7 +46,9 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
       }
 
       const hash =
-        password === "" ? userToUpdate.passwordHash : await this.passwordHasher.hash(password);
+        password === ""
+          ? userToUpdate.passwordHash
+          : await this.passwordHasher.hashPassword(password);
 
       userToUpdate.update({
         hash,

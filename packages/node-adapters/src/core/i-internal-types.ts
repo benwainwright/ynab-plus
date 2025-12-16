@@ -4,5 +4,5 @@ import type EventEmitter from "node:events";
 export interface IInternalTypes {
   EventBusListener: EventEmitter;
   BusNamespace: string;
-  SessionPath: ConfigValue<string>;
+  StoragePath: ConfigValue<string>;
 }

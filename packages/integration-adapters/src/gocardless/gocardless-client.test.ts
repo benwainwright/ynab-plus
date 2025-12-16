@@ -27,7 +27,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
       const newToken = OauthToken.reconstitute({
@@ -55,7 +56,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
       const newToken = OauthToken.reconstitute({
@@ -88,7 +90,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
 
@@ -127,7 +130,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
 
@@ -150,7 +154,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
 
@@ -183,7 +188,8 @@ describe("the gocardless client", () => {
         { value: Promise.resolve(mockGocardlessData.secretId) },
         { value: Promise.resolve(mockGocardlessData.secretKey) },
         { value: Promise.resolve(mockGocardlessData.mockRedirectUrl) },
-        new Map(),
+        mock(),
+        mock(),
         mock(),
       );
 

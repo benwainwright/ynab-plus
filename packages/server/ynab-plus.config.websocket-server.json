@@ -4,7 +4,7 @@
   "websocketHost": "localhost",
   "developmentMode": false,
   "sqliteFilename": "ynab-plus.sqlite",
-  "sessionPath": ".sessions",
+  "storagePath": ".storage",
   "userTableName": "users",
   "tokenTableName": "tokens",
   "tasksTableName": "tasks",

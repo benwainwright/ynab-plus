@@ -28,9 +28,7 @@ describe("login service", () => {
 
     const passwordVerifier = mock<IPasswordVerifier>();
 
-    when(passwordVerifier.verify)
-      .calledWith(password, "foo-hash")
-      .thenResolve(true);
+    when(passwordVerifier.verifyPassword).calledWith(password, "foo-hash").thenResolve(true);
 
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
@@ -39,12 +37,7 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(
-      userRepo,
-      passwordVerifier,
-      mockUserSetter,
-      mock(),
-    );
+    const service = new LoginService(userRepo, passwordVerifier, mockUserSetter, mock());
 
     const result = await service.doHandle(context);
 
@@ -75,9 +68,7 @@ describe("login service", () => {
     const mockUserSetter = mock<ICurrentUserSetter>();
     const passwordVerifier = mock<IPasswordVerifier>();
 
-    when(passwordVerifier.verify)
-      .calledWith(password, "foo-hash")
-      .thenResolve(false);
+    when(passwordVerifier.verifyPassword).calledWith(password, "foo-hash").thenResolve(false);
 
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
@@ -86,12 +77,7 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(
-      userRepo,
-      passwordVerifier,
-      mockUserSetter,
-      mock(),
-    );
+    const service = new LoginService(userRepo, passwordVerifier, mockUserSetter, mock());
 
     const result = await service.doHandle(context);
 
@@ -119,12 +105,7 @@ describe("login service", () => {
 
     const { eventBus } = context;
 
-    const service = new LoginService(
-      userRepo,
-      passwordVerifier,
-      mockUserSetter,
-      mock(),
-    );
+    const service = new LoginService(userRepo, passwordVerifier, mockUserSetter, mock());
 
     const result = await service.doHandle(context);
 

@@ -1,6 +1,6 @@
 export interface IResponseCache<T> {
-  set(key: string, value: T, ttl?: number): void;
-  get(key: string): T | undefined;
-  delete(key: string): void;
-  clear(): void;
+  set(key: string, value: T, ttl?: number): Promise<void>;
+  get(key: string): Promise<T | undefined>;
+  delete(key: string): Promise<void>;
+  clear(): Promise<void>;
 }

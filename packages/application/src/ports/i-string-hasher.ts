@@ -1,3 +1,3 @@
 export interface IStringHasher {
-  hash(text: string): Promise<string>;
+  md5(text: string): string;
 }

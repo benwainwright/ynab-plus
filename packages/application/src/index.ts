@@ -1,4 +1,4 @@
-export { type IInfrastructurePorts, type AllEvents, inject, multiInject } from "@core";
+export { type AllEvents, inject, multiInject } from "@core";
 
 export { type IApplicationLayer } from "./i-application-layer.ts";
 
@@ -16,6 +16,7 @@ export {
   type IOpenBankingAccountBalanceFetcher,
   type IOpenBankingAccountDetailsFetcher,
   type IAccountRepository,
+  type IStringHasher,
   type IDomainEventBuffer,
   type IOpenBankingTokenRefresher,
   type IEventBus,
@@ -31,7 +32,7 @@ export {
   type IOAuthTokenRefresher,
   type IOauthTokenRepository,
   type IObjectStorage,
-  type IStringHasher,
+  type IPasswordHasher,
   type ITransactionFetcher,
   type IPasswordVerifier,
   type IRepository,

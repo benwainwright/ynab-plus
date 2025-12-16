@@ -1,6 +1,11 @@
 import { EventEmitter } from "node:stream";
 import { type IRuntimePorts } from "@ynab-plus/app";
-import { FlatFileObjectStore, NodePasswordHashValidator, NodeEventBus } from "@adapters";
+import {
+  FlatFileObjectStore,
+  NodePasswordHashValidator,
+  NodeEventBus,
+  NodeStringHasher,
+} from "@adapters";
 
 import { typedApplicationModule } from "@ynab-plus/bootstrap";
 import z from "zod";
@@ -15,10 +20,11 @@ export const nodeAdaptersModule: TypedContainerModule<IRuntimePorts & IInternalT
     load.bind("EventBusListener").toConstantValue(new EventEmitter());
     load.bind("BusNamespace").toConstantValue(`ynab-plus`);
 
-    load.bind("SessionStoreObjectStore").to(FlatFileObjectStore);
-    load.bind("StringHasher").to(NodePasswordHashValidator);
+    load.bind("StringHasher").to(NodeStringHasher);
+    load.bind("ObjectStore").to(FlatFileObjectStore);
+    load.bind("PasswordHasher").to(NodePasswordHashValidator);
     load.bind("PasswordVerifier").to(NodePasswordHashValidator);
     load.bind("EventBus").to(NodeEventBus);
-    load.bind("SessionPath").toConstantValue(bootstrapper.configValue("sessionPath", z.string()));
+    load.bind("StoragePath").toConstantValue(bootstrapper.configValue("storagePath", z.string()));
     logger.debug(`Finished initialising node adapters module`, LOG_CONTEXT);
   });

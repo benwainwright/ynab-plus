@@ -1,5 +1,5 @@
 import { AppError } from "@errors";
-import type { IMultipleRepository, IRepository, IStringHasher } from "@ports";
+import type { IMultipleRepository, IRepository, IPasswordHasher } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
 import { mock } from "vitest-mock-extended";
@@ -26,7 +26,7 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IStringHasher>();
+    const hasher = mock<IPasswordHasher>();
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
@@ -43,7 +43,7 @@ describe("update users service", () => {
 
     await service.doHandle(context);
 
-    expect(hasher.hash).not.toBeCalled();
+    expect(hasher.hashPassword).not.toBeCalled();
   });
   it("should update the existing user", async () => {
     const loggedInUser = User.reconstitute({
@@ -64,9 +64,9 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IStringHasher>();
+    const hasher = mock<IPasswordHasher>();
 
-    when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
+    when(hasher.hashPassword).calledWith("foo").thenResolve("foo-hash");
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
@@ -108,9 +108,9 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IStringHasher>();
+    const hasher = mock<IPasswordHasher>();
 
-    when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
+    when(hasher.hashPassword).calledWith("foo").thenResolve("foo-hash");
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
@@ -161,9 +161,9 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IStringHasher>();
+    const hasher = mock<IPasswordHasher>();
 
-    when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
+    when(hasher.hashPassword).calledWith("foo").thenResolve("foo-hash");
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 
@@ -202,9 +202,9 @@ describe("update users service", () => {
       loggedInUser,
     );
 
-    const hasher = mock<IStringHasher>();
+    const hasher = mock<IPasswordHasher>();
 
-    when(hasher.hash).calledWith("foo").thenResolve("foo-hash");
+    when(hasher.hashPassword).calledWith("foo").thenResolve("foo-hash");
 
     const mockRepo = mock<IRepository<User> & IMultipleRepository<User>>();
 

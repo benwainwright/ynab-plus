@@ -8,6 +8,7 @@ import {
   type IOpenBankingTokenFetcher,
   type IOpenBankingTokenRefresher,
   type IRequesitionAccountFetcher,
+  type IStringHasher,
 } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import { BankConnection, OauthToken } from "@ynab-plus/domain";
@@ -40,6 +41,9 @@ export class GocardlessClient
     @inject("ResponseCache")
     responseCache: IResponseCache<unknown>,
 
+    @inject("StringHasher")
+    stringHasher: IStringHasher,
+
     @inject("Logger")
     logger: ILogger,
   ) {
@@ -48,6 +52,7 @@ export class GocardlessClient
       logger,
       responseCache,
       defaultTtl: 1000 * 60,
+      stringHasher,
       defaultHeaders: {
         accept: "application/json",
         "content-type": "application/json",

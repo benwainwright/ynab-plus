@@ -1,3 +1,3 @@
 export interface IPasswordVerifier {
-  verify(password: string, hash: string): Promise<boolean>;
+  verifyPassword(password: string, hash: string): Promise<boolean>;
 }

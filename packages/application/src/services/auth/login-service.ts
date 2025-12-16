@@ -37,17 +37,12 @@ export class LoginService extends AbstractApplicationService<"LoginCommand"> {
   public override async handle<TRole extends IRole = User>({
     command,
     eventBus,
-  }: IHandleContext<"LoginCommand", TRole>): Promise<
-    Commands["LoginCommand"]["response"]
-  > {
+  }: IHandleContext<"LoginCommand", TRole>): Promise<Commands["LoginCommand"]["response"]> {
     const { username, password } = command.data;
 
     const user = await this.users.get(username);
 
-    if (
-      user &&
-      (await this.passwordVerifier.verify(password, user.passwordHash))
-    ) {
+    if (user && (await this.passwordVerifier.verifyPassword(password, user.passwordHash))) {
       await this.currentUserSetter.set(user);
       eventBus.emit("LoginSuccess", undefined);
       return { success: true, id: username };

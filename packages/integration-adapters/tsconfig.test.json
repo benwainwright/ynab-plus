@@ -8,15 +8,16 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "vitest/globals"],
     "paths": {
+      "@http-client": ["./src/http-client/index.ts"],
       "@ynab": ["./src/ynab/index.ts"],
       "@errors": ["./src/errors/index.ts"],
-      "@test-helpers": ["./src/test-helpers/index.ts"]
-    }
+      "@test-helpers": ["./src/test-helpers/index.ts"],
+    },
   },
   "include": ["src/**/*.test.ts", "src/test-helpers/**/*"],
   "references": [
     {
-      "path": "./tsconfig.lib.json"
-    }
-  ]
+      "path": "./tsconfig.lib.json",
+    },
+  ],
 }

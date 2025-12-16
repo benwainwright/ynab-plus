@@ -1,4 +1,4 @@
-import type { IAccountsFetcher, ITransactionFetcher } from "@ynab-plus/app";
+import type { IAccountsFetcher, IStringHasher, ITransactionFetcher } from "@ynab-plus/app";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { Account, SyncDetails, Transaction, type OauthToken } from "@ynab-plus/domain";
 import { injectable } from "inversify";
@@ -15,12 +15,16 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     @inject("ResponseCache")
     private responseCache: IResponseCache<unknown>,
 
+    @inject("StringHasher")
+    private readonly stringHasher: IStringHasher,
+
     @inject("Logger")
     private logger: ILogger,
   ) {
     this.client = new HttpClient({
       baseUrl: `https://api.ynab.com/v1`,
       logger,
+      stringHasher,
       defaultTtl: 1000 * 20,
       responseCache,
       defaultHeaders: {

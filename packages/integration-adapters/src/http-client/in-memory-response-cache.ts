@@ -6,7 +6,7 @@ import { inject } from "@ynab-plus/app";
 const LOG_CONTEXT = { context: "response-cache" };
 
 @injectable()
-export class ResponseCache<T> implements IResponseCache<T> {
+export class InMemoryResponseCache<T> implements IResponseCache<T> {
   public constructor(
     @inject("Logger")
     private readonly logger: ILogger,
@@ -14,15 +14,18 @@ export class ResponseCache<T> implements IResponseCache<T> {
 
   private data = new Map<string, { data: T; timeout: NodeJS.Timeout | undefined }>();
 
-  public delete(key: string) {
+  // oxlint-disable eslint/require-await
+  public async delete(key: string) {
     this.data.delete(key);
   }
 
-  public clear() {
+  // oxlint-disable eslint/require-await
+  public async clear() {
     this.data.clear();
   }
 
-  public set(key: string, thing: T, ttl?: number) {
+  // oxlint-disable eslint/require-await
+  public async set(key: string, thing: T, ttl?: number) {
     this.logger.silly(`Caching value for key'${key}'`, LOG_CONTEXT);
     const existing = this.data.get(key);
 
@@ -40,7 +43,8 @@ export class ResponseCache<T> implements IResponseCache<T> {
     this.data.set(key, { data: thing, timeout });
   }
 
-  public get(key: string) {
+  // oxlint-disable eslint/require-await
+  public async get(key: string) {
     const result = this.data.get(key);
 
     if (!result) {

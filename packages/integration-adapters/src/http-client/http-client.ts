@@ -2,6 +2,7 @@ import { HttpError } from "@errors";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import type z4 from "zod/v4";
 import type { IResponseCache } from "./i-response-cache.ts";
+import type { IStringHasher } from "@ynab-plus/app";
 
 const LOG_CONTEXT = { context: "http-client" };
 
@@ -21,6 +22,7 @@ interface HttpClientConfig {
   responseCache: IResponseCache<unknown>;
   defaultHeaders?: Record<string, string>;
   defaultTtl?: number;
+  stringHasher: IStringHasher;
 }
 
 export class HttpClient {
@@ -29,6 +31,7 @@ export class HttpClient {
   private readonly cache: IResponseCache<unknown>;
   private readonly defaultHeaders: Record<string, string> | undefined;
   private readonly defaultTtl: number | undefined;
+  private readonly stringHasher: IStringHasher;
 
   public constructor(config: HttpClientConfig) {
     this.baseUrl = config.baseUrl;
@@ -36,6 +39,7 @@ export class HttpClient {
     this.cache = config.responseCache;
     this.defaultHeaders = config.defaultHeaders;
     this.defaultTtl = config.defaultTtl;
+    this.stringHasher = config.stringHasher;
   }
 
   public async get<TResponse extends z4.ZodType>({
@@ -85,9 +89,11 @@ export class HttpClient {
   }
 
   private async doCachedFetch(url: string, init: RequestInit, ttl: number | undefined) {
-    const cacheKey = `${url}-${String(init.method)}-${JSON.stringify(init.body)}`;
+    const cacheKey = this.stringHasher.md5(
+      `${url}-${String(init.method)}-${JSON.stringify(init.body)}`,
+    );
 
-    const cacheResult = this.cache.get(cacheKey);
+    const cacheResult = await this.cache.get(cacheKey);
 
     if (cacheResult !== undefined) {
       return cacheResult;
@@ -109,7 +115,7 @@ export class HttpClient {
     const finalTtl = ttl ?? this.defaultTtl;
 
     if (finalTtl) {
-      this.cache.set(cacheKey, data, finalTtl);
+      await this.cache.set(cacheKey, data, finalTtl);
     }
 
     return data;

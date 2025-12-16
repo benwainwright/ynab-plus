@@ -40,7 +40,7 @@ describe("the getaccountTransactions method", () => {
       }),
     );
 
-    const client = new YnabClient(new Map(), mock());
+    const client = new YnabClient(mock(), mock(), mock());
 
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
@@ -70,7 +70,7 @@ describe("the getaccountTransactions method", () => {
   it("updates syncDetails", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(new Map(), logger);
+    const client = new YnabClient(mock(), mock(), logger);
 
     const token = OauthToken.reconstitute({
       refreshExpiry: undefined,
@@ -98,7 +98,7 @@ describe("the getaccountTransactions method", () => {
   it("calls the correct endpoint and parses the response data into a transaction", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(new Map(), logger);
+    const client = new YnabClient(mock(), mock(), logger);
 
     const token = OauthToken.reconstitute({
       refreshExpiry: undefined,
@@ -132,7 +132,7 @@ describe("the getaccounts method", () => {
   it.only("calls the correct endpoint and parses the response data", async () => {
     const logger = mock<ILogger>();
 
-    const client = new YnabClient(new Map(), logger);
+    const client = new YnabClient(mock(), mock(), logger);
 
     vi.setSystemTime(new Date("2024-11-11T20:39:37.823Z"));
 
