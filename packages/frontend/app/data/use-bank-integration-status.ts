@@ -42,6 +42,7 @@ export const useBankIntegrationStatus = () => {
     if (dirty) {
       void (async () => {
         setStatus(await command("CheckBankConnectionCommand", undefined));
+        setDirty(false);
       })();
     }
   }, [dirty]);
