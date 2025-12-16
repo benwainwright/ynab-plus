@@ -32,7 +32,7 @@ export const Page = ({ children, routeName, headerActions }: PageProps): ReactNo
 
   return initialLoadComplete ? (
     <>
-      <Title order={2} mb="xl">
+      <Title order={2} mb="xl" mt="l">
         <Flex gap="1rem" align="center">
           {capitalisedHeader}
           {headerActions}
