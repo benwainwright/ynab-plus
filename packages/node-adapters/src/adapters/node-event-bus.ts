@@ -4,6 +4,9 @@ import type { IEventBus, IEventPacket, IListener } from "@ynab-plus/app";
 import { v7 } from "uuid";
 import { injectable, unmanaged } from "inversify";
 import { inject } from "@core";
+import type { ILogger } from "@ynab-plus/bootstrap";
+
+const LOG_CONTEXT = { context: "node-event-bus" };
 
 @injectable()
 export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
@@ -16,6 +19,9 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
     @inject("BusNamespace")
     private namespace: string,
 
+    @inject("Logger")
+    private logger: ILogger,
+
     @unmanaged()
     private parent?: IEventBus<TEvent>,
   ) {}
@@ -24,6 +30,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
     const child = new NodeEventBus<TEvent>(
       this.listener,
       `${this.namespace}-${namespace}`,
+      this.logger,
       this,
     );
 
@@ -70,6 +77,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
   }
 
   public emit<TKey extends keyof TEvent>(key: TKey, data: TEvent[TKey]) {
+    this.logger.info(`Event emitted: ${String(key)}`, LOG_CONTEXT);
     this.listener.emit(this.namespace, { key, data });
     this.parent?.emit(key, data);
   }

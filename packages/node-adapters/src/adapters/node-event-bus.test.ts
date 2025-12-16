@@ -1,4 +1,5 @@
 import { EventEmitter } from "node:events";
+import { mock } from "vitest-mock-extended";
 
 import { type Events } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
@@ -10,7 +11,7 @@ describe("event bus", () => {
     it("correctly subscribes to an event that can be listened to", async () => {
       const emitter = new EventEmitter();
 
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const data = {
         url: "foo",
@@ -29,7 +30,7 @@ describe("event bus", () => {
 
     it("does not listen to events with different keys", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const mockHandler = vi.fn();
       bus.on("AppInitialised", mockHandler);
@@ -42,7 +43,7 @@ describe("event bus", () => {
   describe("off", () => {
     it("removes event handlers", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const data = {
         url: "foo",
@@ -60,7 +61,7 @@ describe("event bus", () => {
 
     it("also removes onAllHandlers", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const mockListener = vi.fn();
 
@@ -78,7 +79,7 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
 
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const data = {
         url: "foo",
@@ -108,7 +109,7 @@ describe("event bus", () => {
 
       const mockExternalListener = vi.fn();
       emitter.on("foo", mockExternalListener);
-      const bus = new NodeEventBus<Events>(emitter, "foobar");
+      const bus = new NodeEventBus<Events>(emitter, "foobar", mock());
 
       bus.removeAll();
       emitter.emit("foo", "bar");
@@ -120,7 +121,7 @@ describe("event bus", () => {
   describe("onAll", () => {
     it("listens to all events emitted on this bus", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const mockListener = vi.fn();
 
@@ -150,7 +151,7 @@ describe("event bus", () => {
     it("removes all event handlers", () => {
       const emitter = new EventEmitter();
       {
-        using bus = new NodeEventBus<Events>(emitter, "foo");
+        using bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
         const mockOne = vi.fn();
         const mockTwo = vi.fn();
@@ -167,7 +168,7 @@ describe("event bus", () => {
   describe("childbus", () => {
     it("emits events onto the parent bus", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const child = bus.child("foo-child");
       const otherChild = bus.child("bar-child");
@@ -195,7 +196,7 @@ describe("event bus", () => {
 
     it("receives events that are emitted by it", async () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const child = bus.child("foo-child");
 
@@ -217,7 +218,7 @@ describe("event bus", () => {
 
     it("does not listen to events emitted by the parent bus", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const child = bus.child("foo-child");
 
@@ -237,7 +238,7 @@ describe("event bus", () => {
 
     it("does not receive events emitted by other children", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const child1 = bus.child("foo-child");
       const child2 = bus.child("bar-child");
@@ -260,7 +261,7 @@ describe("event bus", () => {
 
     it("does not emit events on the parent bus", () => {
       const emitter = new EventEmitter();
-      const bus = new NodeEventBus<Events>(emitter, "foo");
+      const bus = new NodeEventBus<Events>(emitter, "foo", mock());
 
       const child1 = bus.child("foo-child");
 
