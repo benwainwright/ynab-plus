@@ -4,7 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   build: {
-    sourcemap: true,
+    sourcemap: true
   },
 
   plugins: [
@@ -14,8 +14,8 @@ export default defineConfig({
         "./tsconfig.app.json",
         "./tsconfig.json",
         "../application/tsconfig.json",
-        "../domain/tsconfig.json",
-      ],
-    }),
-  ],
+        "../domain/tsconfig.json"
+      ]
+    })
+  ]
 });

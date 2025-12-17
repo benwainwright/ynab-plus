@@ -8,7 +8,7 @@ export const testUserRepository = (
     eventBuffer: Mocked<IDomainEventBuffer>;
     repo: IRepository<User> & IMultipleRepository<User>;
     unitOfWork: IUnitOfWork;
-  }>,
+  }>
 ) => {
   describe("the user repository", () => {
     it("can delete a user", async () => {
@@ -19,7 +19,7 @@ export const testUserRepository = (
         id: "ben",
         passwordHash:
           "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-        permissions: ["user", "public"],
+        permissions: ["user", "public"]
       });
 
       await unitOfWork.begin();
@@ -46,7 +46,7 @@ export const testUserRepository = (
         id: "ben",
         passwordHash:
           "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-        permissions: ["user", "public"],
+        permissions: ["user", "public"]
       });
 
       await unitOfWork.begin();
@@ -67,7 +67,7 @@ export const testUserRepository = (
           id: "ben",
           passwordHash:
             "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-          permissions: ["public", "user"],
+          permissions: ["public", "user"]
         });
 
         const data2 = User.reconstitute({
@@ -75,7 +75,7 @@ export const testUserRepository = (
           id: "ben2",
           passwordHash:
             "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-          permissions: ["public", "user"],
+          permissions: ["public", "user"]
         });
 
         const data3 = User.reconstitute({
@@ -83,7 +83,7 @@ export const testUserRepository = (
           id: "ben3",
           passwordHash:
             "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-          permissions: ["user"],
+          permissions: ["user"]
         });
 
         await unitOfWork.begin();

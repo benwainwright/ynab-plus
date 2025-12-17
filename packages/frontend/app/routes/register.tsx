@@ -22,21 +22,21 @@ export const Register = (): ReactNode => {
       username: "",
       email: "",
       password: "",
-      validatePassword: "",
+      validatePassword: ""
     } satisfies FormValues,
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       validatePassword: (value, values) =>
-        value !== values.password ? "Passwords did not match" : null,
-    },
+        value !== values.password ? "Passwords did not match" : null
+    }
   });
 
   const onSubmit = async (values: FormValues) => {
     await command("RegisterCommand", {
       username: values.username,
       email: values.email,
-      password: values.password,
+      password: values.password
     });
   };
 

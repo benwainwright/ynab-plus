@@ -5,7 +5,7 @@ export const oAuthTokenSchema = z.object({
     z
       .union([z.string(), z.date()])
       .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
-    z.undefined(),
+    z.undefined()
   ]),
   token: z.string(),
   refreshToken: z.string(),
@@ -15,23 +15,23 @@ export const oAuthTokenSchema = z.object({
     z
       .union([z.string(), z.date()])
       .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
-    z.undefined(),
+    z.undefined()
   ]),
   lastUse: z.union([
     z
       .union([z.string(), z.date()])
       .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
-    z.undefined(),
+    z.undefined()
   ]),
   refreshed: z.union([
     z
       .union([z.string(), z.date()])
       .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
-    z.undefined(),
+    z.undefined()
   ]),
   created: z
     .union([z.string(), z.date()])
-    .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
+    .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg))
 });
 
 export type IOauthToken = z.output<typeof oAuthTokenSchema>;

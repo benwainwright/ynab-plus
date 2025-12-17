@@ -8,7 +8,7 @@ import type {
   IRepository,
   ITaskScheduler,
   ITransactionRepository,
-  IUnitOfWork,
+  IUnitOfWork
 } from "@ports";
 
 import type { SyncDetails, User } from "@ynab-plus/domain";

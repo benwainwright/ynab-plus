@@ -2,7 +2,7 @@ import { inject, AbstractApplicationService } from "@core";
 import {
   type IBankConnectionRepository,
   type IHandleContext,
-  type IInstitutionAuthPageLinkFetcher,
+  type IInstitutionAuthPageLinkFetcher
 } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User } from "@ynab-plus/domain";
@@ -22,7 +22,7 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
     private tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -31,11 +31,11 @@ export class GetInstitutionAuthorizationPageLinkService extends AbstractApplicat
 
   public override requiredPermissions: ("public" | "user" | "admin" | "system")[] = [
     "user",
-    "admin",
+    "admin"
   ];
 
   protected override async handle<TRole extends IRole = User>({
-    command: { data },
+    command: { data }
   }: IHandleContext<"GetInstitutionAuthorizationPageLinkCommand", TRole>): Promise<{
     url: string;
   }> {

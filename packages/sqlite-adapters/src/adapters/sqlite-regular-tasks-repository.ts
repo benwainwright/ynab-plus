@@ -32,7 +32,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private eventBuffer: IDomainEventBuffer,
+    private eventBuffer: IDomainEventBuffer
   ) {}
 
   public async updateTask(task: RegularTask): Promise<RegularTask> {
@@ -68,8 +68,8 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         task.command,
         task.data,
         String(task.triggerImmediately),
-        task.id,
-      ],
+        task.id
+      ]
     );
     return task;
   }
@@ -91,7 +91,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
           command TEXT NOT NULL,
           triggerImmediately TEXT NOT NULL,
           data TEXT
-      );`,
+      );`
     );
   }
 
@@ -103,7 +103,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
       command: schedulableTasksSchema.parse(raw.command),
       data: raw.data ?? undefined,
       onBehalfOf: raw.onBehalfOf ?? undefined,
-      triggerImmediately: raw.triggerImmediately === "true",
+      triggerImmediately: raw.triggerImmediately === "true"
     });
   }
 
@@ -127,8 +127,8 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         task.description,
         task.command,
         task.data,
-        String(task.triggerImmediately),
-      ],
+        String(task.triggerImmediately)
+      ]
     );
     return task;
   }
@@ -138,7 +138,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
     await this.database.runQuery(
       `DELETE FROM ${await this.tableName.value}
       where id = ?`,
-      [task.id],
+      [task.id]
     );
   }
 
@@ -147,7 +147,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
       `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
         WHERE id = ?`,
-      [id],
+      [id]
     );
 
     if (!result) {
@@ -161,7 +161,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
       `SELECT id, onBehalfOf, lastExecution, created, minute, hour, day, month, weekDay, name, description, command, data, triggerImmediately
         FROM ${await this.tableName.value}
         LIMIT ? OFFSET ?`,
-      [limit ?? -1, offset],
+      [limit ?? -1, offset]
     );
 
     return result.map((result) => this.mapRaw(result));
@@ -173,7 +173,7 @@ export class SqliteRegularTaskRepository implements ITaskScheduler {
         FROM ${await this.tableName.value}
         WHERE onBehalfOf = ?
         LIMIT ? OFFSET ?`,
-      [userId, limit, offset],
+      [userId, limit, offset]
     );
 
     return result.map((result) => this.mapRaw(result));

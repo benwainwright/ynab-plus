@@ -23,7 +23,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private eventBuffer: IDomainEventBuffer,
+    private eventBuffer: IDomainEventBuffer
   ) {}
 
   public async delete(syncDetails: SyncDetails): Promise<void> {
@@ -31,7 +31,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
     await this.database.runQuery(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
-      [syncDetails.id],
+      [syncDetails.id]
     );
   }
 
@@ -43,7 +43,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
           checkpoint TEXT,
           lastSync TEXT
       );`,
-      [],
+      []
     );
   }
 
@@ -51,7 +51,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
     return SyncDetails.reconstitute({
       ...account,
       checkpoint: account.checkpoint ?? undefined,
-      lastSync: account.lastSync ?? undefined,
+      lastSync: account.lastSync ?? undefined
     });
   }
 
@@ -60,7 +60,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
       `SELECT id, provider, checkpoint, lastSync
         FROM ${await this.tableName.value}
         where id = ?`,
-      [id],
+      [id]
     );
 
     if (!result) {
@@ -80,7 +80,7 @@ export class SqliteSyncDetailsRepository implements IRepository<SyncDetails> {
           checkpoint = excluded.checkpoint,
           lastSync = excluded.lastSync
         RETURNING id, provider, checkpoint, lastSync`,
-      [thing.id, thing.provider, thing.checkpoint, thing.lastSync?.toISOString() ?? null],
+      [thing.id, thing.provider, thing.checkpoint, thing.lastSync?.toISOString() ?? null]
     );
 
     return thing;

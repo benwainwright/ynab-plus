@@ -13,7 +13,7 @@ export class OauthToken extends DomainModel<IOauthToken> implements IOauthToken 
       refreshToken: config?.secure ? this.refreshToken : ``,
       refreshed: this.refreshed,
       lastUse: this.lastUse,
-      refreshExpiry: this.refreshExpiry,
+      refreshExpiry: this.refreshExpiry
     };
   }
   public readonly provider: string;
@@ -44,7 +44,7 @@ export class OauthToken extends DomainModel<IOauthToken> implements IOauthToken 
       ...config,
       created: new Date(),
       lastUse: undefined,
-      refreshed: undefined,
+      refreshed: undefined
     });
 
     theToken.raiseEvent({ event: "OauthTokenCreated", data: theToken });

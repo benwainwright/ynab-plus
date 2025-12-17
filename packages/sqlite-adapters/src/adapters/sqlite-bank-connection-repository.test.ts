@@ -11,5 +11,5 @@ const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) =>
 });
 
 testBankConnectionRepository(() =>
-  createRepo("BankConnectionRepository", sqliteDataAdaptersModule, testOverridesModule),
+  createRepo("BankConnectionRepository", sqliteDataAdaptersModule, testOverridesModule)
 );

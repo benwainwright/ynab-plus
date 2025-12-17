@@ -10,12 +10,9 @@ interface IntegrationStatusProps {
   provider: string;
 }
 
-export const IntegrationStatus = ({
-  provider,
-  title,
-}: IntegrationStatusProps): ReactNode => {
+export const IntegrationStatus = ({ provider, title }: IntegrationStatusProps): ReactNode => {
   const { status } = useOauth2IntegrationStatus({
-    provider,
+    provider
   });
 
   return (

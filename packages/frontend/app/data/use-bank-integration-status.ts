@@ -31,7 +31,7 @@ export const useBankIntegrationStatus = () => {
   const [dirty, setDirty] = useState(true);
 
   const [status, setStatus] = useState<BankConnectionStatus>({
-    status: "loading",
+    status: "loading"
   });
 
   useEvent("BankConnectionDeleted", () => {

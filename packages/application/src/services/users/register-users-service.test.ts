@@ -12,7 +12,7 @@ describe("register users service", () => {
     const context = createMockServiceContext("RegisterCommand", {
       username: "ben",
       password: "foo",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     const hasher = mock<IPasswordHasher>();
@@ -31,7 +31,7 @@ describe("register users service", () => {
       id: "ben",
       passwordHash: "foo-hash",
       email: "a@b.c",
-      permissions: ["user"],
+      permissions: ["user"]
     });
 
     expect(mockRepo.save).toHaveBeenCalledWith(newUser);
@@ -51,7 +51,7 @@ describe("register users service", () => {
     const context = createMockServiceContext("RegisterCommand", {
       username: "ben",
       password: "foo",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     const hasher = mock<IPasswordHasher>();
@@ -72,8 +72,8 @@ describe("register users service", () => {
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",
-          permissions: ["user"],
-        }),
+          permissions: ["user"]
+        })
       )
       .thenReject(error);
 
@@ -86,7 +86,7 @@ describe("register users service", () => {
     expect(result.success).toEqual(false);
     if (!result.success) {
       expect(eventBus.emit).toHaveBeenCalledWith("RegisterFail", {
-        reason: "whoops",
+        reason: "whoops"
       });
       expect(result.reason).toEqual("whoops");
     }
@@ -96,7 +96,7 @@ describe("register users service", () => {
     const context = createMockServiceContext("RegisterCommand", {
       username: "ben",
       password: "foo",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     const hasher = mock<IPasswordHasher>();
@@ -115,8 +115,8 @@ describe("register users service", () => {
           id: "ben",
           passwordHash: "foo-hash",
           email: "a@b.c",
-          permissions: ["user"],
-        }),
+          permissions: ["user"]
+        })
       )
       .thenReject(new Error());
 

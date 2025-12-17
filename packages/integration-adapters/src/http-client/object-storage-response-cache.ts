@@ -7,13 +7,13 @@ export const NAMESPACE = "http-response-cache";
 export class ObjectStorageResponseCache implements IResponseCache<unknown> {
   public constructor(
     @inject("ObjectStore")
-    private storage: IObjectStorage,
+    private storage: IObjectStorage
   ) {}
 
   public async set(key: string, value: unknown, ttl?: number): Promise<void> {
     const data = {
       expires: typeof ttl !== "undefined" ? new Date(Date.now() + ttl).toISOString() : undefined,
-      data: value,
+      data: value
     };
 
     await this.storage.set(NAMESPACE, key, JSON.stringify(data));

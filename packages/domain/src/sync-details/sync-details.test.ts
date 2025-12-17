@@ -15,7 +15,7 @@ describe("sync-details", () => {
         id: "foo",
         provider: "bar",
         lastSync: new Date(),
-        checkpoint: "foo",
+        checkpoint: "foo"
       });
 
       const dried = details.freezeDry();
@@ -25,7 +25,7 @@ describe("sync-details", () => {
         id: "foo",
         provider: "bar",
         lastSync: new Date(),
-        checkpoint: "foo",
+        checkpoint: "foo"
       });
     });
   });
@@ -41,8 +41,8 @@ describe("sync-details", () => {
       expect(details.pullEvents()).toEqual([
         {
           event: "SyncDetailsCreated",
-          data: details,
-        },
+          data: details
+        }
       ]);
     });
   });

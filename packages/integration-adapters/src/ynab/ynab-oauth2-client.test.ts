@@ -10,14 +10,14 @@ const first_token_response = {
   access_token: "0cd3d1c4-1107-11e8-b642-0ed5f89f718b",
   token_type: "bearer",
   expires_in: 7200,
-  refresh_token: "13ae9632-1107-11e8-b642-0ed5f89f718b",
+  refresh_token: "13ae9632-1107-11e8-b642-0ed5f89f718b"
 };
 
 const refreshedToken = {
   access_token: "new_token",
   token_type: "bearer",
   expires_in: 7200,
-  refresh_token: "new_refresh",
+  refresh_token: "new_refresh"
 };
 
 beforeEach(() => {
@@ -42,21 +42,21 @@ describe("ynab auth client", () => {
 
       const client = new YnabOauth2Client(
         {
-          value: Promise.resolve(clientId),
+          value: Promise.resolve(clientId)
         },
         {
-          value: Promise.resolve(clientSecret),
+          value: Promise.resolve(clientSecret)
         },
         {
-          value: Promise.resolve(redirectUrl),
+          value: Promise.resolve(redirectUrl)
         },
-        "ynab",
+        "ynab"
       );
 
       const url = await client.generateRedirectUrl();
 
       expect(url).toEqual(
-        `https://app.ynab.com/oauth/authorize?client_id=client-id&redirect_uri=https%3A%2F%2Fwww.google.com&response_type=code`,
+        `https://app.ynab.com/oauth/authorize?client_id=client-id&redirect_uri=https%3A%2F%2Fwww.google.com&response_type=code`
       );
     });
   });
@@ -72,15 +72,15 @@ describe("ynab auth client", () => {
 
       const client = new YnabOauth2Client(
         {
-          value: Promise.resolve(clientId),
+          value: Promise.resolve(clientId)
         },
         {
-          value: Promise.resolve(clientSecret),
+          value: Promise.resolve(clientSecret)
         },
         {
-          value: Promise.resolve(redirectUrl),
+          value: Promise.resolve(redirectUrl)
         },
-        "ynab",
+        "ynab"
       );
 
       fetchMock.mockImplementation((_input, init) => {
@@ -88,7 +88,7 @@ describe("ynab auth client", () => {
         formData = init?.body as FormData;
         return new Response(JSON.stringify(first_token_response), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       });
 
@@ -103,7 +103,7 @@ describe("ynab auth client", () => {
       expect(formData?.get("code")).toEqual("1-2-3");
 
       expect(newToken.expiry.getTime()).toEqual(
-        startDate.getTime() + first_token_response.expires_in * 1000,
+        startDate.getTime() + first_token_response.expires_in * 1000
       );
       expect(newToken.provider).toEqual("ynab");
       expect(newToken.token).toEqual(first_token_response.access_token);
@@ -126,15 +126,15 @@ describe("ynab auth client", () => {
 
       const client = new YnabOauth2Client(
         {
-          value: Promise.resolve(clientId),
+          value: Promise.resolve(clientId)
         },
         {
-          value: Promise.resolve(clientSecret),
+          value: Promise.resolve(clientSecret)
         },
         {
-          value: Promise.resolve(redirectUrl),
+          value: Promise.resolve(redirectUrl)
         },
-        "ynab",
+        "ynab"
       );
 
       const now = new Date();
@@ -148,7 +148,7 @@ describe("ynab auth client", () => {
         provider: "monzo",
         created: now,
         refreshed: undefined,
-        lastUse: new Date(),
+        lastUse: new Date()
       });
 
       fetchMock.mockImplementation((_input, init) => {
@@ -156,7 +156,7 @@ describe("ynab auth client", () => {
         formData = init?.body as FormData;
         return new Response(JSON.stringify(refreshedToken), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       });
 
@@ -170,7 +170,7 @@ describe("ynab auth client", () => {
       expect(formData?.get("refresh_token")).toEqual("foo-refresh");
 
       expect(newToken.expiry.getTime()).toEqual(
-        startDate.getTime() + refreshedToken.expires_in * 1000,
+        startDate.getTime() + refreshedToken.expires_in * 1000
       );
       expect(newToken.provider).toEqual("monzo");
       expect(newToken.token).toEqual(refreshedToken.access_token);

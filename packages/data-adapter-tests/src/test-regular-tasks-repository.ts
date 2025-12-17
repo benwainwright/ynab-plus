@@ -7,7 +7,7 @@ export const testRegularTasksRepository = (
     repo: ITaskScheduler;
     unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
-  }>,
+  }>
 ) => {
   describe("the regular  repository", () => {
     describe("gettasks", () => {
@@ -46,7 +46,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await unitOfWork.begin();
@@ -76,7 +76,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await unitOfWork.begin();
@@ -96,7 +96,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await repo.scheduleTask(task2);
@@ -115,7 +115,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
         await repo.scheduleTask(johns);
         expect(eventBuffer.stageEvents).toHaveBeenCalledWith(task);
@@ -146,7 +146,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await unitOfWork.begin();
@@ -166,7 +166,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await repo.scheduleTask(task2);
@@ -185,7 +185,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
         await repo.scheduleTask(johns);
         await unitOfWork.commit();
@@ -213,7 +213,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         const task2 = RegularTask.reconstitute({
@@ -230,7 +230,7 @@ export const testRegularTasksRepository = (
           weekDay: "*",
           name: "Do my shopping",
           description: "A task to do my shopping",
-          command: "SyncAccountsCommand",
+          command: "SyncAccountsCommand"
         });
 
         await unitOfWork.begin();
@@ -274,7 +274,7 @@ export const testRegularTasksRepository = (
             weekDay: "*",
             name: "Do my shopping",
             description: "A task to do my shopping",
-            command: "SyncAccountsCommand",
+            command: "SyncAccountsCommand"
           });
 
           await unitOfWork.begin();
@@ -296,7 +296,7 @@ export const testRegularTasksRepository = (
             weekDay: "*",
             name: "Do my shopping",
             description: "A task to do my shopping",
-            command: "SyncAccountsCommand",
+            command: "SyncAccountsCommand"
           });
 
           eventBuffer.stageEvents.mockReset();
@@ -330,7 +330,7 @@ export const testRegularTasksRepository = (
               weekDay: "*",
               name: "Do my shopping",
               description: "A task to do my shopping",
-              command: "SyncAccountsCommand",
+              command: "SyncAccountsCommand"
             });
 
             const task2 = RegularTask.reconstitute({
@@ -347,7 +347,7 @@ export const testRegularTasksRepository = (
               weekDay: "*",
               name: "Do my shopping",
               description: "A task to do my shopping",
-              command: "SyncAccountsCommand",
+              command: "SyncAccountsCommand"
             });
 
             await unitOfWork.begin();

@@ -13,11 +13,7 @@ export const transactionSchema = z.object({
 
   payee: z.string(),
   amount: z.number(),
-  cleared: z.union([
-    z.literal("cleared"),
-    z.literal("uncleared"),
-    z.literal("reconciled"),
-  ]),
+  cleared: z.union([z.literal("cleared"), z.literal("uncleared"), z.literal("reconciled")]),
   memo: z.string().optional(),
-  approved: z.boolean(),
+  approved: z.boolean()
 });

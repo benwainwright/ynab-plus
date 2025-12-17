@@ -6,9 +6,9 @@ export default defineConfig({
     globals: true,
     coverage: {
       include: ["./src/**/*.ts"],
-      exclude: ["./src/test-helpers/**"],
-    },
+      exclude: ["./src/test-helpers/**"]
+    }
   },
   // @ts-expect-error don't know what is going on here, but it defo works correctly
-  plugins: [tsconfigPaths()],
+  plugins: [tsconfigPaths()]
 });

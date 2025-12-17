@@ -7,7 +7,7 @@ export const testBankConnectionRepository = (
     repo: IBankConnectionRepository;
     eventBuffer: Mocked<IDomainEventBuffer>;
     unitOfWork: IUnitOfWork;
-  }>,
+  }>
 ) => {
   describe("the connection repository", () => {
     it("can update and return a connection", async () => {
@@ -21,7 +21,7 @@ export const testBankConnectionRepository = (
         userId: "ben",
         logo: "bar",
         requisitionId: "baz",
-        accounts: ["foo", "bar"],
+        accounts: ["foo", "bar"]
       });
 
       const connectionTwo = BankConnection.reconstite({
@@ -29,7 +29,7 @@ export const testBankConnectionRepository = (
         id: "foo-3",
         userId: "fred",
         logo: "bar",
-        requisitionId: "baz",
+        requisitionId: "baz"
       });
 
       await repo.saveConnection(connectionOne);
@@ -52,7 +52,7 @@ export const testBankConnectionRepository = (
         id: "foo-2",
         userId: "ben",
         logo: "bar",
-        requisitionId: "baz",
+        requisitionId: "baz"
       });
 
       const connectionTwo = BankConnection.reconstite({
@@ -60,7 +60,7 @@ export const testBankConnectionRepository = (
         id: "foo-3",
         userId: "fred",
         logo: "bar",
-        requisitionId: "baz",
+        requisitionId: "baz"
       });
 
       await unitOfWork.begin();

@@ -21,7 +21,7 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
     private readonly tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }

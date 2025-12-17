@@ -25,7 +25,7 @@ export class DyanamoDbSingleTableClient implements IUnitOfWork {
 
     @inject("AWSEndpoint")
     @optional()
-    private awsEndpoint: string | undefined,
+    private awsEndpoint: string | undefined
   ) {}
 
   public transaction: { timestamp?: Date; TransactItems?: unknown[] } = {};
@@ -66,17 +66,17 @@ export class DyanamoDbSingleTableClient implements IUnitOfWork {
         credentials: {
           accessKeyId: await this.awsAccessKeyId.value,
           secretAccessKey: await this.awsSecretKey.value,
-          accountId: await this.awsAccountId.value,
+          accountId: await this.awsAccountId.value
         },
         ...(this.awsEndpoint ? { endpoint: this.awsEndpoint } : {}),
-        region: await this.awsRegion.value,
+        region: await this.awsRegion.value
       });
 
       this._table = new Table({
         partial: true,
         client: client,
         name: "ynab-plus-data",
-        schema: Schema,
+        schema: Schema
       });
     }
 

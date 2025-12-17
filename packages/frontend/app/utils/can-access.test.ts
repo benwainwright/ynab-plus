@@ -6,7 +6,7 @@ describe("can access", () => {
   it("should return true for public routes", () => {
     const result = canAccess({
       user: undefined,
-      routeTags: ["public"],
+      routeTags: ["public"]
     });
 
     expect(result).toEqual(true);
@@ -18,9 +18,9 @@ describe("can access", () => {
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
-        permissions: ["admin"],
+        permissions: ["admin"]
       }),
-      routeTags: ["admin"],
+      routeTags: ["admin"]
     });
 
     expect(result).toEqual(true);
@@ -32,9 +32,9 @@ describe("can access", () => {
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
-        permissions: ["user"],
+        permissions: ["user"]
       }),
-      routeTags: ["admin"],
+      routeTags: ["admin"]
     });
 
     expect(result).toEqual(false);
@@ -46,9 +46,9 @@ describe("can access", () => {
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
-        permissions: ["user", "admin"],
+        permissions: ["user", "admin"]
       }),
-      routeTags: ["admin"],
+      routeTags: ["admin"]
     });
 
     expect(result).toEqual(true);

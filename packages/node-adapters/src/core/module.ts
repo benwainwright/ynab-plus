@@ -4,7 +4,7 @@ import {
   FlatFileObjectStore,
   NodePasswordHashValidator,
   NodeEventBus,
-  NodeStringHasher,
+  NodeStringHasher
 } from "@adapters";
 
 import { typedApplicationModule } from "@ynab-plus/bootstrap";

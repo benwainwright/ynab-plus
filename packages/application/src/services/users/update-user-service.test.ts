@@ -12,7 +12,7 @@ describe("update users service", () => {
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const context = createMockServiceContext(
@@ -21,9 +21,9 @@ describe("update users service", () => {
         username: "ben",
         password: "",
         email: "a@b.c",
-        permissions: ["admin"],
+        permissions: ["admin"]
       },
-      loggedInUser,
+      loggedInUser
     );
 
     const hasher = mock<IPasswordHasher>();
@@ -34,7 +34,7 @@ describe("update users service", () => {
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["user"],
+      permissions: ["user"]
     });
 
     when(mockRepo.get).calledWith("ben").thenResolve(existingUser);
@@ -50,7 +50,7 @@ describe("update users service", () => {
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const context = createMockServiceContext(
@@ -59,9 +59,9 @@ describe("update users service", () => {
         username: "ben",
         password: "foo",
         email: "a@b.c",
-        permissions: ["admin"],
+        permissions: ["admin"]
       },
-      loggedInUser,
+      loggedInUser
     );
 
     const hasher = mock<IPasswordHasher>();
@@ -74,7 +74,7 @@ describe("update users service", () => {
       id: "ben",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["user"],
+      permissions: ["user"]
     });
 
     when(mockRepo.get).calledWith("ben").thenResolve(existingUser);
@@ -94,7 +94,7 @@ describe("update users service", () => {
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const context = createMockServiceContext(
@@ -103,9 +103,9 @@ describe("update users service", () => {
         username: "ben",
         password: "foo",
         email: "a@b.c",
-        permissions: ["admin"],
+        permissions: ["admin"]
       },
-      loggedInUser,
+      loggedInUser
     );
 
     const hasher = mock<IPasswordHasher>();
@@ -118,7 +118,7 @@ describe("update users service", () => {
       id: "ben",
       passwordHash: "other-hash",
       email: "a@b.d",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     when(mockRepo.get).calledWith("ben").thenResolve(existingUser);
@@ -136,7 +136,7 @@ describe("update users service", () => {
     expect(result.success).toEqual(false);
     if (!result.success) {
       expect(eventBus.emit).toHaveBeenCalledWith("UserUpdateFail", {
-        reason: "whoops",
+        reason: "whoops"
       });
       expect(result.reason).toEqual("whoops");
     }
@@ -147,7 +147,7 @@ describe("update users service", () => {
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const context = createMockServiceContext(
@@ -156,9 +156,9 @@ describe("update users service", () => {
         username: "ben",
         password: "foo",
         email: "a@b.c",
-        permissions: ["admin"],
+        permissions: ["admin"]
       },
-      loggedInUser,
+      loggedInUser
     );
 
     const hasher = mock<IPasswordHasher>();
@@ -178,7 +178,7 @@ describe("update users service", () => {
     expect(result.success).toEqual(false);
     if (!result.success) {
       expect(eventBus.emit).toHaveBeenCalledWith("UserUpdateFail", {
-        reason: `User ben does not exist`,
+        reason: `User ben does not exist`
       });
       expect(result.reason).toEqual("User ben does not exist");
     }
@@ -189,7 +189,7 @@ describe("update users service", () => {
       id: "admin",
       passwordHash: "otherHash",
       email: "other@email.com",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
     const context = createMockServiceContext(
       "UpdateUserCommand",
@@ -197,9 +197,9 @@ describe("update users service", () => {
         username: "ben",
         password: "foo",
         email: "a@b.c",
-        permissions: ["admin"],
+        permissions: ["admin"]
       },
-      loggedInUser,
+      loggedInUser
     );
 
     const hasher = mock<IPasswordHasher>();
@@ -212,7 +212,7 @@ describe("update users service", () => {
       id: "ben",
       passwordHash: "other-hash",
       email: "a@b.d",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     when(mockRepo.get).calledWith("ben").thenResolve(existingUser);

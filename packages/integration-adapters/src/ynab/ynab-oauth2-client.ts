@@ -1,7 +1,7 @@
 import type {
   IOauthNewTokenRequester,
   IOauthRedirectUrlGenerator,
-  IOAuthTokenRefresher,
+  IOAuthTokenRefresher
 } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
@@ -16,7 +16,7 @@ export class YnabOauth2Client
     private clientId: ConfigValue<string>,
     private clientSecret: ConfigValue<string>,
     private redirectUri: ConfigValue<string>,
-    private providerName: string,
+    private providerName: string
   ) {}
   public async refreshToken(token: OauthToken): Promise<OauthToken> {
     const cacheKey = `${token.token}-${token.refreshToken}`;
@@ -33,12 +33,12 @@ export class YnabOauth2Client
 
     const response = await fetch(`https://app.ynab.com/oauth/token`, {
       method: "POST",
-      body: formData,
+      body: formData
     });
 
     if (!response.ok) {
       throw new Error(
-        `Status code ${String(response.status)} was returned with message ${String(response.statusText)} - ${String(await response.text())}`,
+        `Status code ${String(response.status)} was returned with message ${String(response.statusText)} - ${String(await response.text())}`
       );
     }
 
@@ -47,7 +47,7 @@ export class YnabOauth2Client
     token.refresh(
       json.access_token,
       json.refresh_token,
-      new Date(Date.now() + json.expires_in * 1000),
+      new Date(Date.now() + json.expires_in * 1000)
     );
 
     tokenCache.set(cacheKey, token);
@@ -63,7 +63,7 @@ export class YnabOauth2Client
       access_token: z.string(),
       token_type: z.string(),
       refresh_token: z.string(),
-      expires_in: z.number(),
+      expires_in: z.number()
     });
 
     return responseSchema.parse(data);
@@ -86,12 +86,12 @@ export class YnabOauth2Client
 
     const response = await fetch(`https://app.ynab.com/oauth/token`, {
       method: "POST",
-      body: formData,
+      body: formData
     });
 
     if (!response.ok) {
       throw new Error(
-        `Status code ${String(response.status)} was returned with body ${await response.text()}`,
+        `Status code ${String(response.status)} was returned with body ${await response.text()}`
       );
     }
 
@@ -103,7 +103,7 @@ export class YnabOauth2Client
       refreshToken: json.refresh_token,
       expiry: new Date(Date.now() + json.expires_in * 1000),
       refreshExpiry: undefined,
-      userId,
+      userId
     });
 
     tokenCache.set(cacheKey, newToken);

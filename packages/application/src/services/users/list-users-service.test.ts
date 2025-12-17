@@ -14,7 +14,7 @@ describe("list users service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const mockUserList = [
@@ -22,20 +22,20 @@ describe("list users service", () => {
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],
-        email: "email",
+        email: "email"
       }),
       User.reconstitute({
         id: "ben-2",
         passwordHash: "foo",
         permissions: ["admin"],
-        email: "email",
-      }),
+        email: "email"
+      })
     ];
 
     const context = createMockServiceContext(
       "ListUsersCommand",
       { offset: 0, limit: 10 },
-      mockUser,
+      mockUser
     );
 
     const repo = mock<IMultipleRepository<User> & IRepository<User>>();

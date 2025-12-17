@@ -7,8 +7,8 @@ export default defineConfig({
     globals: true,
     coverage: {
       include: ["./src/**/*.ts"],
-      exclude: ["./src/test-helpers/**"],
-    },
+      exclude: ["./src/test-helpers/**"]
+    }
   },
-  plugins: [tsconfigPaths()],
+  plugins: [tsconfigPaths()]
 });

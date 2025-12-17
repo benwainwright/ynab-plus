@@ -5,7 +5,7 @@ import { mock } from "vitest-mock-extended";
 import {
   type IBankConnectionRepository,
   type IBankConnectionCreator,
-  type IRequesitionAccountFetcher,
+  type IRequesitionAccountFetcher
 } from "@ports";
 import { when } from "vitest-when";
 import { BankConnection, OauthToken } from "@ynab-plus/domain";
@@ -42,7 +42,7 @@ describe("check bank connection service", () => {
     >({
       created: createdDate,
       refreshed: refreshedDate,
-      expiry: expires,
+      expiry: expires
     });
 
     when(tokenManager.getToken).calledWith("ben").thenResolve(mockToken);
@@ -53,7 +53,7 @@ describe("check bank connection service", () => {
       bankName: "monzo",
       requisitionId: "id",
       userId: "ben",
-      logo: "foo",
+      logo: "foo"
     });
 
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(mockConnection);
@@ -63,7 +63,7 @@ describe("check bank connection service", () => {
       mock(),
       requestionAccountFetcher,
       tokenManager,
-      mock(),
+      mock()
     );
 
     const result = await service.doHandle(context);
@@ -95,14 +95,14 @@ describe("check bank connection service", () => {
         id: "foo",
         userId: "ben",
         bankName: "ABN AMRO Bank Commercial",
-        logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/abnamrobank.png",
+        logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/abnamrobank.png"
       }),
       BankConnection.reconstite({
         id: "REVOLUT_REVOGB21",
         userId: "ben",
         bankName: "Revolut",
-        logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png",
-      }),
+        logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png"
+      })
     ];
 
     when(bankConnectionCreator.getConnections)
@@ -114,7 +114,7 @@ describe("check bank connection service", () => {
       bankConnectionCreator,
       mock(),
       tokenManager,
-      mock(),
+      mock()
     );
 
     const result = await service.doHandle(context);
@@ -149,7 +149,7 @@ describe("check bank connection service", () => {
       bankName: "monzo",
       requisitionId: "id",
       userId: "ben",
-      logo: "foo",
+      logo: "foo"
     });
 
     when(connectionRepo.getConnection).calledWith("ben").thenResolve(mockConnection);
@@ -163,7 +163,7 @@ describe("check bank connection service", () => {
       mock(),
       requestionAccountFetcher,
       tokenManager,
-      mock(),
+      mock()
     );
 
     await service.doHandle(context);
@@ -175,8 +175,8 @@ describe("check bank connection service", () => {
         bankName: "monzo",
         requisitionId: "id",
         userId: "ben",
-        logo: "foo",
-      }),
+        logo: "foo"
+      })
     );
   });
 });

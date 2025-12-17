@@ -11,7 +11,7 @@ export const LinkAccountButton = (): ReactNode => {
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
-    },
+    }
   });
 
   const [value, setValue] = useState<string | null>(null);
@@ -19,10 +19,7 @@ export const LinkAccountButton = (): ReactNode => {
   useEffect(() => {
     void (async () => {
       if (isLinking) {
-        const result = await command(
-          "ListRequisitionAccountsCommand",
-          undefined,
-        );
+        const result = await command("ListRequisitionAccountsCommand", undefined);
         setRequisitionAccounts(result);
       }
     })();

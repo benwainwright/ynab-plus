@@ -5,6 +5,6 @@ export interface ITransactionFetcher {
     token: OauthToken,
     accountId: string,
     syncDetails: SyncDetails,
-    sinceDate?: Date,
+    sinceDate?: Date
   ): Promise<Transaction[]>;
 }

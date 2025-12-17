@@ -5,16 +5,13 @@ export interface ITransactionRepository extends ICreatable {
   getTransaction(id: string): Promise<Transaction | undefined>;
   saveTransaction(transaction: Transaction): Promise<Transaction>;
 
-  getAccountTransactionCount(
-    userId: string,
-    accountId: string,
-  ): Promise<number>;
+  getAccountTransactionCount(userId: string, accountId: string): Promise<number>;
 
   getAccountTransactions(
     userId: string,
     accountId: string,
     offset: number,
-    limit: number,
+    limit: number
   ): Promise<Transaction[]>;
 
   saveTransactions(transactions: Transaction[]): Promise<Transaction[]>;

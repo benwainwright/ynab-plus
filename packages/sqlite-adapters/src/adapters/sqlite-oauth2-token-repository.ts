@@ -28,7 +28,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private domainEventStore: IDomainEventBuffer,
+    private domainEventStore: IDomainEventBuffer
   ) {}
 
   public async delete(token: OauthToken): Promise<void> {
@@ -36,7 +36,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
        WHERE userId = ? AND provider = ?`,
-      [token.userId, token.provider],
+      [token.userId, token.provider]
     );
   }
 
@@ -53,7 +53,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
           created TEXT NOT NULL,
           refreshExpiry TEXT,
           PRIMARY KEY (userId, provider)
-      );`,
+      );`
     );
   }
 
@@ -64,7 +64,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
       lastUse: raw.lastUse ? new Date(raw.lastUse) : undefined,
       refreshed: raw.refreshed ? new Date(raw.refreshed) : undefined,
       refreshExpiry: raw.refreshExpiry ? new Date(raw.refreshExpiry) : undefined,
-      created: new Date(raw.created),
+      created: new Date(raw.created)
     });
   }
 
@@ -72,7 +72,7 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
     const result = await this.database.getFromDb<RawOauthToken | undefined>(
       `SELECT userId, provider, token, refreshToken, expiry, lastUse, refreshed, created, refreshExpiry
         FROM ${await this.tableName.value} WHERE userId = ? AND provider = ?`,
-      [userId, provider],
+      [userId, provider]
     );
 
     return result ? this.mapRaw(result) : undefined;
@@ -102,8 +102,8 @@ export class SqliteOauth2TokenRepsoitory implements IOauthTokenRepository {
         token.lastUse?.toISOString() ?? null,
         token.refreshed?.toISOString() ?? null,
         token.created.toISOString(),
-        token.refreshExpiry?.toISOString() ?? null,
-      ],
+        token.refreshExpiry?.toISOString() ?? null
+      ]
     );
 
     return token;

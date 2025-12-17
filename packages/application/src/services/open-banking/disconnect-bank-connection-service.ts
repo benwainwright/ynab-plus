@@ -16,7 +16,7 @@ export class DisconnectBankConnectionService extends AbstractApplicationService<
     private readonly connectionRepo: IBankConnectionRepository,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }

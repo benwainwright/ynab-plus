@@ -26,7 +26,7 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
       logo: this.logo,
       bankName: this.bankName,
       requisitionId: this._requisitionId,
-      accounts: this._accounts,
+      accounts: this._accounts
     };
   }
 
@@ -35,7 +35,7 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
 
     connection.raiseEvent({
       event: "BankConnectionCreated",
-      data: connection,
+      data: connection
     });
 
     return connection;
@@ -46,7 +46,7 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
     this._accounts = ids;
     this.raiseEvent({
       event: "BankAccountIdsSaved",
-      data: { old, new: this },
+      data: { old, new: this }
     });
   }
 
@@ -61,7 +61,7 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
   public delete() {
     this.raiseEvent({
       event: "BankConnectionDeleted",
-      data: this,
+      data: this
     });
   }
 
@@ -74,7 +74,7 @@ export class BankConnection extends DomainModel<IBankConnection> implements IBan
     this._requisitionId = id;
     this.raiseEvent({
       event: "BankConnectionRequisitionSaved",
-      data: { old, new: this },
+      data: { old, new: this }
     });
   }
 }

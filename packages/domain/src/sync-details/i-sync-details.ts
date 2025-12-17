@@ -9,5 +9,5 @@ export const syncDetailsSchema = z.object({
   lastSync: z
     .union([z.date(), z.string()])
     .optional()
-    .transform((date) => (typeof date !== "undefined" ? new Date(date) : date)),
+    .transform((date) => (typeof date !== "undefined" ? new Date(date) : date))
 });

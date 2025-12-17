@@ -7,7 +7,7 @@ import {
   type Command,
   type Commands,
   type IRole,
-  type Permission,
+  type Permission
 } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = { context: "abstract-application-service" };
@@ -20,13 +20,13 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands = k
   private _user: User | undefined;
 
   public canHandle<TRole extends IRole>(
-    command: Command<keyof Commands, TRole>,
+    command: Command<keyof Commands, TRole>
   ): command is Command<TKey, TRole> {
     const result = command.key === this.commandName;
 
     this.logger.silly(
       `Can ${this.commandName} handle ${command.key}? ${result ? "yes" : "no"}`,
-      LOG_CONTEXT,
+      LOG_CONTEXT
     );
 
     return result;
@@ -65,7 +65,7 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands = k
     this._user = this.getUserFromRole(command.role);
 
     const hasValidPermission = Boolean(
-      permissions.find((permission) => this.requiredPermissions.includes(permission)),
+      permissions.find((permission) => this.requiredPermissions.includes(permission))
     );
 
     if (hasValidPermission) {
@@ -74,25 +74,25 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands = k
     }
 
     this.logger.silly(`Did not have valid permissions`, {
-      ...LOG_CONTEXT,
+      ...LOG_CONTEXT
     });
 
     throw new NotAuthorisedError(
       `Not authorised to execute ${this.commandName}`,
       this.commandName,
       command.role,
-      this.requiredPermissions,
+      this.requiredPermissions
     );
   }
 
   public async doHandle<TRole extends IRole = User>(
-    context: IHandleContext<TKey, TRole>,
+    context: IHandleContext<TKey, TRole>
   ): Promise<Commands[TKey]["response"]> {
     const { command } = context;
 
     this.logger.debug(`Attempting to handle command`, {
       ...LOG_CONTEXT,
-      command: command.key,
+      command: command.key
     });
 
     this.checkIsAuthorised(context);
@@ -105,6 +105,6 @@ export abstract class AbstractApplicationService<TKey extends keyof Commands = k
   }
 
   protected abstract handle<TRole extends IRole = User>(
-    context: IHandleContext<TKey, TRole>,
+    context: IHandleContext<TKey, TRole>
   ): Promise<Commands[TKey]["response"]>;
 }

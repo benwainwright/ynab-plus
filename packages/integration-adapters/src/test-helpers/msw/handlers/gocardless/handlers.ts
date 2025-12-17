@@ -20,9 +20,9 @@ export const handlers = [
           {
             summary: "Invalid Account ID",
             detail: "$ACCOUNT_ID is not a valid Account UUID. ",
-            status_code: 400,
+            status_code: 400
           },
-          { status: 400 },
+          { status: 400 }
         );
       }
 
@@ -36,11 +36,11 @@ export const handlers = [
         {
           summary: "Invalid Account ID",
           detail: "$ACCOUNT_ID is not a valid Account UUID. ",
-          status_code: 400,
+          status_code: 400
         },
-        { status: 400 },
+        { status: 400 }
       );
-    },
+    }
   ),
 
   http.get<{ accountId: string }>(
@@ -59,13 +59,13 @@ export const handlers = [
           {
             summary: "Invalid Account ID",
             detail: "$ACCOUNT_ID is not a valid Account UUID. ",
-            status_code: 400,
+            status_code: 400
           },
-          { status: 400 },
+          { status: 400 }
         );
       }
       return HttpResponse.json(mockGocardlessData.mockBalancesResponse);
-    },
+    }
   ),
 
   http.get(`${GOCARDLESS_API}/api/v2/institutions`, ({ request }) => {
@@ -80,9 +80,9 @@ export const handlers = [
     if (!country) {
       return HttpResponse.json(
         {
-          error: "please supply country param",
+          error: "please supply country param"
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
     return HttpResponse.json(mockGocardlessData.mockInstititionsList);
@@ -109,7 +109,7 @@ export const handlers = [
       }
 
       return HttpResponse.json(mockGocardlessData.mockRequisitionResponse);
-    },
+    }
   ),
 
   http.post<object, { refresh: string }>(
@@ -129,14 +129,14 @@ export const handlers = [
         return HttpResponse.json({
           summary: "Authentication failed",
           detail: "No active account found with the given credentials!",
-          status_code: 401,
+          status_code: 401
         });
       }
       return HttpResponse.json({
         access: mockGocardlessData.mockRefreshedToken,
-        access_expires: 86400,
+        access_expires: 86400
       });
-    },
+    }
   ),
 
   http.post<object, { secret_id: string; secret_key: string }>(
@@ -159,15 +159,15 @@ export const handlers = [
         return HttpResponse.json({
           summary: "Authentication failed",
           detail: "No active account found with the given credentials!",
-          status_code: 401,
+          status_code: 401
         });
       }
       return HttpResponse.json({
         access: mockGocardlessData.mockToken,
         access_expires: 86400,
         refresh: mockGocardlessData.mockRefreshToken,
-        refresh_expires: 2592000,
+        refresh_expires: 2592000
       });
-    },
-  ),
+    }
+  )
 ];

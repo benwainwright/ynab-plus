@@ -12,14 +12,14 @@ describe("get users service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["public"],
+      permissions: ["public"]
     });
 
     const user2 = User.reconstitute({
       id: "ben2",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["public"],
+      permissions: ["public"]
     });
 
     const mockUserRepo = mock<IRepository<User> & IMultipleRepository<User>>({
@@ -33,13 +33,13 @@ describe("get users service", () => {
         }
 
         return Promise.resolve(undefined);
-      }),
+      })
     });
 
     const service = new GetUsersService(mockUserRepo, mock());
 
     const context = createMockServiceContext("GetUsersCommand", {
-      usernames: ["ben", "ben2"],
+      usernames: ["ben", "ben2"]
     });
 
     const result = await service.doHandle(context);

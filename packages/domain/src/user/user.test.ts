@@ -7,7 +7,7 @@ describe("the user model", () => {
         permissions: ["public"],
         id: "foo",
         passwordHash: "hash",
-        email: "a@b.c",
+        email: "a@b.c"
       });
 
       const dried = user.freezeDry();
@@ -17,7 +17,7 @@ describe("the user model", () => {
         permissions: ["public"],
         id: "foo",
         passwordHash: "",
-        email: "a@b.c",
+        email: "a@b.c"
       });
     });
 
@@ -26,7 +26,7 @@ describe("the user model", () => {
         permissions: ["public"],
         id: "foo",
         passwordHash: "hash",
-        email: "a@b.c",
+        email: "a@b.c"
       });
 
       const dried = user.freezeDry({ secure: true });
@@ -36,7 +36,7 @@ describe("the user model", () => {
         permissions: ["public"],
         id: "foo",
         passwordHash: "hash",
-        email: "a@b.c",
+        email: "a@b.c"
       });
     });
   });
@@ -45,14 +45,14 @@ describe("the user model", () => {
     const user = User.create({
       id: "foo",
       passwordHash: "hash",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     expect(user.pullEvents()).toEqual([
       {
         event: "UserCreated",
-        data: user,
-      },
+        data: user
+      }
     ]);
   });
 
@@ -61,7 +61,7 @@ describe("the user model", () => {
       permissions: ["public"],
       id: "foo",
       passwordHash: "hash",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     user.update({ hash: "foo" });
@@ -74,16 +74,16 @@ describe("the user model", () => {
             permissions: ["public"],
             id: "foo",
             passwordHash: "hash",
-            email: "a@b.c",
+            email: "a@b.c"
           }),
           new: User.reconstitute({
             permissions: ["public"],
             id: "foo",
             passwordHash: "foo",
-            email: "a@b.c",
-          }),
-        },
-      },
+            email: "a@b.c"
+          })
+        }
+      }
     ]);
   });
 
@@ -92,7 +92,7 @@ describe("the user model", () => {
       permissions: ["public"],
       id: "foo",
       passwordHash: "hash",
-      email: "a@b.c",
+      email: "a@b.c"
     });
 
     user.delete();
@@ -100,8 +100,8 @@ describe("the user model", () => {
     expect(user.pullEvents()).toEqual([
       {
         event: "UserDeleted",
-        data: user,
-      },
+        data: user
+      }
     ]);
   });
 });

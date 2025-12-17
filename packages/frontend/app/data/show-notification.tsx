@@ -14,14 +14,14 @@ const getProps = (notification: INotification) => {
       return {
         color: "red",
         title: "Error!",
-        icon: xIcon,
+        icon: xIcon
       };
 
     case "success":
       return {
         color: "green",
         title: "Success",
-        icon: checkIcon,
+        icon: checkIcon
       };
 
     default:
@@ -34,6 +34,6 @@ export const showNotification = (notification: INotification) => {
     position: "top-left",
     message: notification.message,
     autoClose: 5_000,
-    ...getProps(notification),
+    ...getProps(notification)
   });
 };

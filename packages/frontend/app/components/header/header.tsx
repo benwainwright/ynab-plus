@@ -7,20 +7,11 @@ interface HeaderProps {
   onBurgerClick: () => void;
 }
 
-export const Header = ({
-  title,
-  sideBarOpened,
-  onBurgerClick,
-}: HeaderProps): ReactNode => {
+export const Header = ({ title, sideBarOpened, onBurgerClick }: HeaderProps): ReactNode => {
   return (
     <AppShell.Header>
       <Group h="100%" px="md">
-        <Burger
-          opened={sideBarOpened}
-          onClick={onBurgerClick}
-          hiddenFrom="sm"
-          size="sm"
-        />
+        <Burger opened={sideBarOpened} onClick={onBurgerClick} hiddenFrom="sm" size="sm" />
         {title}
       </Group>
     </AppShell.Header>

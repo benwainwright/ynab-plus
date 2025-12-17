@@ -4,19 +4,11 @@ import {
   SystemContext,
   User,
   type Commands,
-  type IRole,
+  type IRole
 } from "@ynab-plus/domain";
-import {
-  type AllEvents,
-  type IEventBus,
-  type IServiceBus,
-} from "@ynab-plus/app";
+import { type AllEvents, type IEventBus, type IServiceBus } from "@ynab-plus/app";
 
-import {
-  AbstractError,
-  type ILogger,
-  type IStartable,
-} from "@ynab-plus/bootstrap";
+import { AbstractError, type ILogger, type IStartable } from "@ynab-plus/bootstrap";
 import cron from "node-cron";
 import { inject, ServerError } from "@core";
 import { injectable } from "inversify";
@@ -27,9 +19,7 @@ const TASK_SCHEDULER_CONTEXT_NAME = "Task Scheduler";
 
 @injectable()
 export class TaskScheduler implements IStartable {
-  private _taskMap:
-    | Map<string, { cronTask: cron.ScheduledTask; appTask: RegularTask }>
-    | undefined;
+  private _taskMap: Map<string, { cronTask: cron.ScheduledTask; appTask: RegularTask }> | undefined;
 
   public constructor(
     @inject("ServiceBus")
@@ -39,29 +29,23 @@ export class TaskScheduler implements IStartable {
     private eventBus: IEventBus,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
   public readonly name = "Task Scheduler";
 
   public async executeCommand<
     TKey extends keyof Commands = keyof Commands,
-    TRole extends IRole = User,
+    TRole extends IRole = User
   >(command: Command<TKey, TRole>): Promise<Commands[TKey]["response"]> {
     try {
       return await this.serviceBus.execute<TKey, TRole>(command);
     } catch (error) {
       if (error instanceof AbstractError) {
-        this.logger.error(
-          `${error.message}, ${String(error.stack)}`,
-          LOG_CONTEXT,
-        );
+        this.logger.error(`${error.message}, ${String(error.stack)}`, LOG_CONTEXT);
         error.handle(this.eventBus);
         return;
       } else if (error instanceof Error) {
-        this.logger.error(
-          `${error.message}, ${String(error.stack)}`,
-          LOG_CONTEXT,
-        );
+        this.logger.error(`${error.message}, ${String(error.stack)}`, LOG_CONTEXT);
         return;
       } else {
         this.logger.error(String(error), LOG_CONTEXT);
@@ -77,29 +61,21 @@ export class TaskScheduler implements IStartable {
       "ListScheduledTasksCommand",
       {
         offset: 0,
-        limit: undefined,
+        limit: undefined
       },
-      new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"]),
+      new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"])
     );
 
     const tasks = await this.executeCommand(command);
 
     const taskOrTasks = tasks.length > 1 ? `tasks` : `task`;
 
-    this.logger.info(
-      `Found ${String(tasks.length)} ${taskOrTasks} scheduled tasks`,
-      LOG_CONTEXT,
-    );
+    this.logger.info(`Found ${String(tasks.length)} ${taskOrTasks} scheduled tasks`, LOG_CONTEXT);
 
-    this._taskMap = new Map<
-      string,
-      { cronTask: cron.ScheduledTask; appTask: RegularTask }
-    >(
+    this._taskMap = new Map<string, { cronTask: cron.ScheduledTask; appTask: RegularTask }>(
       await Promise.all(
-        tasks.map(
-          async (task) => [task.id, await this.makeCronTask(task)] as const,
-        ),
-      ),
+        tasks.map(async (task) => [task.id, await this.makeCronTask(task)] as const)
+      )
     );
 
     this.eventBus.on("RegularTaskDeleted", this.onDelete.bind(this));
@@ -133,7 +109,7 @@ export class TaskScheduler implements IStartable {
       } else {
         this.taskMap.set(data.old.id, {
           cronTask: toUpdate.cronTask,
-          appTask: data.new,
+          appTask: data.new
         });
       }
     }
@@ -150,7 +126,7 @@ export class TaskScheduler implements IStartable {
     const getUserCommand = new Command(
       "GetUserCommand",
       { username: task.onBehalfOf },
-      new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"]),
+      new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"])
     );
 
     return await this.executeCommand(getUserCommand);
@@ -159,40 +135,29 @@ export class TaskScheduler implements IStartable {
   private async executeTask(task: RegularTask, owner: User | undefined) {
     this.logger.debug(`Firing scheduled task ${task.id}`, LOG_CONTEXT);
 
-    const context = new SystemContext(
-      TASK_SCHEDULER_CONTEXT_NAME,
-      ["system"],
-      owner,
-    );
+    const context = new SystemContext(TASK_SCHEDULER_CONTEXT_NAME, ["system"], owner);
 
     const command = task.getCommand(context);
     await this.executeCommand(command);
 
     task.updateTask({
-      lastExecution: new Date(),
+      lastExecution: new Date()
     });
 
-    const updateTaskCommand = new Command(
-      "UpdateScheduledTaskCommand",
-      task,
-      context,
-    );
+    const updateTaskCommand = new Command("UpdateScheduledTaskCommand", task, context);
 
     await this.executeCommand(updateTaskCommand);
   }
 
   private async makeCronTask(task: RegularTask) {
-    this.logger.debug(
-      `Registering task ${task.id} with node-cron`,
-      LOG_CONTEXT,
-    );
+    this.logger.debug(`Registering task ${task.id} with node-cron`, LOG_CONTEXT);
     const owner = await this.getTaskOwner(task);
 
     const theTask = {
       cronTask: cron.schedule(task.getCronString(), async () => {
         await this.executeTask(task, owner);
       }),
-      appTask: task,
+      appTask: task
     };
 
     if (task.triggerImmediately) {

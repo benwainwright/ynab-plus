@@ -19,7 +19,7 @@ export class ServiceBus implements IServiceBus {
     private eventBus: IEventBus,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {
     this.services.forEach((service) => {
       this.logger.verbose(`${service.commandName} registered`, LOG_CONTEXT);
@@ -27,11 +27,11 @@ export class ServiceBus implements IServiceBus {
   }
 
   public async execute<TKey extends keyof Commands = keyof Commands, TRole extends IRole = User>(
-    command: Command<TKey, TRole>,
+    command: Command<TKey, TRole>
   ): Promise<Commands[TKey]["response"]> {
     this.logger.debug(`Command receieved, locating service`, {
       ...LOG_CONTEXT,
-      command: command.key,
+      command: command.key
     });
 
     const service = this.services.find((handler) => handler.canHandle(command));
@@ -42,17 +42,17 @@ export class ServiceBus implements IServiceBus {
 
     this.logger.debug(`Found service`, {
       ...LOG_CONTEXT,
-      service: service.commandName,
+      service: service.commandName
     });
 
     const response = await service.doHandle({
       command,
-      eventBus: this.eventBus,
+      eventBus: this.eventBus
     });
 
     this.logger.debug(`Service ${service.commandName} returned response, ${inspect(response)}`, {
       ...LOG_CONTEXT,
-      service: service.commandName,
+      service: service.commandName
     });
 
     return response;

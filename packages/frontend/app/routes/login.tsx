@@ -1,13 +1,6 @@
 import { CurrentUserContext, Page } from "@components";
 import { command, useEvent } from "@data";
-import {
-  Button,
-  Group,
-  PasswordInput,
-  TextInput,
-  Text,
-  Anchor,
-} from "@mantine/core";
+import { Button, Group, PasswordInput, TextInput, Text, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useContext, useEffect, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
@@ -24,8 +17,8 @@ export const Login = (): ReactNode => {
   const form = useForm({
     initialValues: {
       username: "",
-      password: "",
-    } satisfies FormValues,
+      password: ""
+    } satisfies FormValues
   });
 
   useEffect(() => {
@@ -39,7 +32,7 @@ export const Login = (): ReactNode => {
   const onSubmit = async (values: FormValues) => {
     await command("LoginCommand", {
       username: values.username,
-      password: values.password,
+      password: values.password
     });
   };
 

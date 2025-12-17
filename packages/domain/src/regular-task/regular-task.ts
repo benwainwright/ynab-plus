@@ -1,20 +1,14 @@
 import { Command } from "../command.ts";
 
 import type { Commands } from "../commands.ts";
-import {
-  regularTaskSchema,
-  type IRegularTask,
-  type SchedulableTask,
-} from "./i-regular-tasks.ts";
+import { regularTaskSchema, type IRegularTask, type SchedulableTask } from "./i-regular-tasks.ts";
 
 import { DomainModel, type SystemContext } from "@core";
 
-export class RegularTask<
-  TTaskKey extends SchedulableTask = SchedulableTask,
-> extends DomainModel<IRegularTask<SchedulableTask>> {
-  public override freezeDry(_config?: {
-    secure: boolean;
-  }): IRegularTask<SchedulableTask> {
+export class RegularTask<TTaskKey extends SchedulableTask = SchedulableTask> extends DomainModel<
+  IRegularTask<SchedulableTask>
+> {
+  public override freezeDry(_config?: { secure: boolean }): IRegularTask<SchedulableTask> {
     return {
       id: this.id,
       onBehalfOf: this.onBehalfOf,
@@ -29,7 +23,7 @@ export class RegularTask<
       description: this.description,
       lastExecution: this.lastExecution,
       command: this.command,
-      data: this.data,
+      data: this.data
     };
   }
 
@@ -66,25 +60,19 @@ export class RegularTask<
     this.command = config.command;
   }
 
-  public static reconstitute<TTaskKey extends SchedulableTask>(
-    config: IRegularTask<TTaskKey>,
-  ) {
+  public static reconstitute<TTaskKey extends SchedulableTask>(config: IRegularTask<TTaskKey>) {
     return new RegularTask(regularTaskSchema.parse(config));
   }
 
   public static create<TTaskKey extends SchedulableTask>(
-    config: Omit<IRegularTask<TTaskKey>, "created">,
+    config: Omit<IRegularTask<TTaskKey>, "created">
   ) {
     const theTask = new RegularTask({ ...config, created: new Date() });
     theTask.raiseEvent({ event: "RegularTaskCreated", data: theTask });
     return theTask;
   }
 
-  public updateTask(config: {
-    name?: string;
-    description?: string;
-    lastExecution?: Date;
-  }) {
+  public updateTask(config: { name?: string; description?: string; lastExecution?: Date }) {
     const old = RegularTask.reconstitute(this);
     this._name = config.name ?? this._name;
     this._description = config.description ?? this._description;
@@ -136,7 +124,7 @@ export class RegularTask<
     return new Command(
       this.command,
       JSON.parse(this.data ?? "{}") as Commands[TTaskKey]["request"],
-      role,
+      role
     );
   }
 }

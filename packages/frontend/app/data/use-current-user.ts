@@ -24,6 +24,6 @@ export const useCurrentUser = () => {
     initialLoadComplete,
     reloadUser: () => {
       setDirty(true);
-    },
+    }
   };
 };

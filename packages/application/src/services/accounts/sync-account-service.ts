@@ -4,7 +4,7 @@ import {
   type IHandleContext,
   type IRepository,
   type ITransactionFetcher,
-  type ITransactionRepository,
+  type ITransactionRepository
 } from "@ports";
 import { TokenWasNotFoundError, type OauthTokenManager } from "@services/oauth";
 
@@ -32,7 +32,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
     private transactionRepository: ITransactionRepository,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -42,8 +42,8 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
   protected override async handle<TRole extends IRole = User>({
     eventBus,
     command: {
-      data: { id },
-    },
+      data: { id }
+    }
   }: IHandleContext<"SyncAccountCommand", TRole>): Promise<
     { success: true } | { success: false; reason: string }
   > {
@@ -58,7 +58,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
         syncDetails ??
         SyncDetails.create({
           provider: "ynab",
-          id: `ynab-account-sync-${id}`,
+          id: `ynab-account-sync-${id}`
         });
 
       this.logger.silly(`Fetching transactions`, LOG_CONTEXT);
@@ -66,7 +66,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
       const transactions = await this.transactionFetcher.getAccountTransactions(
         token,
         id,
-        theSyncDetails,
+        theSyncDetails
       );
       this.logger.silly(`Fetched ${String(transactions.length)} transactions!`, LOG_CONTEXT);
 
@@ -78,7 +78,7 @@ export class SyncAccountService extends AbstractApplicationService<"SyncAccountC
       if (error instanceof TokenWasNotFoundError) {
         return {
           success: false,
-          reason: `Token for ynab could not be found`,
+          reason: `Token for ynab could not be found`
         } as const;
       }
       throw error;

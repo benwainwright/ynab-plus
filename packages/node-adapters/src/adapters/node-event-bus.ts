@@ -23,7 +23,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
     private logger: ILogger,
 
     @unmanaged()
-    private parent?: IEventBus<TEvent>,
+    private parent?: IEventBus<TEvent>
   ) {}
 
   public child(namespace: string): IEventBus<TEvent> {
@@ -31,7 +31,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
       this.listener,
       `${this.namespace}-${namespace}`,
       this.logger,
-      this,
+      this
     );
 
     this.children.push(child);
@@ -65,7 +65,7 @@ export class NodeEventBus<TEvent> implements IEventBus<TEvent> {
 
   public on<TKey extends keyof TEvent>(
     key: TKey,
-    callback: (data: IEventPacket<TEvent, TKey>["data"]) => void,
+    callback: (data: IEventPacket<TEvent, TKey>["data"]) => void
   ): string {
     const handler: IListener<TEvent> = (packet) => {
       if (packet.key === key) {

@@ -11,7 +11,7 @@ describe("the account model", () => {
         deleted: false,
         balance: 0,
         unclearedBalance: 100,
-        clearedBalance: 1000,
+        clearedBalance: 1000
       });
 
       const frozen = newAccount.freezeDry();
@@ -26,7 +26,7 @@ describe("the account model", () => {
         balance: 0,
         unclearedBalance: 100,
         clearedBalance: 1000,
-        deleted: false,
+        deleted: false
       });
     });
   });
@@ -41,14 +41,14 @@ describe("the account model", () => {
       deleted: false,
       clearedBalance: 0,
       balance: 1000,
-      unclearedBalance: 10000,
+      unclearedBalance: 10000
     });
 
     expect(newAccount.pullEvents()).toEqual([
       {
         event: "AccountCreated",
-        data: newAccount,
-      },
+        data: newAccount
+      }
     ]);
   });
 
@@ -62,7 +62,7 @@ describe("the account model", () => {
       clearedBalance: 0,
       balance: 1000,
       unclearedBalance: 10000,
-      deleted: false,
+      deleted: false
     });
 
     newAccount.delete();
@@ -70,8 +70,8 @@ describe("the account model", () => {
     expect(newAccount.pullEvents()).toEqual([
       {
         event: "AccountDeleted",
-        data: newAccount,
-      },
+        data: newAccount
+      }
     ]);
   });
 
@@ -85,7 +85,7 @@ describe("the account model", () => {
       clearedBalance: 0,
       balance: 1000,
       unclearedBalance: 10000,
-      deleted: false,
+      deleted: false
     });
 
     newAccount.linkAccount("foo");
@@ -103,7 +103,7 @@ describe("the account model", () => {
             clearedBalance: 0,
             balance: 1000,
             unclearedBalance: 10000,
-            deleted: false,
+            deleted: false
           }),
           new: Account.reconstitute({
             id: "id",
@@ -115,10 +115,10 @@ describe("the account model", () => {
             clearedBalance: 0,
             balance: 1000,
             unclearedBalance: 10000,
-            deleted: false,
-          }),
-        },
-      },
+            deleted: false
+          })
+        }
+      }
     ]);
 
     expect(newAccount.linkedOpenBankingAccount).toEqual("foo");
@@ -134,13 +134,13 @@ describe("the account model", () => {
       clearedBalance: 0,
       balance: 1000,
       unclearedBalance: 10000,
-      deleted: false,
+      deleted: false
     });
 
     newAccount.updateBalance({
       balance: 10_000,
       unclearedBalance: 20,
-      clearedBalance: 200,
+      clearedBalance: 200
     });
 
     expect(newAccount.pullEvents()).toEqual([
@@ -156,7 +156,7 @@ describe("the account model", () => {
             clearedBalance: 0,
             balance: 1000,
             unclearedBalance: 10000,
-            deleted: false,
+            deleted: false
           }),
           new: Account.reconstitute({
             id: "id",
@@ -167,10 +167,10 @@ describe("the account model", () => {
             clearedBalance: 200,
             balance: 10_000,
             unclearedBalance: 20,
-            deleted: false,
-          }),
-        },
-      },
+            deleted: false
+          })
+        }
+      }
     ]);
 
     expect(newAccount.balance).toEqual(10_000);

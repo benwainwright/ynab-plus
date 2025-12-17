@@ -26,7 +26,7 @@ import { OauthTokenManager } from "@services/oauth";
 import { DisconnectBankConnectionService } from "./open-banking/disconnect-bank-connection-service.ts";
 
 export const loadServices = (
-  load: TypedContainerModuleLoadOptions<IApplicationDependencies & IInternalTypes>,
+  load: TypedContainerModuleLoadOptions<IApplicationDependencies & IInternalTypes>
 ) => {
   if (load.isBound("CurrentUserSetter")) {
     load.bind("Service").to(LoginService);

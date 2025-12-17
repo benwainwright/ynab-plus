@@ -34,6 +34,6 @@ export const createRepo = async <TKey extends keyof DataPortsWithMock>(
   return {
     repo: (await container.getAsync(repoKey)) as DataPortsWithMock[TKey],
     unitOfWork: await container.getAsync("UnitOfWork"),
-    eventBuffer: mockEventBuffer,
+    eventBuffer: mockEventBuffer
   };
 };

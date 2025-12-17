@@ -9,7 +9,7 @@ const LOG_CONTEXT = { context: "response-cache" };
 export class InMemoryResponseCache<T> implements IResponseCache<T> {
   public constructor(
     @inject("Logger")
-    private readonly logger: ILogger,
+    private readonly logger: ILogger
   ) {}
 
   private data = new Map<string, { data: T; timeout: NodeJS.Timeout | undefined }>();

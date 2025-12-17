@@ -15,6 +15,4 @@ export type DomainEvents = UserEvents &
   BankConnectionEvents;
 
 export type DomainEvent<TKey extends keyof DomainEvents = keyof DomainEvents> =
-  TKey extends keyof DomainEvents
-    ? { event: TKey; data: DomainEvents[TKey] }
-    : never;
+  TKey extends keyof DomainEvents ? { event: TKey; data: DomainEvents[TKey] } : never;

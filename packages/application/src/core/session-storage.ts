@@ -18,7 +18,7 @@ export class SessionStorage implements ISingleItemStore<User> {
     private sessionIdRequester: ISessionIdRequester,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
 
   public async require(): Promise<User> {
@@ -26,7 +26,7 @@ export class SessionStorage implements ISingleItemStore<User> {
 
     if (!item) {
       throw new AppError(
-        `Session data required but was not found. This method should not be called when the user is logged out`,
+        `Session data required but was not found. This method should not be called when the user is logged out`
       );
     }
 
@@ -63,7 +63,7 @@ export class SessionStorage implements ISingleItemStore<User> {
     await this.storage.set(
       "sessions",
       `${sessionId}-session-key`,
-      thing ? serialiser.serialise(thing) : undefined,
+      thing ? serialiser.serialise(thing) : undefined
     );
   }
 }

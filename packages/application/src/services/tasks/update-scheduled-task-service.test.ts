@@ -21,16 +21,12 @@ describe("update scheduled task service", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     const role = new SystemContext("id", ["system"]);
 
-    const context = createMockServiceContext(
-      "UpdateScheduledTaskCommand",
-      task,
-      role,
-    );
+    const context = createMockServiceContext("UpdateScheduledTaskCommand", task, role);
 
     const mockRepo = mock<ITaskScheduler>();
 
@@ -48,7 +44,7 @@ describe("update scheduled task service", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     when(mockRepo.getTask).calledWith("foo").thenResolve(existingTask);
@@ -76,16 +72,12 @@ describe("update scheduled task service", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     const role = new SystemContext("id", ["system"]);
 
-    const context = createMockServiceContext(
-      "UpdateScheduledTaskCommand",
-      task,
-      role,
-    );
+    const context = createMockServiceContext("UpdateScheduledTaskCommand", task, role);
 
     const mockRepo = mock<ITaskScheduler>();
 

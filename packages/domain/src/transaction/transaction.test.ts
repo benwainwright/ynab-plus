@@ -12,7 +12,7 @@ describe("the account model", () => {
         cleared: "cleared",
         date,
         approved: false,
-        memo: "foo",
+        memo: "foo"
       });
 
       const dried = newTx.freezeDry();
@@ -25,7 +25,7 @@ describe("the account model", () => {
         cleared: "cleared",
         date,
         approved: false,
-        memo: "foo",
+        memo: "foo"
       });
     });
   });
@@ -40,14 +40,14 @@ describe("the account model", () => {
       date: new Date(),
       approved: false,
       userId: "ben",
-      memo: "foo",
+      memo: "foo"
     });
 
     expect(newTx.pullEvents()).toEqual([
       {
         event: "TransactionCreated",
-        data: newTx,
-      },
+        data: newTx
+      }
     ]);
   });
 
@@ -61,7 +61,7 @@ describe("the account model", () => {
       cleared: "cleared",
       date: new Date(),
       approved: false,
-      memo: "foo",
+      memo: "foo"
     });
 
     newTx.delete();
@@ -69,8 +69,8 @@ describe("the account model", () => {
     expect(newTx.pullEvents()).toEqual([
       {
         event: "TransactionDeleted",
-        data: newTx,
-      },
+        data: newTx
+      }
     ]);
   });
 });

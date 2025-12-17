@@ -10,7 +10,7 @@ const port = await getPort();
 
 beforeAll(async () => {
   server = new WebSocketServer({
-    port,
+    port
   });
 
   await new Promise((accept) => {
@@ -35,7 +35,7 @@ describe("the socket event bus", () => {
     const serverSocketPromise = new Promise<WsWebsocket>((accept) =>
       server?.once("connection", (ws) => {
         accept(ws);
-      }),
+      })
     );
     const socket = new WebSocket(`ws://localhost:${String(port)}`);
 
@@ -56,7 +56,7 @@ describe("the socket event bus", () => {
         type: "checking",
         closed: false,
         note: "a note",
-        deleted: false,
+        deleted: false
       }),
 
       Account.reconstitute({
@@ -69,8 +69,8 @@ describe("the socket event bus", () => {
         type: "checking",
         closed: false,
         note: "a note",
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     const listener = vi.fn();
@@ -83,8 +83,8 @@ describe("the socket event bus", () => {
     serverSocket.send(
       serialiser.serialise({
         key: "AccountsSynced",
-        data: accounts,
-      }),
+        data: accounts
+      })
     );
 
     await vi.waitFor(() => {
@@ -98,7 +98,7 @@ describe("the socket event bus", () => {
         ws.once("message", (message) => {
           accept(message);
         });
-      }),
+      })
     );
 
     const socket = new WebSocket(`ws://localhost:${String(port)}`);
@@ -120,7 +120,7 @@ describe("the socket event bus", () => {
         type: "checking",
         closed: false,
         note: "a note",
-        deleted: false,
+        deleted: false
       }),
 
       Account.reconstitute({
@@ -133,20 +133,20 @@ describe("the socket event bus", () => {
         type: "checking",
         closed: false,
         note: "a note",
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     bus.emit("AccountsSynced", accounts);
 
     const serialiser = new Serialiser();
     const result = serialiser.deserialise(
-      JSON.stringify(parseSocketMessage(await serverMessagePromise)),
+      JSON.stringify(parseSocketMessage(await serverMessagePromise))
     );
 
     expect(result).toEqual({
       key: "AccountsSynced",
-      data: accounts,
+      data: accounts
     });
   });
 });

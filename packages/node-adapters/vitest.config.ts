@@ -7,8 +7,8 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["./src/**/*.ts"],
-      exclude: ["./src/test-helpers/**"],
-    },
+      exclude: ["./src/test-helpers/**"]
+    }
   },
-  plugins: [tsconfigPaths()],
+  plugins: [tsconfigPaths()]
 });

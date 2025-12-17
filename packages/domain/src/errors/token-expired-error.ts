@@ -7,14 +7,14 @@ interface IEventEmitter {
 export class TokenExpiredError extends DomainError {
   public constructor(
     message: string,
-    private provider: string,
+    private provider: string
   ) {
     super(message);
   }
 
   public handle(events: IEventEmitter): void {
     events.emit("TokenExpiredError", {
-      provider: this.provider,
+      provider: this.provider
     });
   }
 }

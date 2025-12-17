@@ -7,7 +7,7 @@ export {
   permissions,
   permissionSchema,
   type DomainEvents,
-  type DomainEvent,
+  type DomainEvent
 } from "@core";
 
 export { userSchema, type IUser, User, type UserEvents } from "@user";
@@ -18,28 +18,23 @@ export {
   type SchedulableTask,
   type IRegularTask,
   type RegularTaskEvents,
-  RegularTask,
+  RegularTask
 } from "@regular-task";
 
 export {
   OauthToken,
   type OauthTokenEvents,
   type IOauthToken,
-  oAuthTokenSchema,
+  oAuthTokenSchema
 } from "@oauth-token";
 
-export {
-  Account,
-  type IAccount,
-  accountSchema,
-  type AccountEvents,
-} from "@account";
+export { Account, type IAccount, accountSchema, type AccountEvents } from "@account";
 
 export {
   SyncDetails,
   type SyncDetailsEvents,
   type ISyncDetails,
-  syncDetailsSchema,
+  syncDetailsSchema
 } from "@sync-details";
 
 export type { Commands } from "./commands.ts";
@@ -52,7 +47,7 @@ export {
   type ITransaction,
   transactionSchema,
   type TransactionEvents,
-  Transaction,
+  Transaction
 } from "@transaction";
 
 export { type IBankConnection, BankConnection } from "@bank-connection";

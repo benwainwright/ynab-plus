@@ -5,15 +5,14 @@ import { MOCK_ACCOUNT_ID } from "./mock-account-id.ts";
 
 export const invalidRequestResponse = (
   request: StrictRequest<DefaultBodyType>,
-  params: { budget: string; account?: string },
+  params: { budget: string; account?: string }
 ) => {
   const authHeader = request.headers.get("Authorization");
 
   if (
     params.budget !== "default" &&
     params.budget !== MOCK_BUDGET_ID &&
-    ((typeof !params.account === "undefined" &&
-      params.account !== MOCK_ACCOUNT_ID) ||
+    ((typeof !params.account === "undefined" && params.account !== MOCK_ACCOUNT_ID) ||
       typeof params.account === "undefined")
   ) {
     return HttpResponse.json(
@@ -21,10 +20,10 @@ export const invalidRequestResponse = (
         error: {
           id: "404.2",
           name: "resource_not_found",
-          detail: "Resource not found",
-        },
+          detail: "Resource not found"
+        }
       },
-      { status: 404 },
+      { status: 404 }
     );
   }
 
@@ -34,10 +33,10 @@ export const invalidRequestResponse = (
         error: {
           id: "401",
           name: "unauthorized",
-          detail: "Unauthorized",
-        },
+          detail: "Unauthorized"
+        }
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
   return undefined;

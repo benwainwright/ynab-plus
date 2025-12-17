@@ -6,6 +6,6 @@ export class SystemContext implements IRole {
   public constructor(
     public readonly id: string,
     public readonly permissions: Permission[],
-    public readonly onBehalfOf?: User,
+    public readonly onBehalfOf?: User
   ) {}
 }

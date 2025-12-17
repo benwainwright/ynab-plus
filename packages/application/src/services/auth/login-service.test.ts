@@ -2,7 +2,7 @@ import {
   type ICurrentUserSetter,
   type IMultipleRepository,
   type IPasswordVerifier,
-  type IRepository,
+  type IRepository
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { User } from "@ynab-plus/domain";
@@ -16,7 +16,7 @@ describe("login service", () => {
       id: "ben",
       passwordHash: "foo-hash",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const mockUserSetter = mock<ICurrentUserSetter>();
@@ -32,7 +32,7 @@ describe("login service", () => {
 
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
-      password,
+      password
     });
 
     const { eventBus } = context;
@@ -56,7 +56,7 @@ describe("login service", () => {
       id: "ben",
       passwordHash: "foo-hash",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const password = "bar";
@@ -72,7 +72,7 @@ describe("login service", () => {
 
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
-      password,
+      password
     });
 
     const { eventBus } = context;
@@ -100,7 +100,7 @@ describe("login service", () => {
     const mockUserSetter = mock<ICurrentUserSetter>();
     const context = createMockServiceContext("LoginCommand", {
       username: "ben",
-      password,
+      password
     });
 
     const { eventBus } = context;

@@ -1,7 +1,7 @@
 import type {
   IOauthTokenRepository,
   IOpenBankingTokenFetcher,
-  IOpenBankingTokenRefresher,
+  IOpenBankingTokenRefresher
 } from "@ports";
 import type { ILogger } from "@ynab-plus/bootstrap";
 import { OauthToken } from "@ynab-plus/domain";
@@ -22,7 +22,7 @@ export class OpenBankingTokenManager {
     private bankingTokenFetcher: IOpenBankingTokenFetcher,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
 
   private returnDisposable(token: OauthToken) {
@@ -31,7 +31,7 @@ export class OpenBankingTokenManager {
         if (token.hasEvents()) {
           await this.oauthTokenRepository.save(token);
         }
-      },
+      }
     });
   }
 
@@ -48,7 +48,7 @@ export class OpenBankingTokenManager {
           refreshedToken.token,
           token.refreshToken,
           new Date(Date.now() + refreshedToken.tokenExpiresIn * 1000),
-          token.refreshExpiry,
+          token.refreshExpiry
         );
 
         await this.oauthTokenRepository.save(token);
@@ -66,7 +66,7 @@ export class OpenBankingTokenManager {
       token: tokenResponse.token,
       refreshToken: tokenResponse.refreshToken,
       expiry: new Date(Date.now() + tokenResponse.tokenExpiresIn * 1000),
-      refreshExpiry: new Date(Date.now() + tokenResponse.refreshTokenExpiresIn * 1000),
+      refreshExpiry: new Date(Date.now() + tokenResponse.refreshTokenExpiresIn * 1000)
     });
 
     await this.oauthTokenRepository.save(newToken);

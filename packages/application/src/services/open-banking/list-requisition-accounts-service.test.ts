@@ -26,8 +26,8 @@ describe("list requisition accounts service", () => {
           bankName: "monzo",
           requisitionId: "id",
           userId: "ben",
-          logo: "foo",
-        }),
+          logo: "foo"
+        })
       );
     const mockToken = mock<
       OauthToken & {
@@ -42,14 +42,14 @@ describe("list requisition accounts service", () => {
         created: new Date(),
         name: "the name",
         id: "foo",
-        institutionId: "monzo",
+        institutionId: "monzo"
       },
       {
         created: new Date(),
         name: "the name 2",
         id: "bar",
-        institutionId: "monzo",
-      },
+        institutionId: "monzo"
+      }
     ];
 
     when(accountDetailsFetcher.getAccountDetails)
@@ -60,7 +60,7 @@ describe("list requisition accounts service", () => {
       accountDetailsFetcher,
       bankConnectionRepo,
       tokenManager,
-      logger,
+      logger
     );
 
     const response = await service.doHandle(context);
@@ -82,14 +82,14 @@ describe("list requisition accounts service", () => {
         OauthToken & {
           [Symbol.asyncDispose]: () => Promise<void>;
         }
-      >(),
+      >()
     );
 
     const service = new ListRequisitionAccountsService(
       accountDetailsFetcher,
       bankConnectionRepo,
       tokenManager,
-      logger,
+      logger
     );
 
     await expect(service.doHandle(context)).rejects.toThrow(AppError);

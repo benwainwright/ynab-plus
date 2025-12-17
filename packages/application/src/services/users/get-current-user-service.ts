@@ -3,7 +3,7 @@ import {
   type ICurrentUserSetter,
   type IHandleContext,
   type IMultipleRepository,
-  type IRepository,
+  type IRepository
 } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
@@ -18,7 +18,7 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
   public override requiredPermissions: ("public" | "user" | "admin")[] = [
     "public",
     "user",
-    "admin",
+    "admin"
   ];
 
   public constructor(
@@ -30,16 +30,14 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
 
     @optional()
     @inject("CurrentUserSetter")
-    private currentUserSetter?: ICurrentUserSetter,
+    private currentUserSetter?: ICurrentUserSetter
   ) {
     super(logger);
   }
 
   public override async handle<TRole extends IRole>({
-    command,
-  }: IHandleContext<"GetCurrentUserCommand", TRole>): Promise<
-    User | undefined
-  > {
+    command
+  }: IHandleContext<"GetCurrentUserCommand", TRole>): Promise<User | undefined> {
     const { role } = command;
 
     if (!role) {
@@ -47,26 +45,19 @@ export class GetCurrentUserService extends AbstractApplicationService<"GetCurren
     }
 
     if (!(role instanceof User)) {
-      throw new AppError(
-        `Command cannot be executed without a user based context`,
-      );
+      throw new AppError(`Command cannot be executed without a user based context`);
     }
 
     const user = await this.users.get(role.id);
 
-    if (
-      user &&
-      JSON.stringify(user.permissions) !== JSON.stringify(role.permissions)
-    ) {
+    if (user && JSON.stringify(user.permissions) !== JSON.stringify(role.permissions)) {
       role.update({ permissions: user.permissions });
 
       await this.currentUserSetter?.set(role);
     }
 
     if (!user) {
-      throw new AppError(
-        `Logged in user wasn't found in the database. Have they been deleted?`,
-      );
+      throw new AppError(`Logged in user wasn't found in the database. Have they been deleted?`);
     }
     return user;
   }

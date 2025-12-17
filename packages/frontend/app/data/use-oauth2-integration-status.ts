@@ -28,7 +28,7 @@ export type Oauth2IntegrationStatus =
 export const useOauth2IntegrationStatus = (config: { provider: string }) => {
   const [dirty, setDirty] = useState(true);
   const [status, setStatus] = useState<Oauth2IntegrationStatus>({
-    status: "loading",
+    status: "loading"
   });
 
   useEvent("OauthIntegrationDisconnected", () => {
@@ -44,7 +44,7 @@ export const useOauth2IntegrationStatus = (config: { provider: string }) => {
         if (code) {
           const result = await command("GenerateNewOauthTokenCommand", {
             provider: config.provider,
-            code,
+            code
           });
 
           setStatus(result);
@@ -53,8 +53,8 @@ export const useOauth2IntegrationStatus = (config: { provider: string }) => {
         } else {
           setStatus(
             await command("CheckOauthIntegrationStatusCommand", {
-              provider: config.provider,
-            }),
+              provider: config.provider
+            })
           );
         }
         setDirty(false);

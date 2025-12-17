@@ -15,9 +15,9 @@ export default defineConfig({
         "**/dist/**",
         "**/test-helpers/**",
         ".husky/**",
-        "packages/frontend/**/+types",
+        "packages/frontend/**/+types"
       ],
-      provider: "v8",
-    },
-  },
+      provider: "v8"
+    }
+  }
 });

@@ -33,11 +33,11 @@ describe("the getaccountTransactions method", () => {
       http.get(`${YNAB_API}/v1/budgets/:budget/accounts/:account/transactions`, () => {
         return HttpResponse.json(
           {
-            status: "error",
+            status: "error"
           },
-          { status: 500 },
+          { status: 500 }
         );
-      }),
+      })
     );
 
     const client = new YnabClient(mock(), mock(), mock());
@@ -53,18 +53,18 @@ describe("the getaccountTransactions method", () => {
       refreshToken: "bap",
       lastUse: new Date("2025-12-10T20:39:37.823Z"),
       refreshed: new Date("2025-10-10T20:39:37.823Z"),
-      created: new Date("2025-11-10T20:39:37.823Z"),
+      created: new Date("2025-11-10T20:39:37.823Z")
     });
 
     const syncDetails = SyncDetails.reconstitute({
       id: "foo-bar-2",
       provider: "ynab",
       checkpoint: "blah",
-      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+      lastSync: new Date("2025-12-10T20:39:37.823Z")
     });
 
     await expect(
-      client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails),
+      client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails)
     ).rejects.toThrow(HttpError);
   });
   it("updates syncDetails", async () => {
@@ -81,14 +81,14 @@ describe("the getaccountTransactions method", () => {
       refreshToken: "bar",
       lastUse: new Date("2025-12-10T20:39:37.823Z"),
       refreshed: new Date("2025-07-10T20:39:37.823Z"),
-      created: new Date("2025-05-10T20:39:37.823Z"),
+      created: new Date("2025-05-10T20:39:37.823Z")
     });
 
     const syncDetails = SyncDetails.reconstitute({
       id: "foo-bar-2",
       provider: "ynab",
       checkpoint: "blah",
-      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+      lastSync: new Date("2025-12-10T20:39:37.823Z")
     });
 
     await client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails);
@@ -109,14 +109,14 @@ describe("the getaccountTransactions method", () => {
       refreshToken: "bar",
       lastUse: new Date("2025-12-10T20:39:37.823Z"),
       refreshed: new Date("2025-07-10T20:39:37.823Z"),
-      created: new Date("2025-05-10T20:39:37.823Z"),
+      created: new Date("2025-05-10T20:39:37.823Z")
     });
 
     const syncDetails = SyncDetails.reconstitute({
       id: "foo-bar-2",
       provider: "ynab",
       checkpoint: "blah",
-      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+      lastSync: new Date("2025-12-10T20:39:37.823Z")
     });
 
     const result = await client.getAccountTransactions(token, MOCK_ACCOUNT_ID, syncDetails);
@@ -145,7 +145,7 @@ describe("the getaccounts method", () => {
       refreshToken: "bap",
       lastUse: new Date("2025-12-10T20:39:37.823Z"),
       refreshed: new Date("2025-10-10T20:39:37.823Z"),
-      created: new Date("2025-11-10T20:39:37.823Z"),
+      created: new Date("2025-11-10T20:39:37.823Z")
     });
 
     const response = await client.getAccounts(token);

@@ -1,10 +1,6 @@
 import { inject, AbstractApplicationService } from "@core";
 import { AppError } from "@errors";
-import {
-  type IAccountRepository,
-  type IHandleContext,
-  type ITransactionRepository,
-} from "@ports";
+import { type IAccountRepository, type IHandleContext, type ITransactionRepository } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, User, Transaction, Permission } from "@ynab-plus/domain";
 import { injectable } from "inversify";
@@ -19,7 +15,7 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
     private accountsRepo: IAccountRepository,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -30,8 +26,8 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
 
   protected override async handle<TRole extends IRole = User>({
     command: {
-      data: { accountId, offset, limit },
-    },
+      data: { accountId, offset, limit }
+    }
   }: IHandleContext<"ListTransactionsCommand", TRole>): Promise<{
     transactions: Transaction[];
     count: number;
@@ -39,28 +35,26 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
     const theAccount = await this.accountsRepo.getAccounts(accountId);
 
     if (theAccount?.userId !== this.currentUser.id) {
-      throw new AppError(
-        `Can only list transactions for accounts owned by you`,
-      );
+      throw new AppError(`Can only list transactions for accounts owned by you`);
     }
 
     const txPromise = this.transactionsRepo.getAccountTransactions(
       this.currentUser.id,
       accountId,
       offset,
-      limit,
+      limit
     );
 
     const countPromise = this.transactionsRepo.getAccountTransactionCount(
       this.currentUser.id,
-      accountId,
+      accountId
     );
 
     const [transactions, count] = await Promise.all([txPromise, countPromise]);
 
     return {
       transactions,
-      count,
+      count
     };
   }
 }

@@ -13,13 +13,13 @@ describe("list transactions service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
-      email: "email",
+      email: "email"
     });
 
     const context = createMockServiceContext(
       "ListTransactionsCommand",
       { offset: 0, limit: 30, accountId: "bar" },
-      mockUser,
+      mockUser
     );
 
     const account = Account.reconstitute({
@@ -32,7 +32,7 @@ describe("list transactions service", () => {
       type: "checking",
       closed: false,
       note: "a note",
-      deleted: false,
+      deleted: false
     });
 
     const transactions = [
@@ -45,7 +45,7 @@ describe("list transactions service", () => {
         date: new Date(),
         payee: "foo",
         approved: false,
-        memo: "foo",
+        memo: "foo"
       }),
 
       Transaction.reconstitute({
@@ -57,8 +57,8 @@ describe("list transactions service", () => {
         cleared: "uncleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
-      }),
+        memo: "foo"
+      })
     ];
 
     when(mockTxRepo.getAccountTransactions)
@@ -86,13 +86,13 @@ describe("list transactions service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
-      email: "email",
+      email: "email"
     });
 
     const context = createMockServiceContext(
       "ListTransactionsCommand",
       { offset: 0, limit: 30, accountId: "bar" },
-      mockUser,
+      mockUser
     );
 
     const account = Account.reconstitute({
@@ -105,7 +105,7 @@ describe("list transactions service", () => {
       type: "checking",
       closed: false,
       note: "a note",
-      deleted: false,
+      deleted: false
     });
 
     when(mockAccounts.getAccounts).calledWith("bar").thenResolve(account);
@@ -120,7 +120,7 @@ describe("list transactions service", () => {
         cleared: "cleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
+        memo: "foo"
       }),
 
       Transaction.reconstitute({
@@ -132,8 +132,8 @@ describe("list transactions service", () => {
         cleared: "uncleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
-      }),
+        memo: "foo"
+      })
     ];
 
     when(mockTxRepo.getAccountTransactions)

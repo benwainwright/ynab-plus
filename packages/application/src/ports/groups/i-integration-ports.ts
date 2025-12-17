@@ -10,7 +10,7 @@ import type {
   IOpenBankingTokenFetcher,
   IOpenBankingTokenRefresher,
   IRequesitionAccountFetcher,
-  ITransactionFetcher,
+  ITransactionFetcher
 } from "@ports";
 import type { Factory } from "inversify";
 

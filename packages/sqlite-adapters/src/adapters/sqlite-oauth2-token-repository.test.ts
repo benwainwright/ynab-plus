@@ -12,5 +12,5 @@ const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) =>
 });
 
 testOauthRepository(() =>
-  createRepo("OauthTokenRepository", sqliteDataAdaptersModule, testOverridesModule),
+  createRepo("OauthTokenRepository", sqliteDataAdaptersModule, testOverridesModule)
 );

@@ -13,7 +13,7 @@ export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
     private currentUserSetter: ICurrentUserSetter,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -22,7 +22,7 @@ export class LogoutService extends AbstractApplicationService<"LogoutCommand"> {
   public override readonly commandName = "LogoutCommand";
 
   public override async handle<TRole extends IRole = User>({
-    eventBus,
+    eventBus
   }: IHandleContext<"LogoutCommand", TRole>): Promise<undefined> {
     await this.currentUserSetter.set(undefined);
     eventBus.emit("LogoutSuccess", undefined);

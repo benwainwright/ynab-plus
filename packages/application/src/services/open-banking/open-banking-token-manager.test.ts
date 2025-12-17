@@ -3,7 +3,7 @@ import { OpenBankingTokenManager } from "./open-banking-token-manager.ts";
 import {
   type IOauthTokenRepository,
   type IOpenBankingTokenFetcher,
-  type IOpenBankingTokenRefresher,
+  type IOpenBankingTokenRefresher
 } from "@ports";
 import { when } from "vitest-when";
 import { OauthToken } from "@ynab-plus/domain";
@@ -86,7 +86,7 @@ describe("Open banking token manager", () => {
     const manager = new OpenBankingTokenManager(repo, refresher, tokenFetcher, mock());
 
     const mockToken = mock<OauthToken>({
-      refreshToken: "refresh",
+      refreshToken: "refresh"
     });
 
     mockToken.refreshExpiry = new Date();
@@ -102,7 +102,7 @@ describe("Open banking token manager", () => {
       "refreshed-token",
       "refresh",
       new Date(Date.now() + 10 * 1000),
-      new Date(),
+      new Date()
     );
     expect(token).toEqual(mockToken);
     expect(repo.save).toHaveBeenCalledWith(mockToken);

@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 const dateFormat = {
   weekday: "short",
   month: "short",
-  day: "2-digit",
+  day: "2-digit"
 } as const;
 
 export const Transactions = (): ReactNode => {

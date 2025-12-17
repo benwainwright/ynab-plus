@@ -7,7 +7,7 @@ export const testSyncDetailsRepository = (
     repo: IRepository<ISyncDetails>;
     unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
-  }>,
+  }>
 ) => {
   describe("sqlite sync details adapter", () => {
     it("can save and get sync details by id", async () => {
@@ -17,14 +17,14 @@ export const testSyncDetailsRepository = (
         id: "foo-bar-1",
         provider: "ynab",
         checkpoint: "blah",
-        lastSync: new Date("2025-12-10T20:39:37.823Z"),
+        lastSync: new Date("2025-12-10T20:39:37.823Z")
       });
 
       const newDetails2 = SyncDetails.reconstitute({
         id: "foo-bar-2",
         provider: "ynab",
         checkpoint: "blah",
-        lastSync: new Date("2025-12-10T20:39:37.823Z"),
+        lastSync: new Date("2025-12-10T20:39:37.823Z")
       });
 
       await unitOfWork.begin();
@@ -48,14 +48,14 @@ export const testSyncDetailsRepository = (
         id: "foo-bar-1",
         provider: "ynab",
         checkpoint: "blah",
-        lastSync: new Date("2025-12-10T20:39:37.823Z"),
+        lastSync: new Date("2025-12-10T20:39:37.823Z")
       });
 
       const newDetails2 = SyncDetails.reconstitute({
         id: "foo-bar-2",
         provider: "ynab",
         checkpoint: "blah",
-        lastSync: new Date("2025-12-10T20:39:37.823Z"),
+        lastSync: new Date("2025-12-10T20:39:37.823Z")
       });
 
       await unitOfWork.begin();

@@ -15,7 +15,7 @@ export class OauthTokenManager {
     private clientFactory: IOauthCheckerFactory,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
 
   private returnDisposable(token: OauthToken) {
@@ -24,7 +24,7 @@ export class OauthTokenManager {
         if (token.hasEvents()) {
           await this.tokenRepository.save(token);
         }
-      },
+      }
     });
   }
 

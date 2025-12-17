@@ -8,7 +8,7 @@ import type { ILogger } from "./i-logger.ts";
 
 // Mock fs once for the whole file – this is fine in ESM, unlike spyOn
 vi.mock("fs", () => ({
-  readFileSync: vi.fn(),
+  readFileSync: vi.fn()
 }));
 
 afterEach(() => {
@@ -21,7 +21,7 @@ describe("Bootstrapper", () => {
 
     const configJson = {
       port: 3000,
-      host: "localhost",
+      host: "localhost"
     };
 
     const readFileSyncMock = fs.readFileSync as unknown as {
@@ -40,13 +40,10 @@ describe("Bootstrapper", () => {
     await expect(hostConfig.value).resolves.toBe("localhost");
 
     expect(logger.error).not.toHaveBeenCalled();
-    expect(logger.debug).toHaveBeenCalledWith(
-      "Starting application",
-      LOG_CONTEXT,
-    );
+    expect(logger.debug).toHaveBeenCalledWith("Starting application", LOG_CONTEXT);
     expect(logger.debug).toHaveBeenCalledWith(
       `Application config ${JSON.stringify(configJson)}`,
-      LOG_CONTEXT,
+      LOG_CONTEXT
     );
   });
 
@@ -87,7 +84,7 @@ describe("Bootstrapper", () => {
     const logger = mock<ILogger>();
 
     const badConfigJson = {
-      port: "not-a-number",
+      port: "not-a-number"
     };
 
     const readFileSyncMock = fs.readFileSync as unknown as {
@@ -121,7 +118,7 @@ describe("Bootstrapper", () => {
     const logger = mock<ILogger>();
 
     const configJson = {
-      someKey: "some-value",
+      someKey: "some-value"
     };
 
     const readFileSyncMock = fs.readFileSync as unknown as {
@@ -149,7 +146,7 @@ describe("Bootstrapper", () => {
     new Bootstrapper("config.json", logger);
 
     expect(logger.silly).toHaveBeenCalledWith("Initialising bootstrapper", {
-      context: "bootstrapper",
+      context: "bootstrapper"
     });
   });
 });

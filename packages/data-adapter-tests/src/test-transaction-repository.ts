@@ -7,7 +7,7 @@ export const testTransactionRepository = (
     repo: ITransactionRepository;
     unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
-  }>,
+  }>
 ) => {
   describe("The transaction repository", () => {
     it("allows you to save and retrieve individual transactions", async () => {
@@ -22,7 +22,7 @@ export const testTransactionRepository = (
         date: new Date(),
         approved: false,
         payee: "foo",
-        memo: "foo",
+        memo: "foo"
       });
 
       const transaction2 = Transaction.reconstitute({
@@ -34,7 +34,7 @@ export const testTransactionRepository = (
         date: new Date(),
         approved: false,
         payee: "foo",
-        memo: "foo",
+        memo: "foo"
       });
 
       await unitOfWork.begin();
@@ -61,7 +61,7 @@ export const testTransactionRepository = (
         cleared: "cleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
+        memo: "foo"
       });
 
       const accountTransactions = [
@@ -74,7 +74,7 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
         Transaction.reconstitute({
           id: "biz",
@@ -85,7 +85,7 @@ export const testTransactionRepository = (
           cleared: "reconciled",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
         Transaction.reconstitute({
           id: "bing",
@@ -96,8 +96,8 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
-        }),
+          memo: "foo"
+        })
       ];
 
       await unitOfWork.begin();
@@ -113,7 +113,7 @@ export const testTransactionRepository = (
         cleared: "uncleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
+        memo: "foo"
       });
 
       await repo.saveTransaction(separateAccountTransaction);
@@ -128,7 +128,7 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
 
         Transaction.reconstitute({
@@ -140,8 +140,8 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
-        }),
+          memo: "foo"
+        })
       ]);
 
       await unitOfWork.commit();
@@ -149,7 +149,7 @@ export const testTransactionRepository = (
       expect(result).toHaveLength(4);
 
       expect(result).toEqual(
-        expect.arrayContaining([...accountTransactions, separateAccountTransaction]),
+        expect.arrayContaining([...accountTransactions, separateAccountTransaction])
       );
 
       expect(result).not.toEqual(expect.arrayContaining([fredTransaction]));
@@ -168,7 +168,7 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
         Transaction.reconstitute({
           userId: "ben",
@@ -179,7 +179,7 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
         Transaction.reconstitute({
           userId: "ben",
@@ -190,7 +190,7 @@ export const testTransactionRepository = (
           cleared: "reconciled",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
         Transaction.reconstitute({
           userId: "ben",
@@ -201,8 +201,8 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
-        }),
+          memo: "foo"
+        })
       ];
 
       await unitOfWork.begin();
@@ -217,7 +217,7 @@ export const testTransactionRepository = (
         cleared: "uncleared",
         date: new Date(),
         approved: false,
-        memo: "foo",
+        memo: "foo"
       });
 
       await repo.saveTransaction(separateAccountTransaction);
@@ -232,7 +232,7 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
+          memo: "foo"
         }),
 
         Transaction.reconstitute({
@@ -244,8 +244,8 @@ export const testTransactionRepository = (
           cleared: "cleared",
           date: new Date(),
           approved: false,
-          memo: "foo",
-        }),
+          memo: "foo"
+        })
       ]);
 
       await unitOfWork.commit();

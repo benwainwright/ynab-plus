@@ -8,7 +8,7 @@ const dateFormat = {
   month: "short",
   day: "2-digit",
   hour: "2-digit",
-  minute: "2-digit",
+  minute: "2-digit"
 } as const;
 
 interface ConnectedIntegrationStatusBodyProps {
@@ -18,7 +18,7 @@ interface ConnectedIntegrationStatusBodyProps {
 
 export const ConnectedIntegrationStatusBody = ({
   provider,
-  status,
+  status
 }: ConnectedIntegrationStatusBodyProps): ReactNode => {
   const disconnect = async () => {
     await command("DisconnectOauthIntegrationCommand", { provider });
@@ -29,25 +29,19 @@ export const ConnectedIntegrationStatusBody = ({
       <SimpleGrid cols={2}>
         <Text fw={500}>Connected</Text>
         <div style={{ textAlign: "right", marginRight: "1rem" }}>
-          {DateTime.fromJSDate(new Date(status.created)).toLocaleString(
-            dateFormat,
-          )}
+          {DateTime.fromJSDate(new Date(status.created)).toLocaleString(dateFormat)}
         </div>
         {status.refreshed ? (
           <>
             <Text fw={500}>Last Refresh</Text>
             <div style={{ textAlign: "right", marginRight: "1rem" }}>
-              {DateTime.fromJSDate(new Date(status.refreshed)).toLocaleString(
-                dateFormat,
-              )}
+              {DateTime.fromJSDate(new Date(status.refreshed)).toLocaleString(dateFormat)}
             </div>
           </>
         ) : null}
         <Text fw={500}>Expires</Text>
         <div style={{ textAlign: "right", marginRight: "1rem" }}>
-          {DateTime.fromJSDate(new Date(status.expiry)).toLocaleString(
-            dateFormat,
-          )}
+          {DateTime.fromJSDate(new Date(status.expiry)).toLocaleString(dateFormat)}
         </div>
       </SimpleGrid>
       <Group justify="flex-end">

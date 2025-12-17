@@ -2,7 +2,7 @@ import {
   type IHandleContext,
   type IMultipleRepository,
   type IRepository,
-  type IPasswordHasher,
+  type IPasswordHasher
 } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
@@ -25,14 +25,14 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
     private passwordHasher: IPasswordHasher,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
 
   public override async handle<TRole extends IRole>({
     command,
-    eventBus,
+    eventBus
   }: IHandleContext<"UpdateUserCommand", TRole>) {
     const { password, email, permissions, username } = command.data;
 
@@ -53,7 +53,7 @@ export class UpdateUserService extends AbstractApplicationService<"UpdateUserCom
       userToUpdate.update({
         hash,
         email,
-        permissions,
+        permissions
       });
 
       this.logger.verbose(`Attempting to save user in repository`, LOG_CONTEXT);

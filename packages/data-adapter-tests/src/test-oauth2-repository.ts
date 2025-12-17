@@ -7,7 +7,7 @@ export const testOauthRepository = (
     eventBuffer: Mocked<IDomainEventBuffer>;
     repo: IOauthTokenRepository;
     unitOfWork: IUnitOfWork;
-  }>,
+  }>
 ) => {
   describe("the token repository", () => {
     it("can update and return a token", async () => {
@@ -22,7 +22,7 @@ export const testOauthRepository = (
         refreshToken: "bar",
         lastUse: new Date("2025-12-10T20:39:37.823Z"),
         refreshed: new Date("2025-07-10T20:39:37.823Z"),
-        created: new Date("2025-05-10T20:39:37.823Z"),
+        created: new Date("2025-05-10T20:39:37.823Z")
       });
 
       const tokenTwo = OauthToken.reconstitute({
@@ -34,7 +34,7 @@ export const testOauthRepository = (
         refreshToken: "bap",
         lastUse: new Date("2025-12-10T20:39:37.823Z"),
         refreshed: new Date("2025-10-10T20:39:37.823Z"),
-        created: new Date("2025-11-10T20:39:37.823Z"),
+        created: new Date("2025-11-10T20:39:37.823Z")
       });
 
       await unitOfWork.begin();
@@ -61,7 +61,7 @@ export const testOauthRepository = (
         refreshToken: "bar",
         lastUse: new Date("2025-12-10T20:39:37.823Z"),
         refreshed: new Date("2025-07-10T20:39:37.823Z"),
-        created: new Date("2025-05-10T20:39:37.823Z"),
+        created: new Date("2025-05-10T20:39:37.823Z")
       });
 
       const tokenTwo = OauthToken.reconstitute({
@@ -73,7 +73,7 @@ export const testOauthRepository = (
         refreshToken: "bap",
         lastUse: new Date("2025-12-10T20:39:37.823Z"),
         refreshed: new Date("2025-10-10T20:39:37.823Z"),
-        created: new Date("2025-11-10T20:39:37.823Z"),
+        created: new Date("2025-11-10T20:39:37.823Z")
       });
 
       await unitOfWork.begin();

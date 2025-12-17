@@ -3,7 +3,7 @@ import { type ILogger } from "@ynab-plus/bootstrap";
 import type { IRole, Permission } from "@ynab-plus/domain";
 
 export const LOG_CONTEXT = {
-  context: "check-oauth-integration-status-service",
+  context: "check-oauth-integration-status-service"
 };
 
 import { inject, AbstractApplicationService } from "@core";
@@ -21,7 +21,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     private oauthClientFactory: IOauthCheckerFactory,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -31,7 +31,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
   public override requiredPermissions: Permission[] = ["user", "admin", "system"];
 
   protected override async handle<TRole extends IRole>({
-    command,
+    command
   }: IHandleContext<"CheckOauthIntegrationStatusCommand", TRole>): Promise<
     | {
         status: "connected";
@@ -44,7 +44,7 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
     this.logger.debug(`Checking oauth-integration status`, LOG_CONTEXT);
 
     const {
-      data: { provider },
+      data: { provider }
     } = command;
 
     const oauthClient = this.oauthClientFactory(provider);
@@ -56,13 +56,13 @@ export class CheckOauthIntegrationStatusService extends AbstractApplicationServi
         status: "connected",
         refreshed: token.refreshed,
         expiry: token.expiry,
-        created: token.created,
+        created: token.created
       };
     } catch (error: unknown) {
       if (error instanceof TokenWasNotFoundError) {
         return {
           redirectUrl: await oauthClient.generateRedirectUrl(),
-          status: "not_connected",
+          status: "not_connected"
         };
       }
       throw error;

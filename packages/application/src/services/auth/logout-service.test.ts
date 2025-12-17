@@ -11,15 +11,11 @@ describe("logout service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
     const mockUserSetter = mock<ICurrentUserSetter>();
 
-    const context = createMockServiceContext(
-      "LogoutCommand",
-      undefined,
-      mockUser,
-    );
+    const context = createMockServiceContext("LogoutCommand", undefined, mockUser);
 
     const service = new LogoutService(mockUserSetter, mock());
 

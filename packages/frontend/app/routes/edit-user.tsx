@@ -2,14 +2,7 @@ import { Page } from "@components";
 import { useUser } from "@data";
 import { useParams } from "react-router";
 import { useForm } from "@mantine/form";
-import {
-  Button,
-  Chip,
-  Fieldset,
-  Group,
-  PasswordInput,
-  TextInput,
-} from "@mantine/core";
+import { Button, Chip, Fieldset, Group, PasswordInput, TextInput } from "@mantine/core";
 import { type ReactNode, useEffect } from "react";
 import { permissions, type Permission } from "@ynab-plus/domain";
 
@@ -29,21 +22,21 @@ export const EditUser = (): ReactNode => {
       email: user?.email ?? "",
       password: "",
       permissions: [] as Permission[],
-      validatePassword: "",
+      validatePassword: ""
     } satisfies FormValues,
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       validatePassword: (value, values) =>
-        value !== values.password ? "Passwords did not match" : null,
-    },
+        value !== values.password ? "Passwords did not match" : null
+    }
   });
 
   useEffect(() => {
     if (!isPending && user) {
       form.setValues({
         email: user.email,
-        permissions: user.permissions,
+        permissions: user.permissions
       });
       form.resetDirty();
     }
@@ -53,7 +46,7 @@ export const EditUser = (): ReactNode => {
     await saveUser({
       email: values.email,
       password: values.password,
-      permissions: values.permissions,
+      permissions: values.permissions
     });
   };
 
@@ -97,24 +90,18 @@ export const EditUser = (): ReactNode => {
                 checked={form.values.permissions.includes(permission)}
                 onChange={(checked) => {
                   form.setValues((previous) => {
-                    if (
-                      checked &&
-                      !previous.permissions?.includes(permission)
-                    ) {
+                    if (checked && !previous.permissions?.includes(permission)) {
                       return {
                         ...previous,
-                        permissions: [
-                          ...(previous.permissions ?? []),
-                          permission,
-                        ],
+                        permissions: [...(previous.permissions ?? []), permission]
                       };
                     } else if (!checked) {
                       return {
                         ...previous,
                         permissions:
                           previous.permissions?.filter(
-                            (thePermission) => thePermission !== permission,
-                          ) ?? [],
+                            (thePermission) => thePermission !== permission
+                          ) ?? []
                       };
                     }
 

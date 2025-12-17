@@ -12,7 +12,7 @@ export class User extends DomainModel<IUser> implements IUser, IRole {
       id: this.id,
       passwordHash: config?.secure ? this._passwordHash : ``,
       email: this._email,
-      permissions: this._permissions,
+      permissions: this._permissions
     };
   }
 
@@ -29,11 +29,7 @@ export class User extends DomainModel<IUser> implements IUser, IRole {
     this._permissions = config.permissions;
   }
 
-  public static create(config: {
-    id: string;
-    passwordHash: string;
-    email: string;
-  }) {
+  public static create(config: { id: string; passwordHash: string; email: string }) {
     const user = new User({ ...config, permissions: ["user"] });
     user.raiseEvent({ event: "UserCreated", data: user });
     return user;
@@ -62,7 +58,7 @@ export class User extends DomainModel<IUser> implements IUser, IRole {
   public update({
     permissions,
     hash,
-    email,
+    email
   }: {
     permissions?: Permission[];
     hash?: string;

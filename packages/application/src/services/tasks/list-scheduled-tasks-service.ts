@@ -14,7 +14,7 @@ export class ListScheduledTasksService extends AbstractApplicationService<"ListS
     private taskScheduler: ITaskScheduler,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -22,10 +22,8 @@ export class ListScheduledTasksService extends AbstractApplicationService<"ListS
   public override readonly commandName = "ListScheduledTasksCommand";
 
   public override async handle<TRole extends IRole>({
-    command,
-  }: IHandleContext<"ListScheduledTasksCommand", TRole>): Promise<
-    RegularTask[]
-  > {
+    command
+  }: IHandleContext<"ListScheduledTasksCommand", TRole>): Promise<RegularTask[]> {
     const { offset, limit } = command.data;
 
     return await this.taskScheduler.getTasks(offset, limit);

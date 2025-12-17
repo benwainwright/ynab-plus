@@ -10,12 +10,10 @@ describe("not authorised error", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["public"],
+      permissions: ["public"]
     });
 
-    const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, [
-      "public",
-    ]);
+    const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, ["public"]);
 
     expect(error.message).toEqual("foo");
     expect(error.handler).toEqual("SyncAccountsCommand");
@@ -29,12 +27,10 @@ describe("not authorised error", () => {
         id: "ben",
         email: "a@b.c",
         passwordHash: "foo",
-        permissions: ["public"],
+        permissions: ["public"]
       });
 
-      const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, [
-        "admin",
-      ]);
+      const error = new NotAuthorisedError("foo", "SyncAccountsCommand", user, ["admin"]);
 
       const events = mock<IEventBus>();
 
@@ -43,7 +39,7 @@ describe("not authorised error", () => {
       expect(events.emit).toHaveBeenCalledWith("NotAuthorisedError", {
         handler: "SyncAccountsCommand",
         role: user,
-        requiredPermissions: ["admin"],
+        requiredPermissions: ["admin"]
       });
     });
   });

@@ -4,7 +4,7 @@ import type {
   IAccountRepository,
   IBankConnectionRepository,
   IHandleContext,
-  IOpenBankingAccountBalanceFetcher,
+  IOpenBankingAccountBalanceFetcher
 } from "@ports";
 import type { OpenBankingTokenManager } from "@services/open-banking";
 import type { ILogger } from "@ynab-plus/bootstrap";
@@ -29,15 +29,15 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
     private tokenRepo: OpenBankingTokenManager,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
 
   protected override async handle<TRole extends IRole = User>({
     command: {
-      data: { id },
-    },
+      data: { id }
+    }
   }: IHandleContext<"CompareBalanceCommand", TRole>): Promise<
     | { status: "no_link" }
     | { status: "no_bank_connection" }
@@ -66,7 +66,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
 
     const bankBalance = await this.balanceFetcher.getAccountBalance(
       account.linkedOpenBankingAccount,
-      token,
+      token
     );
 
     if (bankBalance === account.clearedBalance) {
@@ -76,7 +76,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
     return {
       status: "balance_mismatch",
       ynabBalance: account.clearedBalance,
-      bankBalance,
+      bankBalance
     };
   }
 }

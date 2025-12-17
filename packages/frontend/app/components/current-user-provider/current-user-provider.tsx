@@ -11,21 +11,17 @@ interface CurrentUserContextProps {
 export const CurrentUserContext = createContext<CurrentUserContextProps>({
   currentUser: undefined,
   initialLoadComplete: false,
-  reloadUser: () => {},
+  reloadUser: () => {}
 });
 
 interface CurrentUserProviderProps {
   children: ReactNode;
 }
 
-export const CurrentUserProvider = ({
-  children,
-}: CurrentUserProviderProps): ReactNode => {
+export const CurrentUserProvider = ({ children }: CurrentUserProviderProps): ReactNode => {
   const { currentUser, reloadUser, initialLoadComplete } = useCurrentUser();
   return (
-    <CurrentUserContext
-      value={{ currentUser, reloadUser, initialLoadComplete }}
-    >
+    <CurrentUserContext value={{ currentUser, reloadUser, initialLoadComplete }}>
       {children}
     </CurrentUserContext>
   );

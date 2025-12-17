@@ -3,7 +3,7 @@ import type {
   ICommandResponse,
   Permission,
   SystemContext,
-  User,
+  User
 } from "@ynab-plus/domain";
 
 export interface CoreEvents {

@@ -10,7 +10,7 @@ import { injectable, type ServiceIdentifier } from "inversify";
 export const LOG_CONTEXT = { context: "flat-file-object-store" };
 
 export const FlatFileObjectStoreFolderToken: ServiceIdentifier<ConfigValue<string>> = Symbol.for(
-  "FlatFileObjectStoreFolderToken",
+  "FlatFileObjectStoreFolderToken"
 );
 
 @injectable()
@@ -19,7 +19,7 @@ export class FlatFileObjectStore implements IObjectStorage {
     @inject("StoragePath")
     private folder: ConfigValue<string>,
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
 
   private async resolvePath(namespace: string, key?: string) {

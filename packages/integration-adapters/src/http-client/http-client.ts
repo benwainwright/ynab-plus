@@ -47,7 +47,7 @@ export class HttpClient {
     responseSchema,
     headers,
     queryString,
-    ttl,
+    ttl
   }: {
     path: string;
     responseSchema: TResponse;
@@ -61,7 +61,7 @@ export class HttpClient {
       responseSchema,
       headers,
       method: "get",
-      queryString,
+      queryString
     });
   }
 
@@ -70,7 +70,7 @@ export class HttpClient {
     body,
     responseSchema,
     headers,
-    queryString,
+    queryString
   }: {
     path: string;
     body: Record<string, string>;
@@ -84,13 +84,13 @@ export class HttpClient {
       path,
       responseSchema,
       method: "post",
-      body,
+      body
     });
   }
 
   private async doCachedFetch(url: string, init: RequestInit, ttl: number | undefined) {
     const cacheKey = this.stringHasher.md5(
-      `${url}-${String(init.method)}-${JSON.stringify(init.body)}`,
+      `${url}-${String(init.method)}-${JSON.stringify(init.body)}`
     );
 
     const cacheResult = await this.cache.get(cacheKey);
@@ -105,7 +105,7 @@ export class HttpClient {
       const text = await result.text();
       const urlObj = {
         url,
-        ...init,
+        ...init
       };
       throw new HttpError(`Request ${JSON.stringify(urlObj)} failed: ${text}`, result.status, text);
     }
@@ -143,7 +143,7 @@ export class HttpClient {
     body,
     headers,
     queryString,
-    ttl,
+    ttl
   }: IRequestConfig<TResponse>): Promise<z4.output<TResponse>> {
     const url = this.buildUrl(this.baseUrl, path, queryString);
 
@@ -158,7 +158,7 @@ export class HttpClient {
     const config: RequestInit = {
       ...withBody,
       ...withHeaders,
-      method,
+      method
     };
 
     this.logger.silly(`Sending request to ${url} with ${JSON.stringify(config)}`, LOG_CONTEXT);

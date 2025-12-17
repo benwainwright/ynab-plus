@@ -19,7 +19,7 @@ describe("check oauth-integration-status-service", () => {
 
     const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
       generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
-      refreshToken: vi.fn(),
+      refreshToken: vi.fn()
     };
 
     const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
@@ -27,7 +27,7 @@ describe("check oauth-integration-status-service", () => {
     const service = new CheckOauthIntegrationStatusService(
       mockTokenManager,
       oauthClientFactory,
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext(
@@ -38,8 +38,8 @@ describe("check oauth-integration-status-service", () => {
         id: "ben",
         email: "bwainwright28@gmail.com",
         passwordHash: "foo",
-        permissions: ["admin"],
-      }),
+        permissions: ["admin"]
+      })
     );
 
     const response = await service.doHandle(context);
@@ -71,7 +71,7 @@ describe("check oauth-integration-status-service", () => {
 
       const mockOauthClient: IOauthRedirectUrlGenerator & IOAuthTokenRefresher = {
         generateRedirectUrl: vi.fn().mockReturnValue(redirectUrl),
-        refreshToken: vi.fn(),
+        refreshToken: vi.fn()
       };
 
       const oauthClientFactory = vi.fn().mockReturnValue(mockOauthClient);
@@ -79,7 +79,7 @@ describe("check oauth-integration-status-service", () => {
       const service = new CheckOauthIntegrationStatusService(
         mockTokenManager,
         oauthClientFactory,
-        mock(),
+        mock()
       );
 
       const context = createMockServiceContext(
@@ -90,8 +90,8 @@ describe("check oauth-integration-status-service", () => {
           id: "ben",
           email: "bwainwright28@gmail.com",
           passwordHash: "foo",
-          permissions: ["admin"],
-        }),
+          permissions: ["admin"]
+        })
       );
 
       const response = await service.doHandle(context);

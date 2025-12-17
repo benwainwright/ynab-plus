@@ -3,7 +3,7 @@ import {
   type IMultipleRepository,
   type IPasswordVerifier,
   type IRepository,
-  type ICurrentUserSetter,
+  type ICurrentUserSetter
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -27,7 +27,7 @@ export class LoginService extends AbstractApplicationService<"LoginCommand"> {
     private currentUserSetter: ICurrentUserSetter,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -36,7 +36,7 @@ export class LoginService extends AbstractApplicationService<"LoginCommand"> {
 
   public override async handle<TRole extends IRole = User>({
     command,
-    eventBus,
+    eventBus
   }: IHandleContext<"LoginCommand", TRole>): Promise<Commands["LoginCommand"]["response"]> {
     const { username, password } = command.data;
 

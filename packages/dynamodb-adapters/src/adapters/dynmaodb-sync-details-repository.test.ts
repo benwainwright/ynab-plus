@@ -16,5 +16,5 @@ const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) =>
 });
 
 testSyncDetailsRepository(() =>
-  createRepo("SyncDetailsRepository", dynamodbDataAdaptersModule, testOverridesModule),
+  createRepo("SyncDetailsRepository", dynamodbDataAdaptersModule, testOverridesModule)
 );

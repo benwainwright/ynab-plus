@@ -20,22 +20,22 @@ describe("sync account service", () => {
       id: "ben",
       passwordHash:
         "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-      permissions: ["user", "public"],
+      permissions: ["user", "public"]
     });
 
     const context = createMockServiceContext(
       "SyncAccountCommand",
       {
-        id: "the-id",
+        id: "the-id"
       },
-      new SystemContext("scheduler", ["system"], user),
+      new SystemContext("scheduler", ["system"], user)
     );
 
     const newDetails = SyncDetails.reconstitute({
       id: "ynab-account-sync-the-id",
       provider: "ynab",
       checkpoint: "blah",
-      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+      lastSync: new Date("2025-12-10T20:39:37.823Z")
     });
 
     when(syncDetailsRepo.get).calledWith(`ynab-account-sync-the-id`).thenResolve(newDetails);
@@ -61,22 +61,22 @@ describe("sync account service", () => {
       id: "ben",
       passwordHash:
         "$argon2id$v=19$m=65536,t=2,p=1$n7G8BcbQsFanGrlBuFB/Y7dedcifW3P7brW8tyMwLsU$9Zdmy6ccSH6ABRNiP6SU+qKE0oYdqu5eexecCKyMDdk",
-      permissions: ["user", "public"],
+      permissions: ["user", "public"]
     });
 
     const context = createMockServiceContext(
       "SyncAccountCommand",
       {
-        id: "the-id",
+        id: "the-id"
       },
-      new SystemContext("scheduler", ["system"], user),
+      new SystemContext("scheduler", ["system"], user)
     );
 
     const newDetails = SyncDetails.reconstitute({
       id: "ynab-account-sync-the-id",
       provider: "ynab",
       checkpoint: "blah",
-      lastSync: new Date("2025-12-10T20:39:37.823Z"),
+      lastSync: new Date("2025-12-10T20:39:37.823Z")
     });
 
     const mockToken = mock<
@@ -99,7 +99,7 @@ describe("sync account service", () => {
         amount: -4500,
         cleared: "cleared",
         approved: true,
-        memo: "Groceries - Tesco",
+        memo: "Groceries - Tesco"
       }),
       Transaction.reconstitute({
         userId: "ben",
@@ -110,7 +110,7 @@ describe("sync account service", () => {
         amount: -1299,
         cleared: "cleared",
         approved: true,
-        memo: "Coffee and breakfast",
+        memo: "Coffee and breakfast"
       }),
       Transaction.reconstitute({
         userId: "ben",
@@ -121,7 +121,7 @@ describe("sync account service", () => {
         amount: 250000,
         cleared: "cleared",
         approved: true,
-        memo: "Salary",
+        memo: "Salary"
       }),
       Transaction.reconstitute({
         userId: "ben",
@@ -132,7 +132,7 @@ describe("sync account service", () => {
         amount: -799,
         cleared: "cleared",
         approved: false,
-        memo: "Spotify subscription",
+        memo: "Spotify subscription"
       }),
       Transaction.reconstitute({
         userId: "ben",
@@ -143,8 +143,8 @@ describe("sync account service", () => {
         amount: -3250,
         cleared: "cleared",
         approved: false,
-        memo: "Dinner with friends",
-      }),
+        memo: "Dinner with friends"
+      })
     ];
 
     when(fetcher.getAccountTransactions)
@@ -158,11 +158,11 @@ describe("sync account service", () => {
     expect(syncDetailsRepo.save).toHaveBeenCalledWith(newDetails);
     expect(result.success).toEqual(true);
     expect(context.eventBus.emit).toHaveBeenCalledWith("AccountSyncStarted", {
-      accountId: "the-id",
+      accountId: "the-id"
     });
 
     expect(context.eventBus.emit).toHaveBeenCalledWith("AccountSyncFinished", {
-      accountId: "the-id",
+      accountId: "the-id"
     });
   });
 });

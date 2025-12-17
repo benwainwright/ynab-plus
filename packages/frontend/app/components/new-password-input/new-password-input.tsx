@@ -4,9 +4,7 @@ interface NewPasswordInputProps {
   onChange: (password: string) => void;
 }
 
-export const NewPasswordInput = ({
-  onChange,
-}: NewPasswordInputProps): ReactNode => {
+export const NewPasswordInput = ({ onChange }: NewPasswordInputProps): ReactNode => {
   const [password, setPassword] = useState<string>("");
   const [matchPassword, setMatchPassword] = useState<string>("");
 

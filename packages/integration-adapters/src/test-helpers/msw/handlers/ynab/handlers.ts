@@ -17,10 +17,10 @@ export const handlers = [
       return HttpResponse.json({
         data: {
           transactions: MOCK_TRANSACTIONS,
-          server_knowledge: 123,
-        },
+          server_knowledge: 123
+        }
       });
-    },
+    }
   ),
 
   http.get<{ budget: string }>(`${YNAB_API}/v1/budgets/:budget/accounts`, ({ request, params }) => {
@@ -51,23 +51,23 @@ export const handlers = [
             debt_interest_rates: {
               additionalProp1: 0,
               additionalProp2: 0,
-              additionalProp3: 0,
+              additionalProp3: 0
             },
             debt_minimum_payments: {
               additionalProp1: 0,
               additionalProp2: 0,
-              additionalProp3: 0,
+              additionalProp3: 0
             },
             debt_escrow_amounts: {
               additionalProp1: 0,
               additionalProp2: 0,
-              additionalProp3: 0,
+              additionalProp3: 0
             },
-            deleted: true,
-          },
+            deleted: true
+          }
         ],
-        server_knowledge: 1231,
-      },
+        server_knowledge: 1231
+      }
     });
-  }),
+  })
 ];

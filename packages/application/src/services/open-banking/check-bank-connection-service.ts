@@ -3,7 +3,7 @@ import { inject, AbstractApplicationService } from "@core";
 import {
   type IBankConnectionCreator,
   type IBankConnectionRepository,
-  type IRequesitionAccountFetcher,
+  type IRequesitionAccountFetcher
 } from "@ports";
 
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -29,7 +29,7 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
     private tokenManager: OpenBankingTokenManager,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -65,15 +65,15 @@ export class CheckBankConnectionService extends AbstractApplicationService<"Chec
         bankName: connection.bankName,
         connected: token.created,
         refreshed: token.refreshed,
-        expires: token.expiry,
+        expires: token.expiry
       };
     } else {
       return {
         status: "new",
         potentialInstitutions: await this.institutionListFetcher.getConnections(
           this.currentUser.id,
-          token,
-        ),
+          token
+        )
       };
     }
   }

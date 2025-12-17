@@ -20,7 +20,7 @@ describe("get institution link service", () => {
       mockFetcher,
       mockBankConnectionRepo,
       tokenManager,
-      mockLogger,
+      mockLogger
     );
 
     const newToken = mock<
@@ -34,7 +34,7 @@ describe("get institution link service", () => {
     const context = createMockServiceContext(
       "GetInstitutionAuthorizationPageLinkCommand",
       mockBankConnection,
-      "ben",
+      "ben"
     );
 
     const link = "https://www.google.com";

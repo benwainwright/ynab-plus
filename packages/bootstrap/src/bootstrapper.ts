@@ -16,7 +16,7 @@ export const LOG_CONTEXT = { context: "bootstrapper" };
 const RESOLVE_CONFIG = "resolve-config";
 
 export const BootstrapConfigFileToken: ServiceIdentifier<string> = Symbol.for(
-  "BootstrapConfigFileToken",
+  "BootstrapConfigFileToken"
 );
 
 @injectable()
@@ -32,17 +32,14 @@ export class Bootstrapper implements IBootstrapper {
     private configFile: string,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {
     this.logger.silly("Initialising bootstrapper", {
-      context: "bootstrapper",
+      context: "bootstrapper"
     });
     const configFilePath = join(cwd(), this.configFile);
 
-    this._config = JSON.parse(readFileSync(configFilePath, "utf-8")) as Record<
-      string,
-      unknown
-    >;
+    this._config = JSON.parse(readFileSync(configFilePath, "utf-8")) as Record<string, unknown>;
   }
 
   public addInitStep(callback: () => Promise<void>) {
@@ -60,10 +57,7 @@ export class Bootstrapper implements IBootstrapper {
       }
     }
 
-    this.logger.debug(
-      `Application config ${JSON.stringify(this._config)}`,
-      LOG_CONTEXT,
-    );
+    this.logger.debug(`Application config ${JSON.stringify(this._config)}`, LOG_CONTEXT);
 
     this.emitter.emit(RESOLVE_CONFIG);
     await this.bootstrappingSteps.reduce(async (last, current) => {
@@ -74,17 +68,15 @@ export class Bootstrapper implements IBootstrapper {
 
   public configValue<TConfigValue extends StandardSchemaV1>(
     key: string,
-    schema: TConfigValue,
+    schema: TConfigValue
   ): ConfigValue<StandardSchemaV1.InferOutput<TConfigValue>> {
     const value = this._config[key];
     this.fullSchema[key] = schema;
 
-    const valuePromise = new Promise<
-      StandardSchemaV1.InferOutput<TConfigValue>
-    >((accept) =>
+    const valuePromise = new Promise<StandardSchemaV1.InferOutput<TConfigValue>>((accept) =>
       this.emitter.on(RESOLVE_CONFIG, () => {
         accept(value);
-      }),
+      })
     );
 
     return new ConfigValue(valuePromise);

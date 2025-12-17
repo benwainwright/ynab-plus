@@ -10,5 +10,5 @@ const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) =>
 });
 
 testRegularTasksRepository(() =>
-  createRepo("TaskScheduler", sqliteDataAdaptersModule, testOverridesModule),
+  createRepo("TaskScheduler", sqliteDataAdaptersModule, testOverridesModule)
 );

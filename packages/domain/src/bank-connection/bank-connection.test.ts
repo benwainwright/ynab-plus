@@ -16,7 +16,7 @@ describe("the bank connection", () => {
         id: "foo",
         userId: "ben",
         logo: "bar",
-        requisitionId: "baz",
+        requisitionId: "baz"
       });
 
       connection.delete();
@@ -24,8 +24,8 @@ describe("the bank connection", () => {
       expect(connection.pullEvents()).toEqual([
         {
           event: "BankConnectionDeleted",
-          data: connection,
-        },
+          data: connection
+        }
       ]);
     });
   });
@@ -37,7 +37,7 @@ describe("the bank connection", () => {
         id: "foo",
         userId: "ben",
         logo: "bar",
-        requisitionId: "baz",
+        requisitionId: "baz"
       });
 
       expect(connection.bankName).toEqual("foo");
@@ -53,7 +53,7 @@ describe("the bank connection", () => {
         id: "foo",
         userId: "ben",
         bankName: "foo",
-        logo: "bar",
+        logo: "bar"
       });
 
       expect(connection.bankName).toEqual("foo");
@@ -63,8 +63,8 @@ describe("the bank connection", () => {
       expect(connection.pullEvents()).toEqual([
         {
           event: "BankConnectionCreated",
-          data: connection,
-        },
+          data: connection
+        }
       ]);
     });
   });
@@ -75,7 +75,7 @@ describe("the bank connection", () => {
         id: "foo",
         userId: "ben",
         bankName: "foo",
-        logo: "bar",
+        logo: "bar"
       });
 
       connection.saveAccounts(["foo", "bar"]);
@@ -90,17 +90,17 @@ describe("the bank connection", () => {
               id: "foo",
               userId: "ben",
               bankName: "foo",
-              logo: "bar",
+              logo: "bar"
             }),
             new: BankConnection.reconstite({
               id: "foo",
               userId: "ben",
               bankName: "foo",
               accounts: ["foo", "bar"],
-              logo: "bar",
-            }),
-          },
-        },
+              logo: "bar"
+            })
+          }
+        }
       ]);
     });
   });
@@ -111,7 +111,7 @@ describe("the bank connection", () => {
         id: "foo",
         userId: "ben",
         bankName: "foo",
-        logo: "bar",
+        logo: "bar"
       });
 
       connection.saveRequisitionId("foo");
@@ -126,17 +126,17 @@ describe("the bank connection", () => {
               id: "foo",
               userId: "ben",
               bankName: "foo",
-              logo: "bar",
+              logo: "bar"
             }),
             new: BankConnection.reconstite({
               id: "foo",
               userId: "ben",
               bankName: "foo",
               requisitionId: "foo",
-              logo: "bar",
-            }),
-          },
-        },
+              logo: "bar"
+            })
+          }
+        }
       ]);
     });
   });

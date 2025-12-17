@@ -9,23 +9,23 @@
     "types": ["node"],
     "paths": {
       "@adapters": ["./src/adapters/index.ts"],
-      "@core": ["./src/core/index.ts"],
-    },
+      "@core": ["./src/core/index.ts"]
+    }
   },
   "references": [
     {
-      "path": "../domain",
+      "path": "../domain"
     },
     {
-      "path": "../application",
+      "path": "../application"
     },
     {
-      "path": "../bootstrap",
+      "path": "../bootstrap"
     },
     {
-      "path": "../data-adapter-tests",
-    },
+      "path": "../data-adapter-tests"
+    }
   ],
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

@@ -4,7 +4,7 @@ import type {
   IObjectStorage,
   IPasswordVerifier,
   IPasswordHasher,
-  IStringHasher,
+  IStringHasher
 } from "@ports";
 
 export interface IRuntimePorts {

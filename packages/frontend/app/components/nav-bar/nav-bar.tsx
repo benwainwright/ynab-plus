@@ -17,7 +17,7 @@ export const NavBar = (): ReactNode => {
         {Object.entries(list)
           .filter(
             ([, value]) =>
-              canAccess({ user, routeTags: value.permissionsRequired }) && !value.hideFromMenu,
+              canAccess({ user, routeTags: value.permissionsRequired }) && !value.hideFromMenu
           )
           .map(([key, value]) => {
             const toString = value.isIndex ? "" : key;

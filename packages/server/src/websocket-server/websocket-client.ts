@@ -6,7 +6,7 @@ import { injectable } from "inversify";
 import { WebSocket } from "ws";
 
 export const LOG_CONTEXT = {
-  context: "websocket-server-socket-client",
+  context: "websocket-server-socket-client"
 };
 
 @injectable()
@@ -22,7 +22,7 @@ export class ServerWebsocketClient {
     private logger: ILogger,
 
     @inject("SessionStore")
-    private currentUserCache: ISingleItemStore<User>,
+    private currentUserCache: ISingleItemStore<User>
   ) {}
 
   public onConnect(socket: WebSocket) {
@@ -58,7 +58,7 @@ export class ServerWebsocketClient {
 
       this.logger.debug(`Message parsed`, {
         ...LOG_CONTEXT,
-        message: JSON.stringify(parsed),
+        message: JSON.stringify(parsed)
       });
 
       const command = new Command(parsed.key, parsed.data, await this.currentUserCache.get());
@@ -68,7 +68,7 @@ export class ServerWebsocketClient {
       this.eventBus.emit("CommandResponse", {
         id: parsed.id,
         key: parsed.key,
-        data: response,
+        data: response
       });
     } catch (error) {
       if (error instanceof AbstractError) {

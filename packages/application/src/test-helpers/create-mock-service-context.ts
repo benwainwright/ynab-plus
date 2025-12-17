@@ -5,7 +5,7 @@ import {
   User,
   type Commands,
   type ICommandMessage,
-  type IRole,
+  type IRole
 } from "@ynab-plus/domain";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
@@ -13,7 +13,7 @@ import { mock } from "vitest-mock-extended";
 export const createMockServiceContext = <TCommandKey extends keyof Commands>(
   key: TCommandKey,
   data: ICommandMessage<TCommandKey>["data"],
-  currentUser?: IRole | string,
+  currentUser?: IRole | string
 ): {
   command: Command<TCommandKey, IRole>;
   eventBus: IEventBus;
@@ -27,7 +27,7 @@ export const createMockServiceContext = <TCommandKey extends keyof Commands>(
             id: currentUser,
             passwordHash: "foo",
             permissions: ["user", "admin"],
-            email: "email",
+            email: "email"
           })
         : undefined;
 
@@ -37,7 +37,7 @@ export const createMockServiceContext = <TCommandKey extends keyof Commands>(
 
   const currentUserCache = mock<ISingleItemStore<User>>({
     get: vi.fn().mockResolvedValue(currentUser),
-    require: vi.fn().mockResolvedValue(currentUser),
+    require: vi.fn().mockResolvedValue(currentUser)
   });
 
   return { command, eventBus, currentUserCache };

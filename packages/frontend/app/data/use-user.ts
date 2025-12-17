@@ -18,7 +18,7 @@ export const useUser = (username?: string) => {
   const mapUser = (user: IUser): ILocalUser => ({
     permissions: user.permissions,
     password: "",
-    email: user.email,
+    email: user.email
   });
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const useUser = (username?: string) => {
         await command("UpdateUserCommand", { ...updatedUser, username });
       }
     },
-    [username],
+    [username]
   );
 
   useEvent("UserUpdated", (updatedUser) => {

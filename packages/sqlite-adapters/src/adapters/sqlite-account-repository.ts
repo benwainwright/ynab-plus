@@ -30,7 +30,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private domainEventStore: IDomainEventBuffer,
+    private domainEventStore: IDomainEventBuffer
   ) {}
 
   public async deleteAccount(account: Account): Promise<void> {
@@ -38,7 +38,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
-      [account.id],
+      [account.id]
     );
   }
 
@@ -47,7 +47,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance, linkedOpenBankingAccount
         FROM ${await this.tableName.value}
         where id = ?`,
-      [id],
+      [id]
     );
 
     if (!result) {
@@ -63,7 +63,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
       closed: account.closed === "closed",
       deleted: account.deleted === "deleted",
       note: account.note ?? undefined,
-      linkedOpenBankingAccount: account.linkedOpenBankingAccount ?? undefined,
+      linkedOpenBankingAccount: account.linkedOpenBankingAccount ?? undefined
     });
   }
 
@@ -73,7 +73,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
         FROM ${await this.tableName.value}
         WHERE userId = ?
         `,
-      [userId],
+      [userId]
     );
 
     return result.map((account) => this.mapRaw(account));
@@ -94,7 +94,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
           deleted TEXT NOT NULL,
           linkedOpenBankingAccount TEXT
       );`,
-      [],
+      []
     );
   }
 
@@ -125,8 +125,8 @@ export class Sqlite3AccountRepository implements IAccountRepository {
         thing.balance,
         thing.clearedBalance,
         thing.unclearedBalance,
-        thing.linkedOpenBankingAccount,
-      ],
+        thing.linkedOpenBankingAccount
+      ]
     );
 
     return thing;

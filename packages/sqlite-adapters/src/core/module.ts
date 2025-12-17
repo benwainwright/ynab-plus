@@ -11,7 +11,7 @@ import {
   SqliteRegularTaskRepository,
   SqliteSyncDetailsRepository,
   SqliteTransactionRepository,
-  SqliteUserRepository,
+  SqliteUserRepository
 } from "@adapters";
 
 import type { IInternalTypes } from "./internal-types.ts";

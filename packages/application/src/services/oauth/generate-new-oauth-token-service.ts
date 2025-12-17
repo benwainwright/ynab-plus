@@ -2,7 +2,7 @@ import {
   type IHandleContext,
   type IOauthCheckerFactory,
   type IOauthTokenRepository,
-  type ITaskScheduler,
+  type ITaskScheduler
 } from "@ports";
 import { type ILogger } from "@ynab-plus/bootstrap";
 import { RegularTask, type IRole, type Permission } from "@ynab-plus/domain";
@@ -30,15 +30,15 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
     private taskScheduler: ITaskScheduler,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
 
   protected override async handle<TRole extends IRole>({
     command: {
-      data: { code, provider },
-    },
+      data: { code, provider }
+    }
   }: IHandleContext<"GenerateNewOauthTokenCommand", TRole>): Promise<{
     status: "connected";
     expiry: Date;
@@ -47,7 +47,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
   }> {
     this.logger.silly(
       `Generating new oauth token for provider ${provider} with code ${code}`,
-      LOG_CONTEXT,
+      LOG_CONTEXT
     );
 
     const requester = this.newTokenRequesterFactory(provider);
@@ -73,7 +73,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
       day: "*",
       month: "*",
       weekDay: "*",
-      lastExecution: undefined,
+      lastExecution: undefined
     });
 
     await this.taskScheduler.scheduleTask(refreshTask);
@@ -82,7 +82,7 @@ export class GenerateNewOauthTokenService extends AbstractApplicationService<"Ge
       status: "connected",
       refreshed: token.refreshed,
       expiry: token.expiry,
-      created: token.created,
+      created: token.created
     };
   }
 }

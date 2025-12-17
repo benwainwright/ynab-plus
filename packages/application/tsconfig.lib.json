@@ -14,23 +14,23 @@
       "@errors": ["./src/errors/index.ts"],
       "@services": ["./src/services/index.ts"],
       "@services/open-banking": ["./src/services/open-banking/index.ts"],
-      "@services/oauth": ["./src/services/oauth/index.ts"],
-    },
+      "@services/oauth": ["./src/services/oauth/index.ts"]
+    }
   },
   "references": [
     {
-      "path": "../domain",
+      "path": "../domain"
     },
     {
-      "path": "../bootstrap",
+      "path": "../bootstrap"
     },
     {
-      "path": "../serialiser",
+      "path": "../serialiser"
     },
     {
-      "path": "../test-helpers",
-    },
+      "path": "../test-helpers"
+    }
   ],
   "include": ["./src/**/*.ts"],
-  "exclude": ["./src/**/*.test.ts", "src/test-helpers/setup.ts"],
+  "exclude": ["./src/**/*.test.ts", "src/test-helpers/setup.ts"]
 }

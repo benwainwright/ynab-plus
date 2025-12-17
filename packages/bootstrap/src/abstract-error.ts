@@ -22,7 +22,7 @@ export abstract class AbstractError extends Error {
 
       return {
         callee: item.callee,
-        file: `${item.fileRelative}:${lineString}${colString}`,
+        file: `${item.fileRelative}:${lineString}${colString}`
       };
     });
   }

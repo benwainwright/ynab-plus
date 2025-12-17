@@ -19,11 +19,11 @@ export class TransactionalServiceBus implements IServiceBus {
     private domainEvents: IDomainEventStore,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {}
 
   public async execute<TKey extends keyof Commands = keyof Commands, TRole extends IRole = User>(
-    command: Command<TKey, TRole>,
+    command: Command<TKey, TRole>
   ): Promise<Commands[TKey]["response"]> {
     try {
       this.logger.silly(`Transactional service bus beginning execution`, LOG_CONTEXT);

@@ -15,7 +15,7 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
     private taskScheduler: ITaskScheduler,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -26,9 +26,9 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
 
   protected override async handle<TRole extends IRole>({
     command: {
-      data: { provider },
+      data: { provider }
     },
-    eventBus,
+    eventBus
   }: IHandleContext<"DisconnectOauthIntegrationCommand", TRole>): Promise<undefined> {
     const token = await this.tokenRepo.get(this.currentUser.id, provider);
     if (token) {
@@ -36,7 +36,7 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
     }
 
     const task = await this.taskScheduler.getTask(
-      getTokenRefreshTaskKey(this.currentUser.id, provider),
+      getTokenRefreshTaskKey(this.currentUser.id, provider)
     );
 
     if (task) {
@@ -45,7 +45,7 @@ export class DisconnectOauthIntegrationService extends AbstractApplicationServic
     }
 
     eventBus.emit("OauthIntegrationDisconnected", {
-      provider,
+      provider
     });
   }
 }

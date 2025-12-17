@@ -4,7 +4,7 @@ import { BootstrapperToken, type IBootstrapper } from "./i-bootstrapper.ts";
 
 export const getConfigValueFactory = <TSchema extends StandardSchemaV1>(
   keyName: string,
-  schema: TSchema,
+  schema: TSchema
 ): Factory<StandardSchemaV1.InferOutput<TSchema>> => {
   return (context: ResolutionContext) => {
     const bootstrapper = context.get<IBootstrapper>(BootstrapperToken);

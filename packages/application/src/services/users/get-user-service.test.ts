@@ -13,7 +13,7 @@ describe("get user service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["public"],
+      permissions: ["public"]
     });
 
     const mockUserRepo = mock<IRepository<User> & IMultipleRepository<User>>({
@@ -23,13 +23,13 @@ describe("get user service", () => {
         }
 
         return Promise.resolve(undefined);
-      }),
+      })
     });
 
     const service = new GetUserService(mockUserRepo, mock());
 
     const context = createMockServiceContext("GetUserCommand", {
-      username: "ben",
+      username: "ben"
     });
 
     const result = await service.doHandle(context);
@@ -38,13 +38,13 @@ describe("get user service", () => {
 
   it("throws an error if the user is not found", async () => {
     const mockUserRepo = mock<IRepository<User> & IMultipleRepository<User>>({
-      get: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(undefined)
     });
 
     const service = new GetUserService(mockUserRepo, mock());
 
     const context = createMockServiceContext("GetUserCommand", {
-      username: "ben",
+      username: "ben"
     });
 
     await expect(service.doHandle(context)).rejects.toThrow(UserNotFoundError);

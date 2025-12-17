@@ -6,7 +6,7 @@ import type { ServiceIdentifier } from "inversify";
 export interface IBootstrapper {
   configValue<TConfigValue extends StandardSchemaV1>(
     key: string,
-    schema: TConfigValue,
+    schema: TConfigValue
   ): ConfigValue<StandardSchemaV1.InferOutput<TConfigValue>>;
 
   addInitStep(callback: () => Promise<void>): void;
@@ -14,5 +14,4 @@ export interface IBootstrapper {
   start(): Promise<void>;
 }
 
-export const BootstrapperToken: ServiceIdentifier<IBootstrapper> =
-  Symbol.for("Bootstrapper");
+export const BootstrapperToken: ServiceIdentifier<IBootstrapper> = Symbol.for("Bootstrapper");

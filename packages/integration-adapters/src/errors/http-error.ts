@@ -6,7 +6,7 @@ export class HttpError extends AbstractError {
   public constructor(
     message: string,
     private statusCode: number,
-    private body: string,
+    private body: string
   ) {
     super(message);
   }
@@ -14,7 +14,7 @@ export class HttpError extends AbstractError {
   public override handle(events: IEventBus<AdapterEvents>): void {
     events.emit("HttpError", {
       statusCode: this.statusCode,
-      body: this.body,
+      body: this.body
     });
   }
 }

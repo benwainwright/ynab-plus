@@ -1,10 +1,7 @@
 import { DomainModel } from "@core";
 import { transactionSchema, type ITransaction } from "./i-transaction.ts";
 
-export class Transaction
-  extends DomainModel<ITransaction>
-  implements ITransaction
-{
+export class Transaction extends DomainModel<ITransaction> implements ITransaction {
   public override freezeDry(_config?: { secure: boolean }): {
     id: string;
     accountId: string;
@@ -25,7 +22,7 @@ export class Transaction
       amount: this.amount,
       cleared: this.cleared,
       approved: this.approved,
-      memo: this.memo,
+      memo: this.memo
     };
   }
 

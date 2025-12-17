@@ -22,7 +22,7 @@ describe("download-accounts service", () => {
     const context = createMockServiceContext(
       "SyncAccountsCommand",
       { force: true },
-      new SystemContext("test", ["system"]),
+      new SystemContext("test", ["system"])
     );
 
     const service = new SyncAccountsService(mock(), mock(), mock(), mock(), mock());
@@ -37,7 +37,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
@@ -47,7 +47,7 @@ describe("download-accounts service", () => {
         [Symbol.asyncDispose]: () => Promise<void>;
       }
     >({
-      lastUse,
+      lastUse
     });
 
     const mockTokenRepo = mock<OauthTokenManager>();
@@ -67,7 +67,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -79,8 +79,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
@@ -94,13 +94,13 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mock(),
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext(
       "SyncAccountsCommand",
       { force: true },
-      new SystemContext("test", ["admin"], user),
+      new SystemContext("test", ["admin"], user)
     );
 
     const result = await service.doHandle(context);
@@ -118,7 +118,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
@@ -128,7 +128,7 @@ describe("download-accounts service", () => {
         [Symbol.asyncDispose]: () => Promise<void>;
       }
     >({
-      lastUse,
+      lastUse
     });
 
     const mockTokenRepo = mock<OauthTokenManager>();
@@ -148,7 +148,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -160,7 +160,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -172,7 +172,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -184,8 +184,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     const storedAccounts = [
@@ -199,7 +199,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -211,8 +211,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     const mockAccountsRepo = mock<IAccountRepository>();
@@ -228,7 +228,7 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mockTaskScheduler,
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
@@ -251,7 +251,7 @@ describe("download-accounts service", () => {
       weekDay: "*",
       name: "Download transactions",
       description: "Keeps account transactions in sync",
-      command: "SyncAccountCommand",
+      command: "SyncAccountCommand"
     });
 
     const taskTwo = RegularTask.reconstitute({
@@ -268,7 +268,7 @@ describe("download-accounts service", () => {
       weekDay: "*",
       name: "Download transactions",
       description: "Keeps account transactions in sync",
-      command: "SyncAccountCommand",
+      command: "SyncAccountCommand"
     });
 
     expect(mockTaskScheduler.scheduleTask).toHaveBeenCalledWith(taskOne);
@@ -282,7 +282,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
@@ -310,7 +310,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -322,8 +322,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
@@ -337,7 +337,7 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mock(),
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext("SyncAccountsCommand", { force: true }, user);
@@ -355,7 +355,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
@@ -379,7 +379,7 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mock(),
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);
@@ -400,7 +400,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const lastUse = new Date("2025-11-15T11:07:50.571Z");
@@ -428,7 +428,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -440,8 +440,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
@@ -455,7 +455,7 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mock(),
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);
@@ -475,7 +475,7 @@ describe("download-accounts service", () => {
       id: "ben",
       email: "a@b.c",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const token = mock<
@@ -501,7 +501,7 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -513,8 +513,8 @@ describe("download-accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     when(mockFetcher.getAccounts).calledWith(token).thenResolve(accounts);
@@ -528,7 +528,7 @@ describe("download-accounts service", () => {
       mockFetcher,
       mockAccountsRepo,
       mock(),
-      mock(),
+      mock()
     );
 
     const context = createMockServiceContext("SyncAccountsCommand", { force: false }, user);

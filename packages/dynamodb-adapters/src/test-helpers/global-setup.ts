@@ -15,8 +15,8 @@ export const setup = async () => {
         if (err instanceof Error) {
           reject(err);
         }
-      },
-    ),
+      }
+    )
   );
 };
 
@@ -32,7 +32,7 @@ export const teardown = async () => {
         if (err instanceof Error) {
           reject(err);
         }
-      },
-    ),
+      }
+    )
   );
 };

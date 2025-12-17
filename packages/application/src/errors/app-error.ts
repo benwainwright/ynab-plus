@@ -5,7 +5,7 @@ export class AppError extends AbstractError {
   public handle(events: IEventBus) {
     events.emit("ApplicationError", {
       stack: this.parsedStack,
-      message: this.message,
+      message: this.message
     });
   }
 }

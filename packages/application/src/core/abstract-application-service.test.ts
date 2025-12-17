@@ -15,17 +15,13 @@ describe("application service", () => {
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         protected override async handle<TRole extends IRole = User>(
-          _context: IHandleContext<"LogoutCommand", TRole>,
+          _context: IHandleContext<"LogoutCommand", TRole>
         ): Promise<undefined> {}
       }
 
       const handler = new TestHandler(mock());
 
-      const command = new Command(
-        "LoginCommand",
-        { username: "foo", password: "bar" },
-        undefined,
-      );
+      const command = new Command("LoginCommand", { username: "foo", password: "bar" }, undefined);
 
       const result = handler.canHandle(command);
       expect(result).toBe(false);
@@ -38,7 +34,7 @@ describe("application service", () => {
         public override readonly requiredPermissions: Permission[] = ["public"];
 
         protected override async handle<TRole extends IRole = User>(
-          _context: IHandleContext<"LogoutCommand", TRole>,
+          _context: IHandleContext<"LogoutCommand", TRole>
         ): Promise<undefined> {}
       }
 
@@ -60,7 +56,7 @@ describe("application service", () => {
 
         // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle<TRole extends IRole = User>(
-          context: IHandleContext<"LogoutCommand", TRole>,
+          context: IHandleContext<"LogoutCommand", TRole>
         ): Promise<undefined> {
           passed = context;
         }
@@ -82,14 +78,11 @@ describe("application service", () => {
       class TestHandler extends AbstractApplicationService<"LogoutCommand"> {
         public override readonly commandName = "LogoutCommand";
 
-        public override readonly requiredPermissions: Permission[] = [
-          "user",
-          "admin",
-        ];
+        public override readonly requiredPermissions: Permission[] = ["user", "admin"];
 
         // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle<TRole extends IRole = User>(
-          _context: IHandleContext<"LogoutCommand", TRole>,
+          _context: IHandleContext<"LogoutCommand", TRole>
         ): Promise<undefined> {
           handled = true;
         }
@@ -99,7 +92,7 @@ describe("application service", () => {
         id: "test",
         permissions: ["admin"],
         email: "a@b.c",
-        passwordHash: "foo",
+        passwordHash: "foo"
       });
 
       const command = new Command("LogoutCommand", undefined, user);
@@ -123,7 +116,7 @@ describe("application service", () => {
 
         // eslint-disable-next-line @typescript-eslint/require-await
         protected override async handle<TRole extends IRole = User>(
-          _context: IHandleContext<"LogoutCommand", TRole>,
+          _context: IHandleContext<"LogoutCommand", TRole>
         ): Promise<undefined> {
           handled = true;
         }
@@ -133,7 +126,7 @@ describe("application service", () => {
         id: "test",
         permissions: ["user"],
         email: "a@b.c",
-        passwordHash: "foo",
+        passwordHash: "foo"
       });
 
       const command = new Command("LogoutCommand", undefined, user);
@@ -144,9 +137,7 @@ describe("application service", () => {
 
       const context = { command, eventBus };
 
-      await expect(handler.doHandle(context)).rejects.toThrow(
-        NotAuthorisedError,
-      );
+      await expect(handler.doHandle(context)).rejects.toThrow(NotAuthorisedError);
       expect(handled).toBe(false);
     });
   });

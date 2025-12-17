@@ -12,7 +12,7 @@ export class DynamoDbSyncDetailsRepository implements IRepository<SyncDetails> {
     private readonly tableClient: DyanamoDbSingleTableClient,
 
     @inject("DomainEventBuffer")
-    private eventBuffer: IDomainEventBuffer,
+    private eventBuffer: IDomainEventBuffer
   ) {}
 
   public async get(id: string): Promise<SyncDetails | undefined> {
@@ -31,7 +31,7 @@ export class DynamoDbSyncDetailsRepository implements IRepository<SyncDetails> {
       id: result.id,
       provider: result.provider,
       checkpoint: result.checkpoint,
-      lastSync: result.lastSync,
+      lastSync: result.lastSync
     });
   }
 
@@ -47,9 +47,9 @@ export class DynamoDbSyncDetailsRepository implements IRepository<SyncDetails> {
         id: thing.id,
         ...(thing.checkpoint ? { checkpoint: thing.checkpoint } : {}),
         ...(thing.lastSync ? { lastSync: thing.lastSync } : {}),
-        provider: thing.provider,
+        provider: thing.provider
       },
-      { transaction: this.tableClient.transaction },
+      { transaction: this.tableClient.transaction }
     );
 
     return thing;

@@ -7,7 +7,7 @@ export const testAccountsRepository = (
     repo: IAccountRepository;
     unitOfWork: IUnitOfWork;
     eventBuffer: Mocked<IDomainEventBuffer>;
-  }>,
+  }>
 ) => {
   describe("the account repository", () => {
     it("can delete accounts", async () => {
@@ -23,7 +23,7 @@ export const testAccountsRepository = (
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       const accountTwo = Account.create({
@@ -36,7 +36,7 @@ export const testAccountsRepository = (
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       await unitOfWork.begin();
@@ -71,7 +71,7 @@ export const testAccountsRepository = (
         deleted: false,
         balance: 1000,
         clearedBalance: 1_000,
-        unclearedBalance: 10_000,
+        unclearedBalance: 10_000
       });
 
       const accountTwo = Account.reconstitute({
@@ -84,7 +84,7 @@ export const testAccountsRepository = (
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       await unitOfWork.begin();
@@ -107,7 +107,7 @@ export const testAccountsRepository = (
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       const accountTwo = Account.reconstitute({
@@ -120,7 +120,7 @@ export const testAccountsRepository = (
         balance: 1000,
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
-        deleted: false,
+        deleted: false
       });
 
       await unitOfWork.begin();
@@ -147,7 +147,7 @@ export const testAccountsRepository = (
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       const accountTwo = Account.reconstitute({
@@ -160,7 +160,7 @@ export const testAccountsRepository = (
         type: "checking",
         closed: false,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       const accountThree = Account.reconstitute({
@@ -173,7 +173,7 @@ export const testAccountsRepository = (
         unclearedBalance: 10_000,
         closed: false,
         note: "a note",
-        deleted: false,
+        deleted: false
       });
 
       await unitOfWork.begin();

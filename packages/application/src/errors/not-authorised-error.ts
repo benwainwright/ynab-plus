@@ -1,10 +1,5 @@
 import type { IEventBus } from "@ports";
-import type {
-  Commands,
-  Permission,
-  SystemContext,
-  User,
-} from "@ynab-plus/domain";
+import type { Commands, Permission, SystemContext, User } from "@ynab-plus/domain";
 
 import { AppError } from "./app-error.ts";
 
@@ -13,7 +8,7 @@ export class NotAuthorisedError extends AppError {
     message: string,
     public readonly handler: keyof Commands,
     public readonly role: User | SystemContext | undefined,
-    public readonly requiredPermissions: Permission[],
+    public readonly requiredPermissions: Permission[]
   ) {
     super(message);
   }
@@ -22,7 +17,7 @@ export class NotAuthorisedError extends AppError {
     events.emit("NotAuthorisedError", {
       handler: this.handler,
       role: this.role,
-      requiredPermissions: this.requiredPermissions,
+      requiredPermissions: this.requiredPermissions
     });
   }
 }

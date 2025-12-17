@@ -15,13 +15,13 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const result = new Promise((accept) =>
         bus.on("AppInitialised", (data) => {
           accept(data);
-        }),
+        })
       );
       bus.emit("AppInitialised", data);
 
@@ -47,7 +47,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const mockHandler = vi.fn();
@@ -83,7 +83,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const mockOne = vi.fn();
@@ -129,7 +129,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       bus.emit("AppClosing", undefined);
@@ -137,12 +137,12 @@ describe("event bus", () => {
 
       expect(mockListener).toHaveBeenCalledWith({
         key: "AppClosing",
-        data: undefined,
+        data: undefined
       });
 
       expect(mockListener).toHaveBeenCalledWith({
         key: "AppInitialised",
-        data,
+        data
       });
     });
   });
@@ -175,7 +175,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const parentListener = vi.fn();
@@ -202,13 +202,13 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const result = new Promise((accept) =>
         child.on("AppInitialised", (data) => {
           accept(data);
-        }),
+        })
       );
 
       child.emit("AppInitialised", data);
@@ -224,7 +224,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const listener = vi.fn();
@@ -245,7 +245,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const mockListener2 = vi.fn();
@@ -267,7 +267,7 @@ describe("event bus", () => {
 
       const data = {
         url: "foo",
-        port: 20,
+        port: 20
       };
 
       const mockListener1 = vi.fn();

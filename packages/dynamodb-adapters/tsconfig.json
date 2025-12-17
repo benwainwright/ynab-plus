@@ -3,14 +3,14 @@
   "files": ["./vitest.config.ts"],
   "include": [],
   "compilerOptions": {
-    "outDir": ".temp",
+    "outDir": ".temp"
   },
   "references": [
     {
-      "path": "./tsconfig.lib.json",
+      "path": "./tsconfig.lib.json"
     },
     {
-      "path": "./tsconfig.test.json",
-    },
-  ],
+      "path": "./tsconfig.test.json"
+    }
+  ]
 }

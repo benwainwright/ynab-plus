@@ -3,7 +3,7 @@ import {
   type IAccountRepository,
   type IAccountsFetcher,
   type IHandleContext,
-  type ITaskScheduler,
+  type ITaskScheduler
 } from "@ports";
 import type { OauthTokenManager } from "@services/oauth";
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -31,7 +31,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
     private taskScheduler: ITaskScheduler,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -43,8 +43,8 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
   protected override async handle<TRole extends IRole>({
     eventBus,
     command: {
-      data: { force },
-    },
+      data: { force }
+    }
   }: IHandleContext<"SyncAccountsCommand", TRole>) {
     eventBus.emit("AccountsSyncStarted", undefined);
     try {
@@ -56,7 +56,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
       if (token.lastUse && Date.now() < token.lastUse.getTime() + COOLOFF_WINDOW && !force) {
         this.logger.debug(
           `Token was used recently or force wasn't passed. Skipping sync`,
-          LOG_CONTEXT,
+          LOG_CONTEXT
         );
         return { synced: false };
       }
@@ -67,7 +67,7 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
 
       const [storedAccounts, fetchedAccounts] = await Promise.all([
         storedAccountsPromise,
-        fetchedAccountsPromise,
+        fetchedAccountsPromise
       ]);
 
       await Promise.all(
@@ -88,12 +88,12 @@ export class SyncAccountsService extends AbstractApplicationService<"SyncAccount
               weekDay: "*",
               name: "Download transactions",
               description: "Keeps account transactions in sync",
-              command: "SyncAccountCommand",
+              command: "SyncAccountCommand"
             });
 
             await this.taskScheduler.scheduleTask(downloadTask);
           }
-        }),
+        })
       );
 
       this.logger.debug(`Saving accounts into repo`, LOG_CONTEXT);

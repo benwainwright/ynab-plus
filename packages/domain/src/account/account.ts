@@ -43,7 +43,7 @@ export class Account extends DomainModel<IAccount> implements IAccount {
     this._linkedOpenBankingAccount = id;
     this.raiseEvent({
       event: "AccountLinked",
-      data: { old, new: Account.reconstitute(this) },
+      data: { old, new: Account.reconstitute(this) }
     });
   }
 
@@ -59,7 +59,7 @@ export class Account extends DomainModel<IAccount> implements IAccount {
 
     this.raiseEvent({
       event: "AccountBalanceUpdated",
-      data: { old, new: Account.reconstitute(this) },
+      data: { old, new: Account.reconstitute(this) }
     });
   }
 
@@ -86,12 +86,12 @@ export class Account extends DomainModel<IAccount> implements IAccount {
       type: this.type,
       closed: this.closed,
       deleted: this.deleted,
-      note: this.note,
+      note: this.note
     };
   }
 
   public static reconstitute(
-    config: Omit<IAccount, "note"> & { note?: string | undefined | null },
+    config: Omit<IAccount, "note"> & { note?: string | undefined | null }
   ) {
     return new Account(accountSchema.parse(config));
   }

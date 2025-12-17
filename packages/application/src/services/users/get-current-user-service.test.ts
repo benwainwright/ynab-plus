@@ -1,9 +1,5 @@
 import { AppError } from "@errors";
-import type {
-  ICurrentUserSetter,
-  IMultipleRepository,
-  IRepository,
-} from "@ports";
+import type { ICurrentUserSetter, IMultipleRepository, IRepository } from "@ports";
 import { SystemContext, User } from "@ynab-plus/domain";
 import { describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
@@ -16,7 +12,7 @@ describe("get user command handler", () => {
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
       undefined,
-      new SystemContext("test", ["system"]),
+      new SystemContext("test", ["system"])
     );
 
     const mockSetter = mock<ICurrentUserSetter>();
@@ -31,7 +27,7 @@ describe("get user command handler", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const repo = mock<IRepository<User> & IMultipleRepository<User>>({
@@ -40,7 +36,7 @@ describe("get user command handler", () => {
           return Promise.resolve(mockUser);
         }
         return Promise.resolve(undefined);
-      }),
+      })
     });
 
     const context = createMockServiceContext(
@@ -50,8 +46,8 @@ describe("get user command handler", () => {
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-      }),
+        passwordHash: "foo"
+      })
     );
 
     const mockSetter = mock<ICurrentUserSetter>();
@@ -67,7 +63,7 @@ describe("get user command handler", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const repo = mock<IRepository<User> & IMultipleRepository<User>>({
@@ -76,14 +72,10 @@ describe("get user command handler", () => {
           return Promise.resolve(mockUser);
         }
         return Promise.resolve(undefined);
-      }),
+      })
     });
 
-    const context = createMockServiceContext(
-      "GetCurrentUserCommand",
-      undefined,
-      undefined,
-    );
+    const context = createMockServiceContext("GetCurrentUserCommand", undefined, undefined);
 
     const mockSetter = mock<ICurrentUserSetter>();
     const handler = new GetCurrentUserService(repo, mock(), mockSetter);
@@ -98,7 +90,7 @@ describe("get user command handler", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
-      email: "email",
+      email: "email"
     });
 
     const repo = mock<IRepository<User> & IMultipleRepository<User>>({
@@ -107,16 +99,12 @@ describe("get user command handler", () => {
           return Promise.resolve(mockUser);
         }
         return Promise.resolve(undefined);
-      }),
+      })
     });
 
     const mockCurrentUserSetter = mock<ICurrentUserSetter>();
 
-    const handler = new GetCurrentUserService(
-      repo,
-      mock(),
-      mockCurrentUserSetter,
-    );
+    const handler = new GetCurrentUserService(repo, mock(), mockCurrentUserSetter);
 
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
@@ -125,28 +113,22 @@ describe("get user command handler", () => {
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-      }),
+        passwordHash: "foo"
+      })
     );
 
     await handler.doHandle(context);
 
-    expect(mockCurrentUserSetter.set.mock.lastCall?.[0]?.permissions).toEqual([
-      "user",
-    ]);
+    expect(mockCurrentUserSetter.set.mock.lastCall?.[0]?.permissions).toEqual(["user"]);
   });
 
   it("throws an error if the logged in user does not exist in the database", async () => {
     const repo = mock<IRepository<User> & IMultipleRepository<User>>({
-      get: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(undefined)
     });
 
     const mockCurrentUserSetter = mock<ICurrentUserSetter>();
-    const handler = new GetCurrentUserService(
-      repo,
-      mock(),
-      mockCurrentUserSetter,
-    );
+    const handler = new GetCurrentUserService(repo, mock(), mockCurrentUserSetter);
 
     const context = createMockServiceContext(
       "GetCurrentUserCommand",
@@ -155,8 +137,8 @@ describe("get user command handler", () => {
         id: "ben",
         permissions: ["admin"],
         email: "bwainwright28@gmail.com",
-        passwordHash: "foo",
-      }),
+        passwordHash: "foo"
+      })
     );
 
     await expect(handler.doHandle(context)).rejects.toThrow(AppError);

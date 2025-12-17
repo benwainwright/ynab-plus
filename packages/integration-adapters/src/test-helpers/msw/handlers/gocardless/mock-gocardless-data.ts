@@ -16,9 +16,9 @@ export const mockGocardlessData = {
         product: "string",
         cashAccountType: "string",
         additionalAccountData: {
-          secondaryIdentification: "string",
-        },
-      },
+          secondaryIdentification: "string"
+        }
+      }
     },
     bar: {
       account: {
@@ -30,10 +30,10 @@ export const mockGocardlessData = {
         product: "string",
         cashAccountType: "string",
         additionalAccountData: {
-          secondaryIdentification: "string",
-        },
-      },
-    },
+          secondaryIdentification: "string"
+        }
+      }
+    }
   },
   mockAccountId: "foo",
   mockBalancesResponse: {
@@ -41,20 +41,20 @@ export const mockGocardlessData = {
       {
         balanceAmount: {
           amount: "657.49",
-          currency: "string",
+          currency: "string"
         },
         balanceType: "string",
-        referenceDate: "2021-11-22",
+        referenceDate: "2021-11-22"
       },
       {
         balanceAmount: {
           amount: "185.67",
-          currency: "string",
+          currency: "string"
         },
         balanceType: "string",
-        referenceDate: "2021-11-19",
-      },
-    ],
+        referenceDate: "2021-11-19"
+      }
+    ]
   },
   mockRequisitionResponse: {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -69,7 +69,7 @@ export const mockGocardlessData = {
     link: "https://ob.gocardless.com/psd2/start/3fa85f64-5717-4562-b3fc-2c963f66afa6/{$INSTITUTION_ID}",
     ssn: "string",
     account_selection: false,
-    redirect_immediate: false,
+    redirect_immediate: false
   },
 
   mockInstititionsList: [
@@ -81,7 +81,7 @@ export const mockGocardlessData = {
       countries: ["GB"],
       logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/abnamrobank.png",
       max_access_valid_for_days: "90",
-      max_access_valid_for_days_reconfirmation: "730",
+      max_access_valid_for_days_reconfirmation: "730"
     },
     {
       id: "REVOLUT_REVOGB21",
@@ -91,7 +91,7 @@ export const mockGocardlessData = {
       countries: ["GB"],
       logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png",
       max_access_valid_for_days: "90",
-      max_access_valid_for_days_reconfirmation: "730",
-    },
-  ],
+      max_access_valid_for_days_reconfirmation: "730"
+    }
+  ]
 };

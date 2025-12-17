@@ -9,21 +9,16 @@ interface SelectInstitutionButtonProps {
 }
 
 export const SelectInstitutionButton = ({
-  institutions,
+  institutions
 }: SelectInstitutionButtonProps): ReactNode => {
   const [modalOpened, setModalOpened] = useState(false);
   const [bank, setBank] = useState<string>();
 
   const goToInstitutionLink = async () => {
-    const institution = institutions.find(
-      (institution) => institution.bankName === bank,
-    );
+    const institution = institutions.find((institution) => institution.bankName === bank);
 
     if (institution) {
-      const result = await command(
-        "GetInstitutionAuthorizationPageLinkCommand",
-        institution,
-      );
+      const result = await command("GetInstitutionAuthorizationPageLinkCommand", institution);
       window.location.href = result.url;
     }
   };
@@ -44,8 +39,8 @@ export const SelectInstitutionButton = ({
           value={bank ?? ""}
         />
         <Text mt="md">
-          Click on the box above and enter the name of your bank, then press the
-          connect button to be taken to your bank for authorization.
+          Click on the box above and enter the name of your bank, then press the connect button to
+          be taken to your bank for authorization.
         </Text>
         <Button
           mt="md"

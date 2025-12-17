@@ -3,7 +3,5 @@ import type { IOAuthTokenRefresher } from "./i-oauth-token-refresher.ts";
 import type { IOauthNewTokenRequester } from "./i-oauth-new-token-requester.ts";
 
 export type IOauthCheckerFactory = (
-  provider: string,
-) => IOauthRedirectUrlGenerator &
-  IOAuthTokenRefresher &
-  IOauthNewTokenRequester;
+  provider: string
+) => IOauthRedirectUrlGenerator & IOAuthTokenRefresher & IOauthNewTokenRequester;

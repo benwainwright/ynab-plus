@@ -3,7 +3,7 @@ import {
   type IHandleContext,
   type IMultipleRepository,
   type IRepository,
-  type IPasswordHasher,
+  type IPasswordHasher
 } from "@ports";
 import { AbstractError, type ILogger } from "@ynab-plus/bootstrap";
 import { User, type IRole } from "@ynab-plus/domain";
@@ -30,14 +30,14 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
 
     @optional()
     @inject("CurrentUserSetter")
-    private currentUserSetter?: ICurrentUserSetter,
+    private currentUserSetter?: ICurrentUserSetter
   ) {
     super(logger);
   }
 
   public override async handle<TRole extends IRole>({
     command,
-    eventBus,
+    eventBus
   }: IHandleContext<"RegisterCommand", TRole>) {
     const { password, username, email } = command.data;
 
@@ -47,7 +47,7 @@ export class RegisterUserService extends AbstractApplicationService<"RegisterCom
       id: username,
       email,
       passwordHash: hash,
-      permissions: ["user"],
+      permissions: ["user"]
     });
 
     this.logger.verbose(`Attempting to save user in repository`, LOG_CONTEXT);

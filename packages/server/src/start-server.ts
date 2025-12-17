@@ -12,7 +12,7 @@ import { TypedContainer } from "@inversifyjs/strongly-typed";
 
 const start = async () => {
   const container = new TypedContainer<BootstrapTypes>({
-    defaultScope: "Request",
+    defaultScope: "Request"
   });
 
   container.bind("Container").toConstantValue(container);
@@ -29,4 +29,6 @@ const start = async () => {
   await bootstrapper.start();
 };
 
-start().catch((error: unknown) =>{  console.log(error); });
+start().catch((error: unknown) => {
+  console.log(error);
+});

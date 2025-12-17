@@ -1,8 +1,4 @@
-import type {
-  IEventBus,
-  IServiceBus,
-  RequestScopedServiceBusFactory,
-} from "@ports";
+import type { IEventBus, IServiceBus, RequestScopedServiceBusFactory } from "@ports";
 
 export interface IApplicationLayer {
   withRequestScopedServiceBus: () => RequestScopedServiceBusFactory;

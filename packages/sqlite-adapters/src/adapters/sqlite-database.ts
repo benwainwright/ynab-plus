@@ -17,7 +17,7 @@ export class SqliteDatabase implements IUnitOfWork {
 
   public constructor(
     @inject("DatabaseFilename")
-    private readonly databaseName: ConfigValue<string>,
+    private readonly databaseName: ConfigValue<string>
   ) {}
 
   public async begin(): Promise<void> {
@@ -57,7 +57,7 @@ export class SqliteDatabase implements IUnitOfWork {
   public async deferQueryToTransaction(sql: string, ...params: unknown[]) {
     this.storedQueries.push({
       sql,
-      params,
+      params
     });
   }
 

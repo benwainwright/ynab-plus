@@ -2,7 +2,7 @@ import type { IUser } from "@ynab-plus/domain";
 
 export const canAccess = ({
   user,
-  routeTags,
+  routeTags
 }: {
   user: IUser | undefined;
   routeTags: string[];

@@ -20,7 +20,7 @@ describe("the oauth token", () => {
         lastUse: undefined,
         created: new Date(),
         refreshed: undefined,
-        userId: "user",
+        userId: "user"
       });
 
       newToken.delete();
@@ -28,8 +28,8 @@ describe("the oauth token", () => {
       expect(newToken.pullEvents()).toEqual([
         {
           event: "OauthTokenDeleted",
-          data: newToken,
-        },
+          data: newToken
+        }
       ]);
     });
   });
@@ -44,14 +44,14 @@ describe("the oauth token", () => {
       refreshToken: "string",
       expiry: new Date(),
       refreshExpiry: new Date(),
-      userId: "user",
+      userId: "user"
     });
 
     expect(newToken.pullEvents()).toEqual([
       {
         event: "OauthTokenCreated",
-        data: newToken,
-      },
+        data: newToken
+      }
     ]);
 
     expect(newToken.refreshed).toEqual(undefined);
@@ -73,7 +73,7 @@ describe("the oauth token", () => {
         lastUse: undefined,
         created: new Date(),
         refreshed: undefined,
-        userId: "user",
+        userId: "user"
       });
 
       const token = newToken.use();
@@ -83,8 +83,8 @@ describe("the oauth token", () => {
       expect(newToken.pullEvents()).toEqual([
         {
           event: "OauthTokenUsed",
-          data: newToken,
-        },
+          data: newToken
+        }
       ]);
     });
 
@@ -99,7 +99,7 @@ describe("the oauth token", () => {
           lastUse: undefined,
           created: new Date(),
           refreshed: undefined,
-          userId: "user",
+          userId: "user"
         });
 
         const dried = newToken.freezeDry();
@@ -115,7 +115,7 @@ describe("the oauth token", () => {
           lastUse: undefined,
           created: new Date(),
           refreshed: undefined,
-          userId: "user",
+          userId: "user"
         });
       });
 
@@ -129,7 +129,7 @@ describe("the oauth token", () => {
           lastUse: undefined,
           created: new Date(),
           refreshed: undefined,
-          userId: "user",
+          userId: "user"
         });
 
         expect(newToken.freezeDry({ secure: true })).toEqual({
@@ -141,7 +141,7 @@ describe("the oauth token", () => {
           lastUse: undefined,
           created: new Date(),
           refreshed: undefined,
-          userId: "user",
+          userId: "user"
         });
       });
     });
@@ -160,7 +160,7 @@ describe("the oauth token", () => {
           lastUse: undefined,
           created: new Date(),
           refreshed: undefined,
-          userId: "user",
+          userId: "user"
         });
 
         const expiry = new Date("2025-11-22T13:18:27.377Z");
@@ -185,7 +185,7 @@ describe("the oauth token", () => {
                 lastUse: undefined,
                 created: new Date(),
                 refreshed: undefined,
-                userId: "user",
+                userId: "user"
               }),
               new: OauthToken.reconstitute({
                 provider: "ynab",
@@ -196,10 +196,10 @@ describe("the oauth token", () => {
                 lastUse: undefined,
                 created: new Date(),
                 refreshed: new Date(),
-                userId: "user",
-              }),
-            },
-          },
+                userId: "user"
+              })
+            }
+          }
         ]);
       });
     });

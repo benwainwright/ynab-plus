@@ -9,7 +9,7 @@ export class ServerError extends AbstractError {
   public override handle(events: IEventEmitter) {
     events.emit("ApplicationError", {
       stack: this.parsedStack,
-      message: this.message,
+      message: this.message
     });
   }
 }

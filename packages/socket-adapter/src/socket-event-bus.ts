@@ -3,7 +3,7 @@ import type {
   IEventPacket,
   IEventListener,
   IListener,
-  AllEvents,
+  AllEvents
 } from "@ynab-plus/app";
 import { Serialiser } from "@ynab-plus/serialiser";
 import { type Events } from "@ynab-plus/domain";
@@ -21,8 +21,8 @@ export class SocketEventBus implements Bus {
     this.socket.send(
       serialiser.serialise({
         key,
-        data,
-      }),
+        data
+      })
     );
   }
 
@@ -39,9 +39,7 @@ export class SocketEventBus implements Bus {
     const listener = (packet: MessageEvent<Events>) => {
       if (packet.type === "message" && typeof packet.data === "string") {
         const serialiser = new Serialiser();
-        const parsed = serialiser.deserialise(
-          packet.data,
-        ) as IEventPacket<AllEvents>;
+        const parsed = serialiser.deserialise(packet.data) as IEventPacket<AllEvents>;
         callback(parsed);
       }
     };
@@ -53,7 +51,7 @@ export class SocketEventBus implements Bus {
 
   public on<TKey extends keyof AllEvents>(
     key: TKey,
-    callback: (data: IEventPacket<AllEvents, TKey>["data"]) => void,
+    callback: (data: IEventPacket<AllEvents, TKey>["data"]) => void
   ): string {
     const handler = (packet: IEventPacket<AllEvents>) => {
       if (packet.key === key) {

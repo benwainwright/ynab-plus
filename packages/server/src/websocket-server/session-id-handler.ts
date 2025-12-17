@@ -26,9 +26,7 @@ export class SessionIdHandler {
     }
   }
 
-  private parseSessionIdFromRequest(
-    request: IncomingMessage,
-  ): string | undefined {
+  private parseSessionIdFromRequest(request: IncomingMessage): string | undefined {
     const cookies = cookie.parse(request.headers.cookie ?? "");
     const key = cookies[SESSION_ID_COOKIE_KEY];
     if (key) {
@@ -42,10 +40,7 @@ export class SessionIdHandler {
 
   public getSessionId(request: IncomingMessage): string {
     const id = this.sessionIds.get(request);
-    this.logger.debug(
-      `Retrieving session id ${String(id)} from session id store`,
-      LOG_CONTEXT,
-    );
+    this.logger.debug(`Retrieving session id ${String(id)} from session id store`, LOG_CONTEXT);
     if (!id) {
       throw new ServerError(`No id was found`);
     }

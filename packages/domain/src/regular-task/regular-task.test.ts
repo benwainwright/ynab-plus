@@ -25,7 +25,7 @@ describe("the regular task domain model", () => {
         weekDay: "*",
         name: "Do my shopping",
         description: "A task to do my shopping",
-        command: "SyncAccountsCommand",
+        command: "SyncAccountsCommand"
       });
 
       expect(task.freezeDry()).toEqual({
@@ -42,7 +42,7 @@ describe("the regular task domain model", () => {
         weekDay: "*",
         name: "Do my shopping",
         description: "A task to do my shopping",
-        command: "SyncAccountsCommand",
+        command: "SyncAccountsCommand"
       });
     });
   });
@@ -61,14 +61,14 @@ describe("the regular task domain model", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     expect(task.pullEvents()).toEqual([
       {
         event: "RegularTaskCreated",
-        data: task,
-      },
+        data: task
+      }
     ]);
   });
 
@@ -87,12 +87,12 @@ describe("the regular task domain model", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     task.updateTask({
       name: "foo",
-      description: "bar",
+      description: "bar"
     });
 
     expect(task.pullEvents()).toEqual([
@@ -113,7 +113,7 @@ describe("the regular task domain model", () => {
             weekDay: "*",
             name: "Do my shopping",
             description: "A task to do my shopping",
-            command: "SyncAccountsCommand",
+            command: "SyncAccountsCommand"
           }),
           new: RegularTask.reconstitute({
             id: "foo",
@@ -129,10 +129,10 @@ describe("the regular task domain model", () => {
             weekDay: "*",
             name: "foo",
             description: "bar",
-            command: "SyncAccountsCommand",
-          }),
-        },
-      },
+            command: "SyncAccountsCommand"
+          })
+        }
+      }
     ]);
   });
 
@@ -151,7 +151,7 @@ describe("the regular task domain model", () => {
       weekDay: "*",
       name: "Do my shopping",
       description: "A task to do my shopping",
-      command: "SyncAccountsCommand",
+      command: "SyncAccountsCommand"
     });
 
     task.delete();
@@ -159,8 +159,8 @@ describe("the regular task domain model", () => {
     expect(task.pullEvents()).toEqual([
       {
         event: "RegularTaskDeleted",
-        data: task,
-      },
+        data: task
+      }
     ]);
   });
 });

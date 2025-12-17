@@ -8,7 +8,7 @@ const dateFormat = {
   month: "short",
   day: "2-digit",
   hour: "2-digit",
-  minute: "2-digit",
+  minute: "2-digit"
 } as const;
 
 interface BankConnectionConnectionDetails {
@@ -25,7 +25,7 @@ interface BankConnectedIntegrationStatusBodyProps {
 }
 
 export const BankConnectedIntegrationStatusBody = ({
-  status,
+  status
 }: BankConnectedIntegrationStatusBodyProps): ReactNode => {
   const disconnect = async () => {
     await command("DisconnectBankCoonnectionCommand", undefined);

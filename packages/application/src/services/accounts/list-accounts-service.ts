@@ -13,7 +13,7 @@ export class ListAccountsService extends AbstractApplicationService<"ListAccount
     private accounts: IAccountRepository,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }

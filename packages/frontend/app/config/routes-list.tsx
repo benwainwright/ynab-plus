@@ -8,7 +8,7 @@ import {
   IconHome,
   IconPlug,
   IconUsers,
-  IconEngine,
+  IconEngine
 } from "@tabler/icons-react";
 
 export interface RouteSpec {
@@ -28,62 +28,62 @@ export const routesList: Record<string, RouteSpec> = {
     isIndex: true,
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/login",
-    sidebarIcon: <IconHome size={16} stroke={1.5} />,
+    sidebarIcon: <IconHome size={16} stroke={1.5} />
   },
   login: {
     component: "routes/login.tsx",
     permissionsRequired: ["public"],
     authFailRedirect: "/",
-    sidebarIcon: <IconLogin size={16} stroke={1.5} />,
+    sidebarIcon: <IconLogin size={16} stroke={1.5} />
   },
   register: {
     component: "routes/register.tsx",
     permissionsRequired: ["public"],
     authFailRedirect: "/",
-    sidebarIcon: <IconUser size={16} stroke={1.5} />,
+    sidebarIcon: <IconUser size={16} stroke={1.5} />
   },
   integrations: {
     component: "routes/integrations.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/login",
-    sidebarIcon: <IconPlug size={16} stroke={1.5} />,
+    sidebarIcon: <IconPlug size={16} stroke={1.5} />
   },
   accounts: {
     component: "routes/accounts.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/",
-    sidebarIcon: <IconCurrencyPound size={16} stroke={1.5} />,
+    sidebarIcon: <IconCurrencyPound size={16} stroke={1.5} />
   },
   transactions: {
     component: "routes/transactions.tsx",
     permissionsRequired: ["admin", "user"],
     path: "accounts/:accountId",
     authFailRedirect: "/",
-    hideFromMenu: true,
+    hideFromMenu: true
   },
   users: {
     component: "routes/users.tsx",
     permissionsRequired: ["admin"],
     authFailRedirect: "/",
-    sidebarIcon: <IconUsers size={16} stroke={1.5} />,
+    sidebarIcon: <IconUsers size={16} stroke={1.5} />
   },
   tasks: {
     component: "routes/tasks.tsx",
     permissionsRequired: ["admin"],
     authFailRedirect: "/",
-    sidebarIcon: <IconEngine size={16} stroke={1.5} />,
+    sidebarIcon: <IconEngine size={16} stroke={1.5} />
   },
   editUser: {
     component: "routes/edit-user.tsx",
     permissionsRequired: ["admin"],
     path: "users/:userId/edit",
     authFailRedirect: "/",
-    hideFromMenu: true,
+    hideFromMenu: true
   },
   logout: {
     component: "routes/logout.tsx",
     permissionsRequired: ["admin", "user"],
     authFailRedirect: "/",
-    sidebarIcon: <IconLogout size={16} stroke={1.5} />,
-  },
+    sidebarIcon: <IconLogout size={16} stroke={1.5} />
+  }
 } as const satisfies Record<string, RouteSpec>;

@@ -1,10 +1,7 @@
 import { DomainModel } from "@core";
 import { syncDetailsSchema, type ISyncDetails } from "./i-sync-details.ts";
 
-export class SyncDetails
-  extends DomainModel<ISyncDetails>
-  implements ISyncDetails
-{
+export class SyncDetails extends DomainModel<ISyncDetails> implements ISyncDetails {
   public override freezeDry(_config?: { secure: boolean }): {
     id: string;
     provider: string;
@@ -15,7 +12,7 @@ export class SyncDetails
       id: this.id,
       provider: this.provider,
       lastSync: this.lastSync,
-      checkpoint: this._checkpoint,
+      checkpoint: this._checkpoint
     };
   }
 

@@ -12,16 +12,10 @@ export const useTransactions = (accountId?: string) => {
   const [dirty, setDirty] = useState(true);
 
   useEvents((event) => {
-    if (
-      event.key === "AccountSyncStarted" &&
-      event.data.accountId === accountId
-    ) {
+    if (event.key === "AccountSyncStarted" && event.data.accountId === accountId) {
       setSyncing(true);
     }
-    if (
-      event.key === "AccountSyncFinished" &&
-      event.data.accountId === accountId
-    ) {
+    if (event.key === "AccountSyncFinished" && event.data.accountId === accountId) {
       setSyncing(false);
       setDirty(true);
     }
@@ -51,8 +45,8 @@ export const useTransactions = (accountId?: string) => {
             await command("ListTransactionsCommand", {
               accountId,
               offset: (page - 1) * PER_PAGE,
-              limit: PER_PAGE,
-            }),
+              limit: PER_PAGE
+            })
           );
         }
       });
@@ -70,6 +64,6 @@ export const useTransactions = (accountId?: string) => {
     },
     totalPages: (transactions?.count ?? 0) / PER_PAGE,
     syncing,
-    sync: triggerSync,
+    sync: triggerSync
   };
 };

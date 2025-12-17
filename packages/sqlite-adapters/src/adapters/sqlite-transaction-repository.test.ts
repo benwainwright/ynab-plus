@@ -12,5 +12,5 @@ const testOverridesModule = typedApplicationModule<IInternalTypes>(({ load }) =>
 });
 
 testTransactionRepository(() =>
-  createRepo("TransactionRepository", sqliteDataAdaptersModule, testOverridesModule),
+  createRepo("TransactionRepository", sqliteDataAdaptersModule, testOverridesModule)
 );

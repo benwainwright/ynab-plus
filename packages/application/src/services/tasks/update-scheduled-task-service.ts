@@ -11,7 +11,7 @@ export class UpdateScheduledTaskService extends AbstractApplicationService<"Upda
     private taskScheduler: ITaskScheduler,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     super(logger);
   }
@@ -21,7 +21,7 @@ export class UpdateScheduledTaskService extends AbstractApplicationService<"Upda
   public override requiredPermissions: Permission[] = ["system"];
 
   protected override async handle<TRole extends IRole = User>({
-    command: { data },
+    command: { data }
   }: IHandleContext<"UpdateScheduledTaskCommand", TRole>): Promise<{
     success: boolean;
   }> {

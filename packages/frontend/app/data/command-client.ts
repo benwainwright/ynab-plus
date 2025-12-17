@@ -9,14 +9,14 @@ export class CommandClient {
 
   public async send<TName extends keyof Commands>(
     command: TName,
-    data: Commands[TName]["request"],
+    data: Commands[TName]["request"]
   ): Promise<Commands[TName]["response"]> {
     const uuid = v7();
 
     const message: ICommandMessage<TName> = {
       key: command,
       id: uuid,
-      data,
+      data
     };
 
     const serialiser = new Serialiser();
@@ -30,7 +30,7 @@ export class CommandClient {
           if (data.id === uuid && data.key === command) {
             accept(data.data);
           }
-        }),
+        })
       );
     } finally {
       listener.removeAll();

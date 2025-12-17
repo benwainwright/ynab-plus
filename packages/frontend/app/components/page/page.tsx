@@ -24,7 +24,7 @@ export const Page = ({ children, routeName, headerActions }: PageProps): ReactNo
   if (
     !canAccess({
       user: currentUser,
-      routeTags: routeConfig.permissionsRequired,
+      routeTags: routeConfig.permissionsRequired
     })
   ) {
     return initialLoadComplete ? <Navigate to={routeConfig.authFailRedirect} /> : loading;

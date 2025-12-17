@@ -19,7 +19,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
     private readonly stringHasher: IStringHasher,
 
     @inject("Logger")
-    private logger: ILogger,
+    private logger: ILogger
   ) {
     this.client = new HttpClient({
       baseUrl: `https://api.ynab.com/v1`,
@@ -29,15 +29,15 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       responseCache,
       defaultHeaders: {
         accept: "application/json",
-        "content-type": "application/json",
-      },
+        "content-type": "application/json"
+      }
     });
   }
 
   public async getAccountTransactions(
     token: OauthToken,
     accountId: string,
-    syncDetails: SyncDetails,
+    syncDetails: SyncDetails
   ): Promise<Transaction[]> {
     const queryString =
       syncDetails && syncDetails.checkpoint
@@ -49,7 +49,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       queryString,
       ttl: 1000 * 5,
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       responseSchema: z.object({
         data: z.object({
@@ -63,7 +63,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                 cleared: z.union([
                   z.literal("cleared"),
                   z.literal("uncleared"),
-                  z.literal("reconciled"),
+                  z.literal("reconciled")
                 ]),
                 approved: z.boolean(),
                 flag_color: z.string().nullable(),
@@ -81,7 +81,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                 import_payee_name: z.union([z.string(), z.null()]),
                 import_payee_name_original: z.union([z.string(), z.null()]),
                 debt_transaction_type: z.string().nullable(),
-                deleted: z.boolean(),
+                deleted: z.boolean()
               })
               .transform((item) =>
                 Transaction.reconstitute({
@@ -89,13 +89,13 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                   userId: token.userId,
                   accountId: item.account_id,
                   memo: item.memo ?? undefined,
-                  payee: item.payee_name ?? "",
-                }),
-              ),
+                  payee: item.payee_name ?? ""
+                })
+              )
           ),
-          server_knowledge: z.number(),
-        }),
-      }),
+          server_knowledge: z.number()
+        })
+      })
     });
 
     syncDetails.checkpoint = String(result.data.server_knowledge);
@@ -112,7 +112,7 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
       path: "/budgets/default/accounts",
       ttl: 1000 * 60 * 5,
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       queryString,
       responseSchema: z.object({
@@ -128,19 +128,19 @@ export class YnabClient implements IAccountsFetcher, ITransactionFetcher {
                 deleted: z.boolean(),
                 balance: z.number(),
                 cleared_balance: z.number(),
-                uncleared_balance: z.number(),
+                uncleared_balance: z.number()
               })
               .transform((account) => {
                 return Account.reconstitute({
                   ...account,
                   userId: token.userId,
                   clearedBalance: account.cleared_balance,
-                  unclearedBalance: account.uncleared_balance,
+                  unclearedBalance: account.uncleared_balance
                 });
-              }),
-          ),
-        }),
-      }),
+              })
+          )
+        })
+      })
     });
 
     return result.data.accounts;

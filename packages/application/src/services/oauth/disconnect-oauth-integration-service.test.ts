@@ -13,7 +13,7 @@ describe("disconnect outh integration service", () => {
       id: "ben",
       email: "bwainwright28@gmail.com",
       passwordHash: "foo",
-      permissions: ["admin"],
+      permissions: ["admin"]
     });
 
     const scheduler = mock<ITaskScheduler>();
@@ -33,7 +33,7 @@ describe("disconnect outh integration service", () => {
       month: "*",
       weekDay: "*",
       created: new Date("2020-01-01T00:00:00.000Z"),
-      lastExecution: undefined,
+      lastExecution: undefined
     });
 
     const mockToken = mock<OauthToken>();
@@ -45,7 +45,7 @@ describe("disconnect outh integration service", () => {
     const context = createMockServiceContext(
       "DisconnectOauthIntegrationCommand",
       { provider: "ynab" },
-      user,
+      user
     );
 
     await service.doHandle(context);
@@ -55,7 +55,7 @@ describe("disconnect outh integration service", () => {
     const { eventBus } = context;
 
     expect(eventBus.emit).toHaveBeenCalledWith("OauthIntegrationDisconnected", {
-      provider: "ynab",
+      provider: "ynab"
     });
 
     expect(scheduler.deleteTask).toHaveBeenCalledWith(task);

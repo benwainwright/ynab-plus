@@ -24,9 +24,7 @@ export interface UsersCommands {
       email: string;
       password: string;
     };
-    response:
-      | { success: true; id: string }
-      | { success: false; reason: string };
+    response: { success: true; id: string } | { success: false; reason: string };
   };
   GetCurrentUserCommand: {
     request: undefined;

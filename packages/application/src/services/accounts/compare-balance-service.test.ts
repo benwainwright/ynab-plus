@@ -1,7 +1,7 @@
 import {
   type IAccountRepository,
   type IBankConnectionRepository,
-  type IOpenBankingAccountBalanceFetcher,
+  type IOpenBankingAccountBalanceFetcher
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { type ILogger } from "@ynab-plus/bootstrap";
@@ -22,9 +22,9 @@ describe("compare balance service", () => {
     const context = createMockServiceContext(
       "CompareBalanceCommand",
       {
-        id: "account-id",
+        id: "account-id"
       },
-      "ben",
+      "ben"
     );
 
     when(mockAccountRepo.getAccounts)
@@ -41,8 +41,8 @@ describe("compare balance service", () => {
           closed: true,
           note: undefined,
           linkedOpenBankingAccount: "foo",
-          deleted: false,
-        }),
+          deleted: false
+        })
       );
 
     when(mockConnectionRepo.getConnection)
@@ -54,8 +54,8 @@ describe("compare balance service", () => {
           bankName: "Revolut",
           logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png",
           requisitionId: "foo",
-          accounts: ["foo"],
-        }),
+          accounts: ["foo"]
+        })
       );
 
     const mockToken = mock<
@@ -72,7 +72,7 @@ describe("compare balance service", () => {
       mockAccountRepo,
       mockBalanceFetcher,
       mockTokenRepo,
-      mockLogger,
+      mockLogger
     );
 
     const result = await service.doHandle(context);
@@ -93,9 +93,9 @@ describe("compare balance service", () => {
     const context = createMockServiceContext(
       "CompareBalanceCommand",
       {
-        id: "account-id",
+        id: "account-id"
       },
-      "ben",
+      "ben"
     );
 
     when(mockAccountRepo.getAccounts)
@@ -112,8 +112,8 @@ describe("compare balance service", () => {
           closed: true,
           note: undefined,
           linkedOpenBankingAccount: "foo",
-          deleted: false,
-        }),
+          deleted: false
+        })
       );
 
     when(mockConnectionRepo.getConnection)
@@ -125,8 +125,8 @@ describe("compare balance service", () => {
           bankName: "Revolut",
           logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png",
           requisitionId: "foo",
-          accounts: ["foo"],
-        }),
+          accounts: ["foo"]
+        })
       );
 
     const mockToken = mock<
@@ -144,7 +144,7 @@ describe("compare balance service", () => {
       mockAccountRepo,
       mockBalanceFetcher,
       tokenManager,
-      mockLogger,
+      mockLogger
     );
 
     const result = await service.doHandle(context);
@@ -165,9 +165,9 @@ describe("compare balance service", () => {
     const context = createMockServiceContext(
       "CompareBalanceCommand",
       {
-        id: "account-id",
+        id: "account-id"
       },
-      "ben",
+      "ben"
     );
 
     when(mockAccountRepo.getAccounts)
@@ -183,8 +183,8 @@ describe("compare balance service", () => {
           type: "checking",
           closed: true,
           note: undefined,
-          deleted: false,
-        }),
+          deleted: false
+        })
       );
 
     when(mockConnectionRepo.getConnection)
@@ -196,8 +196,8 @@ describe("compare balance service", () => {
           bankName: "Revolut",
           logo: "https://storage.googleapis.com/gc-prd-institution_icons-production/UK/PNG/revolut.png",
           requisitionId: "foo",
-          accounts: ["foo"],
-        }),
+          accounts: ["foo"]
+        })
       );
 
     const service = new CompareBalanceService(
@@ -205,7 +205,7 @@ describe("compare balance service", () => {
       mockAccountRepo,
       mockBalanceFetcher,
       mock(),
-      mockLogger,
+      mockLogger
     );
 
     const result = await service.doHandle(context);
@@ -222,9 +222,9 @@ describe("compare balance service", () => {
     const context = createMockServiceContext(
       "CompareBalanceCommand",
       {
-        id: "account-id",
+        id: "account-id"
       },
-      "ben",
+      "ben"
     );
 
     when(mockConnectionRepo.getConnection).calledWith("ben").thenResolve(undefined);
@@ -234,7 +234,7 @@ describe("compare balance service", () => {
       mockAccountRepo,
       mockBalanceFetcher,
       mock(),
-      mockLogger,
+      mockLogger
     );
 
     const result = await service.doHandle(context);

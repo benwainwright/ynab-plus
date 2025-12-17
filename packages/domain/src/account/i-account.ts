@@ -15,7 +15,7 @@ export const accountSchema = z.object({
     .transform((item) => item ?? undefined)
     .optional(),
 
-  deleted: z.boolean(),
+  deleted: z.boolean()
 });
 
 export type IAccount = z.output<typeof accountSchema>;

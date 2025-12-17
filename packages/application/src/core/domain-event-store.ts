@@ -7,7 +7,7 @@ import { inject } from "./typed-inject.ts";
 export class DomainEventStore implements IDomainEventBuffer, IDomainEventStore {
   public constructor(
     @inject("EventBus")
-    private readonly eventBus: IEventBus,
+    private readonly eventBus: IEventBus
   ) {}
 
   private events: IEvent<DomainEvents, keyof DomainEvents>[] = [];

@@ -6,7 +6,7 @@ export {
   type IIntegrationPorts,
   type IDataPorts,
   type IRuntimePorts,
-  type IEntrypointPorts,
+  type IEntrypointPorts
 } from "@ports/groups";
 
 export {
@@ -46,7 +46,7 @@ export {
   type IAccountsFetcher,
   type ITransactionRepository,
   type IBankConnectionCreator,
-  type IBankConnectionRepository,
+  type IBankConnectionRepository
 } from "@ports";
 
 export { applicationServicesModule } from "./module.ts";

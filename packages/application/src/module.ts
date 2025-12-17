@@ -28,7 +28,7 @@ export const applicationServicesModule = typedApplicationModule<
       id: "admin",
       email: await adminEmail.value,
       passwordHash: await passwordHasher.hashPassword(await adminPassword.value),
-      permissions: ["user", "admin"],
+      permissions: ["user", "admin"]
     });
     await userRepo.save(bootstrapAdmin);
   });
@@ -44,11 +44,11 @@ export const applicationServicesModule = typedApplicationModule<
 
       const requestContainer = new TypedContainer<IApplicationDependencies & BootstrapTypes>({
         parent: container,
-        defaultScope: "Request",
+        defaultScope: "Request"
       });
 
       const requestScopedServicesModule = new TypedContainerModule<IApplicationDependencies>(
-        loadServices,
+        loadServices
       );
 
       requestContainer.bind("CurrentUserSetter").to(SessionStorage).inRequestScope();
@@ -61,8 +61,8 @@ export const applicationServicesModule = typedApplicationModule<
 
       requestContainer.bind("Logger").toConstantValue(
         logger.child({
-          session: hasher.hashPassword(sessionId),
-        }),
+          session: hasher.hashPassword(sessionId)
+        })
       );
 
       requestContainer.bind("EventBus").toConstantValue(parentEventBus.child(sessionId));

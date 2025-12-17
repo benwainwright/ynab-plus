@@ -26,7 +26,7 @@ export const Tasks = (): ReactNode => {
             <tbody>
               {data.map((task) => {
                 const cron = cronstrue.toString(
-                  `${task.minute} ${task.hour} ${task.day} ${task.month} ${task.weekDay}`,
+                  `${task.minute} ${task.hour} ${task.day} ${task.month} ${task.weekDay}`
                 );
                 return (
                   <Table.Tr key={`${task.id}-user-row`}>

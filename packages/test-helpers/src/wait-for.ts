@@ -7,7 +7,7 @@ export const waitFor = async (
   opts?: {
     timeout?: number;
     interval?: number;
-  },
+  }
 ) => {
   const theOpts = opts ?? {};
   const timeout = theOpts.timeout ?? 5_000;
@@ -23,7 +23,7 @@ const waitForHelper = async (
     interval: number;
     timeout: number;
   },
-  start: number,
+  start: number
 ) => {
   try {
     await callback();

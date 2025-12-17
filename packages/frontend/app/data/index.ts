@@ -12,7 +12,7 @@ export {
   type Oauth2IntegrationStatus,
   type Oauth2IntegrationStatusConnected,
   type Oauth2IntegrationStatusLoading,
-  type Oauth2IntegrationStatusNeedsRedirect,
+  type Oauth2IntegrationStatusNeedsRedirect
 } from "./use-oauth2-integration-status.ts";
 export { useUser } from "./use-user.ts";
 export { useUsers } from "./use-users.ts";
@@ -21,6 +21,6 @@ export {
   useBankIntegrationStatus,
   type BankConnectionLoading,
   type BankConnectionNeedsToSelectInstitution,
-  type BankConnectionConnected,
+  type BankConnectionConnected
 } from "./use-bank-integration-status.ts";
 export { useTransactions } from "./use-transactions.ts";

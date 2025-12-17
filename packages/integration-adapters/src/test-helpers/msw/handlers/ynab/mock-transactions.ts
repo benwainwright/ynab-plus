@@ -26,7 +26,7 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
+    subtransactions: []
   },
   {
     id,
@@ -51,7 +51,7 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
+    subtransactions: []
   },
   {
     id,
@@ -76,7 +76,7 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
+    subtransactions: []
   },
   {
     id,
@@ -101,7 +101,7 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
+    subtransactions: []
   },
   {
     id,
@@ -126,7 +126,7 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
+    subtransactions: []
   },
   {
     id,
@@ -151,6 +151,6 @@ export const MOCK_TRANSACTIONS = [
     import_payee_name_original: "Later",
     debt_transaction_type: null,
     deleted: false,
-    subtransactions: [],
-  },
+    subtransactions: []
+  }
 ];

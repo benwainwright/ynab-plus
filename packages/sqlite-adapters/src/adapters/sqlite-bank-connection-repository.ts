@@ -28,7 +28,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private domainEventStore: IDomainEventBuffer,
+    private domainEventStore: IDomainEventBuffer
   ) {}
 
   public mapRaw(raw: RawBankConnection): BankConnection {
@@ -36,7 +36,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
       ...raw,
       requisitionId: raw.requisitionId ?? undefined,
       // oxlint-disable eslint/no-unsafe-assignment
-      accounts: raw.accounts ? JSON.parse(raw.accounts) : undefined,
+      accounts: raw.accounts ? JSON.parse(raw.accounts) : undefined
     });
   }
 
@@ -49,7 +49,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
           logo TEXT NOT NULL,
           requisitionId TEXT,
           accounts TEXT
-      );`,
+      );`
     );
   }
 
@@ -57,7 +57,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
     const result = await this.database.getFromDb<RawBankConnection | undefined>(
       `SELECT id, userId, bankName, logo, requisitionId, accounts
         FROM ${await this.tableName.value} WHERE userId = ?`,
-      [userId],
+      [userId]
     );
 
     if (!result) {
@@ -84,8 +84,8 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
         connection.bankName,
         connection.logo,
         connection.freezeDry().requisitionId ?? null,
-        connection.freezeDry().accounts ? JSON.stringify(connection.freezeDry().accounts) : null,
-      ],
+        connection.freezeDry().accounts ? JSON.stringify(connection.freezeDry().accounts) : null
+      ]
     );
 
     return connection;
@@ -96,7 +96,7 @@ export class SqliteBankConnectionRepository implements IBankConnectionRepository
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE userId = ?`,
-      [connection.userId],
+      [connection.userId]
     );
   }
 }

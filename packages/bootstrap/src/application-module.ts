@@ -6,12 +6,12 @@ export const applicationModule = (
   callback: ({
     load,
     bootstrapper,
-    logger,
+    logger
   }: {
     load: ContainerModuleLoadOptions;
     bootstrapper: IBootstrapper;
     logger: ILogger;
-  }) => void,
+  }) => void
 ) => {
   return new ContainerModule((load) => {
     load.onActivation(BootstrapperToken, (context, bootstrapper) => {

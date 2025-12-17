@@ -8,7 +8,7 @@ import {
   type IOpenBankingTokenFetcher,
   type IOpenBankingTokenRefresher,
   type IRequesitionAccountFetcher,
-  type IStringHasher,
+  type IStringHasher
 } from "@ynab-plus/app";
 import { type ConfigValue, type ILogger } from "@ynab-plus/bootstrap";
 import { BankConnection, OauthToken } from "@ynab-plus/domain";
@@ -45,7 +45,7 @@ export class GocardlessClient
     stringHasher: IStringHasher,
 
     @inject("Logger")
-    logger: ILogger,
+    logger: ILogger
   ) {
     this.client = new HttpClient({
       baseUrl: `https://bankaccountdata.gocardless.com/api/v2`,
@@ -55,14 +55,14 @@ export class GocardlessClient
       stringHasher,
       defaultHeaders: {
         accept: "application/json",
-        "content-type": "application/json",
-      },
+        "content-type": "application/json"
+      }
     });
   }
 
   public async getAccountDetails(
     ids: string[],
-    token: OauthToken,
+    token: OauthToken
   ): Promise<{ id: string; name: string | undefined }[]> {
     return await Promise.all(
       ids.map(async (id) => {
@@ -70,21 +70,21 @@ export class GocardlessClient
           ttl: 1000 * 60 * 60 * 6,
           path: `accounts/${id}/details/`,
           headers: {
-            Authorization: `Bearer ${token.use()}`,
+            Authorization: `Bearer ${token.use()}`
           },
           responseSchema: z
             .object({
               account: z.object({
                 resourceId: z.string(),
-                name: z.string().optional(),
-              }),
+                name: z.string().optional()
+              })
             })
             .transform((response) => ({
               id,
-              name: response.account.name,
-            })),
+              name: response.account.name
+            }))
         });
-      }),
+      })
     );
   }
 
@@ -93,7 +93,7 @@ export class GocardlessClient
       path: `accounts/${id}/balances/`,
       ttl: 1000 * 30,
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       responseSchema: z.object({
         balances: z.array(
@@ -101,15 +101,15 @@ export class GocardlessClient
             referenceDate: z.string(),
             balanceAmount: z.object({
               amount: z.string().transform((amount) => Number.parseFloat(amount) * 100),
-              currency: z.string(),
-            }),
-          }),
-        ),
-      }),
+              currency: z.string()
+            })
+          })
+        )
+      })
     });
 
     const [first] = balances.toSorted((a, b) =>
-      new Date(a.referenceDate) > new Date(b.referenceDate) ? -1 : 1,
+      new Date(a.referenceDate) > new Date(b.referenceDate) ? -1 : 1
     );
 
     if (!first) {
@@ -123,31 +123,31 @@ export class GocardlessClient
     const { accounts } = await this.client.get({
       path: `requisitions/${String(bankConnection.requisitionId)}/`,
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       responseSchema: z.object({
         id: z.string(),
         status: z.string(),
         agreements: z.string().optional(),
         accounts: z.array(z.string()),
-        reference: z.string(),
-      }),
+        reference: z.string()
+      })
     });
     return accounts;
   }
 
   public async getLink(
     connection: BankConnection,
-    token: OauthToken,
+    token: OauthToken
   ): Promise<{ requsitionId: string; url: string }> {
     const result = await this.client.post({
       path: "requisitions/",
       body: {
         institution_id: connection.id,
-        redirect: await this.redirectUrl.value,
+        redirect: await this.redirectUrl.value
       },
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       responseSchema: z.object({
         id: z.string(),
@@ -157,13 +157,13 @@ export class GocardlessClient
         institution_id: z.string(),
         agreement: z.string(),
         reference: z.string(),
-        link: z.string(),
-      }),
+        link: z.string()
+      })
     });
 
     return {
       url: result.link,
-      requsitionId: result.id,
+      requsitionId: result.id
     };
   }
 
@@ -173,13 +173,13 @@ export class GocardlessClient
   }> {
     const response = await this.client.post({
       body: {
-        refresh: token.refreshToken,
+        refresh: token.refreshToken
       },
       path: `token/refresh/`,
       responseSchema: z.object({
         access: z.string(),
-        access_expires: z.number(),
-      }),
+        access_expires: z.number()
+      })
     });
 
     return { token: response.access, tokenExpiresIn: response.access_expires };
@@ -190,21 +190,21 @@ export class GocardlessClient
       path: "token/new/",
       body: {
         secret_id: await this.secretId.value,
-        secret_key: await this.secretKey.value,
+        secret_key: await this.secretKey.value
       },
       responseSchema: z
         .object({
           access: z.string(),
           access_expires: z.number(),
           refresh: z.string(),
-          refresh_expires: z.number(),
+          refresh_expires: z.number()
         })
         .transform((data) => ({
           token: data.access,
           refreshToken: data.refresh,
           tokenExpiresIn: data.access_expires,
-          refreshTokenExpiresIn: data.refresh_expires,
-        })),
+          refreshTokenExpiresIn: data.refresh_expires
+        }))
     });
   }
 
@@ -212,10 +212,10 @@ export class GocardlessClient
     return await this.client.get({
       path: "institutions",
       queryString: {
-        country: "GB",
+        country: "GB"
       },
       headers: {
-        Authorization: `Bearer ${token.use()}`,
+        Authorization: `Bearer ${token.use()}`
       },
       responseSchema: z
         .array(
@@ -226,8 +226,8 @@ export class GocardlessClient
             transaction_total_days: z.string(),
             countries: z.array(z.string()),
             logo: z.string(),
-            max_access_valid_for_days: z.string(),
-          }),
+            max_access_valid_for_days: z.string()
+          })
         )
         .transform((data) =>
           data.map((item) =>
@@ -235,10 +235,10 @@ export class GocardlessClient
               id: item.id,
               userId,
               bankName: item.name,
-              logo: item.logo,
-            }),
-          ),
-        ),
+              logo: item.logo
+            })
+          )
+        )
     });
   }
 }

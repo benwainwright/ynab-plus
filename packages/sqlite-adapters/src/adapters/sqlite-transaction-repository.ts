@@ -27,7 +27,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private eventBuffer: IDomainEventBuffer,
+    private eventBuffer: IDomainEventBuffer
   ) {}
 
   public async getAccountTransactionCount(userId: string, accountId: string): Promise<number> {
@@ -35,7 +35,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
       `SELECT COUNT(*) as count
          FROM ${await this.tableName.value}
         WHERE accountId = ? and userId = ?`,
-      [accountId, userId],
+      [accountId, userId]
     );
 
     return result?.count ?? 0;
@@ -45,7 +45,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     const object = transactionSchema.parse({
       ...raw,
       memo: raw.memo ?? undefined,
-      approved: raw.approved === "true",
+      approved: raw.approved === "true"
     });
 
     return Transaction.reconstitute(object);
@@ -66,7 +66,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
           PRIMARY KEY (id, userId)
 
       );`,
-      [],
+      []
     );
   }
 
@@ -75,7 +75,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
       `SELECT id, userId, accountId, date, amount, cleared, memo, payee, approved
         FROM ${await this.tableName.value}
         where id = ?`,
-      [id],
+      [id]
     );
 
     if (!result) {
@@ -108,8 +108,8 @@ export class SqliteTransactionRepository implements ITransactionRepository {
         transaction.cleared,
         transaction.memo ?? null,
         transaction.payee,
-        String(transaction.approved),
-      ],
+        String(transaction.approved)
+      ]
     );
 
     return transaction;
@@ -119,7 +119,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
     userId: string,
     accountId: string,
     offset: number,
-    limit: number,
+    limit: number
   ): Promise<Transaction[]> {
     const result = await this.database.getAllFromDatabase<RawTransaction[]>(
       `SELECT id, userId, accountId, date, amount, cleared, memo, payee, approved
@@ -127,7 +127,7 @@ export class SqliteTransactionRepository implements ITransactionRepository {
         WHERE accountId = ? AND userId = ?
         ORDER BY date DESC
         LIMIT ? OFFSET ?`,
-      [accountId, userId, limit, offset],
+      [accountId, userId, limit, offset]
     );
 
     return result.map((account) => this.mapRaw(account));

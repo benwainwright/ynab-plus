@@ -10,7 +10,7 @@ export const Currency = ({ children }: CurrencyProps): ReactNode => {
     <>
       {new Intl.NumberFormat("en-GB", {
         style: "currency",
-        currency: "GBP",
+        currency: "GBP"
       }).format(theAmount / 1000)}
     </>
   );

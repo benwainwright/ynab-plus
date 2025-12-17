@@ -1,7 +1,7 @@
 import {
   type ITaskScheduler,
   type IOauthNewTokenRequester,
-  type IOauthTokenRepository,
+  type IOauthTokenRepository
 } from "@ports";
 import { createMockServiceContext } from "@test-helpers";
 import { OauthToken, RegularTask, User } from "@ynab-plus/domain";
@@ -23,8 +23,8 @@ describe("generate new oauth token service", () => {
           id: "ben",
           email: "bwainwright28@gmail.com",
           passwordHash: "foo",
-          permissions: ["admin"],
-        }),
+          permissions: ["admin"]
+        })
       );
 
       const save = vi.fn();
@@ -33,7 +33,7 @@ describe("generate new oauth token service", () => {
         get: vi.fn(),
         save,
         delete: vi.fn(),
-        create: vi.fn(),
+        create: vi.fn()
       };
 
       const mockTaskScheduler = mock<ITaskScheduler>();
@@ -52,7 +52,7 @@ describe("generate new oauth token service", () => {
         month: "*",
         weekDay: "*",
         created: new Date("2020-01-01T00:00:00.000Z"),
-        lastExecution: undefined,
+        lastExecution: undefined
       });
 
       const mockToken = OauthToken.reconstitute({
@@ -64,7 +64,7 @@ describe("generate new oauth token service", () => {
         expiry: new Date("2021-01-01T00:00:00.000Z"),
         created: new Date(),
         refreshed: undefined,
-        lastUse: new Date(),
+        lastUse: new Date()
       });
 
       const requester: IOauthNewTokenRequester = {
@@ -74,7 +74,7 @@ describe("generate new oauth token service", () => {
           }
 
           throw new Error("Wrong code");
-        },
+        }
       };
 
       const factory = vi.fn().mockReturnValue(requester);
@@ -83,7 +83,7 @@ describe("generate new oauth token service", () => {
         mockTokenRepo,
         factory,
         mockTaskScheduler,
-        mock(),
+        mock()
       );
 
       const result = await service.doHandle(context);
@@ -93,9 +93,7 @@ describe("generate new oauth token service", () => {
       expect(result.expiry).toEqual(mockToken.expiry);
       expect(result.refreshed).toEqual(mockToken.refreshed);
       expect(save).toHaveBeenCalledWith(mockToken);
-      expect(mockTaskScheduler.scheduleTask.mock.lastCall?.[0].id).toEqual(
-        task.id,
-      );
+      expect(mockTaskScheduler.scheduleTask.mock.lastCall?.[0].id).toEqual(task.id);
     } finally {
       vi.useRealTimers();
     }

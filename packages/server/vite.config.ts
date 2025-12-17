@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/start-server.ts"),
       formats: ["cjs"],
-      fileName: () => "start-server.cjs",
+      fileName: () => "start-server.cjs"
     },
 
     rollupOptions: {
@@ -17,12 +17,12 @@ export default defineConfig({
         id === "better-sqlite3" ||
         id.startsWith("@ynab-plus/") ||
         // also keep node builtins external
-        id.startsWith("node:"),
+        id.startsWith("node:")
     },
     outDir: "dist",
     emptyOutDir: true,
     sourcemap: true,
-    target: "node24",
+    target: "node24"
   },
   plugins: [
     tsconfigPaths({
@@ -32,8 +32,8 @@ export default defineConfig({
         "../integration-adapters/tsconfig.json",
         "../node-adapters/tsconfig.json",
         "../domain/tsconfig.json",
-        "../sqlite-adapters/tsconfig.json",
-      ],
-    }),
-  ],
+        "../sqlite-adapters/tsconfig.json"
+      ]
+    })
+  ]
 });

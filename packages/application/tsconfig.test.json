@@ -13,13 +13,13 @@
       "@services": ["./src/services/index.ts"],
       "@test-helpers": ["./src/test-helpers/index.ts"],
       "@services/open-banking": ["./src/services/open-banking/index.ts"],
-      "@services/oauth": ["./src/services/oauth/index.ts"],
-    },
+      "@services/oauth": ["./src/services/oauth/index.ts"]
+    }
   },
   "include": ["src/**/*.test.ts", "src/test-helpers/setup.ts"],
   "references": [
     {
-      "path": "./tsconfig.lib.json",
-    },
-  ],
+      "path": "./tsconfig.lib.json"
+    }
+  ]
 }

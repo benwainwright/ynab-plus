@@ -12,7 +12,7 @@ describe("list accounts service", () => {
     const context = createMockServiceContext(
       "ListAccountsCommand",
       undefined,
-      new SystemContext("test", ["system"]),
+      new SystemContext("test", ["system"])
     );
 
     const service = new ListAccountsService(mock(), mock());
@@ -25,7 +25,7 @@ describe("list accounts service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
-      email: "email",
+      email: "email"
     });
 
     const mockUserList = [
@@ -39,7 +39,7 @@ describe("list accounts service", () => {
         balance: 1000,
         clearedBalance: 1_000,
         unclearedBalance: 10_000,
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         id: "bar-account",
@@ -51,14 +51,14 @@ describe("list accounts service", () => {
         unclearedBalance: 10_000,
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     const context = createMockServiceContext(
       "ListAccountsCommand",
       undefined,
-      new SystemContext("test", ["user"], mockUser),
+      new SystemContext("test", ["user"], mockUser)
     );
 
     const repo = mock<IAccountRepository>();
@@ -77,7 +77,7 @@ describe("list accounts service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["user"],
-      email: "email",
+      email: "email"
     });
 
     const mockUserList = [
@@ -91,7 +91,7 @@ describe("list accounts service", () => {
         type: "checking",
         closed: true,
         note: "hello",
-        deleted: false,
+        deleted: false
       }),
       Account.reconstitute({
         balance: 1000,
@@ -103,8 +103,8 @@ describe("list accounts service", () => {
         type: "checking",
         closed: true,
         note: undefined,
-        deleted: false,
-      }),
+        deleted: false
+      })
     ];
 
     const context = createMockServiceContext("ListAccountsCommand", undefined, mockUser);

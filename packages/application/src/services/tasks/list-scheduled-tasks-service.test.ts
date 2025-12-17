@@ -12,7 +12,7 @@ describe("list ScheduledTasks service", () => {
       id: "ben",
       passwordHash: "foo",
       permissions: ["admin"],
-      email: "email",
+      email: "email"
     });
 
     const mockTaskList = [
@@ -30,7 +30,7 @@ describe("list ScheduledTasks service", () => {
         weekDay: "*",
         name: "Do my shopping",
         description: "A task to do my shopping",
-        command: "SyncAccountsCommand",
+        command: "SyncAccountsCommand"
       }),
 
       RegularTask.reconstitute({
@@ -47,14 +47,14 @@ describe("list ScheduledTasks service", () => {
         weekDay: "*",
         name: "Do my shopping",
         description: "A task to do my shopping",
-        command: "SyncAccountsCommand",
-      }),
+        command: "SyncAccountsCommand"
+      })
     ];
 
     const context = createMockServiceContext(
       "ListScheduledTasksCommand",
       { offset: 0, limit: 30 },
-      mockUser,
+      mockUser
     );
 
     const repo = mock<ITaskScheduler>();

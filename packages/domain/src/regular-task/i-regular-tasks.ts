@@ -4,12 +4,10 @@ import type { Commands } from "../commands.ts";
 const schedulableTasks = [
   "SyncAccountsCommand",
   "SyncAccountCommand",
-  "CheckOauthIntegrationStatusCommand",
+  "CheckOauthIntegrationStatusCommand"
 ] as const satisfies Readonly<(keyof Commands)[]>;
 
-export const schedulableTasksSchema = z.union(
-  schedulableTasks.map((task) => z.literal(task)),
-);
+export const schedulableTasksSchema = z.union(schedulableTasks.map((task) => z.literal(task)));
 
 export type SchedulableTask = z.output<typeof schedulableTasksSchema>;
 
@@ -24,7 +22,7 @@ export const regularTaskSchema = z.object({
     z
       .union([z.string(), z.date()])
       .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
-    z.undefined(),
+    z.undefined()
   ]),
   minute: z.string(),
   data: z.union([z.string(), z.undefined()]),
@@ -35,9 +33,9 @@ export const regularTaskSchema = z.object({
   weekDay: z.string(),
   name: z.string(),
   description: z.string(),
-  command: schedulableTasksSchema,
+  command: schedulableTasksSchema
 });
 
-export type IRegularTask<TTaskKey extends SchedulableTask> = z.output<
-  typeof regularTaskSchema
-> & { command: TTaskKey };
+export type IRegularTask<TTaskKey extends SchedulableTask> = z.output<typeof regularTaskSchema> & {
+  command: TTaskKey;
+};

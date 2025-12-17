@@ -1,7 +1,7 @@
 import {
   type IRepository,
   type IMultipleRepository,
-  type IDomainEventBuffer,
+  type IDomainEventBuffer
 } from "@ynab-plus/app";
 import type { ConfigValue } from "@ynab-plus/bootstrap";
 
@@ -28,7 +28,7 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
     private database: SqliteDatabase,
 
     @inject("DomainEventBuffer")
-    private domainEventStore: IDomainEventBuffer,
+    private domainEventStore: IDomainEventBuffer
   ) {}
 
   public async delete(user: User): Promise<void> {
@@ -36,7 +36,7 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
     await this.database.deferQueryToTransaction(
       `DELETE FROM ${await this.tableName.value}
       WHERE id = ?`,
-      [user.id],
+      [user.id]
     );
   }
 
@@ -45,13 +45,13 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
       `SELECT id, email, passwordHash, permissions
         FROM ${await this.tableName.value}
         where id = ?`,
-      [id],
+      [id]
     );
 
     return result
       ? User.reconstitute({
           ...result,
-          permissions: JSON.parse(result.permissions) as Permission[],
+          permissions: JSON.parse(result.permissions) as Permission[]
         })
       : undefined;
   }
@@ -61,14 +61,14 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
       `SELECT id, email, passwordHash, permissions
         FROM ${await this.tableName.value}
         LIMIT ? OFFSET ?`,
-      [limit ?? 30, start ?? 0],
+      [limit ?? 30, start ?? 0]
     );
 
     return result.map((result) =>
       User.reconstitute({
         ...result,
-        permissions: JSON.parse(result.permissions) as Permission[],
-      }),
+        permissions: JSON.parse(result.permissions) as Permission[]
+      })
     );
   }
 
@@ -80,7 +80,7 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
           passwordHash TEXT NOT NULL,
           permissions TEXT
       );`,
-      [],
+      []
     );
   }
 
@@ -94,7 +94,7 @@ export class SqliteUserRepository implements IRepository<User>, IMultipleReposit
           passwordHash    = excluded.passwordHash,
           permissions = excluded.permissions
         RETURNING id, email, passwordHash, permissions;`,
-      [thing.id, thing.email, thing.passwordHash, JSON.stringify(thing.permissions)],
+      [thing.id, thing.email, thing.passwordHash, JSON.stringify(thing.permissions)]
     );
     return thing;
   }
