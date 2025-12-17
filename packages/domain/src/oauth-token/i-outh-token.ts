@@ -1,7 +1,12 @@
 import z from "zod";
 
 export const oAuthTokenSchema = z.object({
-  expiry: z.date(),
+  expiry: z.union([
+    z
+      .union([z.string(), z.date()])
+      .transform((arg) => (typeof arg === "string" ? new Date(arg) : arg)),
+    z.undefined(),
+  ]),
   token: z.string(),
   refreshToken: z.string(),
   provider: z.string(),

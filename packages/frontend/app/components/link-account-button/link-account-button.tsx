@@ -18,13 +18,12 @@ export const LinkAccountButton = (): ReactNode => {
 
   useEffect(() => {
     void (async () => {
-      try {
-        if (isLinking) {
-          const result = await command("ListRequisitionAccountsCommand", undefined);
-          setRequisitionAccounts(result);
-        }
-      } finally {
-        setIsLinking(false);
+      if (isLinking) {
+        const result = await command(
+          "ListRequisitionAccountsCommand",
+          undefined,
+        );
+        setRequisitionAccounts(result);
       }
     })();
   }, [isLinking]);

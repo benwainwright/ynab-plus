@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build:server": "pnpm run --filter '*server' build",
     "dev:websocket": "pnpm run --filter '*server' dev",
     "dev:frontend": "pnpm run --filter '*frontend' dev",
     "dev": "pnpm run dev:websocket & pnpm run dev:frontend",

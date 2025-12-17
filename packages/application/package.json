@@ -22,6 +22,5 @@
     "test": "vitest --coverage",
     "type-check": "tsgo --build",
     "lint": "oxlint --type-aware"
-  },
-  "private": true
+  }
 }

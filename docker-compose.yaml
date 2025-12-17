@@ -1,7 +1,17 @@
 version: "3.9"
 
 services:
-  app:
-    build: .
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+
+    image: server:local
     ports:
-      - "${HOST_PORT:-3015}:3015"
+      - "3017:3017"
+
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    restart: unless-stopped
