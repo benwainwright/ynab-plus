@@ -13,10 +13,12 @@ const dateFormat = {
 
 export const Transactions = (): ReactNode => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { transactions, page, setPage, totalPages, syncing, sync } = useTransactions(accountId);
+  const { transactions, page, setPage, totalPages, syncing, sync, name } =
+    useTransactions(accountId);
 
   return (
     <Page
+      {...(name ? { title: name } : {})}
       routeName="transactions"
       headerActions={
         <>

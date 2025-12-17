@@ -8,6 +8,7 @@ export interface IOpenBankingAccountDetailsFetcher {
     {
       id: string;
       name: string | undefined;
+      details: string | undefined;
     }[]
   >;
 }

@@ -78,6 +78,10 @@ describe("the gocardless client", () => {
       expect(result[1]?.name).toEqual(
         mockGocardlessData.mockAccountDetailsResponses.bar.account.name
       );
+      expect(result[1]?.details).toEqual(
+        mockGocardlessData.mockAccountDetailsResponses.bar.account.details
+      );
+
       expect(result[0]?.name).toEqual(
         mockGocardlessData.mockAccountDetailsResponses.foo.account.name
       );

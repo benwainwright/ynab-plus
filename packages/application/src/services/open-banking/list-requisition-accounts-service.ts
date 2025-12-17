@@ -30,6 +30,7 @@ export class ListRequisitionAccountsService extends AbstractApplicationService<"
     {
       id: string;
       name: string | undefined;
+      details: string | undefined;
     }[]
   > {
     await using token = await this.tokenManager.getToken(this.currentUser.id);

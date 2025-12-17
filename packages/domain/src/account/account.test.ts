@@ -124,6 +124,57 @@ describe("the account model", () => {
     expect(newAccount.linkedOpenBankingAccount).toEqual("foo");
   });
 
+  it("allows you to remove an a account link", () => {
+    const newAccount = Account.reconstitute({
+      id: "id",
+      userId: "userId",
+      name: "account name",
+      type: "accont_type",
+      closed: false,
+      clearedBalance: 0,
+      balance: 1000,
+      unclearedBalance: 10000,
+      deleted: false,
+      linkedOpenBankingAccount: "foo"
+    });
+
+    newAccount.removeAccountLink();
+
+    expect(newAccount.pullEvents()).toEqual([
+      {
+        event: "AccountLinkRemoved",
+        data: {
+          old: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            linkedOpenBankingAccount: "foo",
+            clearedBalance: 0,
+            balance: 1000,
+            unclearedBalance: 10000,
+            deleted: false
+          }),
+          new: Account.reconstitute({
+            id: "id",
+            userId: "userId",
+            name: "account name",
+            type: "accont_type",
+            closed: false,
+            linkedOpenBankingAccount: undefined,
+            clearedBalance: 0,
+            balance: 1000,
+            unclearedBalance: 10000,
+            deleted: false
+          })
+        }
+      }
+    ]);
+
+    expect(newAccount.linkedOpenBankingAccount).toBeUndefined();
+  });
+
   it("allows you to update the balances", () => {
     const newAccount = Account.reconstitute({
       id: "id",

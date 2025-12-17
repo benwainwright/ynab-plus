@@ -10,9 +10,10 @@ interface PageProps {
   routeName: keyof typeof routesList;
   children: ReactNode;
   headerActions?: ReactNode;
+  title?: string;
 }
 
-export const Page = ({ children, routeName, headerActions }: PageProps): ReactNode => {
+export const Page = ({ children, routeName, title, headerActions }: PageProps): ReactNode => {
   const { currentUser, initialLoadComplete } = useContext(CurrentUserContext);
   const routeConfig = routesList[routeName];
   if (!routeConfig) {
@@ -34,7 +35,7 @@ export const Page = ({ children, routeName, headerActions }: PageProps): ReactNo
     <>
       <Title order={2} mb="xl" mt="l">
         <Flex gap="1rem" align="center">
-          {capitalisedHeader}
+          <Box style={{ flexGrow: 2 }}>{title ?? capitalisedHeader}</Box>
           {headerActions}
         </Flex>
       </Title>

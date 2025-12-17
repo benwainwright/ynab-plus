@@ -47,6 +47,15 @@ export class Account extends DomainModel<IAccount> implements IAccount {
     });
   }
 
+  public removeAccountLink() {
+    const old = Account.reconstitute(this);
+    this._linkedOpenBankingAccount = undefined;
+    this.raiseEvent({
+      event: "AccountLinkRemoved",
+      data: { old, new: Account.reconstitute(this) }
+    });
+  }
+
   public updateBalance(config: {
     balance: number;
     clearedBalance: number;

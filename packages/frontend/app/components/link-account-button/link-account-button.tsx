@@ -3,7 +3,11 @@ import { Button, Combobox, Input, InputBase, useCombobox } from "@mantine/core";
 import { type Commands } from "@ynab-plus/domain";
 import { useEffect, useState, type ReactNode } from "react";
 
-export const LinkAccountButton = (): ReactNode => {
+interface LinkAccountButtonProps {
+  onPick: (id: string) => void | Promise<void>;
+}
+
+export const LinkAccountButton = ({ onPick }: LinkAccountButtonProps): ReactNode => {
   const [isLinking, setIsLinking] = useState(false);
   const [requisitionAccounts, setRequisitionAccounts] =
     useState<Commands["ListRequisitionAccountsCommand"]["response"]>();
@@ -28,16 +32,16 @@ export const LinkAccountButton = (): ReactNode => {
   if (isLinking && requisitionAccounts) {
     const options = requisitionAccounts.map((item) => (
       <Combobox.Option value={item.id} key={item.id}>
-        {item.name}
+        {item.name ?? item.details}
       </Combobox.Option>
     ));
-
-    const item = requisitionAccounts.find((item) => item.id === value);
 
     return (
       <Combobox
         store={combobox}
-        onOptionSubmit={(val) => {
+        // oxlint-disable eslint/no-misused-promises
+        onOptionSubmit={async (val) => {
+          await onPick(val);
           setValue(val);
           combobox.closeDropdown();
         }}
@@ -53,7 +57,7 @@ export const LinkAccountButton = (): ReactNode => {
               combobox.toggleDropdown();
             }}
           >
-            {item?.name || <Input.Placeholder>Pick value</Input.Placeholder>}
+            {value ? <div aria-busy></div> : <Input.Placeholder>Pick value</Input.Placeholder>}
           </InputBase>
         </Combobox.Target>
         <Combobox.Dropdown>

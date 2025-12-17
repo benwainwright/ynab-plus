@@ -41,6 +41,7 @@ describe("list requisition accounts service", () => {
       {
         created: new Date(),
         name: "the name",
+        details: "foo",
         id: "foo",
         institutionId: "monzo"
       },
@@ -48,7 +49,8 @@ describe("list requisition accounts service", () => {
         created: new Date(),
         name: "the name 2",
         id: "bar",
-        institutionId: "monzo"
+        institutionId: "monzo",
+        details: undefined
       }
     ];
 

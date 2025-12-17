@@ -19,7 +19,11 @@ export type Commands = {
       offset: number;
       limit: number;
     };
-    response: { transactions: Transaction[]; count: number };
+    response: {
+      transactions: Transaction[];
+      count: number;
+      accountName: string;
+    };
   };
   ListScheduledTasksCommand: {
     request: {

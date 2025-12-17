@@ -42,7 +42,7 @@ export class Sqlite3AccountRepository implements IAccountRepository {
     );
   }
 
-  async getAccounts(id: string): Promise<Account | undefined> {
+  async getAccount(id: string): Promise<Account | undefined> {
     const result = await this.database.getFromDb<RawAccount | undefined>(
       `SELECT id, userId, name, type, closed, note, deleted, balance, clearedBalance, unclearedBalance, linkedOpenBankingAccount
         FROM ${await this.tableName.value}

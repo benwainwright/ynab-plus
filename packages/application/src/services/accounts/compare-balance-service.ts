@@ -46,7 +46,7 @@ export class CompareBalanceService extends AbstractApplicationService<"CompareBa
   > {
     const connectionPromise = this.bankConnectionRepo.getConnection(this.currentUser.id);
 
-    const accountPromise = this.accountRepository.getAccounts(id);
+    const accountPromise = this.accountRepository.getAccount(id);
 
     await using token = await this.tokenRepo.getToken(this.currentUser.id);
 

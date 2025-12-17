@@ -26,6 +26,7 @@ export const mockGocardlessData = {
         iban: "string",
         currency: "string",
         ownerName: "string",
+        details: "foo-details",
         name: "the name",
         product: "string",
         cashAccountType: "string",

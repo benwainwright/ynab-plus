@@ -9,6 +9,7 @@ export interface BankConnectionCommands {
     request: undefined;
     response: {
       name: string | undefined;
+      details: string | undefined;
       id: string;
     }[];
   };

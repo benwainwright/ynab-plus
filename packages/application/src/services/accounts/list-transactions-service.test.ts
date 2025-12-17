@@ -68,7 +68,7 @@ describe("list transactions service", () => {
     when(mockTxRepo.getAccountTransactionCount).calledWith("ben", "bar").thenResolve(4);
 
     const mockAccounts = mock<IAccountRepository>();
-    when(mockAccounts.getAccounts).calledWith("bar").thenResolve(account);
+    when(mockAccounts.getAccount).calledWith("bar").thenResolve(account);
 
     const service = new ListTransactionsService(mockTxRepo, mockAccounts, mock());
 
@@ -76,6 +76,7 @@ describe("list transactions service", () => {
 
     expect(result.transactions).toEqual(transactions);
     expect(result.count).toEqual(4);
+    expect(result.accountName).toEqual("hello");
   });
 
   it("throws an error if the account doesn't belong to the user", async () => {
@@ -108,7 +109,7 @@ describe("list transactions service", () => {
       deleted: false
     });
 
-    when(mockAccounts.getAccounts).calledWith("bar").thenResolve(account);
+    when(mockAccounts.getAccount).calledWith("bar").thenResolve(account);
 
     const transactions = [
       Transaction.reconstitute({

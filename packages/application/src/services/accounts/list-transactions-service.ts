@@ -31,8 +31,9 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
   }: IHandleContext<"ListTransactionsCommand", TRole>): Promise<{
     transactions: Transaction[];
     count: number;
+    accountName: string;
   }> {
-    const theAccount = await this.accountsRepo.getAccounts(accountId);
+    const theAccount = await this.accountsRepo.getAccount(accountId);
 
     if (theAccount?.userId !== this.currentUser.id) {
       throw new AppError(`Can only list transactions for accounts owned by you`);
@@ -53,6 +54,7 @@ export class ListTransactionsService extends AbstractApplicationService<"ListTra
     const [transactions, count] = await Promise.all([txPromise, countPromise]);
 
     return {
+      accountName: theAccount.name,
       transactions,
       count
     };

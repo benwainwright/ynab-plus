@@ -63,7 +63,7 @@ export class GocardlessClient
   public async getAccountDetails(
     ids: string[],
     token: OauthToken
-  ): Promise<{ id: string; name: string | undefined }[]> {
+  ): Promise<{ id: string; name: string | undefined; details: string | undefined }[]> {
     return await Promise.all(
       ids.map(async (id) => {
         return await this.client.get({
@@ -76,12 +76,14 @@ export class GocardlessClient
             .object({
               account: z.object({
                 resourceId: z.string(),
-                name: z.string().optional()
+                name: z.string().optional(),
+                details: z.string().optional()
               })
             })
             .transform((response) => ({
               id,
-              name: response.account.name
+              name: response.account.name,
+              details: response.account.details
             }))
         });
       })
@@ -91,7 +93,7 @@ export class GocardlessClient
   public async getAccountBalance(id: string, token: OauthToken): Promise<number> {
     const { balances } = await this.client.get({
       path: `accounts/${id}/balances/`,
-      ttl: 1000 * 30,
+      ttl: 1000 * 60 * 60 * 6,
       headers: {
         Authorization: `Bearer ${token.use()}`
       },

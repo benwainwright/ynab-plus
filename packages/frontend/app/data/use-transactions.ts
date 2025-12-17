@@ -34,6 +34,7 @@ export const useTransactions = (accountId?: string) => {
   const [transactions, setTransactions] = useState<{
     transactions: ITransaction[];
     count: number;
+    accountName: string;
   }>();
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export const useTransactions = (accountId?: string) => {
   return {
     isPending,
     transactions: transactions?.transactions,
+    name: transactions?.accountName,
     page,
     setPage: (page: number) => {
       setPage(page);

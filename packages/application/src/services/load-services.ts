@@ -24,6 +24,7 @@ import { ListRequisitionAccountsService } from "./open-banking/list-requisition-
 import { OpenBankingTokenManager } from "./open-banking/open-banking-token-manager.ts";
 import { OauthTokenManager } from "@services/oauth";
 import { DisconnectBankConnectionService } from "./open-banking/disconnect-bank-connection-service.ts";
+import { LinkAccountService } from "./accounts/link-account-service.ts";
 
 export const loadServices = (
   load: TypedContainerModuleLoadOptions<IApplicationDependencies & IInternalTypes>
@@ -54,6 +55,7 @@ export const loadServices = (
   load.bind("Service").to(CheckOauthIntegrationStatusService);
   load.bind("Service").to(DisconnectOauthIntegrationService);
   load.bind("Service").to(GenerateNewOauthTokenService);
+  load.bind("Service").to(LinkAccountService);
   load.bind("Service").to(ListRequisitionAccountsService);
   load.bind("Service").to(DisconnectBankConnectionService);
   load.bind("Service").to(CompareBalanceService);

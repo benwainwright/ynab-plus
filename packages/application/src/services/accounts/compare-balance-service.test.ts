@@ -27,7 +27,7 @@ describe("compare balance service", () => {
       "ben"
     );
 
-    when(mockAccountRepo.getAccounts)
+    when(mockAccountRepo.getAccount)
       .calledWith("account-id")
       .thenResolve(
         Account.reconstitute({
@@ -98,7 +98,7 @@ describe("compare balance service", () => {
       "ben"
     );
 
-    when(mockAccountRepo.getAccounts)
+    when(mockAccountRepo.getAccount)
       .calledWith("account-id")
       .thenResolve(
         Account.reconstitute({
@@ -170,7 +170,7 @@ describe("compare balance service", () => {
       "ben"
     );
 
-    when(mockAccountRepo.getAccounts)
+    when(mockAccountRepo.getAccount)
       .calledWith("account-id")
       .thenResolve(
         Account.reconstitute({

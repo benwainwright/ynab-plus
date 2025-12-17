@@ -1,6 +1,13 @@
 import type { Account } from "./account.ts";
 
 export interface AccountsCommands {
+  LinkAccountCommand: {
+    request: {
+      ynabAccount: string;
+      obAccount: string;
+    };
+    response: undefined;
+  };
   CompareBalanceCommand: {
     request: {
       id: string;

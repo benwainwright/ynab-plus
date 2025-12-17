@@ -53,7 +53,7 @@ export const testAccountsRepository = (
       expect(eventBuffer.stageEvents).toHaveBeenCalledWith(accountOne);
       await unitOfWork.commit();
 
-      const result = await repo.getAccounts("one");
+      const result = await repo.getAccount("one");
 
       expect(result).toBeUndefined();
     });
@@ -128,7 +128,7 @@ export const testAccountsRepository = (
       await repo.saveAccount(accountTwo);
       await unitOfWork.commit();
 
-      const token = await repo.getAccounts("two");
+      const token = await repo.getAccount("two");
 
       expect(token).toEqual(accountTwo);
     });
