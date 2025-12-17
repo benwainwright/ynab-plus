@@ -44,6 +44,12 @@ export class SyncDetails extends DomainModel<ISyncDetails> implements ISyncDetai
   }
 
   public set checkpoint(checkpoint: string | undefined) {
+    const old = SyncDetails.reconstitute(this);
     this._checkpoint = checkpoint;
+    const newThing = SyncDetails.reconstitute(this);
+    this.raiseEvent({
+      event: "SyncDetailsNewSyncCheckpointSet",
+      data: { old, new: newThing }
+    });
   }
 }

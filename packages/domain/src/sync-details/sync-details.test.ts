@@ -30,6 +30,39 @@ describe("sync-details", () => {
     });
   });
 
+  describe("the checkpoint property", () => {
+    it("raises an event when set", () => {
+      const details = SyncDetails.reconstitute({
+        id: "foo",
+        provider: "bar",
+        lastSync: new Date(),
+        checkpoint: "foo"
+      });
+
+      details.checkpoint = "bar";
+
+      expect(details.pullEvents()).toEqual([
+        {
+          event: "SyncDetailsNewSyncCheckpointSet",
+          data: {
+            old: SyncDetails.reconstitute({
+              id: "foo",
+              provider: "bar",
+              lastSync: new Date(),
+              checkpoint: "foo"
+            }),
+            new: SyncDetails.reconstitute({
+              id: "foo",
+              provider: "bar",
+              lastSync: new Date(),
+              checkpoint: "bar"
+            })
+          }
+        }
+      ]);
+    });
+  });
+
   describe("create", () => {
     it("emits a domain event and populates internal data correctly", () => {
       const details = SyncDetails.create({ id: "foo", provider: "ynab" });
