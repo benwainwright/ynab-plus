@@ -35,6 +35,8 @@ export const LinkAccountButton = (): ReactNode => {
       </Combobox.Option>
     ));
 
+    const item = requisitionAccounts.find((item) => item.id === value);
+
     return (
       <Combobox
         store={combobox}
@@ -54,7 +56,7 @@ export const LinkAccountButton = (): ReactNode => {
               combobox.toggleDropdown();
             }}
           >
-            {value || <Input.Placeholder>Pick value</Input.Placeholder>}
+            {item?.name || <Input.Placeholder>Pick value</Input.Placeholder>}
           </InputBase>
         </Combobox.Target>
         <Combobox.Dropdown>
