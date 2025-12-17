@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { cwd } from "node:process";
 import { inject } from "@core";
@@ -21,6 +21,12 @@ export class FlatFileObjectStore implements IObjectStorage {
     @inject("Logger")
     private logger: ILogger
   ) {}
+
+  public async listKeys(namespace: string): Promise<string[]> {
+    const path = await this.resolvePath(namespace);
+    this.logger.silly(`Path resolved at ${path}`, LOG_CONTEXT);
+    return await readdir(path);
+  }
 
   private async resolvePath(namespace: string, key?: string) {
     const base = await this.folder.value;

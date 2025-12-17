@@ -12,6 +12,10 @@ export class InMemoryResponseCache<T> implements IResponseCache<T> {
     private readonly logger: ILogger
   ) {}
 
+  public async prune() {
+    // NOOP - does not need pruninig
+  }
+
   private data = new Map<string, { data: T; timeout: NodeJS.Timeout | undefined }>();
 
   // oxlint-disable eslint/require-await
